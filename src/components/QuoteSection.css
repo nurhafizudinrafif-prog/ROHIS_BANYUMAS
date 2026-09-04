@@ -1,0 +1,67 @@
+.quote-section {
+  padding: var(--space-4xl) 0;
+  background: var(--color-bg-alt);
+}
+
+.quote-card {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--space-3xl) var(--space-xl);
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-light);
+  border-radius: var(--radius-xl);
+  position: relative;
+}
+
+.quote-card::before,
+.quote-card::after {
+  content: '"';
+  font-family: var(--font-arabic);
+  font-size: 6rem;
+  color: var(--color-gold);
+  opacity: 0.1;
+  position: absolute;
+  line-height: 1;
+}
+
+.quote-card::before {
+  top: 0.5rem;
+  left: 1.5rem;
+}
+
+.quote-card::after {
+  bottom: -1rem;
+  right: 1.5rem;
+  transform: rotate(180deg);
+}
+
+.quote-arabic {
+  font-family: var(--font-arabic);
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+  color: var(--color-gold);
+  line-height: 2.2;
+  direction: rtl;
+  margin-bottom: var(--space-md);
+}
+
+.quote-translation {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  font-style: italic;
+  line-height: 1.8;
+  margin-bottom: var(--space-sm);
+}
+
+.quote-reference {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  font-family: var(--font-heading);
+}
+
+@media (max-width: 768px) {
+  .quote-card {
+    padding: var(--space-xl) var(--space-md);
+  }
+}

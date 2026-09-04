@@ -1,0 +1,45 @@
+.program-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.program-card-icon {
+  width: 100%;
+  padding: var(--space-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 15%, transparent), color-mix(in srgb, var(--accent) 5%, transparent));
+  color: var(--accent, var(--color-primary-light));
+}
+
+.program-card-title {
+  font-size: 1.15rem;
+  margin-bottom: var(--space-sm);
+}
+
+.program-card-desc {
+  font-size: 0.9rem;
+  margin-bottom: var(--space-md);
+}
+
+.program-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.program-card-list li {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  padding-left: var(--space-md);
+  position: relative;
+}
+
+.program-card-list li::before {
+  content: '✦';
+  position: absolute;
+  left: 0;
+  color: var(--color-gold);
+  font-size: 0.7rem;
+}

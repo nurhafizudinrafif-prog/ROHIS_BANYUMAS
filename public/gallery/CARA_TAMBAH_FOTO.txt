@@ -1,0 +1,6 @@
+Letakkan file foto/dokumentasi kegiatan Anda di folder ini (misal: kajian.jpg, ldk.jpg, dll).
+Lalu daftarkan nama file foto tersebut di file:
+src/data/gallery.js
+
+Contoh:
+image: '/gallery/kajian.jpg'
