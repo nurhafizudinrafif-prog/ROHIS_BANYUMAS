@@ -9,12 +9,14 @@ import ProgramCard from '../components/ProgramCard';
 import ArticleCard from '../components/ArticleCard';
 import EventCard from '../components/EventCard';
 import MemberSchoolCard from '../components/MemberSchoolCard';
+import TeamCard from '../components/TeamCard';
 import QuoteSection from '../components/QuoteSection';
 import { programs } from '../data/programs';
 import { articles } from '../data/articles';
 import { events } from '../data/events';
 import { memberSchools } from '../data/memberSchools';
 import { galleryItems } from '../data/gallery';
+import { team, structurePeriod, organizationFullName } from '../data/team';
 import './Home.css';
 import './Gallery.css';
 
@@ -148,8 +150,29 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Member Schools */}
+      {/* Leadership / BPH Showcase */}
       <section className="section">
+        <div className="container">
+          <SectionHeader
+            badge={`Struktur ${structurePeriod}`}
+            title="Badan Pengurus Harian (BPH)"
+            subtitle={`Pimpinan inti yang mengarahkan visi dan roda pergerakan ${organizationFullName} Periode ${structurePeriod}.`}
+          />
+          <div className="team-grid-bph">
+            {team.bph.map((member, i) => (
+              <TeamCard key={member.id} member={member} index={i} />
+            ))}
+          </div>
+          <div className="text-center" style={{ marginTop: 'var(--space-2xl)' }}>
+            <Link to="/tentang" className="btn btn-outline">
+              Lihat Struktur Lengkap 5 Divisi & 40 Pengurus <ArrowRight size={16} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Member Schools */}
+      <section className="section section-alt">
         <div className="container">
           <SectionHeader
             badge="Jaringan"
