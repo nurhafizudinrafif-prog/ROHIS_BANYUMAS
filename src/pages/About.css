@@ -167,15 +167,82 @@
   font-size: 0.85rem;
 }
 
-/* Departments */
-.about-dept-card .card-body {
+/* Division Tabs & Layout */
+.about-div-tabs {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-2xl);
+}
+
+.about-div-tab {
+  padding: 0.5rem 1.1rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-surface-light);
+  border-radius: var(--radius-full);
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.about-div-tab:hover {
+  border-color: var(--color-primary-light);
+  color: var(--color-text);
+}
+
+.about-div-tab.active {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  border-color: var(--color-primary);
+  color: white;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+
+.about-division-block {
+  margin-bottom: var(--space-3xl);
+}
+
+.about-division-header {
+  margin-bottom: var(--space-xl);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--color-surface-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
   gap: var(--space-sm);
 }
 
-.about-dept-card .card-body p {
-  font-size: 0.9rem;
+.about-division-header-info h3 {
+  font-size: 1.25rem;
+  margin-bottom: 4px;
+}
+
+.about-division-header-info p {
+  font-size: 0.88rem;
+  color: var(--color-text-secondary);
+  max-width: 650px;
+  line-height: 1.5;
+}
+
+.team-grid-bph {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+}
+
+@media (max-width: 900px) {
+  .team-grid-bph {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 540px) {
+  .team-grid-bph {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 768px) {
