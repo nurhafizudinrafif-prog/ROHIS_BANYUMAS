@@ -9,7 +9,7 @@ export default function ScrollToTop() {
   return null;
 }
 
-export function useScrollAnimation() {
+export function useScrollAnimation(dependency) {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -19,14 +19,38 @@ export function useScrollAnimation() {
           }
         });
       },
-      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+      { threshold: 0.05, rootMargin: '0px 0px 50px 0px' }
     );
 
-    const elements = document.querySelectorAll('.animate-on-scroll');
-    elements.forEach((el) => observer.observe(el));
+    const observeAll = () => {
+      const elements = document.querySelectorAll('.animate-on-scroll:not(.visible)');
+      elements.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight + 100 && rect.bottom > -100) {
+          el.classList.add('visible');
+        } else {
+          observer.observe(el);
+        }
+      });
+    };
 
-    return () => observer.disconnect();
-  }, []);
+    observeAll();
+
+    // Observe dynamic elements added by state changes (e.g. tabs)
+    const mutationObserver = new MutationObserver(() => {
+      observeAll();
+    });
+
+    mutationObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+
+    return () => {
+      observer.disconnect();
+      mutationObserver.disconnect();
+    };
+  }, [dependency]);
 }
 
 export function formatDate(dateStr) {

@@ -27,7 +27,7 @@ export default function TeamCard({ member, index = 0, accentColor = null }) {
 
   return (
     <div
-      className={`team-card animate-on-scroll delay-${(index % 4) + 1} ${isLeader ? 'team-card-leader' : ''}`}
+      className={`team-card ${isLeader ? 'team-card-leader' : ''}`}
       style={accentColor ? { '--team-accent': accentColor } : {}}
     >
       <div className="team-card-avatar">

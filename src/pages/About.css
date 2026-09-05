@@ -227,6 +227,21 @@
   line-height: 1.5;
 }
 
+.about-division-block .team-card {
+  animation: teamCardFadeIn 0.35s ease backwards;
+}
+
+@keyframes teamCardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .team-grid-bph {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
