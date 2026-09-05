@@ -29,10 +29,10 @@ export default function Home() {
         <div className="container">
           <SectionHeader
             badge="Program Kerja"
-            title="Empat Pilar Gerakan Kami"
-            subtitle="Menyelenggarakan dakwah, pendidikan, sosial, dan media secara terpadu untuk membentuk generasi Islam yang berdampak."
+            title="Lima Pilar Gerakan Kami"
+            subtitle="Digerakkan melalui 5 divisi utama: SDM, Dakwah, Jurnalistik, HUMAS, dan DANUS untuk membentuk generasi Islam yang berdaya dan berdampak."
           />
-          <div className="grid grid-2 home-programs-grid">
+          <div className="home-programs-grid">
             {programs.map((program, i) => (
               <ProgramCard key={program.id} program={program} index={i} />
             ))}
