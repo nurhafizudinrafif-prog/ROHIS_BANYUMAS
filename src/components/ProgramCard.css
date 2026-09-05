@@ -3,6 +3,56 @@
   flex-direction: column;
   position: relative;
   overflow: hidden;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-surface-light);
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+}
+
+/* Division-specific top accent highlight line */
+.program-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent, var(--color-primary-light)), transparent);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Soft ambient lighting from top matching division color */
+.program-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 130px;
+  background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 75%);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.program-card:hover {
+  border-color: color-mix(in srgb, var(--accent, var(--color-primary)) 40%, transparent);
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.55), 0 0 25px -5px color-mix(in srgb, var(--accent, var(--color-primary)) 20%, transparent);
+  transform: translateY(-5px);
+}
+
+.program-card:hover::before,
+.program-card:hover::after {
+  opacity: 1;
+}
+
+.program-card:active {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.5), 0 0 16px -4px color-mix(in srgb, var(--accent, var(--color-primary)) 20%, transparent);
 }
 
 .program-card-icon {
@@ -11,11 +61,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 15%, transparent), color-mix(in srgb, var(--accent) 5%, transparent));
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 12%, transparent), color-mix(in srgb, var(--accent) 4%, transparent));
   color: var(--accent, var(--color-primary-light));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   transition: all var(--transition-base);
   position: relative;
   overflow: hidden;
+  z-index: 2;
 }
 
 /* Subtle shimmer sweep on icon area */
@@ -26,17 +78,22 @@
   left: -100%;
   width: 50%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
   transition: left 0.7s ease;
 }
 
 .program-card:hover .program-card-icon {
   transform: scale(1.02);
-  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 22%, transparent), color-mix(in srgb, var(--accent) 10%, transparent));
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 18%, transparent), color-mix(in srgb, var(--accent) 6%, transparent));
 }
 
 .program-card:hover .program-card-icon::after {
   left: 200%;
+}
+
+.program-card .card-body {
+  position: relative;
+  z-index: 2;
 }
 
 .program-card-badge {
@@ -54,11 +111,13 @@
 }
 
 .program-card:hover .program-card-title {
-  color: var(--color-primary-light);
+  color: var(--accent, var(--color-primary-light));
 }
 
 .program-card-desc {
   font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
   margin-bottom: var(--space-md);
 }
 
@@ -74,6 +133,7 @@
   padding-left: var(--space-md);
   position: relative;
   transition: all var(--transition-fast);
+  line-height: 1.5;
 }
 
 .program-card:hover .program-card-list li {
@@ -84,7 +144,7 @@
   content: '✦';
   position: absolute;
   left: 0;
-  color: var(--color-gold);
+  color: var(--accent, var(--color-gold));
   font-size: 0.7rem;
   transition: transform var(--transition-fast);
 }

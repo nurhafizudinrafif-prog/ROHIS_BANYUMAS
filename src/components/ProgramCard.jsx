@@ -15,8 +15,11 @@ export default function ProgramCard({ program, index = 0 }) {
   const Icon = iconMap[program.icon] || BookOpen;
 
   return (
-    <div className={`program-card card animate-on-scroll delay-${(index % 3) + 1}`}>
-      <div className="program-card-icon" style={{ '--accent': program.color }}>
+    <div
+      className={`program-card card animate-on-scroll delay-${(index % 3) + 1}`}
+      style={{ '--accent': program.color }}
+    >
+      <div className="program-card-icon">
         <Icon size={32} />
       </div>
       <div className="card-body">
