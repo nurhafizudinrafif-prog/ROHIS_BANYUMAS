@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Camera, X, Calendar } from 'lucide-react';
 import { useScrollAnimation } from '../utils';
 import HeroSection from '../components/HeroSection';
 import StatsCounter from '../components/StatsCounter';
@@ -14,10 +14,13 @@ import { programs } from '../data/programs';
 import { articles } from '../data/articles';
 import { events } from '../data/events';
 import { memberSchools } from '../data/memberSchools';
+import { galleryItems } from '../data/gallery';
 import './Home.css';
+import './Gallery.css';
 
 export default function Home() {
   useScrollAnimation();
+  const [selectedItem, setSelectedItem] = useState(null);
 
   return (
     <main>
@@ -92,8 +95,61 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Member Schools */}
+      {/* Gallery Section */}
       <section className="section section-alt">
+        <div className="container">
+          <SectionHeader
+            badge="Dokumentasi"
+            title="Galeri Kegiatan"
+            subtitle="Potret semangat kebersamaan dan aksi nyata kegiatan dakwah pelajar ROHIS se-Kabupaten Banyumas."
+          />
+          <div className="gallery-grid">
+            {galleryItems.slice(0, 6).map((item, i) => (
+              <div
+                key={item.id}
+                className={`gallery-item animate-on-scroll delay-${(i % 3) + 1}`}
+                onClick={() => setSelectedItem(item)}
+                title="Klik untuk melihat dokumentasi"
+              >
+                <div className="gallery-item-image">
+                  {item.image ? (
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="gallery-item-img"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <>
+                      <span className="gallery-item-emoji">{item.emoji}</span>
+                      <Camera size={20} className="gallery-item-camera" />
+                    </>
+                  )}
+                </div>
+                <div className="gallery-item-overlay">
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+                    <span className="badge badge-primary">{item.category}</span>
+                    {item.date && (
+                      <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>
+                        {item.date}
+                      </span>
+                    )}
+                  </div>
+                  <h4>{item.title}</h4>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="text-center" style={{ marginTop: 'var(--space-2xl)' }}>
+            <Link to="/galeri" className="btn btn-outline">
+              Lihat Semua Galeri <ArrowRight size={16} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Member Schools */}
+      <section className="section">
         <div className="container">
           <SectionHeader
             badge="Jaringan"
@@ -133,6 +189,59 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Lightbox Modal */}
+      {selectedItem && (
+        <div
+          className="gallery-modal-backdrop"
+          onClick={() => setSelectedItem(null)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="gallery-modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="gallery-modal-close"
+              onClick={() => setSelectedItem(null)}
+              aria-label="Tutup"
+            >
+              <X size={20} />
+            </button>
+
+            <div className="gallery-modal-body">
+              {selectedItem.image ? (
+                <img
+                  src={selectedItem.image}
+                  alt={selectedItem.title}
+                  className="gallery-modal-img"
+                />
+              ) : (
+                <div className="gallery-modal-placeholder">
+                  <span>{selectedItem.emoji}</span>
+                  <p>Belum ada foto yang diunggah</p>
+                </div>
+              )}
+            </div>
+
+            <div className="gallery-modal-info">
+              <div>
+                <h3>{selectedItem.title}</h3>
+              </div>
+              <div className="gallery-modal-meta">
+                <span className="badge badge-primary">{selectedItem.category}</span>
+                {selectedItem.date && (
+                  <span className="gallery-modal-date">
+                    <Calendar size={14} style={{ display: 'inline', marginRight: 4, verticalAlign: -2 }} />
+                    {selectedItem.date}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
