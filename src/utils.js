@@ -9,7 +9,7 @@ export default function ScrollToTop() {
   return null;
 }
 
-export function useScrollAnimation(dependency) {
+export function useScrollAnimation() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -50,7 +50,7 @@ export function useScrollAnimation(dependency) {
       observer.disconnect();
       mutationObserver.disconnect();
     };
-  }, [dependency]);
+  }, []);
 }
 
 export function formatDate(dateStr) {
