@@ -92,6 +92,24 @@
   z-index: 2;
 }
 
+.hero-logo-wrapper {
+  margin-bottom: var(--space-md);
+  display: flex;
+  justify-content: center;
+}
+
+.hero-logo-img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 24px rgba(16, 185, 129, 0.45));
+  transition: transform var(--transition-base);
+}
+
+.hero-logo-img:hover {
+  transform: scale(1.08) rotate(2deg);
+}
+
 .hero-badge {
   font-family: var(--font-arabic);
   font-size: 1rem;

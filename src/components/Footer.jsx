@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, AtSign, Play, MessageCircle, Moon, Star } from 'lucide-react';
+import { Mail, Phone, MapPin, AtSign, Play, MessageCircle } from 'lucide-react';
+import logoImg from '../assets/logo.jpg';
 import './Footer.css';
 
 export default function Footer() {
@@ -15,10 +16,7 @@ export default function Footer() {
         <div className="footer-grid">
           <div className="footer-col footer-about">
             <div className="footer-brand">
-              <div className="footer-logo">
-                <Moon size={18} />
-                <Star size={8} className="footer-star" />
-              </div>
+              <img src={logoImg} alt="Logo ROHIS Kabupaten Banyumas" className="footer-logo-img" />
               <div>
                 <h4 className="footer-brand-name">ROHIS Kabupaten Banyumas</h4>
               </div>

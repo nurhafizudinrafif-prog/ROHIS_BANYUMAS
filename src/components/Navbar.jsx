@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Moon, Star } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+import logoImg from '../assets/logo.jpg';
 import './Navbar.css';
 
 const navLinks = [
@@ -33,10 +34,7 @@ export default function Navbar() {
     <nav className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`}>
       <div className="navbar-container container">
         <Link to="/" className="navbar-brand">
-          <div className="navbar-logo">
-            <Moon size={20} />
-            <Star size={10} className="navbar-star" />
-          </div>
+          <img src={logoImg} alt="Logo ROHIS Kabupaten Banyumas" className="navbar-logo-img" />
           <div className="navbar-brand-text">
             <span className="navbar-brand-name">ROHIS</span>
             <span className="navbar-brand-sub">Kabupaten Banyumas</span>

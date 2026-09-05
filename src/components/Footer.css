@@ -23,24 +23,13 @@
   margin-bottom: var(--space-md);
 }
 
-.footer-logo {
-  position: relative;
-  width: 34px;
-  height: 34px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+.footer-logo-img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
   border-radius: var(--radius-sm);
-  color: white;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
   flex-shrink: 0;
-}
-
-.footer-star {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  color: var(--color-gold);
 }
 
 .footer-brand-name {

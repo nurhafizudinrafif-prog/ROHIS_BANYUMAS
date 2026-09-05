@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronDown } from 'lucide-react';
+import logoImg from '../assets/logo.jpg';
 import './HeroSection.css';
 
 export default function HeroSection() {
@@ -13,6 +14,10 @@ export default function HeroSection() {
       </div>
 
       <div className="container hero-content">
+        <div className="hero-logo-wrapper animate-hero delay-0">
+          <img src={logoImg} alt="Logo ROHIS Kabupaten Banyumas" className="hero-logo-img" />
+        </div>
+
         <div className="hero-badge badge badge-gold animate-hero delay-0">
           بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
         </div>
