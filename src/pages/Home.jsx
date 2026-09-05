@@ -164,7 +164,7 @@ export default function Home() {
             ))}
           </div>
           <div className="text-center" style={{ marginTop: 'var(--space-2xl)' }}>
-            <Link to="/tentang" className="btn btn-outline">
+            <Link to="/rohis-anggota" className="btn btn-outline">
               Lihat Struktur Lengkap 5 Divisi & 40 Pengurus <ArrowRight size={16} />
             </Link>
           </div>
