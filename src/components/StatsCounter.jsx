@@ -3,13 +3,13 @@ import { Users, School, Calendar, Award } from 'lucide-react';
 import './StatsCounter.css';
 
 const stats = [
-  { icon: School, value: 12, suffix: '+', label: 'ROHIS Anggota' },
-  { icon: Users, value: 350, suffix: '+', label: 'Anggota Aktif' },
-  { icon: Calendar, value: 48, suffix: '+', label: 'Kegiatan/Tahun' },
-  { icon: Award, value: 2020, suffix: '', label: 'Tahun Berdiri' },
+  { icon: School, value: 15, suffix: '+', label: 'Dari Sekolah Kab. Banyumas' },
+  { icon: Users, value: 53, suffix: '+', label: 'Anggota Aktif' },
+  { icon: Calendar, value: 7, suffix: '+', label: 'Event Besar' },
+  { icon: Award, value: 2017, suffix: '', label: 'Tahun Berdiri', noSeparator: true },
 ];
 
-function CountUp({ target, suffix, duration = 2000 }) {
+function CountUp({ target, suffix, noSeparator = false, duration = 2000 }) {
   const [count, setCount] = useState(0);
   const [hasStarted, setHasStarted] = useState(false);
   const ref = useRef(null);
@@ -45,7 +45,7 @@ function CountUp({ target, suffix, duration = 2000 }) {
 
   return (
     <span ref={ref} className="stat-value">
-      {count.toLocaleString('id-ID')}{suffix}
+      {noSeparator ? count : count.toLocaleString('id-ID')}{suffix}
     </span>
   );
 }
@@ -62,7 +62,7 @@ export default function StatsCounter() {
                 <div className="stat-icon">
                   <Icon size={28} />
                 </div>
-                <CountUp target={stat.value} suffix={stat.suffix} />
+                <CountUp target={stat.value} suffix={stat.suffix} noSeparator={stat.noSeparator} />
                 <span className="stat-label">{stat.label}</span>
               </div>
             );

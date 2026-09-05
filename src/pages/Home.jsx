@@ -98,7 +98,7 @@ export default function Home() {
           <SectionHeader
             badge="Jaringan"
             title="ROHIS Anggota Kami"
-            subtitle="Lebih dari 12 ROHIS sekolah se-Kabupaten Banyumas tergabung dalam organisasi ini."
+            subtitle="Lebih dari 15 sekolah di Kabupaten Banyumas tergabung dalam organisasi ini."
           />
           <div className="grid grid-4">
             {memberSchools.slice(0, 4).map((school, i) => (

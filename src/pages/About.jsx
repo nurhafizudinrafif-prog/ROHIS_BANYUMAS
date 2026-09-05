@@ -28,15 +28,15 @@ export default function About() {
             <div className="about-story-content">
               <h2>Sejarah & Latar Belakang</h2>
               <p>
-                Organisasi ROHIS Kabupaten Banyumas didirikan pada tahun 2020 sebagai wadah koordinasi 
+                Organisasi ROHIS Kabupaten Banyumas didirikan pada tahun 2017 sebagai wadah koordinasi 
                 dan silaturahmi antar ROHIS (Rohani Islam) sekolah tingkat SMA/SMK/MA se-Kabupaten 
                 Banyumas, Jawa Tengah.
               </p>
               <p>
                 Berawal dari inisiatif beberapa pengurus ROHIS sekolah yang merasa perlu adanya 
                 sinergi dan kolaborasi lintas sekolah, organisasi ini terus berkembang hingga kini 
-                menjadi pusat dakwah pemuda Islam yang menaungi lebih dari 12 ROHIS sekolah 
-                dengan ratusan anggota aktif.
+                menjadi pusat dakwah pemuda Islam yang menaungi lebih dari 15 sekolah di Kabupaten Banyumas 
+                dengan puluhan kader dakwah aktif.
               </p>
               <p>
                 Selain mengkoordinasikan kegiatan antar ROHIS, organisasi ini juga menyelenggarakan 
@@ -46,15 +46,15 @@ export default function About() {
             </div>
             <div className="about-story-visual">
               <div className="about-story-card">
-                <span className="about-story-year">2020</span>
+                <span className="about-story-year">2017</span>
                 <span className="about-story-label">Tahun Berdiri</span>
               </div>
               <div className="about-story-card">
-                <span className="about-story-year">12+</span>
-                <span className="about-story-label">ROHIS Anggota</span>
+                <span className="about-story-year">15+</span>
+                <span className="about-story-label">Dari Sekolah Kab. Banyumas</span>
               </div>
               <div className="about-story-card">
-                <span className="about-story-year">350+</span>
+                <span className="about-story-year">53+</span>
                 <span className="about-story-label">Anggota Aktif</span>
               </div>
             </div>
