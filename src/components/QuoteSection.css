@@ -1,6 +1,8 @@
 .quote-section {
   padding: var(--space-4xl) 0;
   background: var(--color-bg-alt);
+  position: relative;
+  overflow: hidden;
 }
 
 .quote-card {
@@ -8,10 +10,18 @@
   max-width: 800px;
   margin: 0 auto;
   padding: var(--space-3xl) var(--space-xl);
-  background: var(--color-surface);
+  background: linear-gradient(135deg, var(--color-surface), rgba(30, 41, 59, 0.8));
   border: 1px solid var(--color-surface-light);
   border-radius: var(--radius-xl);
   position: relative;
+  transition: all var(--transition-slow);
+  backdrop-filter: blur(10px);
+}
+
+.quote-card:hover {
+  border-color: rgba(212, 168, 67, 0.3);
+  box-shadow: 0 0 40px rgba(212, 168, 67, 0.08), 0 20px 60px rgba(0, 0, 0, 0.3);
+  transform: translateY(-4px);
 }
 
 .quote-card::before,
@@ -23,6 +33,12 @@
   opacity: 0.1;
   position: absolute;
   line-height: 1;
+  transition: opacity var(--transition-slow);
+}
+
+.quote-card:hover::before,
+.quote-card:hover::after {
+  opacity: 0.2;
 }
 
 .quote-card::before {
@@ -43,6 +59,7 @@
   line-height: 2.2;
   direction: rtl;
   margin-bottom: var(--space-md);
+  text-shadow: 0 0 40px rgba(212, 168, 67, 0.15);
 }
 
 .quote-translation {

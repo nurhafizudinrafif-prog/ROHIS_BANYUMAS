@@ -1,5 +1,6 @@
 /* ============================================
    ROHIS Kabupaten Banyumas — Global Design System
+   Premium Edition with Professional Animations
    ============================================ */
 
 /* --- CSS Variables (Design Tokens) --- */
@@ -54,11 +55,14 @@
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
   --shadow-glow: 0 0 20px var(--color-primary-glow);
+  --shadow-glow-lg: 0 0 40px var(--color-primary-glow), 0 0 80px rgba(5, 150, 105, 0.1);
+  --shadow-gold-glow: 0 0 20px rgba(212, 168, 67, 0.2);
 
   /* Transitions */
   --transition-fast: 150ms ease;
-  --transition-base: 250ms ease;
-  --transition-slow: 400ms ease;
+  --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
 
   /* Layout */
   --max-width: 1200px;
@@ -144,6 +148,7 @@ p {
 
 .section {
   padding: var(--space-4xl) 0;
+  position: relative;
 }
 
 .section-alt {
@@ -187,6 +192,24 @@ p {
   border-radius: var(--radius-md);
   transition: all var(--transition-base);
   white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle shimmer sweep on hover for all buttons */
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn:hover::after {
+  left: 100%;
 }
 
 .btn-primary {
@@ -197,9 +220,13 @@ p {
 
 .btn-primary:hover {
   background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
-  box-shadow: var(--shadow-glow);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow-lg);
+  transform: translateY(-3px);
   color: white;
+}
+
+.btn-primary:active {
+  transform: translateY(-1px);
 }
 
 .btn-outline {
@@ -211,8 +238,12 @@ p {
 .btn-outline:hover {
   background: var(--color-primary);
   color: white;
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   box-shadow: var(--shadow-glow);
+}
+
+.btn-outline:active {
+  transform: translateY(-1px);
 }
 
 .btn-gold {
@@ -223,9 +254,13 @@ p {
 
 .btn-gold:hover {
   background: linear-gradient(135deg, var(--color-gold-light), var(--color-gold));
-  transform: translateY(-2px);
-  box-shadow: 0 0 20px rgba(212, 168, 67, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 0 30px rgba(212, 168, 67, 0.35), 0 0 60px rgba(212, 168, 67, 0.15);
   color: var(--color-bg);
+}
+
+.btn-gold:active {
+  transform: translateY(-1px);
 }
 
 .btn-sm {
@@ -245,12 +280,29 @@ p {
   border: 1px solid var(--color-surface-light);
   overflow: hidden;
   transition: all var(--transition-base);
+  position: relative;
+}
+
+/* Gradient border glow on hover */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-gold), var(--color-primary));
+  opacity: 0;
+  transition: opacity var(--transition-slow);
+  z-index: -1;
 }
 
 .card:hover {
-  border-color: var(--color-primary);
-  box-shadow: var(--shadow-glow);
-  transform: translateY(-4px);
+  border-color: transparent;
+  box-shadow: var(--shadow-glow), 0 20px 40px rgba(0, 0, 0, 0.3);
+  transform: translateY(-6px);
+}
+
+.card:hover::before {
+  opacity: 1;
 }
 
 .card-body {
@@ -268,6 +320,7 @@ p {
   border-radius: var(--radius-full);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  transition: all var(--transition-fast);
 }
 
 .badge-primary {
@@ -306,6 +359,7 @@ p {
   background: var(--color-gold);
   transform: rotate(45deg);
   flex-shrink: 0;
+  animation: glowPulse 3s ease-in-out infinite;
 }
 
 /* --- Form Styles --- */
@@ -332,7 +386,7 @@ p {
   color: var(--color-text);
   font-family: var(--font-body);
   font-size: 0.95rem;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-base);
 }
 
 .form-input:focus,
@@ -340,7 +394,7 @@ p {
 .form-select:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-glow);
+  box-shadow: 0 0 0 3px var(--color-primary-glow), 0 0 20px rgba(5, 150, 105, 0.1);
 }
 
 .form-textarea {
@@ -353,7 +407,10 @@ p {
   color: var(--color-text-muted);
 }
 
-/* --- Animations --- */
+/* ============================================
+   ANIMATIONS — Professional & Elegant
+   ============================================ */
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -373,7 +430,7 @@ p {
 @keyframes slideInLeft {
   from {
     opacity: 0;
-    transform: translateX(-30px);
+    transform: translateX(-40px);
   }
   to {
     opacity: 1;
@@ -384,7 +441,7 @@ p {
 @keyframes slideInRight {
   from {
     opacity: 0;
-    transform: translateX(30px);
+    transform: translateX(40px);
   }
   to {
     opacity: 1;
@@ -418,21 +475,160 @@ p {
   }
 }
 
+/* New premium animations */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 4px rgba(212, 168, 67, 0.4);
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(212, 168, 67, 0.8), 0 0 24px rgba(212, 168, 67, 0.3);
+    opacity: 0.85;
+  }
+}
+
+@keyframes borderGlow {
+  0%, 100% {
+    border-color: rgba(5, 150, 105, 0.2);
+  }
+  50% {
+    border-color: rgba(5, 150, 105, 0.5);
+  }
+}
+
+@keyframes revealUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.98);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes revealScale {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes textReveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+    letter-spacing: 0.15em;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    letter-spacing: normal;
+  }
+}
+
+@keyframes slideRevealLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px) scale(0.98);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes slideRevealRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px) scale(0.98);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* --- Scroll Animations (Enhanced) --- */
 .animate-on-scroll {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transform: translateY(40px);
+  filter: blur(4px);
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+              filter 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .animate-on-scroll.visible {
   opacity: 1;
   transform: translateY(0);
+  filter: blur(0);
 }
 
+/* Variant: slide from left */
+.animate-on-scroll.slide-left {
+  transform: translateX(-50px);
+}
+.animate-on-scroll.slide-left.visible {
+  transform: translateX(0);
+}
+
+/* Variant: slide from right */
+.animate-on-scroll.slide-right {
+  transform: translateX(50px);
+}
+.animate-on-scroll.slide-right.visible {
+  transform: translateX(0);
+}
+
+/* Variant: scale up */
+.animate-on-scroll.scale-up {
+  transform: scale(0.9);
+}
+.animate-on-scroll.scale-up.visible {
+  transform: scale(1);
+}
+
+/* Staggered delays */
 .animate-on-scroll.visible.delay-1 { transition-delay: 0.1s; }
 .animate-on-scroll.visible.delay-2 { transition-delay: 0.2s; }
 .animate-on-scroll.visible.delay-3 { transition-delay: 0.3s; }
 .animate-on-scroll.visible.delay-4 { transition-delay: 0.4s; }
+.animate-on-scroll.visible.delay-5 { transition-delay: 0.5s; }
 
 /* --- Geometric Pattern Background --- */
 .pattern-bg {
@@ -463,6 +659,13 @@ p {
 .pattern-bg > * {
   position: relative;
   z-index: 1;
+}
+
+/* --- Section divider with gradient line --- */
+.section + .section,
+.section + .section-alt,
+.section-alt + .section {
+  border-top: 1px solid rgba(51, 65, 85, 0.3);
 }
 
 /* --- Responsive Breakpoints --- */

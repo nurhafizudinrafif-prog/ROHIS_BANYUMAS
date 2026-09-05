@@ -23,21 +23,46 @@
 }
 
 .home-cta-section {
-  background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(15, 23, 42, 1));
+  background: linear-gradient(135deg, rgba(5, 150, 105, 0.12), rgba(15, 23, 42, 1) 60%, rgba(212, 168, 67, 0.06));
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated gradient orb in CTA background */
+.home-cta-section::after {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(5, 150, 105, 0.08) 0%, transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: breathe 6s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .home-cta {
   max-width: 650px;
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
 .home-cta h2 {
   margin-bottom: var(--space-md);
+  background: linear-gradient(135deg, var(--color-text) 40%, var(--color-gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .home-cta p {
   font-size: 1.05rem;
   margin-bottom: var(--space-2xl);
+  line-height: 1.8;
 }
 
 .home-cta-actions {

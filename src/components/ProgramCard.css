@@ -1,6 +1,8 @@
 .program-card {
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
 }
 
 .program-card-icon {
@@ -11,11 +13,30 @@
   justify-content: center;
   background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 15%, transparent), color-mix(in srgb, var(--accent) 5%, transparent));
   color: var(--accent, var(--color-primary-light));
-  transition: transform var(--transition-base);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle shimmer sweep on icon area */
+.program-card-icon::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+  transition: left 0.7s ease;
 }
 
 .program-card:hover .program-card-icon {
-  transform: scale(1.05);
+  transform: scale(1.02);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 22%, transparent), color-mix(in srgb, var(--accent) 10%, transparent));
+}
+
+.program-card:hover .program-card-icon::after {
+  left: 200%;
 }
 
 .program-card-badge {
@@ -29,6 +50,11 @@
 .program-card-title {
   font-size: 1.15rem;
   margin-bottom: var(--space-sm);
+  transition: color var(--transition-fast);
+}
+
+.program-card:hover .program-card-title {
+  color: var(--color-primary-light);
 }
 
 .program-card-desc {
@@ -47,6 +73,11 @@
   color: var(--color-text-secondary);
   padding-left: var(--space-md);
   position: relative;
+  transition: all var(--transition-fast);
+}
+
+.program-card:hover .program-card-list li {
+  color: var(--color-text);
 }
 
 .program-card-list li::before {
@@ -55,4 +86,9 @@
   left: 0;
   color: var(--color-gold);
   font-size: 0.7rem;
+  transition: transform var(--transition-fast);
+}
+
+.program-card:hover .program-card-list li::before {
+  transform: rotate(45deg) scale(1.2);
 }

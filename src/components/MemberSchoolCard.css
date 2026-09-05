@@ -10,16 +10,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, rgba(5, 150, 105, 0.15), rgba(5, 150, 105, 0.05));
-  border: 1px solid rgba(5, 150, 105, 0.2);
+  background: linear-gradient(135deg, rgba(5, 150, 105, 0.18), rgba(5, 150, 105, 0.06));
+  border: 1px solid rgba(5, 150, 105, 0.25);
   border-radius: var(--radius-md);
   color: var(--color-primary-light);
   margin-bottom: var(--space-xs);
+  transition: all var(--transition-base);
+}
+
+.school-card:hover .school-card-icon {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 0 16px rgba(5, 150, 105, 0.25);
+  border-color: var(--color-primary-light);
 }
 
 .school-card-name {
   font-size: 1rem;
   line-height: 1.3;
+  transition: color var(--transition-fast);
+}
+
+.school-card:hover .school-card-name {
+  color: var(--color-primary-light);
 }
 
 .school-card-school {
@@ -40,6 +52,11 @@
   gap: var(--space-xs);
   font-size: 0.82rem;
   color: var(--color-text-secondary);
+  transition: color var(--transition-fast);
+}
+
+.school-card:hover .school-card-stat {
+  color: var(--color-text);
 }
 
 .school-card-stat svg {

@@ -5,10 +5,15 @@
 
 .section-header-badge {
   margin-bottom: var(--space-md);
+  animation: fadeIn 0.6s ease;
 }
 
 .section-header-title {
   margin-bottom: var(--space-sm);
+  background: linear-gradient(135deg, var(--color-text) 60%, var(--color-primary-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .section-header-subtitle {
@@ -16,6 +21,7 @@
   margin: 0 auto;
   font-size: 1rem;
   color: var(--color-text-secondary);
+  line-height: 1.8;
 }
 
 .section-header .ornament-separator {
