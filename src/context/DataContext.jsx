@@ -4,6 +4,7 @@ import { events as initialEvents } from '../data/events';
 import { galleryItems as initialGalleryItems, galleryCategories as initialGalleryCategories } from '../data/gallery';
 import { memberSchools as initialMemberSchools } from '../data/memberSchools';
 import { team as initialTeam, structurePeriod, organizationFullName } from '../data/team';
+import { fetchCloudCMSData, saveCloudCMSData } from '../services/cloudSync';
 
 const STORAGE_KEY = 'rohis_banyumas_cms_data_v1';
 
@@ -43,6 +44,33 @@ export function DataProvider({ children }) {
   const [memberSchools, setMemberSchools] = useState(stored?.memberSchools || initialMemberSchools);
   const [team, setTeam] = useState(stored?.team || initialTeam);
   const [siteSettings, setSiteSettings] = useState({ ...defaultSettings, ...(stored?.siteSettings || {}) });
+
+  // Sync from Upstash Cloud Database on load, periodically, and on tab focus
+  useEffect(() => {
+    let isMounted = true;
+    async function syncFromCloud() {
+      const cloudData = await fetchCloudCMSData();
+      if (cloudData && isMounted) {
+        if (cloudData.articles) setArticles(cloudData.articles);
+        if (cloudData.events) setEvents(cloudData.events);
+        if (cloudData.galleryItems) setGalleryItems(cloudData.galleryItems);
+        if (cloudData.memberSchools) setMemberSchools(cloudData.memberSchools);
+        if (cloudData.team) setTeam(cloudData.team);
+        if (cloudData.siteSettings) setSiteSettings((prev) => ({ ...prev, ...cloudData.siteSettings }));
+      }
+    }
+
+    syncFromCloud();
+
+    const interval = setInterval(syncFromCloud, 30000);
+    window.addEventListener('focus', syncFromCloud);
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+      window.removeEventListener('focus', syncFromCloud);
+    };
+  }, []);
 
   // Save to localStorage whenever any state changes
   useEffect(() => {

@@ -108,11 +108,6 @@ export default function Footer() {
 
         <div className="footer-bottom">
           <p>&copy; {new Date().getFullYear()} Organisasi ROHIS Kabupaten Banyumas. Hak Cipta Dilindungi.</p>
-          <div className="footer-admin-link">
-            <Link to="/admin" className="admin-portal-link" title="Portal Khusus Pengurus">
-              <Lock size={12} /> Portal Pengurus
-            </Link>
-          </div>
         </div>
       </div>
     </footer>

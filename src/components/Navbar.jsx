@@ -51,13 +51,6 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-          <Link
-            to="/admin"
-            className={`navbar-admin-btn ${location.pathname === '/admin' ? 'active' : ''}`}
-            title="Portal Khusus Pengurus & Admin CMS"
-          >
-            <Lock size={12} /> Admin
-          </Link>
         </div>
 
         <button
