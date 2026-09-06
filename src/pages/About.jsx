@@ -2,12 +2,13 @@ import { Link } from 'react-router-dom';
 import { useScrollAnimation } from '../utils';
 import SectionHeader from '../components/SectionHeader';
 import TeamCard from '../components/TeamCard';
-import { team, structurePeriod, organizationFullName } from '../data/team';
+import { useData } from '../context/DataContext';
 import { Target, Eye, Heart, BookOpen, Users, Shield, ArrowRight } from 'lucide-react';
 import './About.css';
 
 export default function About() {
   useScrollAnimation();
+  const { team, structurePeriod, organizationFullName } = useData();
 
   return (
     <main className="page-about">

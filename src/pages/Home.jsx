@@ -12,18 +12,23 @@ import MemberSchoolCard from '../components/MemberSchoolCard';
 import TeamCard from '../components/TeamCard';
 import QuoteSection from '../components/QuoteSection';
 import InstagramSection from '../components/InstagramSection';
+import { useData } from '../context/DataContext';
 import { programs } from '../data/programs';
-import { articles } from '../data/articles';
-import { events } from '../data/events';
-import { memberSchools } from '../data/memberSchools';
-import { galleryItems } from '../data/gallery';
-import { team, structurePeriod, organizationFullName } from '../data/team';
 import './Home.css';
 import './Gallery.css';
 
 export default function Home() {
   useScrollAnimation();
   const [selectedItem, setSelectedItem] = useState(null);
+  const {
+    articles,
+    events,
+    memberSchools,
+    galleryItems,
+    team,
+    structurePeriod,
+    organizationFullName,
+  } = useData();
 
   return (
     <main>

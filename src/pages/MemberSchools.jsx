@@ -3,12 +3,12 @@ import { useScrollAnimation } from '../utils';
 import SectionHeader from '../components/SectionHeader';
 import MemberSchoolCard from '../components/MemberSchoolCard';
 import TeamCard from '../components/TeamCard';
-import { memberSchools } from '../data/memberSchools';
-import { team } from '../data/team';
+import { useData } from '../context/DataContext';
 import './About.css';
 
 export default function MemberSchools() {
   useScrollAnimation();
+  const { memberSchools, team } = useData();
   const [activeDivision, setActiveDivision] = useState('Semua');
 
   const totalMembers = memberSchools.reduce((sum, s) => sum + s.members, 0);

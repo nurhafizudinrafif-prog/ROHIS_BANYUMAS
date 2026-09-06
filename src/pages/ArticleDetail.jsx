@@ -1,12 +1,13 @@
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Calendar, User, Tag } from 'lucide-react';
 import { formatDate } from '../utils';
-import { articles } from '../data/articles';
+import { useData } from '../context/DataContext';
 import './Articles.css';
 import './About.css';
 
 export default function ArticleDetail() {
   const { slug } = useParams();
+  const { articles } = useData();
   const article = articles.find((a) => a.slug === slug);
 
   if (!article) {

@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { useScrollAnimation } from '../utils';
 import SectionHeader from '../components/SectionHeader';
 import ArticleCard from '../components/ArticleCard';
-import { articles, articleCategories } from '../data/articles';
+import { useData } from '../context/DataContext';
+import { articleCategories } from '../data/articles';
 import './Articles.css';
 import './About.css';
 
 export default function Articles() {
   useScrollAnimation();
+  const { articles } = useData();
   const [activeCategory, setActiveCategory] = useState('Semua');
 
   const filtered = activeCategory === 'Semua'

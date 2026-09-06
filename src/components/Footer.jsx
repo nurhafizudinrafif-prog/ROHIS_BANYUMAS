@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, MessageCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, MessageCircle, Lock } from 'lucide-react';
 import { InstagramIcon, YoutubeIcon } from './InstagramSection';
 import logoImg from '../assets/logo.png';
 import './Footer.css';
@@ -108,6 +108,11 @@ export default function Footer() {
 
         <div className="footer-bottom">
           <p>&copy; {new Date().getFullYear()} Organisasi ROHIS Kabupaten Banyumas. Hak Cipta Dilindungi.</p>
+          <div className="footer-admin-link">
+            <Link to="/admin" className="admin-portal-link" title="Portal Khusus Pengurus">
+              <Lock size={12} /> Portal Pengurus
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useScrollAnimation } from '../utils';
 import EventCard from '../components/EventCard';
-import { events, eventTypes } from '../data/events';
+import { useData } from '../context/DataContext';
+import { eventTypes } from '../data/events';
 import './Articles.css';
 import './About.css';
 
 export default function Agenda() {
   useScrollAnimation();
+  const { events } = useData();
   const [activeType, setActiveType] = useState('Semua');
   const [activeStatus, setActiveStatus] = useState('all');
 

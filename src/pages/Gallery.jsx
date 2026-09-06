@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { useScrollAnimation } from '../utils';
 import { Camera, X, Calendar } from 'lucide-react';
-import { galleryItems, galleryCategories } from '../data/gallery';
+import { useData } from '../context/DataContext';
 import './Gallery.css';
 import './About.css';
 import './Articles.css';
 
 export default function Gallery() {
   useScrollAnimation();
+  const { galleryItems, galleryCategories } = useData();
   const [activeCategory, setActiveCategory] = useState('Semua');
   const [selectedItem, setSelectedItem] = useState(null);
 
