@@ -78,22 +78,43 @@
   color: var(--team-accent, var(--color-primary-light));
 }
 
-.team-card-role {
+.team-card-badges {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.team-card-division {
   display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.72rem;
+  font-weight: 700;
   color: var(--color-primary-light);
-  padding: 0.2rem 0.6rem;
+  padding: 0.18rem 0.6rem;
   border-radius: var(--radius-full);
   background: rgba(5, 150, 105, 0.12);
-  border: 1px solid rgba(5, 150, 105, 0.25);
-  margin-top: 2px;
+  border: 1px solid rgba(5, 150, 105, 0.3);
+  letter-spacing: 0.02em;
+}
+
+.team-card-role {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  padding: 0.18rem 0.6rem;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-surface-light);
 }
 
 .team-card-role.role-highlight {
   color: var(--color-gold);
-  background: rgba(212, 168, 67, 0.12);
-  border-color: rgba(212, 168, 67, 0.3);
+  background: rgba(212, 168, 67, 0.14);
+  border-color: rgba(212, 168, 67, 0.35);
+  font-weight: 700;
 }
 
 .team-card-school {

@@ -37,7 +37,25 @@ export default function TeamCard({ member, index = 0, accentColor = null }) {
       </div>
       <div className="team-card-info">
         <h4 className="team-card-name">{member.name}</h4>
-        <span className={`team-card-role ${isLeader ? 'role-highlight' : ''}`}>{member.role}</span>
+        <div className="team-card-badges">
+          {member.division && (
+            <span
+              className="team-card-division"
+              style={
+                accentColor
+                  ? {
+                      borderColor: `color-mix(in srgb, ${accentColor} 45%, transparent)`,
+                      color: accentColor,
+                      background: `color-mix(in srgb, ${accentColor} 12%, transparent)`,
+                    }
+                  : {}
+              }
+            >
+              {member.division}
+            </span>
+          )}
+          <span className={`team-card-role ${isLeader ? 'role-highlight' : ''}`}>{member.role}</span>
+        </div>
         {member.school && (
           <span className="team-card-school" title={member.school}>
             <GraduationCap size={13} style={{ display: 'inline', marginRight: '4px', verticalAlign: '-2px', flexShrink: 0 }} />
