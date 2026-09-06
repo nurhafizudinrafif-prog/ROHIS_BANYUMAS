@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Lock } from 'lucide-react';
 import logoImg from '../assets/logo.png';
 import './Navbar.css';
 
@@ -51,6 +51,13 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+          <Link
+            to="/admin"
+            className={`navbar-admin-btn ${location.pathname === '/admin' ? 'active' : ''}`}
+            title="Portal Khusus Pengurus & Admin CMS"
+          >
+            <Lock size={12} /> Admin
+          </Link>
         </div>
 
         <button

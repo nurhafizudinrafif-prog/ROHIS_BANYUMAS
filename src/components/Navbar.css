@@ -126,6 +126,28 @@
   background: rgba(5, 150, 105, 0.1);
 }
 
+.navbar-admin-btn {
+  margin-left: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-gold-light) !important;
+  background: rgba(212, 168, 67, 0.12);
+  border: 1px solid rgba(212, 168, 67, 0.3);
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all var(--transition-base);
+  text-decoration: none;
+}
+
+.navbar-admin-btn:hover {
+  background: rgba(212, 168, 67, 0.25);
+  box-shadow: 0 0 12px rgba(212, 168, 67, 0.3);
+  transform: translateY(-1px);
+}
+
 .navbar-cta {
   margin-left: 0.5rem;
 }
