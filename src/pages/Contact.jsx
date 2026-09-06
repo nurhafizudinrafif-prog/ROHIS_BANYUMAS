@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useScrollAnimation } from '../utils';
-import { Mail, Phone, MapPin, Send, CheckCircle, MessageCircle, AtSign, Play } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, CheckCircle, MessageCircle } from 'lucide-react';
+import { InstagramIcon, YoutubeIcon } from '../components/InstagramSection';
 import './Contact.css';
 import './About.css';
 
@@ -66,9 +67,30 @@ export default function Contact() {
               <div className="contact-social">
                 <h4>Media Sosial</h4>
                 <div className="contact-social-links">
-                  <a href="#" className="contact-social-link"><AtSign size={18} /> @rohisbanyumas</a>
-                  <a href="#" className="contact-social-link"><Play size={18} /> ROHIS Banyumas</a>
-                  <a href="#" className="contact-social-link"><MessageCircle size={18} /> WhatsApp Group</a>
+                  <a
+                    href="https://www.instagram.com/rohis_banyumas/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="contact-social-link"
+                  >
+                    <InstagramIcon size={18} /> @rohis_banyumas
+                  </a>
+                  <a
+                    href="https://youtube.com/@rohisbanyumas9?si=bJpq4dcozF81AHGr"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="contact-social-link"
+                  >
+                    <YoutubeIcon size={18} /> @rohisbanyumas9
+                  </a>
+                  <a
+                    href="https://wa.me/6281234567890"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="contact-social-link"
+                  >
+                    <MessageCircle size={18} /> WhatsApp Center
+                  </a>
                 </div>
               </div>
             </div>

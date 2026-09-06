@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, AtSign, Play, MessageCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, MessageCircle } from 'lucide-react';
+import { InstagramIcon, YoutubeIcon } from './InstagramSection';
 import logoImg from '../assets/logo.png';
 import './Footer.css';
 
@@ -25,13 +26,31 @@ export default function Footer() {
               Organisasi koordinasi antar ROHIS sekolah dan pusat dakwah pemuda Islam se-Kabupaten Banyumas. Bersatu dalam dakwah, bergerak untuk umat.
             </p>
             <div className="footer-social">
-              <a href="#" className="footer-social-link" aria-label="Instagram">
-                <AtSign size={18} />
+              <a
+                href="https://www.instagram.com/rohis_banyumas/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-social-link"
+                aria-label="Instagram Resmi ROHIS Kabupaten Banyumas (@rohis_banyumas)"
+              >
+                <InstagramIcon size={18} />
               </a>
-              <a href="#" className="footer-social-link" aria-label="YouTube">
-                <Play size={18} />
+              <a
+                href="https://youtube.com/@rohisbanyumas9?si=bJpq4dcozF81AHGr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-social-link"
+                aria-label="YouTube Resmi ROHIS Banyumas"
+              >
+                <YoutubeIcon size={18} />
               </a>
-              <a href="#" className="footer-social-link" aria-label="WhatsApp">
+              <a
+                href="https://wa.me/6281234567890"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-social-link"
+                aria-label="WhatsApp ROHIS Kabupaten Banyumas"
+              >
                 <MessageCircle size={18} />
               </a>
             </div>

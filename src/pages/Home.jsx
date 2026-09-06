@@ -11,6 +11,7 @@ import EventCard from '../components/EventCard';
 import MemberSchoolCard from '../components/MemberSchoolCard';
 import TeamCard from '../components/TeamCard';
 import QuoteSection from '../components/QuoteSection';
+import InstagramSection from '../components/InstagramSection';
 import { programs } from '../data/programs';
 import { articles } from '../data/articles';
 import { events } from '../data/events';
@@ -149,6 +150,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Official Instagram Showcase */}
+      <InstagramSection />
 
       {/* Leadership / BPH Showcase */}
       <section className="section">
