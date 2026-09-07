@@ -1,0 +1,63 @@
+// Data Postingan & Reels Resmi Instagram @rohis_banyumas
+
+export const instagramReels = [
+  {
+    id: 'ig-reel-1',
+    type: 'reel',
+    title: 'Profil & Semangat Kader ROHIS Banyumas',
+    category: 'Kaderisasi',
+    tag: '#RohisBanyumas #KaderMuda',
+    image: '/instagram/reel-1.jpg',
+    views: '1,725',
+    likes: 142,
+    comments: 18,
+    url: 'https://www.instagram.com/rohis_banyumas/',
+  },
+  {
+    id: 'ig-reel-2',
+    type: 'reel',
+    title: 'Dokumentasi Kegiatan Rohis Banyumas X PECETT',
+    category: 'Dokumentasi',
+    tag: '#PelajarBanyumas #SyiarPelajar',
+    image: '/instagram/reel-2.jpg',
+    views: '4,415',
+    likes: 312,
+    comments: 45,
+    url: 'https://www.instagram.com/rohis_banyumas/',
+  },
+  {
+    id: 'ig-reel-3',
+    type: 'reel',
+    title: 'Proudly Present Collaboration Event & Juara',
+    category: 'Kolaborasi',
+    tag: '#CollaborationEvent #PrestasiSantri',
+    image: '/instagram/reel-3.jpg',
+    views: '1,093',
+    likes: 103,
+    comments: 3,
+    url: 'https://www.instagram.com/rohis_banyumas/',
+  },
+  {
+    id: 'ig-reel-4',
+    type: 'reel',
+    title: 'Sinergi Bersama ROHIS Sekolah Se-Kabupaten Banyumas',
+    category: 'Ukhuwah',
+    tag: '#UkhuwahPelajar #RohisBanyumas',
+    image: '/instagram/reel-4.jpg',
+    views: '1,093',
+    likes: 98,
+    comments: 12,
+    url: 'https://www.instagram.com/rohis_banyumas/',
+  },
+];
+
+export const instagramProfile = {
+  handle: 'rohis_banyumas',
+  displayName: 'Rohis Kabupaten Banyumas',
+  postsCount: 701,
+  followersCount: 972,
+  followingCount: 81,
+  bio: 'Official Account Rohis Kabupaten Banyumas 🌟\nDibawah Naungan Kementerian Agama Kab. Banyumas (@kankemenagbanyumas)',
+  instagramUrl: 'https://www.instagram.com/rohis_banyumas/',
+  youtubeUrl: 'https://youtube.com/@rohisbanyumas9?si=bJpq4dcozF81AHGr',
+};

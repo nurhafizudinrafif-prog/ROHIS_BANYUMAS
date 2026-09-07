@@ -1,5 +1,9 @@
-import { CheckCircle2, ExternalLink, Heart, MessageCircle } from 'lucide-react';
+import { useState } from 'react';
+import { CheckCircle2, ExternalLink, Heart, MessageCircle, Play, Eye, LayoutGrid, Film, Bookmark } from 'lucide-react';
 import logoImg from '../assets/logo.png';
+import { instagramReels, instagramProfile } from '../data/instagram';
+import { useData } from '../context/DataContext';
+import { getDirectImageUrl } from '../utils/media';
 import './InstagramSection.css';
 
 export function InstagramIcon({ size = 18, className = '' }) {
@@ -43,52 +47,36 @@ export function YoutubeIcon({ size = 18, className = '' }) {
   );
 }
 
-const mockFeed = [
-  {
-    id: 1,
-    category: 'KAJIAN RUTIN',
-    title: 'Kajian Ahad Pagi Rutin Se-Banyumas',
-    tag: '#KajianBanyumas #DakwahPelajar',
-    emoji: '📖',
-    likes: 384,
-    comments: 42,
-    gradient: 'linear-gradient(135deg, rgba(5, 150, 105, 0.4), rgba(15, 23, 42, 0.9))',
-  },
-  {
-    id: 2,
-    category: 'LEADERSHIP',
-    title: 'Latihan Dasar Kepemimpinan (LDK) 2025',
-    tag: '#LDKROHIS #KaderMudaIslam',
-    emoji: '🎓',
-    likes: 512,
-    comments: 67,
-    gradient: 'linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(15, 23, 42, 0.9))',
-  },
-  {
-    id: 3,
-    category: 'SOSIAL & PEDULI',
-    title: 'Bakti Sosial & Santunan Ramadhan Berkah',
-    tag: '#ROHISPeduli #UkhuwahIslamiyah',
-    emoji: '🤝',
-    likes: 429,
-    comments: 38,
-    gradient: 'linear-gradient(135deg, rgba(212, 168, 67, 0.4), rgba(15, 23, 42, 0.9))',
-  },
-  {
-    id: 4,
-    category: 'SYIAR DIGITAL',
-    title: 'Festival Da\'i Muda Pelajar Banyumas',
-    tag: '#DaiMuda #GenerasiQurani',
-    emoji: '🎤',
-    likes: 461,
-    comments: 54,
-    gradient: 'linear-gradient(135deg, rgba(139, 92, 246, 0.4), rgba(15, 23, 42, 0.9))',
-  },
-];
+export function ReelsCameraIcon({ size = 16, className = '' }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <rect width="18" height="18" x="3" y="3" rx="4" />
+      <path d="m10 9 5 3-5 3V9z" fill="currentColor" />
+      <path d="M3 8h4" />
+      <path d="M17 8h4" />
+      <path d="M3 16h4" />
+      <path d="M17 16h4" />
+    </svg>
+  );
+}
 
 export default function InstagramSection() {
-  const igUrl = 'https://www.instagram.com/rohis_banyumas/';
-  const ytUrl = 'https://youtube.com/@rohisbanyumas9?si=bJpq4dcozF81AHGr';
+  const { siteSettings } = useData() || {};
+  const [activeTab, setActiveTab] = useState('reels');
+
+  const igUrl = siteSettings?.instagramUrl || instagramProfile.instagramUrl;
+  const ytUrl = siteSettings?.youtubeUrl || instagramProfile.youtubeUrl;
+  const reels = siteSettings?.instagramPosts || instagramReels;
 
   return (
     <section className="section section-ig-showcase">
@@ -165,11 +153,40 @@ export default function InstagramSection() {
             </div>
           </div>
 
-          {/* Posts Grid Preview */}
+          {/* Instagram Tabs Bar (Like real Instagram app) */}
+          <div className="ig-nav-tabs">
+            <button
+              type="button"
+              className={`ig-nav-tab ${activeTab === 'posts' ? 'active' : ''}`}
+              onClick={() => setActiveTab('posts')}
+            >
+              <LayoutGrid size={15} />
+              <span>POSTINGAN</span>
+            </button>
+            <button
+              type="button"
+              className={`ig-nav-tab ${activeTab === 'reels' ? 'active' : ''}`}
+              onClick={() => setActiveTab('reels')}
+            >
+              <ReelsCameraIcon size={16} />
+              <span>REELS</span>
+              <span className="ig-tab-live-badge">TERBARU</span>
+            </button>
+            <button
+              type="button"
+              className={`ig-nav-tab ${activeTab === 'tagged' ? 'active' : ''}`}
+              onClick={() => setActiveTab('tagged')}
+            >
+              <Bookmark size={15} />
+              <span>DITANDAI</span>
+            </button>
+          </div>
+
+          {/* Section Sub-Header */}
           <div className="ig-feed-header">
             <div className="ig-feed-title">
-              <InstagramIcon size={18} />
-              <span>Postingan & Dokumentasi Terbaru di Instagram</span>
+              <Film size={18} className="text-instagram" />
+              <span>Dokumentasi Reels & Video Resmi @rohis_banyumas</span>
             </div>
             <a
               href={igUrl}
@@ -177,45 +194,78 @@ export default function InstagramSection() {
               rel="noopener noreferrer"
               className="ig-view-all"
             >
-              Buka Feed Instagram <ExternalLink size={13} />
+              Buka di Instagram <ExternalLink size={13} />
             </a>
           </div>
 
-          <div className="ig-feed-grid">
-            {mockFeed.map((post) => (
-              <a
-                key={post.id}
-                href={igUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="ig-feed-card"
-                style={{ background: post.gradient }}
-              >
-                <div className="ig-card-badge">{post.category}</div>
-                <div className="ig-card-emoji">{post.emoji}</div>
-                <div className="ig-card-content">
-                  <h5>{post.title}</h5>
-                  <span className="ig-card-tag">{post.tag}</span>
-                </div>
-                <div className="ig-card-overlay">
-                  <div className="ig-card-metrics">
-                    <span><Heart size={16} fill="white" /> {post.likes}</span>
-                    <span><MessageCircle size={16} fill="white" /> {post.comments}</span>
+          {/* Authentic Instagram Reels Grid */}
+          <div className="ig-reels-grid">
+            {reels.map((item, index) => {
+              const coverImg = getDirectImageUrl(item.image);
+              return (
+                <a
+                  key={item.id || index}
+                  href={item.url || igUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ig-reel-card"
+                >
+                  {/* Reel Media Preview */}
+                  <div className="ig-reel-media">
+                    <img
+                      src={coverImg}
+                      alt={item.title}
+                      className="ig-reel-image"
+                      loading="lazy"
+                    />
+
+                    {/* Top Badges */}
+                    <div className="ig-reel-top">
+                      <span className="ig-reel-category">{item.category || 'Reels'}</span>
+                      <div className="ig-reel-indicator" title="Instagram Reel">
+                        <ReelsCameraIcon size={14} />
+                      </div>
+                    </div>
+
+                    {/* Bottom Persistent Info (Views & Title like real Reels) */}
+                    <div className="ig-reel-bottom">
+                      <div className="ig-reel-viewcount">
+                        <Play size={13} fill="white" />
+                        <span>{item.views}</span>
+                      </div>
+                      <h5 className="ig-reel-title">{item.title}</h5>
+                    </div>
+
+                    {/* Hover Overlay: Likes & Comments with dark backdrop */}
+                    <div className="ig-reel-hover-overlay">
+                      <div className="ig-reel-metrics">
+                        <div className="ig-metric-item">
+                          <Heart size={20} fill="white" />
+                          <span>{item.likes}</span>
+                        </div>
+                        <div className="ig-metric-item">
+                          <MessageCircle size={20} fill="white" />
+                          <span>{item.comments}</span>
+                        </div>
+                      </div>
+                      <span className="ig-reel-watch-btn">
+                        <Play size={12} fill="white" /> Tonton Reel
+                      </span>
+                    </div>
                   </div>
-                  <span className="ig-card-cta">Lihat di Instagram</span>
-                </div>
-              </a>
-            ))}
+                </a>
+              );
+            })}
           </div>
 
           {/* Footer Banner */}
           <div className="ig-card-footer">
             <p>
-              ✨ <strong>Selalu update kegiatan dakwah!</strong> Follow Instagram resmi kami di{' '}
+              ✨ <strong>Selalu update kegiatan dakwah!</strong> Kunjungi Instagram resmi kami di{' '}
               <a href={igUrl} target="_blank" rel="noopener noreferrer" className="ig-footer-link">
                 @rohis_banyumas
               </a>{' '}
-              untuk info jadwal kajian, pendaftaran event, materi dakwah digital, dan siaran langsung.
+              untuk melihat 700+ video reels, dokumentasi agenda, podcast, dan informasi kajian pelajar.
             </p>
           </div>
         </div>
