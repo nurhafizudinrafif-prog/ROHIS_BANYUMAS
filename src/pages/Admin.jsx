@@ -24,9 +24,19 @@ import {
   ExternalLink,
   Lock,
   ShieldCheck,
+  Film,
+  Play,
+  Check,
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { InstagramIcon, YoutubeIcon } from '../components/InstagramSection';
+import {
+  isVideoMedia,
+  getMediaThumbnail,
+  normalizeMediaList,
+  getCoverMedia,
+  getMediaSummary,
+} from '../utils/media';
 import logoImg from '../assets/logo.png';
 import './Admin.css';
 
@@ -136,25 +146,104 @@ export default function Admin() {
     showToast('Berhasil logout dari sistem.', 'info');
   };
 
-  // Open Modal Helpers
+  // Open Modal Helpers & Media Album State
+  const [newMediaInput, setNewMediaInput] = useState({ type: 'image', url: '', caption: '' });
+
   const openAddModal = (type, divisionKey = 'bph') => {
     setModalType(type);
     setEditItem(null);
     setModalDivision(divisionKey);
-    setFormData({});
+    if (type === 'gallery') {
+      setFormData({
+        title: '',
+        category: 'Kajian',
+        date: '',
+        description: '',
+        coverImage: '',
+        media: [],
+      });
+    } else {
+      setFormData({});
+    }
+    setNewMediaInput({ type: 'image', url: '', caption: '' });
   };
 
   const openEditModal = (type, item, divisionKey = 'bph') => {
     setModalType(type);
     setEditItem(item);
     setModalDivision(divisionKey);
-    setFormData({ ...item });
+    if (type === 'gallery') {
+      const normalizedMedia = normalizeMediaList(item);
+      setFormData({
+        ...item,
+        coverImage: getCoverMedia(item),
+        media: normalizedMedia,
+      });
+    } else {
+      setFormData({ ...item });
+    }
+    setNewMediaInput({ type: 'image', url: '', caption: '' });
   };
 
   const closeModal = () => {
     setModalType(null);
     setEditItem(null);
     setFormData({});
+    setNewMediaInput({ type: 'image', url: '', caption: '' });
+  };
+
+  // Helper untuk menambahkan foto/video ke dalam album kegiatan
+  const handleAddMediaToAlbum = () => {
+    if (!newMediaInput.url || !newMediaInput.url.trim()) {
+      showToast('Masukkan URL gambar atau link YouTube terlebih dahulu!', 'warning');
+      return;
+    }
+    const isVid = isVideoMedia(newMediaInput) || newMediaInput.type === 'video';
+    const newMedia = {
+      id: `m-${Date.now()}`,
+      type: isVid ? 'video' : 'image',
+      url: newMediaInput.url.trim(),
+      caption: newMediaInput.caption ? newMediaInput.caption.trim() : '',
+    };
+    const currentMedia = Array.isArray(formData.media) ? formData.media : [];
+    const updatedMedia = [...currentMedia, newMedia];
+    const updatedCover = formData.coverImage || (newMedia.type === 'image' ? newMedia.url : getCoverMedia({ media: updatedMedia }));
+    
+    setFormData({
+      ...formData,
+      media: updatedMedia,
+      coverImage: updatedCover,
+      image: updatedCover,
+    });
+    setNewMediaInput({ type: 'image', url: '', caption: '' });
+    showToast(isVid ? 'Video berhasil ditambahkan ke album' : 'Foto berhasil ditambahkan ke album', 'info');
+  };
+
+  // Helper menghapus media tertentu dari album kegiatan
+  const handleRemoveMediaFromAlbum = (mediaId) => {
+    const currentMedia = Array.isArray(formData.media) ? formData.media : [];
+    const updatedMedia = currentMedia.filter((m) => m.id !== mediaId);
+    let updatedCover = formData.coverImage;
+    if (updatedCover && !updatedMedia.some((m) => m.url === updatedCover)) {
+      updatedCover = updatedMedia[0]?.url || '';
+    }
+    setFormData({
+      ...formData,
+      media: updatedMedia,
+      coverImage: updatedCover,
+      image: updatedCover,
+    });
+    showToast('Media dihapus dari album', 'info');
+  };
+
+  // Helper memilih foto sampul (cover)
+  const handleSetCover = (url) => {
+    setFormData({
+      ...formData,
+      coverImage: url,
+      image: url,
+    });
+    showToast('Foto sampul kegiatan berhasil dipilih!', 'info');
   };
 
   // Submit Modal Forms
@@ -178,12 +267,23 @@ export default function Admin() {
         showToast('Agenda kegiatan baru berhasil ditambahkan!');
       }
     } else if (modalType === 'gallery') {
+      const mediaList = Array.isArray(formData.media) && formData.media.length > 0
+        ? formData.media
+        : (formData.image ? [{ id: `m-${Date.now()}`, type: 'image', url: formData.image, caption: formData.title || '' }] : []);
+      const cover = formData.coverImage || (mediaList[0]?.url || formData.image || '');
+      const submissionData = {
+        ...formData,
+        coverImage: cover,
+        image: cover,
+        media: mediaList,
+      };
+
       if (editItem) {
-        updateGalleryItem(editItem.id, formData);
+        updateGalleryItem(editItem.id, submissionData);
         showToast('Dokumentasi galeri berhasil diperbarui!');
       } else {
-        addGalleryItem(formData);
-        showToast('Foto dokumentasi baru berhasil ditambahkan!');
+        addGalleryItem(submissionData);
+        showToast('Dokumentasi kegiatan baru berhasil ditambahkan ke galeri!');
       }
     } else if (modalType === 'school') {
       if (editItem) {
@@ -1057,38 +1157,48 @@ export default function Admin() {
 
               {/* Gallery Grid */}
               <div className="admin-gallery-grid">
-                {filteredGallery.map((item) => (
-                  <div key={item.id} className="admin-gallery-card card">
-                    <div className="admin-gallery-preview">
-                      {item.image ? (
-                        <img src={item.image} alt={item.title} />
-                      ) : (
-                        <div className="admin-gallery-placeholder">
-                          <span className="gallery-emoji">{item.emoji || '📸'}</span>
+                {filteredGallery.map((item) => {
+                  const cover = getCoverMedia(item);
+                  const summary = getMediaSummary(item);
+                  return (
+                    <div key={item.id} className="admin-gallery-card card">
+                      <div className="admin-gallery-preview">
+                        {cover ? (
+                          <img src={cover} alt={item.title} />
+                        ) : (
+                          <div className="admin-gallery-placeholder">
+                            <span className="gallery-emoji">{item.emoji || '📸'}</span>
+                          </div>
+                        )}
+                        <span className="badge badge-primary gallery-badge">{item.category}</span>
+                        <div className="admin-gallery-count-badge">
+                          {summary.label}
                         </div>
-                      )}
-                      <span className="badge badge-primary gallery-badge">{item.category}</span>
+                      </div>
+                      <div className="admin-gallery-info">
+                        <h4>{item.title}</h4>
+                        <span className="gallery-date">📅 {item.date || 'Terkini'}</span>
+                        {item.description && (
+                          <p className="admin-gallery-desc-snippet">{item.description}</p>
+                        )}
+                      </div>
+                      <div className="admin-gallery-actions">
+                        <button
+                          onClick={() => openEditModal('gallery', item)}
+                          className="btn btn-outline btn-xs"
+                        >
+                          <Pencil size={13} /> Edit ({summary.total} Media)
+                        </button>
+                        <button
+                          onClick={() => handleDeleteGallery(item.id, item.title)}
+                          className="btn btn-danger-ghost btn-xs"
+                        >
+                          <Trash2 size={13} /> Hapus
+                        </button>
+                      </div>
                     </div>
-                    <div className="admin-gallery-info">
-                      <h4>{item.title}</h4>
-                      <span className="gallery-date">📅 {item.date}</span>
-                    </div>
-                    <div className="admin-gallery-actions">
-                      <button
-                        onClick={() => openEditModal('gallery', item)}
-                        className="btn btn-outline btn-xs"
-                      >
-                        <Pencil size={13} /> Edit
-                      </button>
-                      <button
-                        onClick={() => handleDeleteGallery(item.id, item.title)}
-                        className="btn btn-danger-ghost btn-xs"
-                      >
-                        <Trash2 size={13} /> Hapus
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
@@ -1544,13 +1654,13 @@ export default function Admin() {
       {/* ========================================== */}
       {modalType && (
         <div className="admin-modal-backdrop" onClick={closeModal}>
-          <div className="admin-modal card" onClick={(e) => e.stopPropagation()}>
+          <div className={`admin-modal card ${modalType === 'gallery' ? 'admin-modal-lg' : ''}`} onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal-header">
               <h3>
                 {editItem ? 'Edit ' : 'Tambah '}
                 {modalType === 'article' && 'Artikel Dakwah'}
                 {modalType === 'event' && 'Agenda Kegiatan'}
-                {modalType === 'gallery' && 'Dokumentasi Galeri'}
+                {modalType === 'gallery' && 'Dokumentasi Galeri (Foto & Video)'}
                 {modalType === 'school' && 'ROHIS Sekolah'}
                 {modalType === 'member' && 'Pengurus Organisasi'}
               </h3>
@@ -1754,13 +1864,13 @@ export default function Admin() {
               {modalType === 'gallery' && (
                 <>
                   <div className="form-group">
-                    <label className="form-label">Judul Foto / Kegiatan *</label>
+                    <label className="form-label">Judul Kegiatan / Nama Album *</label>
                     <input
                       type="text"
                       className="form-input"
                       value={formData.title || ''}
                       onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                      placeholder="Contoh: Latihan Dasar Kepemimpinan 2026"
+                      placeholder="Contoh: Kajian Akbar Pelajar Se-Banyumas 2025"
                       required
                     />
                   </div>
@@ -1783,38 +1893,171 @@ export default function Admin() {
                       </select>
                     </div>
                     <div className="form-group">
-                      <label className="form-label">Waktu Pelaksanaan</label>
+                      <label className="form-label">Tanggal / Waktu Pelaksanaan</label>
                       <input
                         type="text"
                         className="form-input"
                         value={formData.date || ''}
                         onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                        placeholder="Contoh: September 2026"
+                        placeholder="Contoh: 16 Februari 2025"
                       />
                     </div>
                   </div>
 
-                  <div className="form-grid-2">
-                    <div className="form-group">
-                      <label className="form-label">Emoji Fallback</label>
-                      <input
-                        type="text"
-                        className="form-input"
-                        value={formData.emoji || '📸'}
-                        onChange={(e) => setFormData({ ...formData, emoji: e.target.value })}
-                        placeholder="📸, 📖, 🤝, 🎓"
-                      />
+                  <div className="form-group">
+                    <label className="form-label">Ringkasan Kegiatan (Opsional)</label>
+                    <textarea
+                      rows={2}
+                      className="form-textarea"
+                      value={formData.description || ''}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      placeholder="Tuliskan catatan singkat atau ringkasan momen kegiatan ini..."
+                    />
+                  </div>
+
+                  {/* MULTI-MEDIA MANAGER SECTION */}
+                  <div className="admin-media-manager-box">
+                    <div className="media-manager-header">
+                      <div>
+                        <h4 className="media-manager-title">📸 Koleksi Foto & Video Kegiatan</h4>
+                        <p className="media-manager-sub">
+                          Tambahkan beberapa foto atau video untuk kegiatan ini. Mendukung foto (URL/Unsplash) dan video (Link YouTube atau direct MP4).
+                        </p>
+                      </div>
+                      <span className="badge badge-primary">
+                        {(formData.media?.length || 0)} Media Ditambahkan
+                      </span>
                     </div>
-                    <div className="form-group">
-                      <label className="form-label">URL Foto / Path Gambar</label>
-                      <input
-                        type="text"
-                        className="form-input"
-                        value={formData.image || ''}
-                        onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                        placeholder="https://... atau /gallery/foto.jpg"
-                      />
+
+                    {/* Form Tambah Item Media */}
+                    <div className="add-media-form-box">
+                      <div className="media-type-selector">
+                        <button
+                          type="button"
+                          className={`media-type-btn ${newMediaInput.type === 'image' ? 'active' : ''}`}
+                          onClick={() => setNewMediaInput({ ...newMediaInput, type: 'image' })}
+                        >
+                          <ImageIcon size={14} /> Foto (Gambar)
+                        </button>
+                        <button
+                          type="button"
+                          className={`media-type-btn ${newMediaInput.type === 'video' ? 'active' : ''}`}
+                          onClick={() => setNewMediaInput({ ...newMediaInput, type: 'video' })}
+                        >
+                          <Film size={14} /> Video (YouTube / MP4)
+                        </button>
+                      </div>
+
+                      <div className="form-group" style={{ marginBottom: '0.6rem' }}>
+                        <input
+                          type="text"
+                          className="form-input"
+                          placeholder={
+                            newMediaInput.type === 'video'
+                              ? 'Masukkan Link YouTube (https://youtu.be/... atau https://www.youtube.com/watch?v=...) atau URL MP4'
+                              : 'Masukkan URL Foto (https://images.unsplash.com/... atau /gallery/foto.jpg)'
+                          }
+                          value={newMediaInput.url}
+                          onChange={(e) => setNewMediaInput({ ...newMediaInput, url: e.target.value })}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              handleAddMediaToAlbum();
+                            }
+                          }}
+                        />
+                      </div>
+
+                      <div className="add-media-row-action">
+                        <input
+                          type="text"
+                          className="form-input"
+                          placeholder="Keterangan / Caption foto atau video ini (opsional)"
+                          value={newMediaInput.caption}
+                          onChange={(e) => setNewMediaInput({ ...newMediaInput, caption: e.target.value })}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              handleAddMediaToAlbum();
+                            }
+                          }}
+                        />
+                        <button
+                          type="button"
+                          onClick={handleAddMediaToAlbum}
+                          className="btn btn-primary btn-add-media"
+                        >
+                          <Plus size={16} /> Tambah Media
+                        </button>
+                      </div>
                     </div>
+
+                    {/* Daftar Media Yang Sudah Ditambahkan */}
+                    {formData.media && formData.media.length > 0 ? (
+                      <div className="admin-media-list">
+                        {formData.media.map((med, index) => {
+                          const isVid = isVideoMedia(med);
+                          const thumb = getMediaThumbnail(med);
+                          const isCover = (formData.coverImage === med.url) || (!formData.coverImage && index === 0);
+
+                          return (
+                            <div key={med.id || index} className={`admin-media-card ${isCover ? 'is-cover' : ''}`}>
+                              <div className="admin-media-thumb">
+                                {thumb ? (
+                                  <img src={thumb} alt={med.caption || 'Media item'} />
+                                ) : (
+                                  <div className="admin-media-no-thumb">
+                                    {isVid ? <Film size={22} /> : <ImageIcon size={22} />}
+                                  </div>
+                                )}
+                                <span className={`media-type-tag ${isVid ? 'tag-video' : 'tag-image'}`}>
+                                  {isVid ? '▶ VIDEO' : '📷 FOTO'}
+                                </span>
+                                {isCover && <span className="cover-badge">★ SAMPUL</span>}
+                              </div>
+
+                              <div className="admin-media-details">
+                                <div className="admin-media-top-info">
+                                  <span className="admin-media-num">Item #{index + 1}</span>
+                                  {isCover && <span className="text-gold-sm">(Foto Sampul Depan)</span>}
+                                </div>
+                                <p className="admin-media-caption">
+                                  {med.caption || <em className="text-muted">(Tanpa keterangan)</em>}
+                                </p>
+                                <span className="admin-media-url-hint" title={med.url}>{med.url}</span>
+                              </div>
+
+                              <div className="admin-media-actions">
+                                {!isCover && (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleSetCover(med.url)}
+                                    className="btn btn-outline btn-xs"
+                                    title="Pilih foto ini sebagai sampul utama di galeri depan"
+                                  >
+                                    Jadikan Sampul
+                                  </button>
+                                )}
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveMediaFromAlbum(med.id)}
+                                  className="btn-icon btn-icon-delete"
+                                  title="Hapus media ini dari album"
+                                >
+                                  <Trash2 size={15} />
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="admin-empty-media">
+                        <ImageIcon size={32} style={{ opacity: 0.35, marginBottom: 8 }} />
+                        <p>Belum ada foto atau video yang ditambahkan ke kegiatan ini.</p>
+                        <span className="text-muted">Gunakan form di atas untuk memasukkan link foto atau video YouTube.</span>
+                      </div>
+                    )}
                   </div>
                 </>
               )}

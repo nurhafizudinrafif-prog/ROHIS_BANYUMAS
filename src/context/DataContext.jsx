@@ -178,20 +178,39 @@ export function DataProvider({ children }) {
 
   // --- CRUD: Gallery Items ---
   const addGalleryItem = useCallback((item) => {
+    const mediaList = Array.isArray(item.media) && item.media.length > 0
+      ? item.media
+      : (item.image ? [{ id: `m-${Date.now()}`, type: 'image', url: item.image, caption: item.title || '' }] : []);
+    const cover = item.coverImage || item.image || (mediaList[0]?.url || '');
     const newItem = {
       id: Date.now(),
       title: item.title || 'Dokumentasi Baru',
       category: item.category || 'Kajian',
-      image: item.image || '',
+      image: cover,
+      coverImage: cover,
       emoji: item.emoji || '📸',
       date: item.date || 'Terkini',
+      description: item.description || '',
+      media: mediaList,
     };
     setGalleryItems((prev) => [newItem, ...prev]);
     return newItem;
   }, []);
 
   const updateGalleryItem = useCallback((id, updatedFields) => {
-    setGalleryItems((prev) => prev.map((g) => (g.id === id ? { ...g, ...updatedFields } : g)));
+    setGalleryItems((prev) =>
+      prev.map((g) => {
+        if (g.id !== id) return g;
+        const merged = { ...g, ...updatedFields };
+        if (updatedFields.media && !updatedFields.coverImage) {
+          merged.coverImage = updatedFields.media[0]?.url || merged.coverImage || merged.image || '';
+        }
+        if (merged.coverImage) {
+          merged.image = merged.coverImage;
+        }
+        return merged;
+      })
+    );
   }, []);
 
   const deleteGalleryItem = useCallback((id) => {
