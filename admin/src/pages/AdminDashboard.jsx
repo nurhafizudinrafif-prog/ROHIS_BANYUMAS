@@ -293,8 +293,9 @@ export default function AdminDashboard() {
 
     if (modalType === 'article') {
       let updated;
+      const coverImageVal = formData.image || formData.coverImage || null;
       if (editItem) {
-        updated = articles.map((a) => (a.id === editItem.id ? { ...a, ...formData } : a));
+        updated = articles.map((a) => (a.id === editItem.id ? { ...a, ...formData, image: coverImageVal, coverImage: coverImageVal } : a));
         showToast('Artikel berhasil diperbarui & disimpan ke Cloud!');
       } else {
         const newArt = {
@@ -306,7 +307,8 @@ export default function AdminDashboard() {
           author: formData.author || 'Admin ROHIS',
           excerpt: formData.excerpt || '',
           content: formData.content || '',
-          image: formData.image || null,
+          image: coverImageVal,
+          coverImage: coverImageVal,
         };
         updated = [newArt, ...articles];
         showToast('Artikel baru berhasil dipublikasikan ke Web Publik!');
@@ -911,17 +913,40 @@ export default function AdminDashboard() {
                     <button onClick={() => setActiveTab('articles')} className="btn-link-sm">Lihat Semua</button>
                   </div>
                   <div className="overview-list">
-                    {articles.slice(0, 4).map((art) => (
-                      <div key={art.id} className="overview-item">
-                        <div className="overview-item-title">
-                          <strong>{art.title}</strong>
-                          <span className="overview-item-meta">{art.category} &bull; {art.date}</span>
+                    {articles.slice(0, 4).map((art) => {
+                      const coverUrl = getDirectImageUrl(art.image || art.coverImage);
+                      return (
+                        <div key={art.id} className="overview-item">
+                          <div className="article-table-title-cell">
+                            <div className="article-table-thumb">
+                              {coverUrl ? (
+                                <img
+                                  src={coverUrl}
+                                  alt=""
+                                  onError={(e) => {
+                                    const driveId = extractGoogleDriveId(art.image || art.coverImage);
+                                    if (driveId) {
+                                      e.currentTarget.src = `https://drive.google.com/thumbnail?id=${driveId}&sz=w600`;
+                                    } else {
+                                      e.currentTarget.style.display = 'none';
+                                    }
+                                  }}
+                                />
+                              ) : (
+                                <span className="article-table-thumb-empty">📖</span>
+                              )}
+                            </div>
+                            <div className="overview-item-title">
+                              <strong>{art.title}</strong>
+                              <span className="overview-item-meta">{art.category} &bull; {art.date}</span>
+                            </div>
+                          </div>
+                          <button onClick={() => openEditModal('article', art)} className="btn-icon">
+                            <Pencil size={15} />
+                          </button>
                         </div>
-                        <button onClick={() => openEditModal('article', art)} className="btn-icon">
-                          <Pencil size={15} />
-                        </button>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -999,12 +1024,36 @@ export default function AdminDashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredArticles.map((art) => (
-                      <tr key={art.id}>
-                        <td>
-                          <strong className="table-title">{art.title}</strong>
-                          <span className="table-slug">/artikel/{art.slug}</span>
-                        </td>
+                    {filteredArticles.map((art) => {
+                      const coverUrl = getDirectImageUrl(art.image || art.coverImage);
+                      return (
+                        <tr key={art.id}>
+                          <td>
+                            <div className="article-table-title-cell">
+                              <div className="article-table-thumb">
+                                {coverUrl ? (
+                                  <img
+                                    src={coverUrl}
+                                    alt=""
+                                    onError={(e) => {
+                                      const driveId = extractGoogleDriveId(art.image || art.coverImage);
+                                      if (driveId) {
+                                        e.currentTarget.src = `https://drive.google.com/thumbnail?id=${driveId}&sz=w600`;
+                                      } else {
+                                        e.currentTarget.style.display = 'none';
+                                      }
+                                    }}
+                                  />
+                                ) : (
+                                  <span className="article-table-thumb-empty">📖</span>
+                                )}
+                              </div>
+                              <div>
+                                <strong className="table-title">{art.title}</strong>
+                                <span className="table-slug">/artikel/{art.slug}</span>
+                              </div>
+                            </div>
+                          </td>
                         <td><span className="badge badge-primary">{art.category}</span></td>
                         <td>{art.author || 'Admin'}</td>
                         <td>{art.date}</td>
@@ -1019,7 +1068,8 @@ export default function AdminDashboard() {
                           </div>
                         </td>
                       </tr>
-                    ))}
+                    );
+                  })}
                   </tbody>
                 </table>
               </div>
@@ -1407,13 +1457,60 @@ export default function AdminDashboard() {
                       className="form-input"
                       value={formData.author || ''}
                       onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+                      placeholder="Nama penulis atau Tim Dakwah ROHIS"
                     />
                   </div>
+
+                  {/* FOTO SAMPUL / COVER ARTIKEL */}
+                  <div className="form-group">
+                    <label className="form-label">Foto Sampul / Cover Artikel (Opsional)</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="Masukkan link Google Drive Foto (https://drive.google.com/file/d/...) atau URL Gambar (https://...)"
+                      value={formData.image || formData.coverImage || ''}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setFormData({ ...formData, image: val, coverImage: val });
+                      }}
+                    />
+                  </div>
+
+                  {(formData.image || formData.coverImage) && (
+                    <div className="admin-cover-preview">
+                      <span className="admin-cover-preview-label">Pratinjau Foto Sampul:</span>
+                      <div className="admin-cover-preview-box">
+                        <img
+                          src={getDirectImageUrl(formData.image || formData.coverImage)}
+                          alt="Pratinjau Cover"
+                          onError={(e) => {
+                            const driveId = extractGoogleDriveId(formData.image || formData.coverImage);
+                            if (driveId) {
+                              e.currentTarget.src = `https://drive.google.com/thumbnail?id=${driveId}&sz=w1200`;
+                            }
+                          }}
+                        />
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-outline"
+                          onClick={() => setFormData({ ...formData, image: '', coverImage: '' })}
+                        >
+                          Hapus Sampul
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="admin-drive-tip" style={{ marginTop: '0.4rem', marginBottom: '1rem' }}>
+                    💡 <strong>Tips Foto Sampul:</strong> Mendukung URL gambar langsung dan link Google Drive Foto. Jika menggunakan Google Drive, pastikan izin file diatur ke <u>"Siapa saja yang memiliki link"</u>.
+                  </div>
+
                   <div className="form-group">
                     <label className="form-label">Ringkasan (Excerpt)</label>
                     <textarea
                       rows={2}
                       className="form-textarea"
+                      placeholder="Ringkasan singkat yang tampil di kartu artikel..."
                       value={formData.excerpt || ''}
                       onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
                     />
@@ -1423,6 +1520,7 @@ export default function AdminDashboard() {
                     <textarea
                       rows={8}
                       className="form-textarea"
+                      placeholder="Tulis materi artikel lengkap di sini..."
                       value={formData.content || ''}
                       onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                       required

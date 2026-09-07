@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Calendar, User, Tag } from 'lucide-react';
 import { formatDate } from '../utils';
 import { useData } from '../context/DataContext';
+import { getDirectImageUrl, extractGoogleDriveId } from '../utils/media';
 import './Articles.css';
 import './About.css';
 
@@ -9,6 +11,22 @@ export default function ArticleDetail() {
   const { slug } = useParams();
   const { articles } = useData();
   const article = articles.find((a) => a.slug === slug);
+
+  const rawCover = article?.image || article?.coverImage;
+  const initialCover = getDirectImageUrl(rawCover);
+  const [coverSrc, setCoverSrc] = useState(initialCover);
+  const [hasError, setHasError] = useState(false);
+  const [isDriveFallback, setIsDriveFallback] = useState(false);
+
+  const handleImageError = () => {
+    const driveId = extractGoogleDriveId(rawCover);
+    if (driveId && !isDriveFallback) {
+      setIsDriveFallback(true);
+      setCoverSrc(`https://drive.google.com/thumbnail?id=${driveId}&sz=w1600`);
+    } else {
+      setHasError(true);
+    }
+  };
 
   if (!article) {
     return (
@@ -27,13 +45,14 @@ export default function ArticleDetail() {
   }
 
   const paragraphs = article.content.split('\n\n').filter(Boolean);
+  const showCover = Boolean(coverSrc) && !hasError;
 
   return (
     <main>
       <section className="page-hero pattern-bg">
         <div className="container text-center">
           <span className="badge badge-primary">{article.category}</span>
-          <h1 className="page-hero-title" style={{ maxWidth: '800px', margin: 'var(--space-md) auto 0' }}>
+          <h1 className="page-hero-title" style={{ maxWidth: '840px', margin: 'var(--space-md) auto 0' }}>
             {article.title}
           </h1>
           <div className="article-detail-meta" style={{ justifyContent: 'center', marginTop: 'var(--space-lg)' }}>
@@ -53,6 +72,17 @@ export default function ArticleDetail() {
       <section className="section">
         <div className="container">
           <div className="article-detail">
+            {showCover && (
+              <div className="article-detail-cover-wrapper">
+                <img
+                  src={coverSrc}
+                  alt={article.title}
+                  className="article-detail-cover-img"
+                  onError={handleImageError}
+                />
+              </div>
+            )}
+
             <div className="article-detail-content">
               {paragraphs.map((p, i) => (
                 <p key={i} dangerouslySetInnerHTML={{ __html: p.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />

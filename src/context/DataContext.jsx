@@ -123,7 +123,8 @@ export function DataProvider({ children }) {
       author: article.author || 'Admin ROHIS',
       excerpt: article.excerpt || '',
       content: article.content || '',
-      image: article.image || null,
+      image: article.image || article.coverImage || null,
+      coverImage: article.coverImage || article.image || null,
     };
     setArticles((prev) => [newArticle, ...prev]);
     return newArticle;

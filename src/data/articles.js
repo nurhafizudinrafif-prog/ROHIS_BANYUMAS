@@ -26,7 +26,7 @@ Berikut beberapa langkah konkret yang bisa dilakukan:
 5. **Berkolaborasi dengan komunitas dakwah** — Bergabunglah dengan organisasi seperti ROHIS untuk memperluas jangkauan dakwah dan saling mendukung.
 
 Ingat, setiap langkah kecil yang kita ambil dalam kebaikan akan menjadi amal jariyah yang terus mengalir pahalanya. Mari bersama-sama menjadi pemuda Muslim yang berdampak!`,
-    image: null,
+    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80',
   },
   {
     id: 2,
@@ -56,7 +56,7 @@ Ilmu yang tidak diamalkan ibarat pohon yang tidak berbuah. Terapkan ilmu dalam k
 Sampaikan ilmu yang telah dipelajari kepada orang lain, meskipun hanya satu ayat.
 
 Semoga kita semua menjadi penuntut ilmu yang ikhlas dan istiqomah.`,
-    image: null,
+    image: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=1200&q=80',
   },
   {
     id: 3,
@@ -78,7 +78,7 @@ Manfaat ukhuwah Islamiyah bagi remaja:
 - Menjadi bekal untuk bermasyarakat
 
 Mari perkuat ukhuwah kita melalui kegiatan-kegiatan ROHIS yang bermanfaat!`,
-    image: null,
+    image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1200&q=80',
   },
   {
     id: 4,
@@ -105,7 +105,7 @@ Tips menjaga istiqomah:
 5. **Bersabar dan tidak putus asa** — Jika pernah lalai, segera bangkit dan kembali beristiqomah.
 
 Semoga Allah memudahkan kita semua untuk istiqomah dalam kebaikan. Aamiin.`,
-    image: null,
+    image: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=1200&q=80',
   },
   {
     id: 5,
@@ -126,7 +126,7 @@ Prinsip-prinsip kepemimpinan Islami:
 5. **Pelayanan** — Pemimpin adalah pelayan bagi yang dipimpinnya.
 
 Di ROHIS, kita belajar menjadi pemimpin-pemimpin masa depan yang berkarakter Islami. Melalui berbagai program kegiatan, kita diasah untuk menjadi pribadi yang bertanggung jawab, jujur, dan berdedikasi.`,
-    image: null,
+    image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80',
   },
   {
     id: 6,
@@ -146,7 +146,7 @@ Program Ramadhan ROHIS Kabupaten Banyumas:
 - Bakti sosial distribusi sembako
 
 Mari manfaatkan Ramadhan sebaik-baiknya untuk meningkatkan ketakwaan dan mempererat ukhuwah!`,
-    image: null,
+    image: 'https://images.unsplash.com/photo-1542816417-0983c9c9ad53?auto=format&fit=crop&w=1200&q=80',
   },
 ];
 
