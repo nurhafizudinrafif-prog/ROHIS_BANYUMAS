@@ -1,5 +1,68 @@
 // Utilitas pemrosesan media (Foto & Video)
+// Mendukung:
+// 1. Google Drive (Foto & Video dengan auto-convert ke direct embed/CDN)
+// 2. YouTube (Embed player & thumbnail resmi)
+// 3. Direct URL (Unsplash, MP4, WebM, PNG, JPG, WebP, dll.)
 
+// ============================================
+// GOOGLE DRIVE HELPERS
+// ============================================
+export function extractGoogleDriveId(url) {
+  if (!url || typeof url !== 'string') return null;
+  const trimmed = url.trim();
+  // Pattern 1: /file/d/FILE_ID
+  const match1 = trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (match1) return match1[1];
+  // Pattern 2: id=FILE_ID
+  const match2 = trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (match2) return match2[1];
+  // Pattern 3: /open?id=FILE_ID
+  const match3 = trimmed.match(/\/open\?id=([a-zA-Z0-9_-]+)/);
+  if (match3) return match3[1];
+  // Pattern 4: /d/FILE_ID
+  const match4 = trimmed.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (match4) return match4[1];
+  return null;
+}
+
+export function isGoogleDriveUrl(url) {
+  if (!url || typeof url !== 'string') return false;
+  return (
+    url.includes('drive.google.com') ||
+    url.includes('docs.google.com') ||
+    url.includes('googleusercontent.com')
+  );
+}
+
+export function getGoogleDriveEmbedUrl(url) {
+  const fileId = extractGoogleDriveId(url);
+  if (!fileId) return null;
+  return `https://drive.google.com/file/d/${fileId}/preview`;
+}
+
+export function getGoogleDriveDirectImageUrl(url) {
+  const fileId = extractGoogleDriveId(url);
+  if (!fileId) return url;
+  return `https://lh3.googleusercontent.com/d/${fileId}`;
+}
+
+export function getGoogleDriveThumbnail(url) {
+  const fileId = extractGoogleDriveId(url);
+  if (!fileId) return null;
+  return `https://drive.google.com/thumbnail?id=${fileId}&sz=w600`;
+}
+
+export function getDirectImageUrl(url) {
+  if (!url || typeof url !== 'string') return '';
+  if (isGoogleDriveUrl(url)) {
+    return getGoogleDriveDirectImageUrl(url);
+  }
+  return url;
+}
+
+// ============================================
+// YOUTUBE HELPERS
+// ============================================
 export function extractYouTubeId(url) {
   if (!url || typeof url !== 'string') return null;
   const trimmed = url.trim();
@@ -20,6 +83,9 @@ export function getYouTubeThumbnail(url) {
   return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
 }
 
+// ============================================
+// GENERAL MEDIA HELPERS
+// ============================================
 export function isVideoMedia(mediaItem) {
   if (!mediaItem) return false;
   if (mediaItem.type === 'video') return true;
@@ -31,9 +97,17 @@ export function isVideoMedia(mediaItem) {
 
 export function getMediaThumbnail(mediaItem) {
   if (!mediaItem || !mediaItem.url) return '';
+  const url = mediaItem.url;
   if (isVideoMedia(mediaItem)) {
-    const ytThumb = getYouTubeThumbnail(mediaItem.url);
+    const ytThumb = getYouTubeThumbnail(url);
     if (ytThumb) return ytThumb;
+    const driveThumb = getGoogleDriveThumbnail(url);
+    if (driveThumb) return driveThumb;
+  } else {
+    if (isGoogleDriveUrl(url)) {
+      const driveThumb = getGoogleDriveThumbnail(url);
+      if (driveThumb) return driveThumb;
+    }
   }
   return mediaItem.url;
 }
@@ -63,12 +137,14 @@ export function normalizeMediaList(item) {
 
 export function getCoverMedia(item) {
   if (!item) return '';
-  if (item.coverImage) return item.coverImage;
+  if (item.coverImage) {
+    return getDirectImageUrl(item.coverImage);
+  }
   const mediaList = normalizeMediaList(item);
   if (mediaList.length > 0) {
     return getMediaThumbnail(mediaList[0]);
   }
-  return item.image || '';
+  return getDirectImageUrl(item.image || '');
 }
 
 export function getMediaSummary(item) {

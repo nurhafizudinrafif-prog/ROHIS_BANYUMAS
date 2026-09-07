@@ -41,6 +41,9 @@ import {
   normalizeMediaList,
   getCoverMedia,
   getMediaSummary,
+  getDirectImageUrl,
+  isGoogleDriveUrl,
+  extractGoogleDriveId,
 } from '../utils/media';
 import logoImg from '../assets/logo.png';
 import './AdminDashboard.css';
@@ -231,20 +234,21 @@ export default function AdminDashboard() {
 
   // Helper untuk menambahkan foto/video ke dalam album kegiatan
   const handleAddMediaToAlbum = () => {
-    if (!newMediaInput.url || !newMediaInput.url.trim()) {
-      showToast('Masukkan URL gambar atau link YouTube terlebih dahulu!', 'warning');
+    const rawUrl = newMediaInput.url ? newMediaInput.url.trim() : '';
+    if (!rawUrl) {
+      showToast('Masukkan link Google Drive atau URL media terlebih dahulu!', 'warning');
       return;
     }
-    const isVid = isVideoMedia(newMediaInput) || newMediaInput.type === 'video';
+    const isVid = newMediaInput.type === 'video';
     const newMedia = {
       id: `m-${Date.now()}`,
       type: isVid ? 'video' : 'image',
-      url: newMediaInput.url.trim(),
+      url: rawUrl,
       caption: newMediaInput.caption ? newMediaInput.caption.trim() : '',
     };
     const currentMedia = Array.isArray(formData.media) ? formData.media : [];
     const updatedMedia = [...currentMedia, newMedia];
-    const updatedCover = formData.coverImage || (newMedia.type === 'image' ? newMedia.url : getCoverMedia({ media: updatedMedia }));
+    const updatedCover = formData.coverImage || (newMedia.type === 'image' ? getCoverMedia({ media: [newMedia] }) : getCoverMedia({ media: updatedMedia }));
     
     setFormData({
       ...formData,
@@ -252,7 +256,7 @@ export default function AdminDashboard() {
       coverImage: updatedCover,
       image: updatedCover,
     });
-    setNewMediaInput({ type: 'image', url: '', caption: '' });
+    setNewMediaInput({ type: newMediaInput.type, url: '', caption: '' });
     showToast(isVid ? 'Video berhasil ditambahkan ke album' : 'Foto berhasil ditambahkan ke album', 'info');
   };
 
@@ -1536,7 +1540,7 @@ export default function AdminDashboard() {
                       <div>
                         <h4 className="media-manager-title">📸 Koleksi Foto & Video Kegiatan</h4>
                         <p className="media-manager-sub">
-                          Tambahkan beberapa foto atau video untuk kegiatan ini. Mendukung foto (URL/Unsplash) dan video (Link YouTube atau direct MP4).
+                          Tambahkan beberapa foto atau video untuk kegiatan ini. Mendukung <strong>Google Drive (Foto & Video)</strong>, Link YouTube, gambar web, dan file MP4.
                         </p>
                       </div>
                       <span className="badge badge-primary">
@@ -1552,14 +1556,14 @@ export default function AdminDashboard() {
                           className={`media-type-btn ${newMediaInput.type === 'image' ? 'active' : ''}`}
                           onClick={() => setNewMediaInput({ ...newMediaInput, type: 'image' })}
                         >
-                          <ImageIcon size={14} /> Foto (Gambar)
+                          <ImageIcon size={14} /> Foto (Drive / Gambar)
                         </button>
                         <button
                           type="button"
                           className={`media-type-btn ${newMediaInput.type === 'video' ? 'active' : ''}`}
                           onClick={() => setNewMediaInput({ ...newMediaInput, type: 'video' })}
                         >
-                          <Film size={14} /> Video (YouTube / MP4)
+                          <Film size={14} /> Video (Drive / YouTube / MP4)
                         </button>
                       </div>
 
@@ -1569,8 +1573,8 @@ export default function AdminDashboard() {
                           className="form-input"
                           placeholder={
                             newMediaInput.type === 'video'
-                              ? 'Masukkan Link YouTube (https://youtu.be/... atau https://www.youtube.com/watch?v=...) atau URL MP4'
-                              : 'Masukkan URL Foto (https://images.unsplash.com/... atau /gallery/foto.jpg)'
+                              ? 'Masukkan Link Google Drive Video (https://drive.google.com/file/d/...), YouTube, atau URL MP4'
+                              : 'Masukkan Link Google Drive Foto (https://drive.google.com/file/d/...) atau URL Gambar'
                           }
                           value={newMediaInput.url}
                           onChange={(e) => setNewMediaInput({ ...newMediaInput, url: e.target.value })}
@@ -1604,6 +1608,10 @@ export default function AdminDashboard() {
                         >
                           <Plus size={16} /> Tambah Media
                         </button>
+                      </div>
+
+                      <div className="admin-drive-tip">
+                        💡 <strong>Tips Google Drive:</strong> Buka file di Google Drive &gt; klik <strong>Bagikan (Share)</strong> &gt; ubah Akses Umum menjadi <u>"Siapa saja yang memiliki link"</u> agar foto/video dapat dilihat publik di website.
                       </div>
                     </div>
 

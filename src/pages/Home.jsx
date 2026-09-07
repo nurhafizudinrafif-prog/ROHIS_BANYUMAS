@@ -27,6 +27,9 @@ import {
   normalizeMediaList,
   isVideoMedia,
   getYouTubeEmbedUrl,
+  getGoogleDriveEmbedUrl,
+  getDirectImageUrl,
+  extractGoogleDriveId,
   getMediaThumbnail,
   getCoverMedia,
   getMediaSummary,
@@ -55,6 +58,8 @@ export default function Home() {
   const currentMedia = activeMediaList[activeMediaIndex] || activeMediaList[0];
   const isVideo = currentMedia ? isVideoMedia(currentMedia) : false;
   const ytEmbedUrl = isVideo && currentMedia ? getYouTubeEmbedUrl(currentMedia.url) : null;
+  const driveEmbedUrl = isVideo && currentMedia ? getGoogleDriveEmbedUrl(currentMedia.url) : null;
+  const directImageUrl = currentMedia ? getDirectImageUrl(currentMedia.url) : '';
 
   const handleOpenAlbum = (item) => {
     setSelectedItem(item);
@@ -366,6 +371,14 @@ export default function Home() {
                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                           allowFullScreen
                         />
+                      ) : driveEmbedUrl ? (
+                        <iframe
+                          src={driveEmbedUrl}
+                          title={currentMedia.caption || selectedItem.title}
+                          className="cinema-iframe"
+                          allow="autoplay; encrypted-media"
+                          allowFullScreen
+                        />
                       ) : (
                         <video
                           controls
@@ -381,9 +394,16 @@ export default function Home() {
                   ) : (
                     <div className="cinema-image-wrapper">
                       <img
-                        src={currentMedia.url}
+                        src={directImageUrl}
                         alt={currentMedia.caption || selectedItem.title}
                         className="cinema-main-img"
+                        onError={(e) => {
+                          const driveId = extractGoogleDriveId(currentMedia.url);
+                          if (driveId && !e.currentTarget.dataset.fallback) {
+                            e.currentTarget.dataset.fallback = 'true';
+                            e.currentTarget.src = `https://drive.google.com/thumbnail?id=${driveId}&sz=w1600`;
+                          }
+                        }}
                       />
                     </div>
                   )}
