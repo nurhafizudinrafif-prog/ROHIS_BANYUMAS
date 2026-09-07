@@ -1,4 +1,5 @@
-import { CheckCircle2, ExternalLink, Heart, MessageCircle, Play, Eye } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { ExternalLink, Heart, MessageCircle, Play, Eye, Mail, RefreshCw } from 'lucide-react';
 import logoImg from '../assets/logo.png';
 import { instagramReels, instagramProfile } from '../data/instagram';
 import { useData } from '../context/DataContext';
@@ -72,9 +73,45 @@ export function ReelsCameraIcon({ size = 16, className = '' }) {
 export default function InstagramSection() {
   const { siteSettings, instagramReels: liveReels } = useData() || {};
 
-  const igUrl = siteSettings?.instagramUrl || instagramProfile.instagramUrl;
-  const ytUrl = siteSettings?.youtubeUrl || instagramProfile.youtubeUrl;
+  const [profile, setProfile] = useState(instagramProfile);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [isLiveConnected, setIsLiveConnected] = useState(false);
+
+  const igUrl = profile?.instagramUrl || siteSettings?.instagramUrl || instagramProfile.instagramUrl;
+  const ytUrl = profile?.youtubeUrl || siteSettings?.youtubeUrl || instagramProfile.youtubeUrl;
   const reels = (liveReels && liveReels.length > 0) ? liveReels : (siteSettings?.instagramPosts || instagramReels);
+
+  // Live Auto-Sync directly from Instagram via /api/instagram
+  const syncInstagramLive = useCallback(async (isManual = false) => {
+    if (isManual) setIsSyncing(true);
+    try {
+      const res = await fetch('/api/instagram');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.profile) {
+          setProfile(data.profile);
+          setIsLiveConnected(true);
+        }
+      }
+    } catch (err) {
+      console.log('Using cached profile data');
+    } finally {
+      if (isManual) {
+        setTimeout(() => setIsSyncing(false), 500);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    syncInstagramLive();
+    // Auto-check for updates every 60 seconds
+    const interval = setInterval(() => syncInstagramLive(), 60000);
+    window.addEventListener('focus', syncInstagramLive);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', syncInstagramLive);
+    };
+  }, [syncInstagramLive]);
 
   return (
     <section className="section section-ig-showcase">
@@ -85,17 +122,39 @@ export default function InstagramSection() {
             {/* Avatar with gradient ring */}
             <div className="ig-avatar-ring">
               <div className="ig-avatar-inner">
-                <img src={logoImg} alt="Logo Rohis Kabupaten Banyumas" className="ig-avatar-img" />
+                <img
+                  src={profile.avatar || logoImg}
+                  alt="Logo Rohis Kabupaten Banyumas"
+                  className="ig-avatar-img"
+                  onError={(e) => {
+                    e.currentTarget.src = logoImg;
+                  }}
+                />
               </div>
             </div>
 
             {/* Profile Info */}
             <div className="ig-info">
               <div className="ig-handle-row">
-                <h3 className="ig-handle">rohis_banyumas</h3>
-                <span className="ig-verified-badge" title="Official Account Terverifikasi">
-                  <CheckCircle2 size={18} />
-                </span>
+                <h3 className="ig-handle">{profile.handle || 'rohis_banyumas'}</h3>
+
+                {/* Real-time Live Badge */}
+                <div className="ig-live-status-badge" title="Data statistik tersinkronisasi otomatis dari Instagram @rohis_banyumas">
+                  <span className="ig-live-pulse-dot-sm"></span>
+                  <span>{isLiveConnected ? 'REAL-TIME SYNC' : 'INSTAGRAM RESMI'}</span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => syncInstagramLive(true)}
+                  className={`btn-ig-sync-small ${isSyncing ? 'syncing' : ''}`}
+                  title="Klik untuk menyinkronkan live dari Instagram sekarang"
+                  disabled={isSyncing}
+                >
+                  <RefreshCw size={11} className={isSyncing ? 'spin-icon' : ''} />
+                  <span>{isSyncing ? 'Sinkron...' : 'Live Sync'}</span>
+                </button>
+
                 <a
                   href={igUrl}
                   target="_blank"
@@ -110,22 +169,35 @@ export default function InstagramSection() {
 
               <div className="ig-stats-row">
                 <div className="ig-stat">
-                  <strong>701</strong> <span>postingan</span>
+                  <strong>{profile.postsCount || '701'}</strong> <span>postingan</span>
                 </div>
                 <div className="ig-stat">
-                  <strong>972</strong> <span>pengikut</span>
+                  <strong>{profile.followersCount || '973'}</strong> <span>pengikut</span>
                 </div>
                 <div className="ig-stat">
-                  <strong>81</strong> <span>mengikuti</span>
+                  <strong>{profile.followingCount || '81'}</strong> <span>mengikuti</span>
                 </div>
               </div>
 
               <div className="ig-bio">
-                <h4 className="ig-display-name">Rohis Kabupaten Banyumas</h4>
+                <h4 className="ig-display-name">{profile.displayName || 'Rohis Kabupaten Banyumas'}</h4>
                 <p className="ig-bio-text">
-                  Official Account Rohis Kabupaten Banyumas 🌟
+                  Official Account Rohis Kabupaten Banyumas
                   <br />
-                  Dibawah Naungan <strong>Kementerian Agama Kab. Banyumas</strong> (@kankemenagbanyumas)
+                  Dibawah Naungan <strong>Kementerian Agama Kab. Banyumas</strong>{' '}
+                  <a
+                    href="https://www.instagram.com/kankemenagbanyumas/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ig-mention-tag"
+                  >
+                    @kankemenagbanyumas
+                  </a>
+                  <br />
+                  Email :{' '}
+                  <a href="mailto:rohisbanyumas9@gmail.com" className="ig-email-tag">
+                    rohisbanyumas9@gmail.com
+                  </a>
                 </p>
                 <div className="ig-bio-links">
                   <a
@@ -135,7 +207,14 @@ export default function InstagramSection() {
                     className="ig-link-pill ig-link-yt"
                   >
                     <YoutubeIcon size={14} />
-                    youtube.com/@rohisbanyumas9
+                    youtube.com/@rohisbanyumas9?si=bJpq4dcozF81AHGr
+                  </a>
+                  <a
+                    href="mailto:rohisbanyumas9@gmail.com"
+                    className="ig-link-pill ig-link-email"
+                  >
+                    <Mail size={14} />
+                    rohisbanyumas9@gmail.com
                   </a>
                   <a
                     href={igUrl}

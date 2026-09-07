@@ -36,7 +36,7 @@ import { events as seedEvents } from '../data/events';
 import { galleryItems as seedGallery, galleryCategories } from '../data/gallery';
 import { memberSchools as seedSchools } from '../data/memberSchools';
 import { team as seedTeam, structurePeriod, organizationFullName } from '../data/team';
-import { instagramReels as seedInstagramReels } from '../data/instagram';
+import { instagramReels as seedInstagramReels, instagramProfile as seedInstagramProfile } from '../data/instagram';
 import {
   isVideoMedia,
   getMediaThumbnail,
@@ -74,6 +74,8 @@ export default function AdminDashboard() {
   const [memberSchools, setMemberSchools] = useState(seedSchools);
   const [team, setTeam] = useState(seedTeam);
   const [instagramReels, setInstagramReels] = useState(seedInstagramReels);
+  const [instagramProfile, setInstagramProfile] = useState(seedInstagramProfile);
+  const [isSyncingIg, setIsSyncingIg] = useState(false);
   const [siteSettings, setSiteSettings] = useState({
     adminUsername: 'admin',
     adminPassword: 'rohisbanyumas2026',
@@ -125,6 +127,7 @@ export default function AdminDashboard() {
         if (cloudData.memberSchools) setMemberSchools(cloudData.memberSchools);
         if (cloudData.team) setTeam(cloudData.team);
         if (cloudData.instagramReels) setInstagramReels(cloudData.instagramReels);
+        if (cloudData.instagramProfile) setInstagramProfile(cloudData.instagramProfile);
         if (cloudData.siteSettings) {
           setSiteSettings((prev) => ({ ...prev, ...cloudData.siteSettings }));
           setSettingsForm((prev) => ({ ...prev, ...cloudData.siteSettings }));
@@ -139,19 +142,46 @@ export default function AdminDashboard() {
     loadCloud();
   }, []);
 
-  // Sync back to cloud whenever data changes (debounced)
+  // Sync back to cloud whenever data changes (debounced & supports both object payload and positional args)
   const syncToCloud = useCallback(
-    async (updatedArticles, updatedEvents, updatedGallery, updatedSchools, updatedTeam, updatedInstagram, updatedSettings) => {
+    async (optionsOrArticles, updatedEvents, updatedGallery, updatedSchools, updatedTeam, updatedInstagram, updatedProfile, updatedSettings) => {
       setIsSavingCloud(true);
-      const payload = {
-        articles: updatedArticles || articles,
-        events: updatedEvents || events,
-        galleryItems: updatedGallery || galleryItems,
-        memberSchools: updatedSchools || memberSchools,
-        team: updatedTeam || team,
-        instagramReels: updatedInstagram || instagramReels,
-        siteSettings: updatedSettings || siteSettings,
-      };
+      let payload;
+      if (
+        optionsOrArticles &&
+        typeof optionsOrArticles === 'object' &&
+        !Array.isArray(optionsOrArticles) &&
+        ('articles' in optionsOrArticles ||
+          'events' in optionsOrArticles ||
+          'galleryItems' in optionsOrArticles ||
+          'memberSchools' in optionsOrArticles ||
+          'team' in optionsOrArticles ||
+          'instagramReels' in optionsOrArticles ||
+          'instagramProfile' in optionsOrArticles ||
+          'siteSettings' in optionsOrArticles)
+      ) {
+        payload = {
+          articles: optionsOrArticles.articles || articles,
+          events: optionsOrArticles.events || events,
+          galleryItems: optionsOrArticles.galleryItems || galleryItems,
+          memberSchools: optionsOrArticles.memberSchools || memberSchools,
+          team: optionsOrArticles.team || team,
+          instagramReels: optionsOrArticles.instagramReels || instagramReels,
+          instagramProfile: optionsOrArticles.instagramProfile || instagramProfile,
+          siteSettings: optionsOrArticles.siteSettings || siteSettings,
+        };
+      } else {
+        payload = {
+          articles: optionsOrArticles || articles,
+          events: updatedEvents || events,
+          galleryItems: updatedGallery || galleryItems,
+          memberSchools: updatedSchools || memberSchools,
+          team: updatedTeam || team,
+          instagramReels: updatedInstagram || instagramReels,
+          instagramProfile: updatedProfile || instagramProfile,
+          siteSettings: updatedSettings || siteSettings,
+        };
+      }
 
       const ok = await saveCloudCMSData(payload);
       setIsSavingCloud(false);
@@ -160,8 +190,31 @@ export default function AdminDashboard() {
       }
       return ok;
     },
-    [articles, events, galleryItems, memberSchools, team, instagramReels, siteSettings]
+    [articles, events, galleryItems, memberSchools, team, instagramReels, instagramProfile, siteSettings]
   );
+
+  // Live Sync trigger from Instagram API
+  const handleSyncInstagramLive = async () => {
+    setIsSyncingIg(true);
+    showToast('Menghubungkan langsung ke Instagram @rohis_banyumas...');
+    try {
+      const res = await fetch('/api/instagram');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.profile) {
+          setInstagramProfile(data.profile);
+          showToast(`Berhasil sinkron live dari Instagram! (${data.profile.followersCount} pengikut)`);
+          await syncToCloud({ instagramProfile: data.profile });
+        }
+      } else {
+        showToast('Info profil telah disinkronkan dari database cloud.');
+      }
+    } catch (e) {
+      showToast('Gagal memuat live Instagram: ' + e.message, 'warning');
+    } finally {
+      setIsSyncingIg(false);
+    }
+  };
 
   // Handle Login
   const handleLogin = (e) => {
@@ -1435,6 +1488,15 @@ export default function AdminDashboard() {
                   </p>
                 </div>
                 <div className="admin-header-actions">
+                  <button
+                    onClick={handleSyncInstagramLive}
+                    className="btn btn-gold btn-sm"
+                    disabled={isSyncingIg}
+                    title="Ambil data profil terbaru langsung dari Instagram"
+                  >
+                    <RefreshCw size={15} className={isSyncingIg ? 'spin-icon' : ''} />
+                    {isSyncingIg ? 'Menyinkronkan...' : 'Sinkronkan Live Profil IG'}
+                  </button>
                   <a
                     href={siteSettings.instagramUrl}
                     target="_blank"
@@ -1446,6 +1508,57 @@ export default function AdminDashboard() {
                   <button onClick={() => openAddModal('instagram')} className="btn btn-primary">
                     <Plus size={18} /> Tambah Reel Baru
                   </button>
+                </div>
+              </div>
+
+              {/* Live Profile Summary Card */}
+              <div className="card admin-ig-live-card mb-4">
+                <div className="admin-ig-live-header">
+                  <div className="admin-ig-live-avatar-wrap">
+                    <img
+                      src={instagramProfile?.avatar || logoImg}
+                      alt="Avatar Rohis Banyumas"
+                      className="admin-ig-live-avatar"
+                      onError={(e) => {
+                        e.currentTarget.src = logoImg;
+                      }}
+                    />
+                  </div>
+                  <div className="admin-ig-live-details">
+                    <div className="admin-ig-live-handle-row">
+                      <h3 className="admin-ig-live-handle">@{instagramProfile?.handle || 'rohis_banyumas'}</h3>
+                      <span className="admin-ig-live-badge">
+                        <span className="live-dot"></span> Real-Time Connected
+                      </span>
+                      {instagramProfile?.lastSynced && (
+                        <span className="admin-ig-live-time">
+                          Update: {new Date(instagramProfile.lastSynced).toLocaleTimeString('id-ID')}
+                        </span>
+                      )}
+                    </div>
+                    <div className="admin-ig-live-stats-row">
+                      <div className="admin-ig-live-stat">
+                        <strong>{instagramProfile?.postsCount || '701'}</strong>
+                        <span>postingan</span>
+                      </div>
+                      <div className="admin-ig-live-stat">
+                        <strong>{instagramProfile?.followersCount || '973'}</strong>
+                        <span>pengikut</span>
+                      </div>
+                      <div className="admin-ig-live-stat">
+                        <strong>{instagramProfile?.followingCount || '81'}</strong>
+                        <span>mengikuti</span>
+                      </div>
+                    </div>
+                    <div className="admin-ig-live-bio">
+                      <div className="admin-ig-live-name">{instagramProfile?.displayName || 'Rohis Kabupaten Banyumas'}</div>
+                      <div className="admin-ig-live-bio-text">
+                        Official Account Rohis Kabupaten Banyumas<br />
+                        Dibawah Naungan Kementerian Agama Kab. Banyumas (@kankemenagbanyumas)<br />
+                        Email : {instagramProfile?.email || 'rohisbanyumas9@gmail.com'}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 

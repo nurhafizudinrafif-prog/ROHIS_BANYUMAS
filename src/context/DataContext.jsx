@@ -4,7 +4,7 @@ import { events as initialEvents } from '../data/events';
 import { galleryItems as initialGalleryItems, galleryCategories as initialGalleryCategories } from '../data/gallery';
 import { memberSchools as initialMemberSchools } from '../data/memberSchools';
 import { team as initialTeam, structurePeriod, organizationFullName } from '../data/team';
-import { instagramReels as initialInstagramReels } from '../data/instagram';
+import { instagramReels as initialInstagramReels, instagramProfile as initialInstagramProfile } from '../data/instagram';
 import { fetchCloudCMSData, saveCloudCMSData } from '../services/cloudSync';
 
 const STORAGE_KEY = 'rohis_banyumas_cms_data_v1';
@@ -45,6 +45,7 @@ export function DataProvider({ children }) {
   const [memberSchools, setMemberSchools] = useState(stored?.memberSchools || initialMemberSchools);
   const [team, setTeam] = useState(stored?.team || initialTeam);
   const [instagramReels, setInstagramReels] = useState(stored?.instagramReels || initialInstagramReels);
+  const [instagramProfile, setInstagramProfile] = useState(stored?.instagramProfile || initialInstagramProfile);
   const [siteSettings, setSiteSettings] = useState({ ...defaultSettings, ...(stored?.siteSettings || {}) });
 
   // Sync from Upstash Cloud Database on load, periodically, and on tab focus
@@ -59,6 +60,7 @@ export function DataProvider({ children }) {
         if (cloudData.memberSchools) setMemberSchools(cloudData.memberSchools);
         if (cloudData.team) setTeam(cloudData.team);
         if (cloudData.instagramReels) setInstagramReels(cloudData.instagramReels);
+        if (cloudData.instagramProfile) setInstagramProfile(cloudData.instagramProfile);
         if (cloudData.siteSettings) setSiteSettings((prev) => ({ ...prev, ...cloudData.siteSettings }));
       }
     }
@@ -85,6 +87,7 @@ export function DataProvider({ children }) {
         memberSchools,
         team,
         instagramReels,
+        instagramProfile,
         siteSettings,
         savedAt: new Date().toISOString(),
       };
@@ -92,7 +95,7 @@ export function DataProvider({ children }) {
     } catch (err) {
       console.error('Failed to save to localStorage:', err);
     }
-  }, [articles, events, galleryItems, memberSchools, team, instagramReels, siteSettings]);
+  }, [articles, events, galleryItems, memberSchools, team, instagramReels, instagramProfile, siteSettings]);
 
   // Synchronize across open browser tabs
   useEffect(() => {
@@ -106,6 +109,7 @@ export function DataProvider({ children }) {
           if (remote.memberSchools) setMemberSchools(remote.memberSchools);
           if (remote.team) setTeam(remote.team);
           if (remote.instagramReels) setInstagramReels(remote.instagramReels);
+          if (remote.instagramProfile) setInstagramProfile(remote.instagramProfile);
           if (remote.siteSettings) setSiteSettings(remote.siteSettings);
         } catch (err) {
           console.error('Cross-tab sync error:', err);
@@ -433,6 +437,7 @@ export function DataProvider({ children }) {
     memberSchools,
     team,
     instagramReels,
+    instagramProfile,
     siteSettings,
     structurePeriod: siteSettings.period || structurePeriod,
     organizationFullName: siteSettings.orgName || organizationFullName,
@@ -462,6 +467,7 @@ export function DataProvider({ children }) {
     updateInstagramReel,
     deleteInstagramReel,
     setInstagramReels,
+    setInstagramProfile,
 
     updateSettings,
     resetToDefault,
