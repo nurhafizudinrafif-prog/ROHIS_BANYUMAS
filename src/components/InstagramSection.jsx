@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { CheckCircle2, ExternalLink, Heart, MessageCircle, Play, Eye, LayoutGrid, Film, Bookmark } from 'lucide-react';
+import { CheckCircle2, ExternalLink, Heart, MessageCircle, Play, Eye } from 'lucide-react';
 import logoImg from '../assets/logo.png';
 import { instagramReels, instagramProfile } from '../data/instagram';
 import { useData } from '../context/DataContext';
@@ -71,12 +70,11 @@ export function ReelsCameraIcon({ size = 16, className = '' }) {
 }
 
 export default function InstagramSection() {
-  const { siteSettings } = useData() || {};
-  const [activeTab, setActiveTab] = useState('reels');
+  const { siteSettings, instagramReels: liveReels } = useData() || {};
 
   const igUrl = siteSettings?.instagramUrl || instagramProfile.instagramUrl;
   const ytUrl = siteSettings?.youtubeUrl || instagramProfile.youtubeUrl;
-  const reels = siteSettings?.instagramPosts || instagramReels;
+  const reels = (liveReels && liveReels.length > 0) ? liveReels : (siteSettings?.instagramPosts || instagramReels);
 
   return (
     <section className="section section-ig-showcase">
@@ -153,49 +151,33 @@ export default function InstagramSection() {
             </div>
           </div>
 
-          {/* Instagram Tabs Bar (Like real Instagram app) */}
-          <div className="ig-nav-tabs">
-            <button
-              type="button"
-              className={`ig-nav-tab ${activeTab === 'posts' ? 'active' : ''}`}
-              onClick={() => setActiveTab('posts')}
-            >
-              <LayoutGrid size={15} />
-              <span>POSTINGAN</span>
-            </button>
-            <button
-              type="button"
-              className={`ig-nav-tab ${activeTab === 'reels' ? 'active' : ''}`}
-              onClick={() => setActiveTab('reels')}
-            >
-              <ReelsCameraIcon size={16} />
-              <span>REELS</span>
-              <span className="ig-tab-live-badge">TERBARU</span>
-            </button>
-            <button
-              type="button"
-              className={`ig-nav-tab ${activeTab === 'tagged' ? 'active' : ''}`}
-              onClick={() => setActiveTab('tagged')}
-            >
-              <Bookmark size={15} />
-              <span>DITANDAI</span>
-            </button>
-          </div>
-
-          {/* Section Sub-Header */}
-          <div className="ig-feed-header">
-            <div className="ig-feed-title">
-              <Film size={18} className="text-instagram" />
-              <span>Dokumentasi Reels & Video Resmi @rohis_banyumas</span>
+          {/* Header Seksi: Dokumentasi Reels & Video Resmi @rohis_banyumas terbaru */}
+          <div className="ig-reels-header-pro">
+            <div className="ig-reels-header-left">
+              <div className="ig-badge-live">
+                <span className="ig-live-pulse-dot"></span>
+                <ReelsCameraIcon size={13} />
+                <span>FEED REELS TERBARU</span>
+              </div>
+              <h3 className="ig-reels-pro-title">
+                Dokumentasi Reels & Video Resmi <span className="ig-handle-highlight">@rohis_banyumas</span> terbaru
+              </h3>
+              <p className="ig-reels-pro-subtitle">
+                Update liputan kegiatan, syiar dakwah, dan keseruan pelajar Islam se-Kabupaten Banyumas yang terhubung langsung dengan Instagram resmi.
+              </p>
             </div>
-            <a
-              href={igUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ig-view-all"
-            >
-              Buka di Instagram <ExternalLink size={13} />
-            </a>
+            <div className="ig-reels-header-right">
+              <a
+                href={igUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-instagram-pro"
+              >
+                <InstagramIcon size={15} />
+                <span>Buka Instagram</span>
+                <ExternalLink size={13} />
+              </a>
+            </div>
           </div>
 
           {/* Authentic Instagram Reels Grid */}

@@ -28,6 +28,7 @@ import {
   Film,
   Play,
   Check,
+  Video,
 } from 'lucide-react';
 import { fetchCloudCMSData, saveCloudCMSData } from '../services/cloudSync';
 import { articles as seedArticles } from '../data/articles';
@@ -35,6 +36,7 @@ import { events as seedEvents } from '../data/events';
 import { galleryItems as seedGallery, galleryCategories } from '../data/gallery';
 import { memberSchools as seedSchools } from '../data/memberSchools';
 import { team as seedTeam, structurePeriod, organizationFullName } from '../data/team';
+import { instagramReels as seedInstagramReels } from '../data/instagram';
 import {
   isVideoMedia,
   getMediaThumbnail,
@@ -71,6 +73,7 @@ export default function AdminDashboard() {
   const [galleryItems, setGalleryItems] = useState(seedGallery);
   const [memberSchools, setMemberSchools] = useState(seedSchools);
   const [team, setTeam] = useState(seedTeam);
+  const [instagramReels, setInstagramReels] = useState(seedInstagramReels);
   const [siteSettings, setSiteSettings] = useState({
     adminUsername: 'admin',
     adminPassword: 'rohisbanyumas2026',
@@ -121,6 +124,7 @@ export default function AdminDashboard() {
         if (cloudData.galleryItems) setGalleryItems(cloudData.galleryItems);
         if (cloudData.memberSchools) setMemberSchools(cloudData.memberSchools);
         if (cloudData.team) setTeam(cloudData.team);
+        if (cloudData.instagramReels) setInstagramReels(cloudData.instagramReels);
         if (cloudData.siteSettings) {
           setSiteSettings((prev) => ({ ...prev, ...cloudData.siteSettings }));
           setSettingsForm((prev) => ({ ...prev, ...cloudData.siteSettings }));
@@ -137,7 +141,7 @@ export default function AdminDashboard() {
 
   // Sync back to cloud whenever data changes (debounced)
   const syncToCloud = useCallback(
-    async (updatedArticles, updatedEvents, updatedGallery, updatedSchools, updatedTeam, updatedSettings) => {
+    async (updatedArticles, updatedEvents, updatedGallery, updatedSchools, updatedTeam, updatedInstagram, updatedSettings) => {
       setIsSavingCloud(true);
       const payload = {
         articles: updatedArticles || articles,
@@ -145,6 +149,7 @@ export default function AdminDashboard() {
         galleryItems: updatedGallery || galleryItems,
         memberSchools: updatedSchools || memberSchools,
         team: updatedTeam || team,
+        instagramReels: updatedInstagram || instagramReels,
         siteSettings: updatedSettings || siteSettings,
       };
 
@@ -155,7 +160,7 @@ export default function AdminDashboard() {
       }
       return ok;
     },
-    [articles, events, galleryItems, memberSchools, team, siteSettings]
+    [articles, events, galleryItems, memberSchools, team, instagramReels, siteSettings]
   );
 
   // Handle Login
@@ -201,6 +206,17 @@ export default function AdminDashboard() {
         description: '',
         coverImage: '',
         media: [],
+      });
+    } else if (type === 'instagram') {
+      setFormData({
+        title: '',
+        category: 'Dokumentasi',
+        tag: '#RohisBanyumas #DakwahPelajar',
+        image: '',
+        views: '1,500',
+        likes: 120,
+        comments: 15,
+        url: 'https://www.instagram.com/rohis_banyumas/',
       });
     } else {
       setFormData({});
@@ -422,19 +438,62 @@ export default function AdminDashboard() {
 
       setTeam(updatedTeam);
       showToast('Data pengurus berhasil diperbarui & disinkronkan!');
-      await syncToCloud(null, null, null, null, updatedTeam, null);
+      await syncToCloud(null, null, null, null, updatedTeam, null, null);
+    } else if (modalType === 'instagram') {
+      let updated;
+      const imgUrl = formData.image || '/instagram/reel-1.jpg';
+      if (editItem) {
+        updated = instagramReels.map((r) =>
+          r.id === editItem.id
+            ? {
+                ...r,
+                ...formData,
+                image: imgUrl,
+                likes: Number(formData.likes) || r.likes || 0,
+                comments: Number(formData.comments) || r.comments || 0,
+              }
+            : r
+        );
+        showToast('Reel Instagram berhasil diperbarui & disinkronkan ke Web Publik!');
+      } else {
+        const newReel = {
+          id: `ig-reel-${Date.now()}`,
+          type: 'reel',
+          title: formData.title || 'Reel Baru @rohis_banyumas',
+          category: formData.category || 'Dokumentasi',
+          tag: formData.tag || '#RohisBanyumas',
+          image: imgUrl,
+          views: formData.views || '1,000',
+          likes: Number(formData.likes) || 0,
+          comments: Number(formData.comments) || 0,
+          url: formData.url || 'https://www.instagram.com/rohis_banyumas/',
+        };
+        updated = [newReel, ...instagramReels];
+        showToast('Reel baru berhasil ditambahkan dan langsung aktif di Web Publik!');
+      }
+      setInstagramReels(updated);
+      await syncToCloud(null, null, null, null, null, updated, null);
     }
 
     closeModal();
   };
 
   // Delete Handlers
+  const handleDeleteInstagram = async (id, title) => {
+    if (window.confirm(`Hapus Reel "${title}" dari website?`)) {
+      const updated = instagramReels.filter((r) => r.id !== id);
+      setInstagramReels(updated);
+      showToast('Reel Instagram berhasil dihapus dari website.');
+      await syncToCloud(null, null, null, null, null, updated, null);
+    }
+  };
+
   const handleDeleteArticle = async (id, title) => {
     if (window.confirm(`Hapus artikel "${title}"?`)) {
       const updated = articles.filter((a) => a.id !== id);
       setArticles(updated);
       showToast('Artikel dihapus.');
-      await syncToCloud(updated, null, null, null, null, null);
+      await syncToCloud(updated, null, null, null, null, null, null);
     }
   };
 
@@ -798,6 +857,19 @@ export default function AdminDashboard() {
               <span className="nav-counter">{totalPengurus}</span>
             </button>
 
+            <button
+              className={`admin-nav-item ${activeTab === 'instagram' ? 'active' : ''}`}
+              onClick={() => {
+                setActiveTab('instagram');
+                setSearchQuery('');
+                setFilterCategory('Semua');
+              }}
+            >
+              <Video size={18} />
+              <span>Reels Instagram</span>
+              <span className="nav-counter">{instagramReels.length}</span>
+            </button>
+
             <div className="admin-nav-separator"></div>
 
             <button
@@ -835,6 +907,9 @@ export default function AdminDashboard() {
                   </button>
                   <button onClick={() => openAddModal('event')} className="btn btn-gold btn-sm">
                     <Plus size={16} /> Buat Agenda
+                  </button>
+                  <button onClick={() => openAddModal('instagram')} className="btn btn-outline btn-sm">
+                    <Plus size={16} /> Tambah Reel IG
                   </button>
                 </div>
               </div>
@@ -884,6 +959,15 @@ export default function AdminDashboard() {
                     <span className="stat-name">Pengurus ROKABA</span>
                   </div>
                   <button onClick={() => setActiveTab('team')} className="stat-card-link">Kelola &rarr;</button>
+                </div>
+
+                <div className="admin-stat-card">
+                  <div className="stat-card-icon stat-icon-pink"><Video size={24} /></div>
+                  <div className="stat-card-info">
+                    <span className="stat-count">{instagramReels.length}</span>
+                    <span className="stat-name">Reels Instagram</span>
+                  </div>
+                  <button onClick={() => setActiveTab('instagram')} className="stat-card-link">Kelola &rarr;</button>
                 </div>
               </div>
 
@@ -1340,6 +1424,98 @@ export default function AdminDashboard() {
             </div>
           )}
 
+          {/* INSTAGRAM REELS TAB */}
+          {activeTab === 'instagram' && (
+            <div className="tab-pane">
+              <div className="admin-header-row">
+                <div>
+                  <h2>Kelola Reels & Postingan Instagram (@rohis_banyumas)</h2>
+                  <p>
+                    Setiap ada Reel atau postingan baru di Instagram, perbarui di sini agar website langsung menampilkan konten terbaru secara real-time.
+                  </p>
+                </div>
+                <div className="admin-header-actions">
+                  <a
+                    href={siteSettings.instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-outline btn-sm"
+                  >
+                    <ExternalLink size={15} /> Buka Instagram
+                  </a>
+                  <button onClick={() => openAddModal('instagram')} className="btn btn-primary">
+                    <Plus size={18} /> Tambah Reel Baru
+                  </button>
+                </div>
+              </div>
+
+              {/* Info Tips Box */}
+              <div className="card admin-alert-card mb-4">
+                <div className="alert-card-content">
+                  <span className="alert-card-icon">💡</span>
+                  <div>
+                    <strong>Sinkronisasi Instan ke Website Publik:</strong>
+                    <p>
+                      Saat Anda mengunggah video Reel baru di Instagram <code>@rohis_banyumas</code>, klik tombol <strong>+ Tambah Reel Baru</strong> di atas, masukkan URL Reel dan link gambar sampul (atau link Google Drive). Begitu disimpan, video akan langsung muncul di barisan "Dokumentasi Reels & Video Resmi @rohis_banyumas terbaru" di halaman depan web publik tanpa perlu deploy ulang!
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Reels Grid */}
+              <div className="admin-ig-grid">
+                {instagramReels.map((reel) => {
+                  const coverImg = getDirectImageUrl(reel.image);
+                  return (
+                    <div key={reel.id} className="card admin-ig-card">
+                      <div className="admin-ig-media">
+                        <img src={coverImg} alt={reel.title} className="admin-ig-img" />
+                        <span className="admin-ig-category">{reel.category}</span>
+                        <div className="admin-ig-views">
+                          <Play size={12} fill="white" />
+                          <span>{reel.views} views</span>
+                        </div>
+                      </div>
+                      <div className="admin-ig-info">
+                        <h4 className="admin-ig-title">{reel.title}</h4>
+                        <p className="admin-ig-tag">{reel.tag}</p>
+                        <div className="admin-ig-stats">
+                          <span>❤️ {reel.likes || 0} suka</span>
+                          <span>💬 {reel.comments || 0} komentar</span>
+                        </div>
+                        <div className="admin-ig-actions">
+                          <a
+                            href={reel.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn-outline btn-xs"
+                            title="Tonton di Instagram"
+                          >
+                            <ExternalLink size={13} /> Tonton di IG
+                          </a>
+                          <button
+                            onClick={() => openEditModal('instagram', reel)}
+                            className="btn btn-primary-ghost btn-xs"
+                            title="Edit Reel"
+                          >
+                            <Pencil size={13} /> Edit
+                          </button>
+                          <button
+                            onClick={() => handleDeleteInstagram(reel.id, reel.title)}
+                            className="btn btn-danger-ghost btn-xs"
+                            title="Hapus Reel"
+                          >
+                            <Trash2 size={13} /> Hapus
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* SETTINGS TAB */}
           {activeTab === 'settings' && (
             <div className="tab-pane">
@@ -1420,6 +1596,7 @@ export default function AdminDashboard() {
                 {modalType === 'gallery' && 'Dokumentasi Galeri (Foto & Video)'}
                 {modalType === 'school' && 'ROHIS Sekolah'}
                 {modalType === 'member' && 'Pengurus Organisasi'}
+                {modalType === 'instagram' && 'Reel Instagram (@rohis_banyumas)'}
               </h3>
               <button onClick={closeModal} className="btn-close-modal"><X size={18} /></button>
             </div>
@@ -1872,6 +2049,102 @@ export default function AdminDashboard() {
                       value={formData.instagram || ''}
                       onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
                     />
+                  </div>
+                </>
+              )}
+
+              {modalType === 'instagram' && (
+                <>
+                  <div className="form-group">
+                    <label className="form-label">Link Postingan / Reel Instagram *</label>
+                    <input
+                      type="url"
+                      className="form-input"
+                      value={formData.url || ''}
+                      onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+                      placeholder="https://www.instagram.com/reel/... atau https://www.instagram.com/p/..."
+                      required
+                    />
+                    <small className="form-hint">Tautan langsung ke video Reel di akun @rohis_banyumas.</small>
+                  </div>
+
+                  <div className="form-group">
+                    <label className="form-label">Judul / Keterangan Reel *</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      value={formData.title || ''}
+                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                      placeholder="Misal: Profil & Semangat Kader ROHIS Banyumas"
+                      required
+                    />
+                  </div>
+
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label className="form-label">Kategori</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        value={formData.category || ''}
+                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                        placeholder="Misal: Kaderisasi, Dokumentasi, Kolaborasi, Syiar"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Tagar / Hashtag</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        value={formData.tag || ''}
+                        onChange={(e) => setFormData({ ...formData, tag: e.target.value })}
+                        placeholder="#RohisBanyumas #DakwahPelajar"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-group">
+                    <label className="form-label">URL Foto Sampul (Thumbnail) *</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      value={formData.image || ''}
+                      onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                      placeholder="Bisa link gambar web, Google Drive, atau /instagram/reel-1.jpg"
+                      required
+                    />
+                    <small className="form-hint">Mendukung file gambar dari link Google Drive publik atau URL gambar.</small>
+                  </div>
+
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label className="form-label">Estimasi Tayangan (Views)</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        value={formData.views || ''}
+                        onChange={(e) => setFormData({ ...formData, views: e.target.value })}
+                        placeholder="Misal: 4,415"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Jumlah Suka (Likes)</label>
+                      <input
+                        type="number"
+                        className="form-input"
+                        value={formData.likes ?? 0}
+                        onChange={(e) => setFormData({ ...formData, likes: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Jumlah Komentar</label>
+                      <input
+                        type="number"
+                        className="form-input"
+                        value={formData.comments ?? 0}
+                        onChange={(e) => setFormData({ ...formData, comments: e.target.value })}
+                      />
+                    </div>
                   </div>
                 </>
               )}
