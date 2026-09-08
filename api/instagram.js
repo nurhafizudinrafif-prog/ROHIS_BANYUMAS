@@ -1,12 +1,24 @@
-// Vercel Serverless Function: Auto-Sync Instagram Profile & Feed
+// Vercel Serverless Function: Real-Time Auto-Sync Instagram Profile & Live Feed
 const UPSTASH_URL = 'https://holy-gobbler-70550.upstash.io';
 const UPSTASH_TOKEN = 'gQAAAAAAAROWAAIgcDJlOTE0NTNiY2EyYjA0MjU3YmNjNjJkMzc3YmZmYjQ2NA';
 const CMS_KEY = 'rohis_cms_data';
 const USERNAME = 'rohis_banyumas';
 
+function pkToShortcode(pk) {
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+  let num = BigInt(pk);
+  let shortcode = '';
+  while (num > 0n) {
+    const remainder = num % 64n;
+    num = num / 64n;
+    shortcode = alphabet[Number(remainder)] + shortcode;
+  }
+  return shortcode;
+}
+
 export default async function handler(req, res) {
   // Enable CORS
-  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
   res.setHeader(
@@ -20,7 +32,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1. Fetch live public data from Instagram with social crawler UA
+    // 1. Fetch live public data directly from Instagram with official crawler User-Agent
     const igRes = await fetch(`https://www.instagram.com/${USERNAME}/`, {
       headers: {
         'User-Agent': 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
@@ -30,18 +42,19 @@ export default async function handler(req, res) {
     });
 
     let liveProfile = null;
+    let livePosts = [];
 
     if (igRes.ok) {
       const html = await igRes.text();
 
-      // Extract stats: "973 Followers, 81 Following, 701 Posts - See Instagram photos..."
+      // Extract stats from OpenGraph meta
       const descMatch =
         html.match(/<meta [^>]*property="og:description" [^>]*content="([^"]+)"/i) ||
         html.match(/<meta [^>]*content="([^"]+)" [^>]*property="og:description"/i) ||
         html.match(/<meta [^>]*name="description" [^>]*content="([^"]+)"/i);
 
       let followers = '973';
-      let following = '81';
+      let following = '82';
       let posts = '701';
 
       if (descMatch) {
@@ -66,10 +79,18 @@ export default async function handler(req, res) {
       }
 
       // Extract Avatar
+      let avatar = null;
       const imgMatch =
         html.match(/<meta [^>]*property="og:image" [^>]*content="([^"]+)"/i) ||
         html.match(/<meta [^>]*content="([^"]+)" [^>]*property="og:image"/i);
-      const avatar = imgMatch ? imgMatch[1].replace(/&amp;/g, '&') : null;
+      if (imgMatch) {
+        avatar = imgMatch[1].replace(/&amp;/g, '&');
+      } else {
+        const picMatch = html.match(/"profile_pic_url(?:_hd)?":"([^"]+)"/i);
+        if (picMatch) {
+          avatar = picMatch[1].replace(/\\u0026/g, '&').replace(/\\/g, '');
+        }
+      }
 
       // Extract external URL
       const extUrlMatch = html.match(/external_url["']?\s*:\s*["']([^"']+)["']/i);
@@ -91,9 +112,70 @@ export default async function handler(req, res) {
         isLive: true,
         lastSynced: new Date().toISOString(),
       };
+
+      // Extract Timeline Posts & Reels directly from embedded timeline edges
+      const edgeMatch = html.match(/"edges":\[([\s\S]*?)\]\s*,\s*"page_info"/);
+      if (edgeMatch) {
+        try {
+          const edgesJson = JSON.parse(`[${edgeMatch[1]}]`);
+          edgesJson.forEach((edge, idx) => {
+            const node = edge.node;
+            if (!node) return;
+
+            const pk = node.pk || (node.id ? node.id.replace('POLARIS_', '') : null);
+            const code = pk ? pkToShortcode(pk) : null;
+            const captionRaw = node.caption?.text || '';
+            const cleanCaption = captionRaw
+              .replace(/\\n/g, '\n')
+              .replace(/\\u0040/g, '@')
+              .replace(/\\u0026/g, '&');
+
+            // First line of caption as clean title
+            const firstLine = cleanCaption.split('\n')[0].trim() || `Postingan Rohis #${idx + 1}`;
+            const title = firstLine.length > 65 ? firstLine.slice(0, 62) + '...' : firstLine;
+
+            // Direct image URL
+            const img =
+              node.display_uri ||
+              (node.image_versions2?.candidates?.length > 0
+                ? node.image_versions2.candidates[0].url
+                : null);
+
+            const isReel =
+              node.__typename === 'XIGPolarisVideoMedia' || node.product_type === 'clips';
+            const postUrl = code
+              ? isReel
+                ? `https://www.instagram.com/reel/${code}/`
+                : `https://www.instagram.com/p/${code}/`
+              : `https://www.instagram.com/${USERNAME}/`;
+
+            livePosts.push({
+              id: `ig-auto-${pk || idx}`,
+              type: isReel ? 'reel' : 'post',
+              title,
+              caption: cleanCaption,
+              category: isReel
+                ? 'Reels'
+                : node.product_type === 'carousel_container'
+                ? 'Galeri'
+                : 'Postingan',
+              tag: '#RohisBanyumas',
+              image: img,
+              views: 'Terbaru',
+              likes: 0,
+              comments: 0,
+              url: postUrl,
+              shortcode: code,
+              publishedAt: new Date().toISOString(),
+            });
+          });
+        } catch (err) {
+          console.error('Edges JSON parse error:', err.message);
+        }
+      }
     }
 
-    // 2. Fetch current CMS data (for cached reels and profile backup) from Upstash Cloud Redis
+    // 2. Fetch current CMS data from Upstash Cloud Redis (for fallback & custom admin reels)
     let cloudData = {};
     try {
       const redisRes = await fetch(`${UPSTASH_URL}/get/${CMS_KEY}`, {
@@ -117,9 +199,10 @@ export default async function handler(req, res) {
       console.error('Redis fetch error:', e.message);
     }
 
-    // 3. If we got live profile, persist it into Upstash Cloud Redis
-    if (liveProfile && cloudData) {
-      cloudData.instagramProfile = liveProfile;
+    // 3. Persist live profile & live posts into Upstash Cloud Redis if updated
+    if ((liveProfile || livePosts.length > 0) && cloudData) {
+      if (liveProfile) cloudData.instagramProfile = liveProfile;
+      if (livePosts.length > 0) cloudData.instagramLivePosts = livePosts;
       cloudData.lastIgSync = new Date().toISOString();
 
       try {
@@ -141,8 +224,9 @@ export default async function handler(req, res) {
       displayName: 'Rohis Kabupaten Banyumas',
       postsCount: '701',
       followersCount: '973',
-      followingCount: '81',
+      followingCount: '82',
       bio: 'Official Account Rohis Kabupaten Banyumas\nDibawah Naungan Kementerian Agama Kab. Banyumas @kankemenagbanyumas\nEmail : rohisbanyumas9@gmail.com',
+      avatar: null,
       email: 'rohisbanyumas9@gmail.com',
       youtubeUrl: 'https://youtube.com/@rohisbanyumas9?si=bJpq4dcozF81AHGr',
       instagramUrl: `https://www.instagram.com/${USERNAME}/`,
@@ -150,13 +234,20 @@ export default async function handler(req, res) {
       lastSynced: new Date().toISOString(),
     };
 
-    // Cache header: cache for 2 minutes on edge, allow stale while revalidating
-    res.setHeader('Cache-Control', 's-maxage=120, stale-while-revalidate=300');
+    // Combine live posts from Instagram with custom admin reels
+    const finalPosts =
+      livePosts.length > 0
+        ? livePosts
+        : cloudData.instagramLivePosts || cloudData.instagramReels || [];
+
+    // Cache header: cache for 30s on edge, allow stale while revalidating
+    res.setHeader('Cache-Control', 's-maxage=30, stale-while-revalidate=60');
 
     return res.status(200).json({
       success: true,
       profile: finalProfile,
-      reels: cloudData.instagramReels || [],
+      posts: finalPosts,
+      reels: finalPosts,
       source: liveProfile ? 'live_instagram_scrape' : 'cloud_cache',
       timestamp: new Date().toISOString(),
     });

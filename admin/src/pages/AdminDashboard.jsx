@@ -198,12 +198,30 @@ export default function AdminDashboard() {
     setIsSyncingIg(true);
     showToast('Menghubungkan langsung ke Instagram @rohis_banyumas...');
     try {
-      const res = await fetch('/api/instagram');
-      if (res.ok) {
+      let res;
+      try {
+        res = await fetch('/api/instagram');
+        if (!res.ok || res.headers.get('content-type')?.includes('text/html')) {
+          res = await fetch('https://rohis-banyumas.vercel.app/api/instagram');
+        }
+      } catch (e) {
+        res = await fetch('https://rohis-banyumas.vercel.app/api/instagram');
+      }
+
+      if (res && res.ok) {
         const data = await res.json();
         if (data.profile) {
           setInstagramProfile(data.profile);
-          showToast(`Berhasil sinkron live dari Instagram! (${data.profile.followersCount} pengikut)`);
+        }
+        if (data.posts && data.posts.length > 0) {
+          setInstagramReels(data.posts);
+          showToast(`Berhasil sinkron live dari Instagram! (${data.profile?.followersCount} pengikut, ${data.posts.length} postingan)`);
+          await syncToCloud({
+            instagramProfile: data.profile,
+            instagramReels: data.posts,
+          });
+        } else {
+          showToast(`Berhasil sinkron profil live dari Instagram! (${data.profile?.followersCount} pengikut)`);
           await syncToCloud({ instagramProfile: data.profile });
         }
       } else {
@@ -1519,6 +1537,7 @@ export default function AdminDashboard() {
                       src={instagramProfile?.avatar || logoImg}
                       alt="Avatar Rohis Banyumas"
                       className="admin-ig-live-avatar"
+                      referrerPolicy="no-referrer"
                       onError={(e) => {
                         e.currentTarget.src = logoImg;
                       }}

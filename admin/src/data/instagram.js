@@ -2,6 +2,19 @@
 
 export const instagramReels = [
   {
+    id: 'ig-auto-3955927298209689157',
+    type: 'post',
+    title: '✨ PENA SI PIJAR IS REVEAL! ✨',
+    caption: '✨ PENA SI PIJAR IS REVEAL! ✨\n\nBukan sekadar pena, tetapi ruang untuk menuangkan ide, cerita, kreativitas, dan mimpi yang selama ini ingin dituliskan 🙌🏻\n\nSelamat datang di perjalanan baru bersama Pena Si Pijar. Mari menyalakan pijar lewat setiap kata 🖋️💫',
+    category: 'Postingan',
+    tag: '#RohisBanyumas #PenaSiPijar',
+    image: 'https://scontent.cdninstagram.com/v/t51.82787-15/763824282_18253035748307596_2161278273069095030_n.heic?stp=dst-jpg_e35_s640x640_tt6&_nc_cat=107&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiQ0FST1VTRUxfSVRFTS5iZXN0X2ltYWdlX3VybGdlbi5DMyJ9&_nc_ohc=GmM1eJPRAZUQ7kNvwGmwaIG&_nc_oc=Ado448Gd0bxf5etHPfjXrPUeadxZealaOiX3nk0YiZMxk5CGyCjjzN-GZeep2an1W4I&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=gs7XFqEwxWT_u_7rbKOKfA&_nc_ss=7fa8c&oh=00_AQIpPVjv6NV7ZJH0-Lw8CEKsxUeNQFzI7V8LURFiu7BD9Q&oe=6AA59CA5',
+    views: 'Terbaru',
+    likes: 14,
+    comments: 0,
+    url: 'https://www.instagram.com/p/DbmRusXDy5F/',
+  },
+  {
     id: 'ig-reel-1',
     type: 'reel',
     title: 'Profil & Semangat Kader ROHIS Banyumas',
@@ -56,10 +69,9 @@ export const instagramProfile = {
   displayName: 'Rohis Kabupaten Banyumas',
   postsCount: '701',
   followersCount: '973',
-  followingCount: '81',
+  followingCount: '82',
   bio: 'Official Account Rohis Kabupaten Banyumas\nDibawah Naungan Kementerian Agama Kab. Banyumas @kankemenagbanyumas\nEmail : rohisbanyumas9@gmail.com',
   email: 'rohisbanyumas9@gmail.com',
   instagramUrl: 'https://www.instagram.com/rohis_banyumas/',
   youtubeUrl: 'https://youtube.com/@rohisbanyumas9?si=bJpq4dcozF81AHGr',
 };
-

@@ -74,27 +74,46 @@ export default function InstagramSection() {
   const { siteSettings, instagramReels: liveReels } = useData() || {};
 
   const [profile, setProfile] = useState(instagramProfile);
+  const [livePosts, setLivePosts] = useState([]);
   const [isSyncing, setIsSyncing] = useState(false);
   const [isLiveConnected, setIsLiveConnected] = useState(false);
 
   const igUrl = profile?.instagramUrl || siteSettings?.instagramUrl || instagramProfile.instagramUrl;
   const ytUrl = profile?.youtubeUrl || siteSettings?.youtubeUrl || instagramProfile.youtubeUrl;
-  const reels = (liveReels && liveReels.length > 0) ? liveReels : (siteSettings?.instagramPosts || instagramReels);
 
-  // Live Auto-Sync directly from Instagram via /api/instagram
+  // Real-time automatic feed: Prioritize live posts directly from Instagram
+  const reels = (livePosts && livePosts.length > 0)
+    ? livePosts
+    : ((liveReels && liveReels.length > 0) ? liveReels : (siteSettings?.instagramPosts || instagramReels));
+
+  // Live Auto-Sync directly from Instagram via /api/instagram (with seamless fallback)
   const syncInstagramLive = useCallback(async (isManual = false) => {
     if (isManual) setIsSyncing(true);
     try {
-      const res = await fetch('/api/instagram');
-      if (res.ok) {
+      let res;
+      try {
+        res = await fetch('/api/instagram');
+        if (!res.ok || res.headers.get('content-type')?.includes('text/html')) {
+          res = await fetch('https://rohis-banyumas.vercel.app/api/instagram');
+        }
+      } catch (e) {
+        res = await fetch('https://rohis-banyumas.vercel.app/api/instagram');
+      }
+
+      if (res && res.ok) {
         const data = await res.json();
         if (data.profile) {
           setProfile(data.profile);
           setIsLiveConnected(true);
         }
+        if (data.posts && data.posts.length > 0) {
+          setLivePosts(data.posts);
+        } else if (data.reels && data.reels.length > 0) {
+          setLivePosts(data.reels);
+        }
       }
     } catch (err) {
-      console.log('Using cached profile data');
+      console.log('Using cached profile data', err);
     } finally {
       if (isManual) {
         setTimeout(() => setIsSyncing(false), 500);
@@ -104,8 +123,8 @@ export default function InstagramSection() {
 
   useEffect(() => {
     syncInstagramLive();
-    // Auto-check for updates every 60 seconds
-    const interval = setInterval(() => syncInstagramLive(), 60000);
+    // Auto-check for updates every 45 seconds
+    const interval = setInterval(() => syncInstagramLive(), 45000);
     window.addEventListener('focus', syncInstagramLive);
     return () => {
       clearInterval(interval);
@@ -126,6 +145,7 @@ export default function InstagramSection() {
                   src={profile.avatar || logoImg}
                   alt="Logo Rohis Kabupaten Banyumas"
                   className="ig-avatar-img"
+                  referrerPolicy="no-referrer"
                   onError={(e) => {
                     e.currentTarget.src = logoImg;
                   }}
@@ -274,10 +294,14 @@ export default function InstagramSection() {
                   {/* Reel Media Preview */}
                   <div className="ig-reel-media">
                     <img
-                      src={coverImg}
+                      src={coverImg || '/instagram/reel-1.jpg'}
                       alt={item.title}
                       className="ig-reel-image"
                       loading="lazy"
+                      referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        e.currentTarget.src = '/instagram/reel-1.jpg';
+                      }}
                     />
 
                     {/* Top Badges */}
