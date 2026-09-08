@@ -37,9 +37,14 @@ export async function fetchCloudCMSData() {
     });
     if (!res.ok) return null;
     const data = await res.json();
-    if (!data.result) return null;
-
-    const parsed = typeof data.result === 'string' ? JSON.parse(data.result) : data.result;
+    let parsed = data.result;
+    while (typeof parsed === 'string') {
+      try {
+        parsed = JSON.parse(parsed);
+      } catch (e) {
+        break;
+      }
+    }
     return parsed;
   } catch (err) {
     console.warn('Gagal memuat data dari Cloud Upstash:', err);

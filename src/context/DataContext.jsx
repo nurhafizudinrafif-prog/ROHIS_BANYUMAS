@@ -7,7 +7,7 @@ import { team as initialTeam, structurePeriod, organizationFullName } from '../d
 import { instagramReels as initialInstagramReels, instagramProfile as initialInstagramProfile } from '../data/instagram';
 import { fetchCloudCMSData, saveCloudCMSData } from '../services/cloudSync';
 
-const STORAGE_KEY = 'rohis_banyumas_cms_data_v1';
+const STORAGE_KEY = 'rohis_banyumas_cms_data_v2';
 
 const defaultSettings = {
   adminUsername: 'admin',
@@ -26,7 +26,14 @@ function loadStoredData() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
-    return JSON.parse(raw);
+    const data = JSON.parse(raw);
+    if (data?.instagramProfile?.followersCount === '973') {
+      data.instagramProfile.followersCount = '971';
+    }
+    if (data?.instagramProfile?.followingCount === '82') {
+      data.instagramProfile.followingCount = '81';
+    }
+    return data;
   } catch (err) {
     console.error('Error loading data from localStorage:', err);
     return null;

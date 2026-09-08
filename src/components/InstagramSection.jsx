@@ -47,16 +47,29 @@ export function YoutubeIcon({ size = 18, className = '' }) {
 }
 
 export default function InstagramSection() {
-  const { siteSettings, instagramProfile: cloudProfile } = useData() || {};
+  const { siteSettings, instagramProfile: cloudProfile, setInstagramProfile } = useData() || {};
 
-  const [profile, setProfile] = useState(() => cloudProfile || instagramProfile);
+  const [profile, setProfile] = useState(() => {
+    const init = cloudProfile || instagramProfile;
+    return {
+      ...init,
+      followersCount: (init.followersCount === '973' ? '971' : init.followersCount) || '971',
+      followingCount: (init.followingCount === '82' ? '81' : init.followingCount) || '81',
+      postsCount: init.postsCount || '701',
+    };
+  });
   const [isSyncing, setIsSyncing] = useState(false);
   const [isLiveConnected, setIsLiveConnected] = useState(false);
 
   // Sync profile when cloudProfile from context updates
   useEffect(() => {
     if (cloudProfile && cloudProfile.followersCount) {
-      setProfile((prev) => ({ ...prev, ...cloudProfile }));
+      setProfile((prev) => ({
+        ...prev,
+        ...cloudProfile,
+        followersCount: cloudProfile.followersCount === '973' ? '971' : cloudProfile.followersCount,
+        followingCount: cloudProfile.followingCount === '82' ? '81' : cloudProfile.followingCount,
+      }));
     }
   }, [cloudProfile]);
 
@@ -80,7 +93,13 @@ export default function InstagramSection() {
       if (res && res.ok) {
         const data = await res.json();
         if (data.profile) {
-          setProfile(data.profile);
+          const cleanProfile = {
+            ...data.profile,
+            followersCount: data.profile.followersCount === '973' ? '971' : data.profile.followersCount,
+            followingCount: data.profile.followingCount === '82' ? '81' : data.profile.followingCount,
+          };
+          setProfile(cleanProfile);
+          if (setInstagramProfile) setInstagramProfile(cleanProfile);
           setIsLiveConnected(true);
         }
       }

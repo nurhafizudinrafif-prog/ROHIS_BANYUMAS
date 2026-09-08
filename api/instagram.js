@@ -324,7 +324,7 @@ export default async function handler(req, res) {
             Authorization: `Bearer ${UPSTASH_TOKEN}`,
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(JSON.stringify(cloudData)),
+          body: JSON.stringify(cloudData),
         });
       } catch (err) {
         console.error('Redis save error:', err.message);
