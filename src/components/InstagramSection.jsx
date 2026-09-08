@@ -312,11 +312,16 @@ export default function InstagramSection() {
                       </div>
                     </div>
 
-                    {/* Bottom Persistent Info (Views & Title like real Reels) */}
+                    {/* Bottom Persistent Info (Likes, Comments & Title) */}
                     <div className="ig-reel-bottom">
                       <div className="ig-reel-viewcount">
-                        <Play size={13} fill="white" />
-                        <span>{item.views}</span>
+                        <Heart size={12} fill="#ec4899" color="#ec4899" />
+                        <span>{item.likes > 0 ? `${item.likes} suka` : (item.views || 'Buka di IG')}</span>
+                        {item.comments > 0 && (
+                          <span style={{ marginLeft: 6, display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+                            <MessageCircle size={12} fill="white" /> {item.comments}
+                          </span>
+                        )}
                       </div>
                       <h5 className="ig-reel-title">{item.title}</h5>
                     </div>
@@ -325,16 +330,16 @@ export default function InstagramSection() {
                     <div className="ig-reel-hover-overlay">
                       <div className="ig-reel-metrics">
                         <div className="ig-metric-item">
-                          <Heart size={20} fill="white" />
-                          <span>{item.likes}</span>
+                          <Heart size={20} fill="#ec4899" color="#ec4899" />
+                          <span>{item.likes || 0}</span>
                         </div>
                         <div className="ig-metric-item">
                           <MessageCircle size={20} fill="white" />
-                          <span>{item.comments}</span>
+                          <span>{item.comments || 0}</span>
                         </div>
                       </div>
                       <span className="ig-reel-watch-btn">
-                        <Play size={12} fill="white" /> Tonton Reel
+                        <InstagramIcon size={14} /> Buka di Instagram
                       </span>
                     </div>
                   </div>
