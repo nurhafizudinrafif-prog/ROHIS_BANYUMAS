@@ -32,32 +32,101 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1. Fetch live public data directly from Instagram with official crawler User-Agent
-    const igRes = await fetch(`https://www.instagram.com/${USERNAME}/`, {
-      headers: {
-        'User-Agent': 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.9',
-      },
-    });
+    // 1. Fetch live public data directly from Instagram (try Desktop Browser first for exact real-time JSON stats)
+    const browserHeaders = {
+      'User-Agent':
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+      'Accept':
+        'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+      'Accept-Language': 'en-US,en;q=0.9',
+      'Cache-Control': 'no-cache',
+      'Sec-Ch-Ua': '"Chromium";v="128", "Not;A=Brand";v="24", "Google Chrome";v="128"',
+      'Sec-Ch-Ua-Mobile': '?0',
+      'Sec-Ch-Ua-Platform': '"Windows"',
+      'Sec-Fetch-Dest': 'document',
+      'Sec-Fetch-Mode': 'navigate',
+      'Sec-Fetch-Site': 'none',
+      'Sec-Fetch-User': '?1',
+      'Upgrade-Insecure-Requests': '1',
+    };
+
+    let html = null;
+    try {
+      const igRes = await fetch(`https://www.instagram.com/${USERNAME}/?hl=en`, {
+        headers: browserHeaders,
+        signal: AbortSignal.timeout(6000),
+      });
+      if (igRes.ok) {
+        html = await igRes.text();
+      }
+    } catch (e) {
+      console.warn('Browser headers fetch failed, trying crawler fallback:', e.message);
+    }
+
+    // Fallback to crawler headers if needed
+    if (!html || (!html.includes('follower_count') && !html.includes('Followers'))) {
+      try {
+        const crawlerRes = await fetch(`https://www.instagram.com/${USERNAME}/`, {
+          headers: {
+            'User-Agent': 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.9',
+          },
+          signal: AbortSignal.timeout(5000),
+        });
+        if (crawlerRes.ok) {
+          html = await crawlerRes.text();
+        }
+      } catch (e) {
+        console.warn('Crawler fetch failed:', e.message);
+      }
+    }
 
     let liveProfile = null;
     let livePosts = [];
 
-    if (igRes.ok) {
-      const html = await igRes.text();
-
-      // Extract stats from HTML directly with resilient regex
-      let followers = '973';
-      let following = '82';
+    if (html) {
+      // Extract stats from HTML directly: prioritize exact real-time JSON counts
+      let followers = '971';
+      let following = '81';
       let posts = '701';
 
-      const fMatch = html.match(/([\d,KMkm.]+)\s*Followers/i);
-      const flMatch = html.match(/([\d,KMkm.]+)\s*Following/i);
-      const pMatch = html.match(/([\d,KMkm.]+)\s*Posts/i);
-      if (fMatch) followers = fMatch[1];
-      if (flMatch) following = flMatch[1];
-      if (pMatch) posts = pMatch[1];
+      // 1. JSON client counts (most accurate & real-time)
+      const fJson = html.match(/"follower_count":\s*(\d+)/);
+      const flJson = html.match(/"following_count":\s*(\d+)/);
+      if (fJson) {
+        followers = fJson[1];
+      } else {
+        const edgeFollowers = html.match(/"edge_followed_by":\s*\{\s*"count":\s*(\d+)/);
+        if (edgeFollowers) {
+          followers = edgeFollowers[1];
+        } else {
+          const fMatch = html.match(/([\d,KMkm.]+)\s*Followers/i);
+          if (fMatch) followers = fMatch[1];
+        }
+      }
+
+      if (flJson) {
+        following = flJson[1];
+      } else {
+        const edgeFollow = html.match(/"edge_follow":\s*\{\s*"count":\s*(\d+)/);
+        if (edgeFollow) {
+          following = edgeFollow[1];
+        } else {
+          const flMatch = html.match(/([\d,KMkm.]+)\s*Following/i);
+          if (flMatch) following = flMatch[1];
+        }
+      }
+
+      const pJson =
+        html.match(/"edge_owner_to_timeline_media":\s*\{\s*"count":\s*(\d+)/) ||
+        html.match(/"media_count":\s*(\d+)/);
+      if (pJson) {
+        posts = pJson[1];
+      } else {
+        const pMatch = html.match(/([\d,KMkm.]+)\s*Posts/i);
+        if (pMatch) posts = pMatch[1];
+      }
 
       // Extract Bio
       let bio =
@@ -266,8 +335,8 @@ export default async function handler(req, res) {
       handle: USERNAME,
       displayName: 'Rohis Kabupaten Banyumas',
       postsCount: '701',
-      followersCount: '973',
-      followingCount: '82',
+      followersCount: '971',
+      followingCount: '81',
       bio: 'Official Account Rohis Kabupaten Banyumas\nDibawah Naungan Kementerian Agama Kab. Banyumas @kankemenagbanyumas\nEmail : rohisbanyumas9@gmail.com',
       avatar: 'https://scontent.cdninstagram.com/v/t51.2885-19/27890994_149854779057783_6740004813683032064_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=101&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=oLfDKffL7SEQ7kNvwH2YEat&_nc_oc=AdqVqlYSLJVTtumF9w_yB5CnBxPJeREKLjfF0gltRPb5pdqJTu0dw4G6EZCZ_x68YcM&_nc_zt=24&_nc_ht=scontent.cdninstagram.com&_nc_ss=7fa8c&oh=00_AQIr2qTd2xertW_-_xxbmubDJE56CPouAO6mkT-wgSP1Bg&oe=6AA5A856',
       email: 'rohisbanyumas9@gmail.com',
@@ -283,8 +352,8 @@ export default async function handler(req, res) {
         ? livePosts
         : cloudData.instagramLivePosts || cloudData.instagramReels || [];
 
-    // Cache header: cache for 20s on edge, allow stale while revalidating
-    res.setHeader('Cache-Control', 's-maxage=20, stale-while-revalidate=40');
+    // Cache header: cache for 10s on edge, allow stale while revalidating
+    res.setHeader('Cache-Control', 's-maxage=10, stale-while-revalidate=30');
 
     return res.status(200).json({
       success: true,

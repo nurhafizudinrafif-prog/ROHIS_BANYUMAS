@@ -1564,7 +1564,7 @@ export default function AdminDashboard() {
                         <span>postingan</span>
                       </div>
                       <div className="admin-ig-live-stat">
-                        <strong>{instagramProfile?.followersCount || '973'}</strong>
+                        <strong>{instagramProfile?.followersCount || '971'}</strong>
                         <span>pengikut</span>
                       </div>
                       <div className="admin-ig-live-stat">
