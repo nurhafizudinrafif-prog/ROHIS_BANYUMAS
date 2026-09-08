@@ -435,6 +435,9 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--space-md);
+  margin-top: 1.75rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   margin-bottom: var(--space-xl);
 }
 

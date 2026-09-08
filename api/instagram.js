@@ -47,25 +47,17 @@ export default async function handler(req, res) {
     if (igRes.ok) {
       const html = await igRes.text();
 
-      // Extract stats from OpenGraph meta
-      const descMatch =
-        html.match(/<meta [^>]*property="og:description" [^>]*content="([^"]+)"/i) ||
-        html.match(/<meta [^>]*content="([^"]+)" [^>]*property="og:description"/i) ||
-        html.match(/<meta [^>]*name="description" [^>]*content="([^"]+)"/i);
-
+      // Extract stats from HTML directly with resilient regex
       let followers = '973';
       let following = '82';
       let posts = '701';
 
-      if (descMatch) {
-        const desc = descMatch[1];
-        const fMatch = desc.match(/([\d,KMkm.]+)\s*Followers/i);
-        const flMatch = desc.match(/([\d,KMkm.]+)\s*Following/i);
-        const pMatch = desc.match(/([\d,KMkm.]+)\s*Posts/i);
-        if (fMatch) followers = fMatch[1];
-        if (flMatch) following = flMatch[1];
-        if (pMatch) posts = pMatch[1];
-      }
+      const fMatch = html.match(/([\d,KMkm.]+)\s*Followers/i);
+      const flMatch = html.match(/([\d,KMkm.]+)\s*Following/i);
+      const pMatch = html.match(/([\d,KMkm.]+)\s*Posts/i);
+      if (fMatch) followers = fMatch[1];
+      if (flMatch) following = flMatch[1];
+      if (pMatch) posts = pMatch[1];
 
       // Extract Bio
       let bio =
@@ -78,7 +70,7 @@ export default async function handler(req, res) {
           .replace(/\\u0026/g, '&');
       }
 
-      // Extract Avatar (with high-res profile pic extraction)
+      // Extract Avatar (with direct CDN and meta fallback)
       let avatar = null;
       const picDirect =
         html.match(/https?:\/\/[^"'\s\\]+cdninstagram\.com\/[^"'\s\\]*t51\.2885-19\/[^"'\s\\]+/i);
@@ -101,6 +93,9 @@ export default async function handler(req, res) {
         }
       }
 
+      const defaultAvatar =
+        'https://scontent.cdninstagram.com/v/t51.2885-19/27890994_149854779057783_6740004813683032064_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_cat=101&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=oLfDKffL7SEQ7kNvwH2YEat&_nc_oc=AdqVqlYSLJVTtumF9w_yB5CnBxPJeREKLjfF0gltRPb5pdqJTu0dw4G6EZCZ_x68YcM&_nc_zt=24&_nc_ht=scontent.cdninstagram.com&_nc_ss=7fa8c&oh=00_AQIr2qTd2xertW_-_xxbmubDJE56CPouAO6mkT-wgSP1Bg&oe=6AA5A856';
+
       // Extract external URL
       const extUrlMatch = html.match(/external_url["']?\s*:\s*["']([^"']+)["']/i);
       const externalUrl = extUrlMatch
@@ -114,7 +109,7 @@ export default async function handler(req, res) {
         followersCount: followers,
         followingCount: following,
         bio,
-        avatar,
+        avatar: avatar || defaultAvatar,
         email: 'rohisbanyumas9@gmail.com',
         youtubeUrl: externalUrl,
         instagramUrl: `https://www.instagram.com/${USERNAME}/`,

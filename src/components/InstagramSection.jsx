@@ -71,12 +71,19 @@ export function ReelsCameraIcon({ size = 16, className = '' }) {
 }
 
 export default function InstagramSection() {
-  const { siteSettings, instagramReels: liveReels } = useData() || {};
+  const { siteSettings, instagramReels: liveReels, instagramProfile: cloudProfile } = useData() || {};
 
-  const [profile, setProfile] = useState(instagramProfile);
+  const [profile, setProfile] = useState(() => cloudProfile || instagramProfile);
   const [livePosts, setLivePosts] = useState([]);
   const [isSyncing, setIsSyncing] = useState(false);
   const [isLiveConnected, setIsLiveConnected] = useState(false);
+
+  // Sync profile when cloudProfile from context updates
+  useEffect(() => {
+    if (cloudProfile && cloudProfile.followersCount) {
+      setProfile((prev) => ({ ...prev, ...cloudProfile }));
+    }
+  }, [cloudProfile]);
 
   const igUrl = profile?.instagramUrl || siteSettings?.instagramUrl || instagramProfile.instagramUrl;
   const ytUrl = profile?.youtubeUrl || siteSettings?.youtubeUrl || instagramProfile.youtubeUrl;
@@ -195,7 +202,7 @@ export default function InstagramSection() {
                   <strong>{profile.followersCount || '973'}</strong> <span>pengikut</span>
                 </div>
                 <div className="ig-stat">
-                  <strong>{profile.followingCount || '81'}</strong> <span>mengikuti</span>
+                  <strong>{profile.followingCount || '82'}</strong> <span>mengikuti</span>
                 </div>
               </div>
 
@@ -250,36 +257,7 @@ export default function InstagramSection() {
             </div>
           </div>
 
-          {/* Header Seksi: Dokumentasi Reels & Video Resmi @rohis_banyumas terbaru */}
-          <div className="ig-reels-header-pro">
-            <div className="ig-reels-header-left">
-              <div className="ig-badge-live">
-                <span className="ig-live-pulse-dot"></span>
-                <ReelsCameraIcon size={13} />
-                <span>FEED REELS TERBARU</span>
-              </div>
-              <h3 className="ig-reels-pro-title">
-                Dokumentasi Reels & Video Resmi <span className="ig-handle-highlight">@rohis_banyumas</span> terbaru
-              </h3>
-              <p className="ig-reels-pro-subtitle">
-                Update liputan kegiatan, syiar dakwah, dan keseruan pelajar Islam se-Kabupaten Banyumas yang terhubung langsung dengan Instagram resmi.
-              </p>
-            </div>
-            <div className="ig-reels-header-right">
-              <a
-                href={igUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-instagram-pro"
-              >
-                <InstagramIcon size={15} />
-                <span>Buka Instagram</span>
-                <ExternalLink size={13} />
-              </a>
-            </div>
-          </div>
-
-          {/* Authentic Instagram Reels Grid */}
+          {/* Authentic Instagram Posts & Reels Grid (Flowing directly under profile) */}
           <div className="ig-reels-grid">
             {reels.map((item, index) => {
               const coverImg = getDirectImageUrl(item.image);
