@@ -125,8 +125,11 @@ export default function AdminDashboard() {
         if (cloudData.events) setEvents(cloudData.events);
         if (cloudData.galleryItems) setGalleryItems(cloudData.galleryItems);
         if (cloudData.memberSchools) setMemberSchools(cloudData.memberSchools);
-        if (cloudData.team) setTeam(cloudData.team);
-        if (cloudData.instagramReels) setInstagramReels(cloudData.instagramReels);
+        if (cloudData.instagramLivePosts && cloudData.instagramLivePosts.length > 0) {
+          setInstagramReels(cloudData.instagramLivePosts);
+        } else if (cloudData.instagramReels) {
+          setInstagramReels(cloudData.instagramReels);
+        }
         if (cloudData.instagramProfile) setInstagramProfile(cloudData.instagramProfile);
         if (cloudData.siteSettings) {
           setSiteSettings((prev) => ({ ...prev, ...cloudData.siteSettings }));
