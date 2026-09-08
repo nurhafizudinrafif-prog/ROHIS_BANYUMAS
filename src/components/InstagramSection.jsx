@@ -1,9 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
-import { ExternalLink, Heart, MessageCircle, Play, Eye, Mail, RefreshCw } from 'lucide-react';
+import { ExternalLink, Mail, RefreshCw } from 'lucide-react';
 import logoImg from '../assets/logo.png';
-import { instagramReels, instagramProfile } from '../data/instagram';
+import { instagramProfile } from '../data/instagram';
 import { useData } from '../context/DataContext';
-import { getDirectImageUrl } from '../utils/media';
 import './InstagramSection.css';
 
 export function InstagramIcon({ size = 18, className = '' }) {
@@ -47,34 +46,10 @@ export function YoutubeIcon({ size = 18, className = '' }) {
   );
 }
 
-export function ReelsCameraIcon({ size = 16, className = '' }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <rect width="18" height="18" x="3" y="3" rx="4" />
-      <path d="m10 9 5 3-5 3V9z" fill="currentColor" />
-      <path d="M3 8h4" />
-      <path d="M17 8h4" />
-      <path d="M3 16h4" />
-      <path d="M17 16h4" />
-    </svg>
-  );
-}
-
 export default function InstagramSection() {
-  const { siteSettings, instagramReels: liveReels, instagramProfile: cloudProfile } = useData() || {};
+  const { siteSettings, instagramProfile: cloudProfile } = useData() || {};
 
   const [profile, setProfile] = useState(() => cloudProfile || instagramProfile);
-  const [livePosts, setLivePosts] = useState([]);
   const [isSyncing, setIsSyncing] = useState(false);
   const [isLiveConnected, setIsLiveConnected] = useState(false);
 
@@ -87,11 +62,6 @@ export default function InstagramSection() {
 
   const igUrl = profile?.instagramUrl || siteSettings?.instagramUrl || instagramProfile.instagramUrl;
   const ytUrl = profile?.youtubeUrl || siteSettings?.youtubeUrl || instagramProfile.youtubeUrl;
-
-  // Real-time automatic feed: Prioritize live posts directly from Instagram
-  const reels = (livePosts && livePosts.length > 0)
-    ? livePosts
-    : ((liveReels && liveReels.length > 0) ? liveReels : (siteSettings?.instagramPosts || instagramReels));
 
   // Live Auto-Sync directly from Instagram via /api/instagram (with seamless fallback)
   const syncInstagramLive = useCallback(async (isManual = false) => {
@@ -112,11 +82,6 @@ export default function InstagramSection() {
         if (data.profile) {
           setProfile(data.profile);
           setIsLiveConnected(true);
-        }
-        if (data.posts && data.posts.length > 0) {
-          setLivePosts(data.posts);
-        } else if (data.reels && data.reels.length > 0) {
-          setLivePosts(data.reels);
         }
       }
     } catch (err) {
@@ -257,75 +222,6 @@ export default function InstagramSection() {
             </div>
           </div>
 
-          {/* Authentic Instagram Posts & Reels Grid (Flowing directly under profile) */}
-          <div className="ig-reels-grid">
-            {reels.map((item, index) => {
-              const coverImg = getDirectImageUrl(item.image);
-              return (
-                <a
-                  key={item.id || index}
-                  href={item.url || igUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="ig-reel-card"
-                >
-                  {/* Reel Media Preview */}
-                  <div className="ig-reel-media">
-                    <img
-                      src={coverImg || '/instagram/reel-1.jpg'}
-                      alt={item.title}
-                      className="ig-reel-image"
-                      loading="lazy"
-                      referrerPolicy="no-referrer"
-                      onError={(e) => {
-                        e.currentTarget.src = '/instagram/reel-1.jpg';
-                      }}
-                    />
-
-                    {/* Top Badges */}
-                    <div className="ig-reel-top">
-                      <span className="ig-reel-category">{item.category || 'Reels'}</span>
-                      <div className="ig-reel-indicator" title="Instagram Reel">
-                        <ReelsCameraIcon size={14} />
-                      </div>
-                    </div>
-
-                    {/* Bottom Persistent Info (Likes, Comments & Title) */}
-                    <div className="ig-reel-bottom">
-                      <div className="ig-reel-viewcount">
-                        <Heart size={12} fill="#ec4899" color="#ec4899" />
-                        <span>{item.likes > 0 ? `${item.likes} suka` : (item.views || 'Buka di IG')}</span>
-                        {item.comments > 0 && (
-                          <span style={{ marginLeft: 6, display: 'inline-flex', alignItems: 'center', gap: 3 }}>
-                            <MessageCircle size={12} fill="white" /> {item.comments}
-                          </span>
-                        )}
-                      </div>
-                      <h5 className="ig-reel-title">{item.title}</h5>
-                    </div>
-
-                    {/* Hover Overlay: Likes & Comments with dark backdrop */}
-                    <div className="ig-reel-hover-overlay">
-                      <div className="ig-reel-metrics">
-                        <div className="ig-metric-item">
-                          <Heart size={20} fill="#ec4899" color="#ec4899" />
-                          <span>{item.likes || 0}</span>
-                        </div>
-                        <div className="ig-metric-item">
-                          <MessageCircle size={20} fill="white" />
-                          <span>{item.comments || 0}</span>
-                        </div>
-                      </div>
-                      <span className="ig-reel-watch-btn">
-                        <InstagramIcon size={14} /> Buka di Instagram
-                      </span>
-                    </div>
-                  </div>
-                </a>
-              );
-            })}
-          </div>
-
           {/* Footer Banner */}
           <div className="ig-card-footer">
             <p>
@@ -333,7 +229,7 @@ export default function InstagramSection() {
               <a href={igUrl} target="_blank" rel="noopener noreferrer" className="ig-footer-link">
                 @rohis_banyumas
               </a>{' '}
-              untuk melihat 700+ video reels, dokumentasi agenda, podcast, dan informasi kajian pelajar.
+              untuk melihat video reels, dokumentasi agenda, podcast, dan informasi kajian pelajar.
             </p>
           </div>
         </div>
