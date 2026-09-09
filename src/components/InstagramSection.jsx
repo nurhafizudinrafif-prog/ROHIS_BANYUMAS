@@ -167,13 +167,13 @@ export default function InstagramSection() {
 
               <div className="ig-stats-row">
                 <div className="ig-stat">
-                  <strong>{profile.postsCount ?? '701'}</strong> <span>postingan</span>
+                  <strong>{profile.postsCount ?? '-'}</strong> <span>postingan</span>
                 </div>
                 <div className="ig-stat">
-                  <strong>{profile.followersCount ?? '973'}</strong> <span>pengikut</span>
+                  <strong>{profile.followersCount ?? '-'}</strong> <span>pengikut</span>
                 </div>
                 <div className="ig-stat">
-                  <strong>{profile.followingCount ?? '82'}</strong> <span>mengikuti</span>
+                  <strong>{profile.followingCount ?? '-'}</strong> <span>mengikuti</span>
                 </div>
               </div>
 

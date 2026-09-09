@@ -83,63 +83,63 @@ export default async function handler(req, res) {
 
     if (html) {
       // Dynamic real-time extraction: NO HARDCODED STATS
+      // Priority: JSON embedded data > OG meta description
+      // JSON data is the actual real-time count; OG meta is cached by Instagram CDN and can be stale
       let followers = null;
       let following = null;
       let posts = null;
 
-      // 1. Extract from OpenGraph / meta description (most reliable live stats from Instagram SSR)
-      const descMatch =
-        html.match(/<meta\s+[^>]*content=["']([^"']*(?:Followers|Follower|pengikut)[^"']*)["']/i) ||
-        html.match(/<meta\s+[^>]*name=["']description["']\s+content=["']([^"']+)["']/i) ||
-        html.match(/<meta\s+[^>]*property=["']og:description["']\s+content=["']([^"']+)["']/i) ||
-        html.match(/<meta\s+[^>]*content=["']([^"']+)["']\s+property=["']og:description["']/i);
+      // 1. PRIORITY: Extract from embedded JSON (most accurate real-time data)
+      const fJson = html.match(/"follower_count":\s*(\d+)/);
+      if (fJson) followers = fJson[1];
+      else {
+        const edgeFollowers = html.match(/"edge_followed_by":\s*\{\s*"count":\s*(\d+)/);
+        if (edgeFollowers) followers = edgeFollowers[1];
+      }
 
-      if (descMatch) {
-        const descText = descMatch[1];
-        const m = descText.match(/([\d,KMkm.]+)\s*Followers?[^\d]*([\d,KMkm.]+)\s*Following[^\d]*([\d,KMkm.]+)\s*Posts?/i);
-        if (m) {
-          followers = m[1].replace(/,/g, '');
-          following = m[2].replace(/,/g, '');
-          posts = m[3].replace(/,/g, '');
+      const flJson = html.match(/"following_count":\s*(\d+)/);
+      if (flJson) following = flJson[1];
+      else {
+        const edgeFollow = html.match(/"edge_follow":\s*\{\s*"count":\s*(\d+)/);
+        if (edgeFollow) following = edgeFollow[1];
+      }
+
+      const pJson =
+        html.match(/"media_count":\s*(\d+)/) ||
+        html.match(/"edge_owner_to_timeline_media":\s*\{\s*"count":\s*(\d+)/);
+      if (pJson) posts = pJson[1] || pJson[2];
+
+      // 2. FALLBACK: Extract from OpenGraph / meta description (Instagram CDN cached, may lag)
+      if (!followers || !following || !posts) {
+        const descMatch =
+          html.match(/<meta\s+[^>]*content=["']([^"']*(?:Followers|Follower|pengikut)[^"']*)['"]/i) ||
+          html.match(/<meta\s+[^>]*name=["']description["']\s+content=["']([^"']+)['"]/i) ||
+          html.match(/<meta\s+[^>]*property=["']og:description["']\s+content=["']([^"']+)['"]/i) ||
+          html.match(/<meta\s+[^>]*content=["']([^"']+)['"]\s+property=["']og:description['"]/i);
+
+        if (descMatch) {
+          const descText = descMatch[1];
+          const m = descText.match(/([\d,KMkm.]+)\s*Followers?[^\d]*([\d,KMkm.]+)\s*Following[^\d]*([\d,KMkm.]+)\s*Posts?/i);
+          if (m) {
+            if (!followers) followers = m[1].replace(/,/g, '');
+            if (!following) following = m[2].replace(/,/g, '');
+            if (!posts) posts = m[3].replace(/,/g, '');
+          }
         }
       }
 
-      // 2. Extract from embedded JSON if not matched yet
+      // 3. LAST RESORT: plain text patterns
       if (!followers) {
-        const fJson = html.match(/"follower_count":\s*(\d+)/);
-        if (fJson) followers = fJson[1];
-        else {
-          const edgeFollowers = html.match(/"edge_followed_by":\s*\{\s*"count":\s*(\d+)/);
-          if (edgeFollowers) followers = edgeFollowers[1];
-          else {
-            const fMatch = html.match(/([\d,KMkm.]+)\s*Followers/i);
-            if (fMatch) followers = fMatch[1];
-          }
-        }
+        const fMatch = html.match(/([\d,KMkm.]+)\s*Followers/i);
+        if (fMatch) followers = fMatch[1].replace(/,/g, '');
       }
-
       if (!following) {
-        const flJson = html.match(/"following_count":\s*(\d+)/);
-        if (flJson) following = flJson[1];
-        else {
-          const edgeFollow = html.match(/"edge_follow":\s*\{\s*"count":\s*(\d+)/);
-          if (edgeFollow) following = edgeFollow[1];
-          else {
-            const flMatch = html.match(/([\d,KMkm.]+)\s*Following/i);
-            if (flMatch) following = flMatch[1];
-          }
-        }
+        const flMatch = html.match(/([\d,KMkm.]+)\s*Following/i);
+        if (flMatch) following = flMatch[1].replace(/,/g, '');
       }
-
       if (!posts) {
-        const pJson =
-          html.match(/"edge_owner_to_timeline_media":\s*\{\s*"count":\s*(\d+)/) ||
-          html.match(/"media_count":\s*(\d+)/);
-        if (pJson) posts = pJson[1];
-        else {
-          const pMatch = html.match(/([\d,KMkm.]+)\s*Posts/i);
-          if (pMatch) posts = pMatch[1];
-        }
+        const pMatch = html.match(/([\d,KMkm.]+)\s*Posts/i);
+        if (pMatch) posts = pMatch[1].replace(/,/g, '');
       }
 
       // Extract Bio
@@ -190,7 +190,7 @@ export default async function handler(req, res) {
         liveProfile = {
           handle: USERNAME,
           displayName: 'Rohis Kabupaten Banyumas',
-          postsCount: posts || '701',
+          postsCount: posts || null,
           followersCount: followers,
           followingCount: following,
           bio,
@@ -348,18 +348,19 @@ export default async function handler(req, res) {
       }
     }
 
+    // Use live data > cloud cache > minimal fallback (no hardcoded stats)
     const finalProfile = liveProfile || cloudData.instagramProfile || {
       handle: USERNAME,
       displayName: 'Rohis Kabupaten Banyumas',
-      postsCount: '701',
-      followersCount: '973',
-      followingCount: '82',
+      postsCount: null,
+      followersCount: null,
+      followingCount: null,
       bio: 'Official Account Rohis Kabupaten Banyumas\nDibawah Naungan Kementerian Agama Kab. Banyumas @kankemenagbanyumas\nEmail : rohisbanyumas9@gmail.com',
-      avatar: 'https://scontent.cdninstagram.com/v/t51.2885-19/27890994_149854779057783_6740004813683032064_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=101&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=oLfDKffL7SEQ7kNvwH2YEat&_nc_oc=AdqVqlYSLJVTtumF9w_yB5CnBxPJeREKLjfF0gltRPb5pdqJTu0dw4G6EZCZ_x68YcM&_nc_zt=24&_nc_ht=scontent.cdninstagram.com&_nc_ss=7fa8c&oh=00_AQIr2qTd2xertW_-_xxbmubDJE56CPouAO6mkT-wgSP1Bg&oe=6AA5A856',
+      avatar: defaultAvatar,
       email: 'rohisbanyumas9@gmail.com',
       youtubeUrl: 'https://youtube.com/@rohisbanyumas9?si=bJpq4dcozF81AHGr',
       instagramUrl: `https://www.instagram.com/${USERNAME}/`,
-      isLive: !!liveProfile,
+      isLive: false,
       lastSynced: new Date().toISOString(),
     };
 

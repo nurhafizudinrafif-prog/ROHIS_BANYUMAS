@@ -67,9 +67,9 @@ export const instagramReels = [
 export const instagramProfile = {
   handle: 'rohis_banyumas',
   displayName: 'Rohis Kabupaten Banyumas',
-  postsCount: '701',
-  followersCount: '973',
-  followingCount: '82',
+  postsCount: null,
+  followersCount: null,
+  followingCount: null,
   bio: 'Official Account Rohis Kabupaten Banyumas\nDibawah Naungan Kementerian Agama Kab. Banyumas @kankemenagbanyumas\nEmail : rohisbanyumas9@gmail.com',
   email: 'rohisbanyumas9@gmail.com',
   instagramUrl: 'https://www.instagram.com/rohis_banyumas/',
