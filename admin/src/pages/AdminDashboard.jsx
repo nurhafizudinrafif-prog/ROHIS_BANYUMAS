@@ -218,13 +218,13 @@ export default function AdminDashboard() {
         }
         if (data.posts && data.posts.length > 0) {
           setInstagramReels(data.posts);
-          showToast(`Berhasil sinkron live dari Instagram! (${data.profile?.followersCount} pengikut, ${data.posts.length} postingan)`);
+          showToast(`Berhasil sinkron live dari Instagram! (${data.posts.length} postingan)`);
           await syncToCloud({
             instagramProfile: data.profile,
             instagramReels: data.posts,
           });
         } else {
-          showToast(`Berhasil sinkron profil live dari Instagram! (${data.profile?.followersCount} pengikut)`);
+          showToast('Berhasil sinkron profil live dari Instagram!');
           await syncToCloud({ instagramProfile: data.profile });
         }
       } else {
@@ -1557,20 +1557,6 @@ export default function AdminDashboard() {
                           Update: {new Date(instagramProfile.lastSynced).toLocaleTimeString('id-ID')}
                         </span>
                       )}
-                    </div>
-                    <div className="admin-ig-live-stats-row">
-                      <div className="admin-ig-live-stat">
-                        <strong>{instagramProfile?.postsCount ?? '701'}</strong>
-                        <span>postingan</span>
-                      </div>
-                      <div className="admin-ig-live-stat">
-                        <strong>{instagramProfile?.followersCount ?? '973'}</strong>
-                        <span>pengikut</span>
-                      </div>
-                      <div className="admin-ig-live-stat">
-                        <strong>{instagramProfile?.followingCount ?? '82'}</strong>
-                        <span>mengikuti</span>
-                      </div>
                     </div>
                     <div className="admin-ig-live-bio">
                       <div className="admin-ig-live-name">{instagramProfile?.displayName || 'Rohis Kabupaten Banyumas'}</div>

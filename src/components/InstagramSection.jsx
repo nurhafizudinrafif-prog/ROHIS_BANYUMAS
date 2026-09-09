@@ -57,7 +57,7 @@ export default function InstagramSection() {
 
   // Sync profile when cloudProfile from context updates
   useEffect(() => {
-    if (cloudProfile && cloudProfile.followersCount) {
+    if (cloudProfile) {
       setProfile((prev) => ({
         ...prev,
         ...cloudProfile,
@@ -165,17 +165,6 @@ export default function InstagramSection() {
                 </a>
               </div>
 
-              <div className="ig-stats-row">
-                <div className="ig-stat">
-                  <strong>{profile.postsCount ?? '-'}</strong> <span>postingan</span>
-                </div>
-                <div className="ig-stat">
-                  <strong>{profile.followersCount ?? '-'}</strong> <span>pengikut</span>
-                </div>
-                <div className="ig-stat">
-                  <strong>{profile.followingCount ?? '-'}</strong> <span>mengikuti</span>
-                </div>
-              </div>
 
               <div className="ig-bio">
                 <h4 className="ig-display-name">{profile.displayName || 'Rohis Kabupaten Banyumas'}</h4>
