@@ -26,14 +26,7 @@ function loadStoredData() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
-    const data = JSON.parse(raw);
-    if (data?.instagramProfile?.followersCount === '973') {
-      data.instagramProfile.followersCount = '971';
-    }
-    if (data?.instagramProfile?.followingCount === '82') {
-      data.instagramProfile.followingCount = '81';
-    }
-    return data;
+    return JSON.parse(raw);
   } catch (err) {
     console.error('Error loading data from localStorage:', err);
     return null;

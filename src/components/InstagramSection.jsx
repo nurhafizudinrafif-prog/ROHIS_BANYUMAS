@@ -50,13 +50,7 @@ export default function InstagramSection() {
   const { siteSettings, instagramProfile: cloudProfile, setInstagramProfile } = useData() || {};
 
   const [profile, setProfile] = useState(() => {
-    const init = cloudProfile || instagramProfile;
-    return {
-      ...init,
-      followersCount: (init.followersCount === '973' ? '971' : init.followersCount) || '971',
-      followingCount: (init.followingCount === '82' ? '81' : init.followingCount) || '81',
-      postsCount: init.postsCount || '701',
-    };
+    return cloudProfile || instagramProfile;
   });
   const [isSyncing, setIsSyncing] = useState(false);
   const [isLiveConnected, setIsLiveConnected] = useState(false);
@@ -67,8 +61,6 @@ export default function InstagramSection() {
       setProfile((prev) => ({
         ...prev,
         ...cloudProfile,
-        followersCount: cloudProfile.followersCount === '973' ? '971' : cloudProfile.followersCount,
-        followingCount: cloudProfile.followingCount === '82' ? '81' : cloudProfile.followingCount,
       }));
     }
   }, [cloudProfile]);
@@ -93,13 +85,8 @@ export default function InstagramSection() {
       if (res && res.ok) {
         const data = await res.json();
         if (data.profile) {
-          const cleanProfile = {
-            ...data.profile,
-            followersCount: data.profile.followersCount === '973' ? '971' : data.profile.followersCount,
-            followingCount: data.profile.followingCount === '82' ? '81' : data.profile.followingCount,
-          };
-          setProfile(cleanProfile);
-          if (setInstagramProfile) setInstagramProfile(cleanProfile);
+          setProfile(data.profile);
+          if (setInstagramProfile) setInstagramProfile(data.profile);
           setIsLiveConnected(true);
         }
       }
@@ -110,7 +97,7 @@ export default function InstagramSection() {
         setTimeout(() => setIsSyncing(false), 500);
       }
     }
-  }, []);
+  }, [setInstagramProfile]);
 
   useEffect(() => {
     syncInstagramLive();
@@ -180,13 +167,13 @@ export default function InstagramSection() {
 
               <div className="ig-stats-row">
                 <div className="ig-stat">
-                  <strong>{profile.postsCount || '701'}</strong> <span>postingan</span>
+                  <strong>{profile.postsCount ?? '701'}</strong> <span>postingan</span>
                 </div>
                 <div className="ig-stat">
-                  <strong>{profile.followersCount || '971'}</strong> <span>pengikut</span>
+                  <strong>{profile.followersCount ?? '973'}</strong> <span>pengikut</span>
                 </div>
                 <div className="ig-stat">
-                  <strong>{profile.followingCount || '81'}</strong> <span>mengikuti</span>
+                  <strong>{profile.followingCount ?? '82'}</strong> <span>mengikuti</span>
                 </div>
               </div>
 
