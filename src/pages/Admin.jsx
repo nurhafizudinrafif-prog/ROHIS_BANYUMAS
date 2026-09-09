@@ -422,8 +422,7 @@ export default function Admin() {
     return memberSchools.filter((s) => {
       return (
         s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        s.school.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        s.leader.toLowerCase().includes(searchQuery.toLowerCase())
+        s.school.toLowerCase().includes(searchQuery.toLowerCase())
       );
     });
   }, [memberSchools, searchQuery]);
@@ -1299,7 +1298,6 @@ export default function Admin() {
                   <thead>
                     <tr>
                       <th>Nama ROHIS & Sekolah</th>
-                      <th>Ketua ROHIS</th>
                       <th>Jumlah Anggota</th>
                       <th>Tahun Berdiri</th>
                       <th>Alamat</th>
@@ -1309,7 +1307,7 @@ export default function Admin() {
                   <tbody>
                     {filteredSchools.length === 0 ? (
                       <tr>
-                        <td colSpan={6} className="text-center py-4">
+                        <td colSpan={5} className="text-center py-4">
                           Tidak ada sekolah yang sesuai.
                         </td>
                       </tr>
@@ -1320,7 +1318,6 @@ export default function Admin() {
                             <strong className="table-title">{s.name}</strong>
                             <span className="table-sub">{s.school}</span>
                           </td>
-                          <td>{s.leader}</td>
                           <td>
                             <span className="badge badge-gold">{s.members} Siswa</span>
                           </td>
@@ -2180,27 +2177,15 @@ export default function Admin() {
                     />
                   </div>
 
-                  <div className="form-grid-2">
-                    <div className="form-group">
-                      <label className="form-label">Ketua ROHIS</label>
-                      <input
-                        type="text"
-                        className="form-input"
-                        value={formData.leader || ''}
-                        onChange={(e) => setFormData({ ...formData, leader: e.target.value })}
-                        placeholder="Nama Ketua"
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label className="form-label">Jumlah Anggota (Siswa)</label>
-                      <input
-                        type="number"
-                        className="form-input"
-                        value={formData.members ?? ''}
-                        onChange={(e) => setFormData({ ...formData, members: e.target.value })}
-                        placeholder="Misal: 45"
-                      />
-                    </div>
+                  <div className="form-group">
+                    <label className="form-label">Jumlah Anggota (Siswa)</label>
+                    <input
+                      type="number"
+                      className="form-input"
+                      value={formData.members ?? ''}
+                      onChange={(e) => setFormData({ ...formData, members: e.target.value })}
+                      placeholder="Misal: 3"
+                    />
                   </div>
 
                   <div className="form-grid-2">

@@ -21,7 +21,6 @@ export default function MemberSchoolCard({ school, index = 0 }) {
           </div>
         </div>
         <div className="school-card-footer">
-          <span className="school-card-leader">Ketua: {school.leader}</span>
           <span className="badge badge-primary">Est. {school.established}</span>
         </div>
       </div>

@@ -470,7 +470,6 @@ export default function AdminDashboard() {
           id: Date.now(),
           name: formData.name || 'ROHIS Sekolah',
           school: formData.school || 'Nama Sekolah',
-          leader: formData.leader || '-',
           members: Number(formData.members) || 0,
           address: formData.address || 'Banyumas',
           established: Number(formData.established) || new Date().getFullYear(),
@@ -1360,7 +1359,6 @@ export default function AdminDashboard() {
                   <thead>
                     <tr>
                       <th>Nama ROHIS & Sekolah</th>
-                      <th>Ketua</th>
                       <th>Jumlah Anggota</th>
                       <th>Alamat</th>
                       <th style={{ textAlign: 'right' }}>Aksi</th>
@@ -1373,7 +1371,6 @@ export default function AdminDashboard() {
                           <strong className="table-title">{s.name}</strong>
                           <span className="table-sub">{s.school}</span>
                         </td>
-                        <td>{s.leader}</td>
                         <td><span className="badge badge-gold">{s.members} Siswa</span></td>
                         <td>{s.address}</td>
                         <td>
@@ -2101,15 +2098,6 @@ export default function AdminDashboard() {
                       value={formData.school || ''}
                       onChange={(e) => setFormData({ ...formData, school: e.target.value })}
                       required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">Nama Ketua</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      value={formData.leader || ''}
-                      onChange={(e) => setFormData({ ...formData, leader: e.target.value })}
                     />
                   </div>
                 </>

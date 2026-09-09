@@ -105,7 +105,7 @@ export default function MemberSchools() {
           <SectionHeader
             badge="Jaringan Sekolah"
             title="ROHIS Sekolah Anggota Kami"
-            subtitle={`${memberSchools.length} ROHIS sekolah dengan total ${totalMembers}+ anggota aktif tergabung dalam organisasi ini.`}
+            subtitle={`${memberSchools.length} ROHIS sekolah dengan total ${totalMembers} kader pengurus aktif yang tergabung dalam organisasi ini.`}
           />
           <div className="grid grid-3">
             {memberSchools.map((school, i) => (
