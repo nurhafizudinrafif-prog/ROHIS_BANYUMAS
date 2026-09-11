@@ -1,5 +1,6 @@
 /* ============================================
    Home Page — Liquid Glass Premium
+   Style: Apple-inspired Liquid Glass + Elegant Neon Aurora
    ============================================ */
 
 .home-programs-grid {
@@ -28,7 +29,7 @@
 
 /* CTA Section */
 .home-cta-section {
-  background: linear-gradient(135deg, rgba(0, 212, 170, 0.06), rgba(232, 184, 77, 0.04), rgba(168, 85, 247, 0.03));
+  position: relative;
 }
 
 .home-cta {
@@ -38,21 +39,32 @@
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
-  border: 1.5px solid rgba(0, 212, 170, 0.35);
+  border: 1px solid rgba(0, 229, 195, 0.35);
   border-radius: var(--radius-xl);
-  box-shadow: var(--glass-shadow), 0 0 35px rgba(0, 212, 170, 0.16), var(--glass-inset);
+  box-shadow:
+    var(--glass-shadow),
+    0 0 35px rgba(0, 229, 195, 0.16);
+  transition: var(--transition-liquid);
+}
+
+.home-cta:hover {
+  transform: translateY(-4px);
+  background: var(--glass-bg-hover);
+  box-shadow:
+    var(--glass-shadow-hover),
+    0 0 45px rgba(0, 229, 195, 0.22);
 }
 
 .home-cta h2 {
   margin-bottom: var(--space-md);
-  background: linear-gradient(135deg, var(--color-text), var(--color-primary-light));
+  background: linear-gradient(135deg, var(--color-forest) 0%, var(--color-emerald) 60%, var(--color-neon) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .home-cta p {
-  color: var(--color-text-secondary);
+  color: var(--color-muted);
   line-height: 1.7;
   margin-bottom: var(--space-xl);
 }
@@ -63,3 +75,4 @@
   justify-content: center;
   flex-wrap: wrap;
 }
+

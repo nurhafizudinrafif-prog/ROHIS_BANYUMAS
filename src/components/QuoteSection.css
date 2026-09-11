@@ -1,5 +1,6 @@
 /* ============================================
    Quote Section — Liquid Glass Premium
+   Style: Apple-inspired Liquid Glass + Elegant Neon Aurora
    ============================================ */
 
 .quote-section {
@@ -14,40 +15,41 @@
   margin: 0 auto;
   text-align: center;
   padding: var(--space-3xl) var(--space-2xl);
-  background: var(--glass-bg-gold);
+  background:
+    radial-gradient(100% 100% at 50% 0%, rgba(212, 175, 90, 0.12) 0%, transparent 65%),
+    var(--glass-bg);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
-  border: 1.2px solid rgba(232, 184, 77, 0.3);
+  border: 1px solid rgba(212, 175, 90, 0.35);
   border-radius: var(--radius-xl);
-  box-shadow: var(--glass-shadow), 0 0 30px rgba(232, 184, 77, 0.12), var(--glass-inset);
+  box-shadow:
+    var(--glass-shadow),
+    0 0 35px rgba(212, 175, 90, 0.12);
   position: relative;
   overflow: hidden;
+  transition: var(--transition-liquid);
 }
 
-/* Glass shine effect */
-.quote-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(232, 184, 77, 0.2), rgba(0, 212, 170, 0.15), transparent);
+.quote-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    var(--glass-shadow-hover),
+    0 0 45px rgba(212, 175, 90, 0.20);
 }
 
 .quote-arabic {
   font-family: var(--font-arabic);
   font-size: clamp(1.5rem, 3.5vw, 2rem);
-  color: var(--color-gold);
+  color: #a67c1e;
   direction: rtl;
   line-height: 2;
   margin-bottom: var(--space-md);
-  text-shadow: 0 0 30px rgba(232, 184, 77, 0.15);
+  text-shadow: 0 0 20px rgba(212, 175, 90, 0.15);
 }
 
 .quote-translation {
   font-size: 1rem;
-  color: var(--color-text-secondary);
+  color: var(--color-forest);
   line-height: 1.8;
   font-style: italic;
   margin-bottom: var(--space-md);
@@ -56,7 +58,8 @@
 .quote-reference {
   font-family: var(--font-heading);
   font-size: 0.85rem;
-  color: var(--color-primary-light);
-  font-weight: 600;
+  color: var(--color-emerald);
+  font-weight: 700;
   letter-spacing: 0.02em;
 }
+
