@@ -7,7 +7,7 @@ export default function FloatingButtons() {
   const [showBackTop, setShowBackTop] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setShowBackTop(window.scrollY > 400);
+    const handleScroll = () => setShowBackTop(window.scrollY > 150);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);

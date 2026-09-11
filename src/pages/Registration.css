@@ -1,21 +1,25 @@
+/* ============================================
+   Registration Page — Liquid Glass Premium
+   ============================================ */
+
 .reg-wrapper {
   max-width: 640px;
   margin: 0 auto;
 }
 
+/* Steps */
 .reg-steps {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-sm);
+  gap: 0.5rem;
   margin-bottom: var(--space-2xl);
-  flex-wrap: wrap;
 }
 
 .reg-step {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  gap: 0.4rem;
   opacity: 0.4;
   transition: all var(--transition-base);
 }
@@ -31,36 +35,47 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: var(--color-surface);
-  border: 2px solid var(--color-surface-light);
   font-family: var(--font-heading);
   font-weight: 700;
   font-size: 0.85rem;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--glass-border);
   transition: all var(--transition-base);
 }
 
 .reg-step.active .reg-step-num {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  color: white;
+  background: rgba(0, 212, 170, 0.12);
+  border-color: rgba(0, 212, 170, 0.3);
+  color: var(--color-primary-light);
+  box-shadow: 0 0 12px rgba(0, 212, 170, 0.15);
 }
 
 .reg-step span {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--color-text-secondary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  font-family: var(--font-heading);
+}
+
+.reg-step.active span {
+  color: var(--color-text);
 }
 
 .reg-step-arrow {
   color: var(--color-text-muted);
+  opacity: 0.3;
 }
 
+/* Form */
 .reg-form {
-  background: var(--color-surface);
-  border: 1px solid var(--color-surface-light);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1.2px solid rgba(0, 212, 170, 0.3);
   border-radius: var(--radius-xl);
-  padding: var(--space-2xl);
+  padding: var(--space-xl);
+  box-shadow: var(--glass-shadow), 0 0 30px rgba(0, 212, 170, 0.12), var(--glass-inset);
 }
 
 .reg-form-step {
@@ -72,10 +87,14 @@
 .reg-form-step h3 {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
-  color: var(--color-primary-light);
-  padding-bottom: var(--space-md);
-  border-bottom: 1px solid var(--color-surface-light);
+  gap: 0.5rem;
+  font-size: 1.15rem;
+  color: var(--color-text);
+  margin-bottom: 0;
+}
+
+.reg-form-step h3 svg {
+  color: var(--color-primary);
 }
 
 .reg-form-row {
@@ -88,51 +107,45 @@
   display: flex;
   gap: var(--space-md);
   justify-content: flex-end;
-  padding-top: var(--space-md);
-  border-top: 1px solid var(--color-surface-light);
+  margin-top: var(--space-sm);
 }
 
 /* Success */
 .reg-success {
-  padding: var(--space-3xl) 0;
+  max-width: 500px;
+  margin: 0 auto;
 }
 
 .reg-success-icon {
-  color: var(--color-success);
+  color: var(--color-primary);
   margin-bottom: var(--space-lg);
 }
 
 .reg-success h1 {
+  font-size: 2rem;
   margin-bottom: var(--space-md);
 }
 
 .reg-success p {
-  max-width: 500px;
-  margin: 0 auto var(--space-md);
+  color: var(--color-text-muted);
+  line-height: 1.7;
 }
 
 .reg-success-note {
+  margin-top: var(--space-md);
+  font-size: 1.15rem;
   color: var(--color-gold) !important;
-  font-family: var(--font-heading);
-  font-weight: 600;
-  font-size: 1.1rem;
 }
 
-@media (max-width: 480px) {
-  .reg-form {
-    padding: var(--space-lg);
-  }
-
+/* Responsive */
+@media (max-width: 600px) {
   .reg-form-row {
     grid-template-columns: 1fr;
   }
 
-  .reg-form-actions {
-    flex-direction: column;
-  }
-
   .reg-steps {
-    gap: var(--space-xs);
+    flex-wrap: wrap;
+    gap: 0.35rem;
   }
 
   .reg-step span {

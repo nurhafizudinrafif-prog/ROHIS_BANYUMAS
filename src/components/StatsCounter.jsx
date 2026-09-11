@@ -3,10 +3,10 @@ import { Users, School, Calendar, Award } from 'lucide-react';
 import './StatsCounter.css';
 
 const stats = [
-  { icon: School, value: 15, suffix: '+', label: 'Dari Sekolah Kab. Banyumas' },
-  { icon: Users, value: 53, suffix: '+', label: 'Anggota Aktif' },
-  { icon: Calendar, value: 7, suffix: '+', label: 'Event Besar' },
-  { icon: Award, value: 2017, suffix: '', label: 'Tahun Berdiri', noSeparator: true },
+  { icon: School, value: 15, suffix: '+', label: 'Dari Sekolah Kab. Banyumas', colorClass: 'stat-green' },
+  { icon: Users, value: 53, suffix: '+', label: 'Anggota Aktif', colorClass: 'stat-cyan' },
+  { icon: Calendar, value: 7, suffix: '+', label: 'Event Besar', colorClass: 'stat-gold' },
+  { icon: Award, value: 2017, suffix: '', label: 'Tahun Berdiri', noSeparator: true, colorClass: 'stat-purple' },
 ];
 
 function CountUp({ target, suffix, noSeparator = false, duration = 2000 }) {
@@ -21,7 +21,7 @@ function CountUp({ target, suffix, noSeparator = false, duration = 2000 }) {
           setHasStarted(true);
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.3 }
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
@@ -58,12 +58,21 @@ export default function StatsCounter() {
           {stats.map((stat, i) => {
             const Icon = stat.icon;
             return (
-              <div key={i} className="stat-item animate-on-scroll">
-                <div className="stat-icon">
-                  <Icon size={28} />
+              <div key={i} className={`stat-glass-card ${stat.colorClass} animate-on-scroll delay-${i + 1}`}>
+                {/* Glossy Icon Box */}
+                <div className="stat-glass-icon-box">
+                  <Icon size={26} />
                 </div>
+                {/* Number Counter */}
                 <CountUp target={stat.value} suffix={stat.suffix} noSeparator={stat.noSeparator} />
+                {/* Label */}
                 <span className="stat-label">{stat.label}</span>
+                {/* Gold Diamond Accent Line */}
+                <div className="stat-diamond-accent">
+                  <span className="diamond-line"></span>
+                  <span className="diamond-dot">◆</span>
+                  <span className="diamond-line"></span>
+                </div>
               </div>
             );
           })}

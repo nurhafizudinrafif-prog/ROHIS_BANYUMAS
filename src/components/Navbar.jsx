@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Lock } from 'lucide-react';
+import { Menu, X, Search, User } from 'lucide-react';
 import logoImg from '../assets/logo.png';
 import './Navbar.css';
 
@@ -51,6 +51,16 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+        </div>
+
+        <div className="navbar-actions">
+          <button className="navbar-search-btn" aria-label="Cari">
+            <Search size={18} />
+          </button>
+          <Link to="/admin" className="navbar-login-btn">
+            <User size={16} />
+            <span>Login</span>
+          </Link>
         </div>
 
         <button

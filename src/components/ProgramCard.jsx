@@ -1,4 +1,4 @@
-import { UserCheck, BookOpen, Newspaper, Megaphone, Wallet, Users, Heart } from 'lucide-react';
+import { UserCheck, BookOpen, Newspaper, Megaphone, Wallet, Users, Heart, Check } from 'lucide-react';
 import './ProgramCard.css';
 
 const iconMap = {
@@ -16,31 +16,38 @@ export default function ProgramCard({ program, index = 0 }) {
 
   return (
     <div
-      className={`program-card card animate-on-scroll delay-${(index % 3) + 1}`}
-      style={{ '--accent': program.color }}
+      className={`program-glass-card animate-on-scroll delay-${(index % 3) + 1}`}
+      style={{ '--accent-color': program.color }}
     >
-      <div className="program-card-icon">
-        <Icon size={32} />
+      {/* Glossy App Icon */}
+      <div className="program-glass-icon-wrapper">
+        <div className="program-glass-icon">
+          <Icon size={28} />
+        </div>
       </div>
-      <div className="card-body">
+
+      {/* Card Content */}
+      <div className="program-card-content">
         {program.division && (
-          <span
-            className="badge badge-primary program-card-badge"
-            style={{
-              borderColor: program.color,
-              color: program.color,
-              background: `color-mix(in srgb, ${program.color} 12%, transparent)`,
-            }}
-          >
-            {program.division}
-          </span>
+          <div className="program-badge-wrapper">
+            <span className="program-neon-badge">
+              {program.division}
+            </span>
+          </div>
         )}
+
         <h3 className="program-card-title">{program.title}</h3>
         <p className="program-card-desc">{program.description}</p>
+
         {program.details && (
-          <ul className="program-card-list">
+          <ul className="program-card-checklist">
             {program.details.map((item, i) => (
-              <li key={i}>{item}</li>
+              <li key={i} className="program-check-item">
+                <span className="check-icon-box">
+                  <Check size={14} />
+                </span>
+                <span className="check-text">{item}</span>
+              </li>
             ))}
           </ul>
         )}

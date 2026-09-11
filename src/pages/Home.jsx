@@ -237,8 +237,8 @@ export default function Home() {
             })}
           </div>
           <div className="text-center" style={{ marginTop: 'var(--space-2xl)' }}>
-            <Link to="/galeri" className="btn btn-outline">
-              Lihat Semua Galeri <ArrowRight size={16} />
+            <Link to="/galeri" className="btn-gallery-cta">
+              Lihat Semua Galeri <ChevronRight size={17} />
             </Link>
           </div>
         </div>

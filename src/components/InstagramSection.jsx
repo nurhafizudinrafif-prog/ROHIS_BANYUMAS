@@ -47,24 +47,13 @@ export function YoutubeIcon({ size = 18, className = '' }) {
 }
 
 export default function InstagramSection() {
-  const { siteSettings, instagramProfile: cloudProfile, setInstagramProfile } = useData() || {};
+  const { siteSettings, instagramProfile: cloudProfile } = useData() || {};
 
-  const [profile, setProfile] = useState(() => {
-    return cloudProfile || instagramProfile;
-  });
+  const [localProfile, setLocalProfile] = useState(null);
   const [isSyncing, setIsSyncing] = useState(false);
   const [isLiveConnected, setIsLiveConnected] = useState(false);
 
-  // Sync profile when cloudProfile from context updates
-  useEffect(() => {
-    if (cloudProfile) {
-      setProfile((prev) => ({
-        ...prev,
-        ...cloudProfile,
-      }));
-    }
-  }, [cloudProfile]);
-
+  const profile = localProfile || cloudProfile || instagramProfile;
   const igUrl = profile?.instagramUrl || siteSettings?.instagramUrl || instagramProfile.instagramUrl;
   const ytUrl = profile?.youtubeUrl || siteSettings?.youtubeUrl || instagramProfile.youtubeUrl;
 
@@ -78,15 +67,14 @@ export default function InstagramSection() {
         if (!res.ok || res.headers.get('content-type')?.includes('text/html')) {
           res = await fetch('https://rohis-banyumas.vercel.app/api/instagram');
         }
-      } catch (e) {
+      } catch {
         res = await fetch('https://rohis-banyumas.vercel.app/api/instagram');
       }
 
       if (res && res.ok) {
         const data = await res.json();
         if (data.profile) {
-          setProfile(data.profile);
-          if (setInstagramProfile) setInstagramProfile(data.profile);
+          setLocalProfile(data.profile);
           setIsLiveConnected(true);
         }
       }
@@ -97,16 +85,16 @@ export default function InstagramSection() {
         setTimeout(() => setIsSyncing(false), 500);
       }
     }
-  }, [setInstagramProfile]);
+  }, []);
 
   useEffect(() => {
     syncInstagramLive();
     // Auto-check for updates every 45 seconds
     const interval = setInterval(() => syncInstagramLive(), 45000);
-    window.addEventListener('focus', syncInstagramLive);
+    window.addEventListener('focus', () => syncInstagramLive());
     return () => {
       clearInterval(interval);
-      window.removeEventListener('focus', syncInstagramLive);
+      window.removeEventListener('focus', () => syncInstagramLive());
     };
   }, [syncInstagramLive]);
 

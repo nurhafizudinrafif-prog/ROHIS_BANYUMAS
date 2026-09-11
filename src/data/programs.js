@@ -12,7 +12,7 @@ export const programs = [
       'Evaluasi kinerja dan pembinaan kader internal',
       'Mentoring kepemimpinan generasi muda Islam',
     ],
-    color: '#3B82F6',
+    color: '#00d4aa',
   },
   {
     id: 2,
@@ -27,7 +27,7 @@ export const programs = [
       'Tabligh Akbar & Dauroh Tahsin Tilawah Al-Qur\'an',
       'Peringatan Hari Besar Islam (PHBI) bersama pelajar',
     ],
-    color: '#059669',
+    color: '#00e5ff',
   },
   {
     id: 3,
@@ -42,7 +42,7 @@ export const programs = [
       'Workshop jurnalistik, desain grafis & media dakwah',
       'Pengelolaan portal informasi dan website resmi',
     ],
-    color: '#8B5CF6',
+    color: '#a855f7',
   },
   {
     id: 4,
@@ -57,7 +57,7 @@ export const programs = [
       'Aksi sosial peduli umat dan tanggap bencana daerah',
       'Penyelenggaraan forum konsolidasi lintas generasi',
     ],
-    color: '#06B6D4',
+    color: '#3b82f6',
   },
   {
     id: 5,
@@ -72,6 +72,6 @@ export const programs = [
       'Manajemen kas produktif dan pendanaan mandiri kegiatan',
       'Edukasi dasar entrepreneurship syariah untuk pelajar',
     ],
-    color: '#D4A843',
+    color: '#e8b84d',
   },
 ];
