@@ -11,7 +11,7 @@
   justify-content: center;
   padding: calc(var(--navbar-height) + 3rem) 0 4rem;
   overflow: hidden;
-  background-color: #030d14;
+  background: transparent;
 }
 
 /* Panoramic background with Nabawi & Arch framing */
@@ -231,29 +231,15 @@
   align-items: center;
   gap: 0.85rem;
   padding: 0.75rem 1.35rem;
-  background: 
-    linear-gradient(
-      135deg,
-      rgba(0, 212, 170, 0.08) 0%,
-      rgba(0, 229, 255, 0.05) 40%,
-      rgba(12, 48, 82, 0.06) 100%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.055) 0%,
-      rgba(255, 255, 255, 0.018) 30%,
-      rgba(12, 48, 82, 0.075) 65%,
-      rgba(6, 25, 45, 0.11) 100%
-    );
-  backdrop-filter: blur(24px) saturate(200%);
-  -webkit-backdrop-filter: blur(24px) saturate(200%);
-  border: 1.2px solid rgba(255, 255, 255, 0.18);
+  background: var(--liquid-glass);
+  backdrop-filter: var(--liquid-blur);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  border: 1px solid var(--liquid-border);
   border-radius: var(--radius-lg);
   box-shadow: 
-    0 14px 36px rgba(0, 0, 0, 0.45), 
-    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.4),
-    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2);
-  transition: all var(--transition-base);
+    var(--liquid-shadow), 
+    var(--liquid-inset);
+  transition: var(--transition-liquid);
   position: relative;
   overflow: hidden;
 }
@@ -271,15 +257,12 @@
 
 .hero-glass-mini-card:hover {
   transform: translateY(-4px) scale(1.02);
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.085) 0%,
-    rgba(255, 255, 255, 0.028) 30%,
-    rgba(12, 48, 82, 0.12) 65%,
-    rgba(6, 25, 45, 0.18) 100%
-  );
-  border-color: rgba(0, 240, 180, 0.55);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.55), 0 0 24px rgba(0, 212, 170, 0.25), inset 0 1.5px 2px rgba(255, 255, 255, 0.6);
+  background: var(--liquid-glass-hover);
+  border-color: var(--liquid-border-hover);
+  box-shadow: 
+    var(--liquid-shadow-hover), 
+    0 0 24px rgba(0, 255, 210, 0.15), 
+    var(--liquid-inset);
 }
 
 .hero-mini-icon {

@@ -23,6 +23,12 @@ function AppContent() {
   return (
     <>
       <ScrollToTop />
+      {/* Background ambient orbs & Islamic geometric pattern */}
+      <div className="islamic-pattern" aria-hidden="true" />
+      <div className="neon-orb neon-orb-1" aria-hidden="true" />
+      <div className="neon-orb neon-orb-2" aria-hidden="true" />
+      <div className="neon-orb neon-orb-3" aria-hidden="true" />
+
       {!isAdmin && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />
