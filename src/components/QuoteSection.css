@@ -1,6 +1,7 @@
 /* ============================================
    Quote Section — Liquid Glass Premium
-   Style: Apple-inspired Liquid Glass + Elegant Neon Aurora
+   ROHIS DARK LIQUID GLASS
+   Transparent • Blurred • Subtle Neon • Elegant
    ============================================ */
 
 .quote-section {
@@ -16,40 +17,58 @@
   text-align: center;
   padding: var(--space-3xl) var(--space-2xl);
   background:
-    radial-gradient(100% 100% at 50% 0%, rgba(212, 175, 90, 0.12) 0%, transparent 65%),
-    var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid rgba(212, 175, 90, 0.35);
+    radial-gradient(100% 100% at 50% 0%, rgba(215, 184, 102, 0.12) 0%, transparent 65%),
+    var(--liquid-glass);
+  backdrop-filter: var(--liquid-blur);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  border: 1px solid rgba(215, 184, 102, 0.35);
   border-radius: var(--radius-xl);
   box-shadow:
-    var(--glass-shadow),
-    0 0 35px rgba(212, 175, 90, 0.12);
+    var(--liquid-shadow),
+    0 0 35px rgba(215, 184, 102, 0.12),
+    var(--liquid-inset);
   position: relative;
   overflow: hidden;
   transition: var(--transition-liquid);
 }
 
+.quote-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      115deg,
+      rgba(255,255,255,0.10) 0%,
+      rgba(255,255,255,0.025) 18%,
+      transparent 40%
+    );
+  opacity: 0.65;
+  pointer-events: none;
+}
+
 .quote-card:hover {
   transform: translateY(-4px);
+  border-color: rgba(215, 184, 102, 0.55);
   box-shadow:
-    var(--glass-shadow-hover),
-    0 0 45px rgba(212, 175, 90, 0.20);
+    var(--liquid-shadow-hover),
+    0 0 45px rgba(215, 184, 102, 0.22),
+    var(--liquid-inset);
 }
 
 .quote-arabic {
   font-family: var(--font-arabic);
   font-size: clamp(1.5rem, 3.5vw, 2rem);
-  color: #a67c1e;
+  color: #D7B866;
   direction: rtl;
   line-height: 2;
   margin-bottom: var(--space-md);
-  text-shadow: 0 0 20px rgba(212, 175, 90, 0.15);
+  text-shadow: 0 0 14px rgba(215, 184, 102, 0.25);
 }
 
 .quote-translation {
   font-size: 1rem;
-  color: var(--color-forest);
+  color: rgba(255, 255, 255, 0.90);
   line-height: 1.8;
   font-style: italic;
   margin-bottom: var(--space-md);
@@ -58,8 +77,8 @@
 .quote-reference {
   font-family: var(--font-heading);
   font-size: 0.85rem;
-  color: var(--color-emerald);
+  color: #00F0CF;
   font-weight: 700;
   letter-spacing: 0.02em;
+  text-shadow: 0 0 10px rgba(0, 240, 207, 0.2);
 }
-

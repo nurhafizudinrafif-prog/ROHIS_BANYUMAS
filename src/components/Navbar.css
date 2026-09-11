@@ -1,6 +1,7 @@
 /* ============================================
    Navbar — Floating Liquid Glass Capsule
-   Style: Apple-inspired Liquid Glass + Elegant Neon Aurora
+   ROHIS DARK LIQUID GLASS
+   Transparent • Blurred • Subtle Neon • Elegant
    ============================================ */
 
 .navbar {
@@ -17,15 +18,20 @@
   background:
     linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.72),
-      rgba(255, 255, 255, 0.45)
+      rgba(255, 255, 255, 0.075),
+      rgba(255, 255, 255, 0.025)
     );
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid rgba(255, 255, 255, 0.65);
+  backdrop-filter:
+    blur(28px)
+    saturate(145%);
+  -webkit-backdrop-filter:
+    blur(28px)
+    saturate(145%);
+  border:
+    1px solid rgba(255, 255, 255, 0.12);
   box-shadow:
-    var(--glass-shadow),
-    var(--glass-glow);
+    0 10px 35px rgba(0, 0, 0, 0.28),
+    var(--liquid-inset);
   padding: 0 1.25rem;
   transition: var(--transition-liquid);
 }
@@ -34,13 +40,14 @@
   background:
     linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.88),
-      rgba(255, 255, 255, 0.62)
+      rgba(255, 255, 255, 0.095),
+      rgba(255, 255, 255, 0.035)
     );
-  border-color: rgba(0, 229, 195, 0.35);
+  border-color: rgba(0, 255, 210, 0.28);
   box-shadow:
-    var(--glass-shadow-hover),
-    0 0 25px rgba(0, 229, 195, 0.12);
+    0 16px 40px rgba(0, 0, 0, 0.35),
+    0 0 24px rgba(0, 255, 210, 0.08),
+    var(--liquid-inset);
   top: 12px;
 }
 
@@ -65,14 +72,14 @@
   height: 38px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid rgba(0, 229, 195, 0.4);
-  box-shadow: 0 0 14px rgba(0, 229, 195, 0.25);
+  border: 2px solid rgba(0, 255, 210, 0.4);
+  box-shadow: 0 0 14px rgba(0, 255, 210, 0.25);
   transition: var(--transition-liquid);
 }
 
 .navbar-brand:hover .navbar-logo-img {
-  border-color: var(--color-neon);
-  box-shadow: 0 0 24px rgba(0, 229, 195, 0.5);
+  border-color: #00F0CF;
+  box-shadow: 0 0 22px rgba(0, 255, 210, 0.5);
   transform: rotate(5deg) scale(1.05);
 }
 
@@ -86,15 +93,16 @@
   font-family: var(--font-heading);
   font-weight: 800;
   font-size: 1.1rem;
-  color: var(--color-forest);
+  color: #ffffff;
   letter-spacing: -0.01em;
 }
 
 .navbar-brand-sub {
   font-size: 0.65rem;
-  color: var(--color-emerald);
+  color: #00F0CF;
   font-weight: 600;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 10px rgba(0, 240, 207, 0.3);
 }
 
 /* Nav Menu */
@@ -109,7 +117,7 @@
   padding: 0.45rem 0.85rem;
   font-size: 0.88rem;
   font-weight: 600;
-  color: var(--color-forest);
+  color: rgba(255, 255, 255, 0.82);
   text-decoration: none;
   border-radius: var(--radius-pill);
   transition: var(--transition-liquid);
@@ -122,16 +130,16 @@
   left: 50%;
   width: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--color-emerald), var(--color-neon));
+  background: linear-gradient(90deg, #00DDB8, #00F0CF);
   transition: all var(--transition-base);
   transform: translateX(-50%);
   border-radius: 1px;
-  box-shadow: 0 0 8px rgba(0, 229, 195, 0.6);
+  box-shadow: 0 0 10px rgba(0, 255, 210, 0.6);
 }
 
 .navbar-link:hover {
-  color: var(--color-emerald);
-  background: rgba(255, 255, 255, 0.65);
+  color: #00E8C1;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .navbar-link:hover::after {
@@ -139,8 +147,9 @@
 }
 
 .navbar-link.active {
-  color: var(--color-emerald);
+  color: #00E8C1;
   font-weight: 700;
+  text-shadow: 0 0 14px rgba(0, 232, 193, 0.25);
 }
 
 .navbar-link.active::after {
@@ -161,17 +170,17 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  color: var(--color-forest);
-  background: rgba(255, 255, 255, 0.55);
-  border: 1px solid rgba(11, 61, 46, 0.12);
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   transition: var(--transition-liquid);
 }
 
 .navbar-search-btn:hover {
-  color: var(--color-emerald);
-  background: rgba(255, 255, 255, 0.85);
-  border-color: rgba(0, 229, 195, 0.45);
-  box-shadow: 0 0 14px rgba(0, 229, 195, 0.25);
+  color: #00F0CF;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(0, 255, 210, 0.35);
+  box-shadow: 0 0 16px rgba(0, 255, 210, 0.25);
   transform: scale(1.06);
 }
 
@@ -181,26 +190,26 @@
   gap: 0.45rem;
   padding: 0.45rem 1.15rem;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 700;
   font-family: var(--font-heading);
-  color: #FFFFFF !important;
+  color: #020A0B !important;
   background:
     linear-gradient(
       135deg,
-      #087A60 0%,
-      #0E9D7C 48%,
-      #00BFA5 100%
+      #00BFA5 0%,
+      #00DDB8 50%,
+      #00F0CF 100%
     );
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(0, 255, 210, 0.4);
   border-radius: var(--radius-pill);
   transition: var(--transition-liquid);
   text-decoration: none;
-  box-shadow: 0 4px 16px rgba(0, 140, 110, 0.22);
+  box-shadow: 0 4px 16px rgba(0, 221, 184, 0.3), 0 0 18px rgba(0, 255, 210, 0.2);
 }
 
 .navbar-login-btn:hover {
-  color: #FFFFFF !important;
-  box-shadow: 0 8px 24px rgba(0, 140, 110, 0.32), 0 0 20px rgba(0, 229, 195, 0.2);
+  color: #020A0B !important;
+  box-shadow: 0 6px 24px rgba(0, 221, 184, 0.45), 0 0 24px rgba(0, 255, 210, 0.35);
   transform: translateY(-2px);
 }
 
@@ -211,15 +220,16 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  color: var(--color-forest);
-  background: rgba(255, 255, 255, 0.55);
-  border: 1px solid rgba(11, 61, 46, 0.12);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   transition: var(--transition-liquid);
 }
 
 .navbar-toggle:hover {
-  background: rgba(255, 255, 255, 0.85);
-  border-color: var(--color-emerald);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(0, 255, 210, 0.35);
+  color: #00F0CF;
 }
 
 /* Mobile Responsive */
@@ -244,14 +254,14 @@
     background:
       linear-gradient(
         135deg,
-        rgba(255, 255, 255, 0.92),
-        rgba(255, 255, 255, 0.82)
+        rgba(4, 19, 21, 0.96),
+        rgba(6, 25, 26, 0.98)
       );
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
-    border: 1px solid rgba(0, 229, 195, 0.3);
+    backdrop-filter: blur(28px) saturate(145%);
+    -webkit-backdrop-filter: blur(28px) saturate(145%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: var(--radius-xl);
-    box-shadow: var(--glass-shadow-hover);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 28px rgba(0, 255, 210, 0.1);
     transform: translateY(-20px);
     opacity: 0;
     transition: var(--transition-liquid);
@@ -268,7 +278,7 @@
     padding: 0.85rem 1.25rem;
     font-size: 1rem;
     border-radius: var(--radius-md);
-    color: var(--color-forest);
+    color: rgba(255, 255, 255, 0.88);
   }
 
   .navbar-link::after {
@@ -277,8 +287,7 @@
 
   .navbar-link:hover,
   .navbar-link.active {
-    background: rgba(0, 229, 195, 0.15);
-    color: var(--color-forest);
+    background: rgba(0, 255, 210, 0.12);
+    color: #00E8C1;
   }
 }
-

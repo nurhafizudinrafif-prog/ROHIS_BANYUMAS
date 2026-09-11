@@ -1,6 +1,6 @@
 /* ============================================
    Home Page — Liquid Glass Premium
-   Style: Apple-inspired Liquid Glass + Elegant Neon Aurora
+   ROHIS DARK LIQUID GLASS
    ============================================ */
 
 .home-programs-grid {
@@ -36,35 +36,58 @@
   max-width: 640px;
   margin: 0 auto;
   padding: var(--space-3xl) var(--space-xl);
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid rgba(0, 229, 195, 0.35);
+  background: var(--liquid-glass);
+  backdrop-filter: var(--liquid-blur);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  border: 1px solid var(--liquid-border);
   border-radius: var(--radius-xl);
   box-shadow:
-    var(--glass-shadow),
-    0 0 35px rgba(0, 229, 195, 0.16);
+    var(--liquid-shadow),
+    var(--liquid-inset);
   transition: var(--transition-liquid);
+  position: relative;
+  overflow: hidden;
+}
+
+.home-cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      115deg,
+      rgba(255,255,255,0.10) 0%,
+      rgba(255,255,255,0.025) 18%,
+      transparent 40%
+    );
+  opacity: 0.65;
+  pointer-events: none;
 }
 
 .home-cta:hover {
   transform: translateY(-4px);
-  background: var(--glass-bg-hover);
+  background: var(--liquid-glass-hover);
+  border-color: var(--liquid-border-hover);
   box-shadow:
-    var(--glass-shadow-hover),
-    0 0 45px rgba(0, 229, 195, 0.22);
+    var(--liquid-shadow-hover),
+    var(--liquid-inset);
 }
 
 .home-cta h2 {
   margin-bottom: var(--space-md);
-  background: linear-gradient(135deg, var(--color-forest) 0%, var(--color-emerald) 60%, var(--color-neon) 100%);
+  background: linear-gradient(
+    90deg,
+    #00DDB8,
+    #00F0CF 45%,
+    #4DD7E8
+  );
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 .home-cta p {
-  color: var(--color-muted);
+  color: rgba(255, 255, 255, 0.75);
   line-height: 1.7;
   margin-bottom: var(--space-xl);
 }
@@ -75,4 +98,3 @@
   justify-content: center;
   flex-wrap: wrap;
 }
-

@@ -31,7 +31,12 @@
   margin-top: var(--space-md);
   font-size: clamp(1.8rem, 5vw, 3rem);
   font-weight: 800;
-  background: linear-gradient(135deg, var(--color-forest) 0%, var(--color-emerald) 55%, var(--color-neon) 100%);
+  background: linear-gradient(
+    90deg,
+    #00DDB8,
+    #00F0CF 45%,
+    #4DD7E8
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -41,7 +46,7 @@
   max-width: 640px;
   margin: var(--space-md) auto 0;
   font-size: 1rem;
-  color: var(--color-muted);
+  color: rgba(255, 255, 255, 0.75);
   line-height: 1.7;
 }
 

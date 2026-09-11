@@ -1,6 +1,7 @@
 /* ============================================
    Program Card — Liquid Glass Design System
-   Style: Apple-inspired Liquid Glass + Elegant Neon Aurora
+   ROHIS DARK LIQUID GLASS
+   Transparent • Blurred • Subtle Neon • Elegant
    ============================================ */
 
 .program-glass-card {
@@ -8,45 +9,74 @@
   display: flex;
   flex-direction: column;
   padding: 2.2rem 1.85rem;
-  border-radius: var(--radius-lg);
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius-glass);
+  background: var(--liquid-glass);
+  backdrop-filter: var(--liquid-blur);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  border: 1px solid var(--liquid-border);
   box-shadow:
-    var(--glass-shadow),
-    var(--glass-glow);
-  transition: var(--transition-liquid);
+    var(--liquid-shadow),
+    var(--liquid-inset);
+  transition:
+    background 0.45s cubic-bezier(.22,1,.36,1),
+    border-color 0.45s ease,
+    box-shadow 0.45s ease,
+    transform 0.45s cubic-bezier(.22,1,.36,1);
   overflow: hidden;
 }
 
-/* Light specular sheen */
+/* Soft Top Reflection */
 .program-glass-card::before {
-  content: '';
+  content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 50%;
-  background: linear-gradient(
-    180deg, 
-    rgba(255, 255, 255, 0.22) 0%, 
-    rgba(255, 255, 255, 0.04) 60%, 
-    transparent 100%
-  );
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  inset: 0;
+  background:
+    linear-gradient(
+      115deg,
+      rgba(255,255,255,0.10) 0%,
+      rgba(255,255,255,0.025) 18%,
+      transparent 40%
+    );
+  opacity: 0.65;
   pointer-events: none;
-  z-index: 1;
+}
+
+/* Subtle Liquid Glow */
+.program-glass-card::after {
+  content: "";
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  top: -150px;
+  right: -100px;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle,
+      rgba(0,255,210,0.13),
+      transparent 68%
+    );
+  filter: blur(35px);
+  opacity: 0.65;
+  pointer-events: none;
+  transition:
+    transform 0.6s ease,
+    opacity 0.5s ease;
 }
 
 /* Hover effect */
 .program-glass-card:hover {
-  transform: translateY(-6px);
-  background: var(--glass-bg-hover);
-  border-color: rgba(0, 229, 195, 0.35);
+  transform: translateY(-4px);
+  background: var(--liquid-glass-hover);
+  border-color: var(--liquid-border-hover);
   box-shadow:
-    var(--glass-shadow-hover),
-    0 0 35px rgba(0, 229, 195, 0.12);
+    var(--liquid-shadow-hover),
+    var(--liquid-inset);
+}
+
+.program-glass-card:hover::after {
+  transform: translate(-15px, 15px) scale(1.12);
+  opacity: 0.9;
 }
 
 /* Content layer above glass shine */
@@ -71,25 +101,25 @@
   border-radius: var(--radius-md);
   background: radial-gradient(
     circle at 35% 25%, 
-    rgba(255, 255, 255, 0.55) 0%, 
-    color-mix(in srgb, var(--accent-color, var(--color-emerald)) 35%, transparent) 40%, 
-    rgba(255, 255, 255, 0.2) 100%
+    rgba(255, 255, 255, 0.25) 0%, 
+    color-mix(in srgb, var(--accent-color, #00DDB8) 35%, transparent) 40%, 
+    rgba(255, 255, 255, 0.05) 100%
   );
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid color-mix(in srgb, var(--accent-color, var(--color-emerald)) 60%, rgba(255, 255, 255, 0.6));
-  color: var(--accent-color, var(--color-emerald));
+  border: 1px solid color-mix(in srgb, var(--accent-color, #00DDB8) 50%, rgba(255, 255, 255, 0.3));
+  color: var(--accent-color, #00F0CF);
   box-shadow: 
-    0 4px 16px rgba(0, 229, 195, 0.2), 
-    inset 0 1px 2px rgba(255, 255, 255, 0.7);
+    0 4px 16px rgba(0, 255, 210, 0.2), 
+    inset 0 1px 2px rgba(255, 255, 255, 0.3);
   transition: var(--transition-liquid);
 }
 
 .program-glass-card:hover .program-glass-icon {
   transform: scale(1.08);
   box-shadow: 
-    0 8px 24px rgba(0, 229, 195, 0.3), 
-    inset 0 1px 2px rgba(255, 255, 255, 0.85);
+    0 8px 24px rgba(0, 255, 210, 0.35), 
+    inset 0 1px 2px rgba(255, 255, 255, 0.5);
 }
 
 /* Neon Pill Badge */
@@ -106,12 +136,12 @@
   text-transform: uppercase;
   padding: 0.25rem 0.85rem;
   border-radius: var(--radius-pill);
-  color: var(--accent-color, var(--color-forest));
-  border: 1px solid color-mix(in srgb, var(--accent-color, var(--color-emerald)) 40%, rgba(255, 255, 255, 0.6));
-  background: rgba(255, 255, 255, 0.55);
+  color: var(--accent-color, #00F0CF);
+  border: 1px solid color-mix(in srgb, var(--accent-color, #00DDB8) 40%, rgba(255, 255, 255, 0.2));
+  background: rgba(0, 255, 210, 0.08);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 2px 8px rgba(11, 61, 46, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Title & Description */
@@ -119,14 +149,14 @@
   font-family: var(--font-heading);
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--color-forest);
+  color: #ffffff;
   margin-bottom: 0.75rem;
   line-height: 1.3;
 }
 
 .program-card-desc {
   font-size: 0.88rem;
-  color: var(--color-muted);
+  color: rgba(255, 255, 255, 0.72);
   line-height: 1.65;
   margin-bottom: 1.5rem;
 }
@@ -137,7 +167,7 @@
   flex-direction: column;
   gap: 0.75rem;
   padding-top: 1rem;
-  border-top: 1px solid rgba(11, 61, 46, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .program-check-item {
@@ -145,7 +175,7 @@
   align-items: flex-start;
   gap: 0.65rem;
   font-size: 0.85rem;
-  color: var(--color-text);
+  color: rgba(255, 255, 255, 0.88);
   line-height: 1.5;
 }
 
@@ -153,13 +183,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-emerald);
+  color: #00E8C1;
   flex-shrink: 0;
   margin-top: 2px;
-  filter: drop-shadow(0 0 5px rgba(0, 229, 195, 0.6));
+  filter: drop-shadow(0 0 6px rgba(0, 255, 210, 0.6));
 }
 
 .check-text {
   flex: 1;
 }
-
