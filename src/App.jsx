@@ -4,6 +4,7 @@ import ScrollToTop from './utils';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import FloatingButtons from './components/FloatingButtons';
+import DynamicBackground from './components/DynamicBackground';
 import Home from './pages/Home';
 import About from './pages/About';
 import Programs from './pages/Programs';
@@ -23,11 +24,8 @@ function AppContent() {
   return (
     <>
       <ScrollToTop />
-      {/* Background ambient orbs & Islamic geometric pattern */}
-      <div className="islamic-pattern" aria-hidden="true" />
-      <div className="neon-orb neon-orb-1" aria-hidden="true" />
-      <div className="neon-orb neon-orb-2" aria-hidden="true" />
-      <div className="neon-orb neon-orb-3" aria-hidden="true" />
+      {/* Elegant & Living Dynamic Islamic Background */}
+      <DynamicBackground />
 
       {!isAdmin && <Navbar />}
       <Routes>
