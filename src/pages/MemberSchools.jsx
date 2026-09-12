@@ -8,7 +8,7 @@ import './About.css';
 
 export default function MemberSchools() {
   useScrollAnimation();
-  const { memberSchools, team } = useData();
+  const { memberSchools, team, organizationFullName, structurePeriod } = useData();
   const [activeDivision, setActiveDivision] = useState('Semua');
 
   const totalMembers = memberSchools.reduce((sum, s) => sum + s.members, 0);
@@ -24,19 +24,35 @@ export default function MemberSchools() {
       <section className="page-hero pattern-bg">
         <div className="container text-center">
           <span className="badge badge-primary animate-hero delay-0">Jaringan & Kepengurusan</span>
-          <h1 className="page-hero-title animate-hero delay-1">ROHIS Anggota & Divisi Kepengurusan</h1>
+          <h1 className="page-hero-title animate-hero delay-1">ROHIS Anggota & Struktur Kepengurusan</h1>
           <p className="page-hero-subtitle animate-hero delay-2">
-            Sinergi jaringan {memberSchools.length} ROHIS sekolah dan 5 divisi gerakan Organisasi ROHIS Kabupaten Banyumas Periode 2025/2026.
+            Sinergi jaringan {memberSchools.length} ROHIS sekolah, BPH, dan 5 divisi gerakan {organizationFullName} Periode {structurePeriod}.
           </p>
         </div>
       </section>
 
-      {/* 5 Divisi Kepengurusan ROKABA Section */}
-      <section className="section">
+      {/* Leadership / BPH Showcase (Sebelum SDM) */}
+      <section className="section" id="bph">
+        <div className="container">
+          <SectionHeader
+            badge={`Struktur ${structurePeriod}`}
+            title="Badan Pengurus Harian (BPH)"
+            subtitle={`Pimpinan inti yang mengarahkan visi dan roda pergerakan ${organizationFullName} Periode ${structurePeriod}.`}
+          />
+          <div className="team-grid-bph">
+            {team.bph.map((member, i) => (
+              <TeamCard key={member.id} member={member} index={i} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5 Divisi Kepengurusan ROKABA Section (Mulai dari SDM) */}
+      <section className="section section-alt" id="divisi">
         <div className="container">
           <SectionHeader
             badge="5 Pilar Gerakan"
-            title="Divisi Kepengurusan ROKABA 2025/2026"
+            title={`Divisi Kepengurusan ROKABA ${structurePeriod}`}
             subtitle="Kader-kader dakwah terpilih dari sekolah-sekolah se-Banyumas yang mengemban amanah di setiap divisi."
           />
 
@@ -47,6 +63,14 @@ export default function MemberSchools() {
               onClick={() => setActiveDivision('Semua')}
             >
               Semua Divisi ({team.divisions.reduce((acc, d) => acc + d.members.length, 0)})
+            </button>
+            <button
+              className="about-div-tab"
+              onClick={() => {
+                document.getElementById('bph')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              BPH ({team.bph.length})
             </button>
             {team.divisions.map((d) => (
               <button
@@ -100,7 +124,7 @@ export default function MemberSchools() {
       </section>
 
       {/* Jaringan ROHIS Sekolah Anggota */}
-      <section className="section section-alt">
+      <section className="section">
         <div className="container">
           <SectionHeader
             badge="Jaringan Sekolah"

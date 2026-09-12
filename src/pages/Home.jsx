@@ -19,7 +19,6 @@ import ProgramCard from '../components/ProgramCard';
 import ArticleCard from '../components/ArticleCard';
 import EventCard from '../components/EventCard';
 import MemberSchoolCard from '../components/MemberSchoolCard';
-import TeamCard from '../components/TeamCard';
 import QuoteSection from '../components/QuoteSection';
 import InstagramSection from '../components/InstagramSection';
 import { useData } from '../context/DataContext';
@@ -247,34 +246,13 @@ export default function Home() {
       {/* Official Instagram Showcase */}
       <InstagramSection />
 
-      {/* Leadership / BPH Showcase */}
+      {/* Member Schools */}
       <section className="section">
         <div className="container">
           <SectionHeader
-            badge={`Struktur ${structurePeriod}`}
-            title="Badan Pengurus Harian (BPH)"
-            subtitle={`Pimpinan inti yang mengarahkan visi dan roda pergerakan ${organizationFullName} Periode ${structurePeriod}.`}
-          />
-          <div className="team-grid-bph">
-            {team.bph.map((member, i) => (
-              <TeamCard key={member.id} member={member} index={i} />
-            ))}
-          </div>
-          <div className="text-center" style={{ marginTop: 'var(--space-2xl)' }}>
-            <Link to="/rohis-anggota" className="btn btn-outline">
-              Lihat Struktur Lengkap 5 Divisi & 40 Pengurus <ArrowRight size={16} />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Member Schools */}
-      <section className="section section-alt">
-        <div className="container">
-          <SectionHeader
-            badge="Jaringan"
-            title="ROHIS Anggota Kami"
-            subtitle="Lebih dari 15 sekolah di Kabupaten Banyumas tergabung dalam organisasi ini."
+            badge="Jaringan & Struktur"
+            title="ROHIS Anggota & Kepengurusan"
+            subtitle={`Lebih dari 15 sekolah di Kabupaten Banyumas serta jajaran BPH dan 5 divisi gerakan ${structurePeriod}.`}
           />
           <div className="grid grid-4">
             {memberSchools.slice(0, 4).map((school, i) => (
@@ -283,7 +261,7 @@ export default function Home() {
           </div>
           <div className="text-center" style={{ marginTop: 'var(--space-2xl)' }}>
             <Link to="/rohis-anggota" className="btn btn-outline">
-              Lihat Semua ROHIS <ArrowRight size={16} />
+              Lihat Struktur Lengkap BPH, Divisi & ROHIS Sekolah <ArrowRight size={16} />
             </Link>
           </div>
         </div>
