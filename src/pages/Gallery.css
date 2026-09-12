@@ -8,12 +8,99 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
+  position: relative;
+}
+
+.gallery-grid::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  left: -3%;
+  width: 480px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(0, 255, 200, 0.14), transparent 70%);
+  filter: blur(55px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.gallery-grid::after {
+  content: '';
+  position: absolute;
+  bottom: -10%;
+  right: -3%;
+  width: 500px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.14), transparent 70%);
+  filter: blur(55px);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .gallery-item {
   cursor: pointer;
   display: flex;
   flex-direction: column;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: var(--radius-glass);
+
+  /* Kaca Dasar Transparan */
+  background:
+    linear-gradient(
+      140deg,
+      rgba(0, 255, 200, 0.05) 0%,
+      rgba(4, 16, 20, 0.65) 45%,
+      rgba(24, 10, 36, 0.65) 100%
+    );
+
+  /* Efek Blur Kaca (sedikit dikurangi agar lebih jernih) */
+  backdrop-filter: blur(16px) saturate(165%) contrast(105%);
+  -webkit-backdrop-filter: blur(16px) saturate(165%) contrast(105%);
+
+  /* 3D Glass Bevel Border: Neon Green atas/kiri, Neon Purple kanan/bawah */
+  border: 1px solid rgba(0, 255, 200, 0.25);
+  border-top: 1.5px solid rgba(0, 255, 200, 0.60);
+  border-left: 1.5px solid rgba(0, 255, 200, 0.38);
+  border-right: 1.5px solid rgba(168, 85, 247, 0.45);
+  border-bottom: 1.5px solid rgba(168, 85, 247, 0.28);
+
+  /* 3D Depth & Floating Elevation */
+  box-shadow:
+    0 24px 60px -8px rgba(0, 0, 0, 0.75),
+    0 8px 24px -4px rgba(0, 0, 0, 0.45),
+    0 0 25px rgba(0, 255, 200, 0.08),
+    0 12px 32px rgba(168, 85, 247, 0.10),
+    inset 0 1.5px 0 rgba(0, 255, 200, 0.45),
+    inset 0 -2px 0 rgba(168, 85, 247, 0.38),
+    inset 1.5px 0 0 rgba(0, 255, 200, 0.20),
+    inset -1.5px 0 0 rgba(168, 85, 247, 0.20);
+
+  transition:
+    transform 450ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 450ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 400ms ease;
+
+  will-change: transform, box-shadow;
+}
+
+.gallery-item:hover {
+  transform: translateY(-10px) scale(1.025);
+  border-top-color: rgba(0, 255, 200, 0.85);
+  border-left-color: rgba(0, 255, 200, 0.55);
+  border-right-color: rgba(168, 85, 247, 0.75);
+  border-bottom-color: rgba(168, 85, 247, 0.45);
+
+  box-shadow:
+    0 35px 85px -10px rgba(0, 0, 0, 0.88),
+    0 16px 36px -4px rgba(0, 0, 0, 0.60),
+    0 0 35px rgba(0, 255, 200, 0.28),
+    0 15px 45px rgba(168, 85, 247, 0.25),
+    inset 0 2px 0 rgba(0, 255, 200, 0.65),
+    inset 0 -2.5px 0 rgba(168, 85, 247, 0.50),
+    inset 1.5px 0 0 rgba(0, 255, 200, 0.30),
+    inset -1.5px 0 0 rgba(168, 85, 247, 0.30);
 }
 
 .gallery-item-image {
@@ -23,7 +110,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 20, 25, 0.4);
+  background: rgba(0, 20, 25, 0.5);
+  z-index: 1;
+}
+
+/* 3D Glass Vignette & Reflection on Image */
+.gallery-item-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 255, 200, 0.12) 0%,
+    transparent 20%,
+    transparent 75%,
+    rgba(0, 0, 0, 0.45) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
 }
 
 .gallery-item-img {
@@ -34,7 +138,7 @@
 }
 
 .gallery-item:hover .gallery-item-img {
-  transform: scale(1.12);
+  transform: scale(1.08);
   filter: saturate(115%) contrast(104%);
 }
 
@@ -51,12 +155,12 @@
   opacity: 0.5;
 }
 
-/* Media count badge (Top Right dark pill) */
+/* Media count badge (Top Right 3D dark pill) */
 .gallery-card-badge {
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
-  z-index: 3;
+  z-index: 5;
 }
 
 .gallery-card-badge span {
@@ -66,51 +170,59 @@
   font-weight: 600;
   font-family: var(--font-heading);
   color: #ffffff;
-  background: rgba(2, 10, 11, 0.72);
-  backdrop-filter: blur(14px) saturate(160%);
-  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  background: rgba(2, 12, 14, 0.78);
+  backdrop-filter: blur(10px) saturate(150%);
+  -webkit-backdrop-filter: blur(10px) saturate(150%);
   border-radius: var(--radius-full);
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(0, 255, 200, 0.35);
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(0, 255, 200, 0.35),
+    inset 0 -1px 0 rgba(168, 85, 247, 0.25);
 }
 
-/* Video indicator: Center Red Play Button matching mockup */
+/* Video indicator: Center Red 3D Play Button */
 .gallery-video-indicator {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   background: linear-gradient(135deg, #ef4444, #dc2626);
   color: #ffffff;
-  border: 2px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.7), 0 4px 12px rgba(0, 0, 0, 0.5);
-  z-index: 3;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow:
+    0 0 22px rgba(239, 68, 68, 0.75),
+    0 6px 16px rgba(0, 0, 0, 0.6),
+    inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  z-index: 5;
   transition: all var(--transition-base);
 }
 
 .gallery-item:hover .gallery-video-indicator {
   transform: translate(-50%, -50%) scale(1.15);
-  box-shadow: 0 0 30px rgba(239, 68, 68, 0.9), 0 4px 16px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 32px rgba(239, 68, 68, 0.95), 0 4px 18px rgba(0, 0, 0, 0.65);
 }
 
-/* Card info overlay */
+/* Card info overlay with 3D glass shelf effect */
 .gallery-item-overlay {
   padding: 1.25rem 1.35rem 1.45rem;
   background: linear-gradient(
     180deg,
-    rgba(2, 10, 11, 0.45) 0%,
-    rgba(2, 10, 11, 0.85) 100%
+    rgba(3, 14, 18, 0.55) 0%,
+    rgba(18, 8, 28, 0.70) 100%
   );
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border-top: 1px solid rgba(0, 255, 200, 0.30);
+  box-shadow:
+    inset 0 1px 0 rgba(0, 255, 200, 0.22),
+    0 -8px 24px rgba(0, 0, 0, 0.50);
   position: relative;
   z-index: 2;
 }
@@ -123,12 +235,13 @@
 }
 
 .gallery-overlay-meta .badge {
-  background: rgba(0, 212, 170, 0.18);
-  color: #00f0c0;
-  border: 1px solid rgba(0, 212, 170, 0.45);
-  box-shadow: 0 0 10px rgba(0, 212, 170, 0.2);
+  background: rgba(0, 255, 200, 0.16);
+  color: #00f0cf;
+  border: 1px solid rgba(0, 255, 200, 0.45);
+  box-shadow: 0 0 10px rgba(0, 255, 200, 0.25), inset 0 1px 0 rgba(0, 255, 200, 0.35);
   font-size: 0.7rem;
   padding: 0.2rem 0.65rem;
+  border-radius: var(--radius-pill);
 }
 
 .gallery-overlay-date {

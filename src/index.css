@@ -92,8 +92,8 @@
 
   /* BLUR */
   --liquid-blur:
-    blur(24px)
-    saturate(180%)
+    blur(16px)
+    saturate(165%)
     contrast(105%);
 
   /* 3D SHADOW (Neon Green on top-left, Neon Purple on bottom-right) */
@@ -356,9 +356,9 @@ p {
       rgba(24, 10, 36, 0.65) 100%
     );
 
-  /* BLUR BACKGROUND BERJALAN SEMPURNA TANPA PRESERVE-3D */
-  backdrop-filter: blur(24px) saturate(180%) contrast(105%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%) contrast(105%);
+  /* BLUR BACKGROUND BERJALAN SEMPURNA TANPA PRESERVE-3D (DIKURANGI SEDIKIT AGAR LEBIH JERNIH) */
+  backdrop-filter: blur(16px) saturate(165%) contrast(105%);
+  -webkit-backdrop-filter: blur(16px) saturate(165%) contrast(105%);
 
   border: 1px solid rgba(0, 255, 200, 0.22);
   border-top-color: rgba(0, 255, 200, 0.50);
@@ -437,7 +437,7 @@ p {
     );
 
   transform: scale(1.08);
-  filter: blur(14px);
+  filter: blur(10px);
   opacity: 0.55;
   pointer-events: none;
 
@@ -477,6 +477,7 @@ p {
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
+  z-index: 4;
 
   /* SHEEN NEON HIJAU DI ATAS & UNGU DI BAWAH/SAMPING (TIDAK OVER-PUTIH) */
   background:
@@ -580,7 +581,7 @@ p {
 
   transform: scale(1.22) rotate(1.5deg);
 
-  filter: blur(18px);
+  filter: blur(12px);
 
   opacity: 0.80;
 
