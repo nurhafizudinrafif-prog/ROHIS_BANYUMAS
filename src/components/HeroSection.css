@@ -402,35 +402,6 @@
 
 /* Responsive */
 @media (max-width: 1080px) {
-  .hero-cinematic-container {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 2.5rem;
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .hero-cinematic-left {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .hero-cinematic-right {
-    align-self: flex-start;
-    padding: 0;
-  }
-
-  .hero-slogan-script-container {
-    text-align: left;
-    transform: rotate(0deg);
-  }
-
-  .hero-slogan-brush-line {
-    margin-left: 0;
-  }
-}
-
-@media (max-width: 768px) {
   .hero-cinematic {
     padding-top: calc(var(--navbar-height) + 2.2rem);
     padding-bottom: 3.5rem;
@@ -439,7 +410,7 @@
     max-width: 100vw;
   }
 
-  /* Full seamless vertical gradient on mobile — eliminates 90deg horizontal cut-off seam */
+  /* Full seamless vertical gradient — eliminates 90deg horizontal cut-off seam on any mobile/tablet width */
   .hero-cinematic-bg {
     background-image: 
       linear-gradient(
@@ -459,6 +430,7 @@
     max-width: 100%;
     padding: 0 1.25rem;
     gap: 2rem;
+    flex-direction: column;
     align-items: stretch;
   }
 
@@ -482,13 +454,13 @@
   }
 
   .hero-cinematic-title {
-    font-size: clamp(2rem, 8.5vw, 2.75rem);
+    font-size: clamp(2.1rem, 7.5vw, 3.2rem);
     line-height: 1.18;
     margin-bottom: 1rem;
   }
 
   .hero-cinematic-subtitle {
-    font-size: 0.95rem;
+    font-size: 0.98rem;
     line-height: 1.65;
     max-width: 100%;
     margin-bottom: 1.75rem;
@@ -506,7 +478,7 @@
 
   .hero-glass-mini-card {
     width: 100%;
-    padding: 0.85rem 1.15rem;
+    padding: 0.85rem 1.25rem;
   }
 
   .hero-cinematic-right {
@@ -522,7 +494,7 @@
   }
 
   .hero-slogan-script {
-    font-size: clamp(1.85rem, 6vw, 2.25rem);
+    font-size: clamp(1.85rem, 5.5vw, 2.4rem);
   }
 
   .hero-slogan-brush-line {
@@ -540,4 +512,5 @@
     justify-content: center;
   }
 }
+
 

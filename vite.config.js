@@ -35,5 +35,17 @@ export default defineConfig({
   build: {
     target: 'es2022',
     cssMinify: false,
+    rollupOptions: {
+      output: {
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name && assetInfo.name.endsWith('.css')) {
+            return 'assets/[name]-v2-[hash].[ext]';
+          }
+          return 'assets/[name]-[hash].[ext]';
+        },
+      },
+    },
   },
 });
