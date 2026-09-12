@@ -32,135 +32,105 @@
 
 
   /* =========================================================
-     LIQUID GLASS
+     LIQUID GLASS — DARK NEO GREEN
      ========================================================= */
 
+  /* Warna utama kaca
+     Hijau hanya sebagai aksen, bukan warna dominan */
   --glass-bg:
     linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.085) 0%,
-      rgba(255, 255, 255, 0.035) 25%,
-      rgba(255, 255, 255, 0.018) 50%,
-      rgba(0, 230, 190, 0.028) 75%,
-      rgba(255, 255, 255, 0.025) 100%
+      145deg,
+      rgba(255, 255, 255, 0.115) 0%,
+      rgba(255, 255, 255, 0.045) 28%,
+      rgba(0, 255, 200, 0.035) 58%,
+      rgba(0, 255, 160, 0.055) 100%
     );
 
-
-  /* =========================================================
-     LIQUID AURORA
-     ========================================================= */
-
+  /* Aurora sangat halus */
   --glass-aurora:
-
     radial-gradient(
-      90% 100% at 0% 0%,
-      rgba(0, 255, 204, 0.10),
-      transparent 60%
+      circle at 15% 10%,
+      rgba(110, 255, 220, 0.13),
+      transparent 40%
     ),
-
     radial-gradient(
-      80% 90% at 100% 0%,
-      rgba(0, 200, 255, 0.07),
-      transparent 58%
-    ),
-
-    radial-gradient(
-      90% 90% at 100% 100%,
-      rgba(90, 70, 220, 0.045),
-      transparent 60%
+      circle at 85% 90%,
+      rgba(0, 255, 145, 0.10),
+      transparent 38%
     );
-
-
-  /* =========================================================
-     FINAL GLASS
-     ========================================================= */
 
   --liquid-glass:
     var(--glass-aurora),
     var(--glass-bg);
-
 
   /* =========================================================
      HOVER
      ========================================================= */
 
   --liquid-glass-hover:
-
     radial-gradient(
       100% 100% at 0% 0%,
       rgba(0, 255, 204, 0.15),
       transparent 60%
     ),
-
     radial-gradient(
       90% 90% at 100% 0%,
       rgba(0, 200, 255, 0.11),
       transparent 58%
     ),
-
     linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.105),
-      rgba(255, 255, 255, 0.035)
+      rgba(255, 255, 255, 0.12),
+      rgba(255, 255, 255, 0.04)
     );
-
 
   /* =========================================================
      BORDER
      ========================================================= */
 
   --liquid-border:
-    rgba(255, 255, 255, 0.18);
+    rgba(255, 255, 255, 0.20);
 
   --liquid-border-hover:
-    rgba(0, 255, 210, 0.45);
-
+    rgba(80, 255, 210, 0.48);
 
   /* =========================================================
-     BLUR (3D Deep Liquid Blur)
+     BLUR
      ========================================================= */
 
   --liquid-blur:
-    blur(32px)
-    saturate(180%)
-    contrast(105%);
-
+    blur(24px)
+    saturate(165%)
+    contrast(106%);
 
   /* =========================================================
-     3D MULTI-LAYER SHADOW
+     3D SHADOW
      ========================================================= */
 
   --liquid-shadow:
-    0 24px 60px -12px rgba(0, 0, 0, 0.65),
-    0 10px 24px -6px rgba(0, 0, 0, 0.45),
-    0 2px 6px 0 rgba(0, 0, 0, 0.30),
-    0 0 20px 0 rgba(0, 255, 210, 0.06);
-
+    0 32px 70px -20px rgba(0, 0, 0, 0.72),
+    0 14px 32px -10px rgba(0, 0, 0, 0.46),
+    0 3px 8px rgba(0, 0, 0, 0.26),
+    0 0 25px rgba(0, 255, 190, 0.045);
 
   --liquid-shadow-hover:
-    0 32px 70px -12px rgba(0, 0, 0, 0.75),
-    0 16px 32px -8px rgba(0, 0, 0, 0.50),
-    0 0 35px 2px rgba(0, 255, 210, 0.18);
-
+    0 40px 85px -20px rgba(0, 0, 0, 0.76),
+    0 18px 40px -10px rgba(0, 0, 0, 0.50),
+    0 0 35px rgba(0, 255, 190, 0.10),
+    0 0 80px rgba(0, 255, 170, 0.045);
 
   /* =========================================================
-     3D BEVELED INTERNAL LIGHT / SPECULAR REFRACTION
+     INNER GLASS / BEVEL
      ========================================================= */
 
   --liquid-inset:
-    inset 0 1.5px 0 0 rgba(255, 255, 255, 0.38),
-    inset 1px 0 0 0 rgba(255, 255, 255, 0.16),
-    inset 0 -1.5px 0 0 rgba(0, 0, 0, 0.55),
-    inset -1px 0 0 0 rgba(0, 0, 0, 0.30),
-    inset 0 0 24px 0 rgba(255, 255, 255, 0.04);
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.42),
+    inset 1px 0 0 rgba(255, 255, 255, 0.16),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.42),
+    inset -1px 0 0 rgba(0, 0, 0, 0.20),
+    inset 0 0 30px rgba(255, 255, 255, 0.035);
 
-
-  /* =========================================================
-     RADIUS
-     ========================================================= */
-
-  --radius-glass:
-    22px;
+  --radius-glass: 26px;
 
   /* Aliases for backwards-compatibility */
   --page-bg: var(--dark-bg);
@@ -370,96 +340,201 @@ p {
 .liquid-glass,
 .glass-card,
 .card {
+
   position: relative;
+  isolation: isolate;
+
   overflow: hidden;
-  background: var(--liquid-glass);
-  backdrop-filter: var(--liquid-blur);
-  -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1px solid var(--liquid-border);
-  border-radius: var(--radius-glass);
-  box-shadow: var(--liquid-shadow), var(--liquid-inset);
-  transition:
-    background 0.45s cubic-bezier(.22,1,.36,1),
-    border-color 0.45s ease,
-    box-shadow 0.45s ease,
-    transform 0.45s cubic-bezier(.22,1,.36,1);
-}
 
-/* =========================================================
-   SOFT TOP REFLECTION
-   ========================================================= */
-
-.liquid-glass::before,
-.glass-card::before,
-.card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
   background:
-    linear-gradient(
-      125deg,
-      rgba(255, 255, 255, 0.22) 0%,
-      rgba(255, 255, 255, 0.06) 20%,
-      rgba(255, 255, 255, 0.01) 45%,
-      transparent 70%
-    );
-  opacity: 0.85;
-  border-radius: inherit;
-  pointer-events: none;
+    var(--liquid-glass);
+
+  backdrop-filter:
+    var(--liquid-blur);
+
+  -webkit-backdrop-filter:
+    var(--liquid-blur);
+
+  border:
+    1px solid var(--liquid-border);
+
+  border-radius:
+    var(--radius-glass);
+
+  box-shadow:
+    var(--liquid-shadow),
+    var(--liquid-inset);
+
+  transform:
+    translateZ(0);
+
+  transition:
+    transform 500ms cubic-bezier(.2,.8,.2,1),
+    box-shadow 500ms cubic-bezier(.2,.8,.2,1),
+    border-color 400ms ease;
+
+  will-change:
+    transform;
 }
 
+
 /* =========================================================
-   SUBTLE LIQUID GLOW
+   REFRACTION / DEPTH
+   Lapisan transparan untuk memberi kesan kaca tebal
    ========================================================= */
 
 .liquid-glass::after,
 .glass-card::after,
 .card::after {
+
   content: "";
+
   position: absolute;
-  width: 220px;
-  height: 220px;
-  top: -150px;
-  right: -100px;
-  border-radius: 50%;
+
+  inset: -12%;
+
+  z-index: -1;
+
   background:
     radial-gradient(
-      circle,
-      rgba(0,255,210,0.13),
-      transparent 68%
+      circle at 50% 0%,
+      rgba(255,255,255,.16),
+      transparent 38%
+    ),
+    radial-gradient(
+      circle at 90% 100%,
+      rgba(0,255,180,.10),
+      transparent 32%
     );
-  filter: blur(35px);
-  opacity: 0.65;
-  pointer-events: none;
-  transition:
-    transform 0.6s ease,
-    opacity 0.5s ease;
+
+  filter:
+    blur(18px);
+
+  transform:
+    scale(1.08);
+
+  opacity:
+    .65;
+
+  pointer-events:
+    none;
 }
 
+
 /* =========================================================
-   HOVER
+   SPECULAR HIGHLIGHT
+   Pantulan cahaya seperti kaca fisik
+   ========================================================= */
+
+.liquid-glass::before,
+.glass-card::before,
+.card::before {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  border-radius:
+    inherit;
+
+  pointer-events:
+    none;
+
+  background:
+    linear-gradient(
+      120deg,
+      rgba(255,255,255,.28) 0%,
+      rgba(255,255,255,.10) 12%,
+      rgba(255,255,255,.025) 30%,
+      transparent 56%
+    );
+
+  opacity:
+    .82;
+
+  mix-blend-mode:
+    screen;
+}
+
+
+/* =========================================================
+   REFRACTIVE EDGE
+   Membuat pinggiran seolah tebal dan melengkung
+   ========================================================= */
+
+.liquid-glass,
+.glass-card,
+.card {
+
+  outline:
+    1px solid rgba(255,255,255,.035);
+
+}
+
+
+/* =========================================================
+   HOVER — FLOAT + ZOOM
    ========================================================= */
 
 .liquid-glass:hover,
 .glass-card:hover,
 .card:hover {
-  background: var(--liquid-glass-hover);
-  border-color: var(--liquid-border-hover);
-  box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
-  transform: translateY(-6px) scale(1.012);
+
+  transform:
+    translateY(-7px)
+    scale(1.018);
+
+  border-color:
+    var(--liquid-border-hover);
+
+  box-shadow:
+    var(--liquid-shadow-hover),
+    var(--liquid-inset);
 }
 
-.liquid-glass:hover::before,
-.glass-card:hover::before,
-.card:hover::before {
-  opacity: 1;
-}
+
+/* =========================================================
+   EXTRA HIGHLIGHT SAAT HOVER
+   ========================================================= */
 
 .liquid-glass:hover::after,
 .glass-card:hover::after,
 .card:hover::after {
-  transform: translate(-15px, 15px) scale(1.18);
-  opacity: 0.95;
+
+  transform:
+    scale(1.14);
+
+  opacity:
+    .90;
+
+  transition:
+    transform 700ms cubic-bezier(.2,.8,.2,1);
+}
+
+
+/* =========================================================
+   TOP GLASS LINE
+   Garis tipis yang memberi efek bevel
+   ========================================================= */
+
+.liquid-glass::marker {
+  display: none;
+}
+
+
+/* =========================================================
+   OPTIONAL — GLASS CONTENT
+   Supaya isi selalu berada di atas efek
+   ========================================================= */
+
+.liquid-glass > *,
+.glass-card > *,
+.card > * {
+
+  position: relative;
+  z-index: 2;
 }
 
 /* 3D Glass Modal Utility */
