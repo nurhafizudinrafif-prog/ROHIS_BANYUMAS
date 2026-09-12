@@ -15,6 +15,35 @@
   transition: background 1.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* 0. Cinematic Multi-Layer Image Stack with Smooth Cross-Fade */
+.dynamic-image-stack {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.bg-layer-item {
+  position: absolute;
+  inset: -20px;
+  background-size: cover;
+  background-position: center 38%;
+  opacity: 0;
+  transform: scale(1.05);
+  transition:
+    opacity 1.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 2.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.bg-layer-item.is-active {
+  opacity: 0.40;
+  transform: scale(1);
+}
+
 /* 1. Islamic Pattern with Parallax Drift */
 .dynamic-islamic-pattern {
   position: absolute;
@@ -28,6 +57,7 @@
   background-size: 120px 120px;
   will-change: transform;
   transition: opacity 1s ease;
+  z-index: 1;
 }
 
 /* 2. Fluid Aurora Glow Orbs */
@@ -36,6 +66,8 @@
   border-radius: 50%;
   pointer-events: none;
   filter: blur(95px);
+  mix-blend-mode: screen;
+  z-index: 2;
   will-change: transform, background, opacity;
   transition:
     transform 1.2s cubic-bezier(0.16, 1, 0.3, 1),
@@ -176,6 +208,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
+  z-index: 3;
   background: radial-gradient(
     ellipse 120% 120% at 50% 50%,
     transparent 35%,

@@ -2,6 +2,15 @@ import { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import './DynamicBackground.css';
 
+const backgroundLayers = [
+  { id: 'hero', src: '/backgrounds/bg-hero.jpg' },
+  { id: 'programs', src: '/backgrounds/bg-programs.jpg' },
+  { id: 'quote', src: '/backgrounds/bg-quote.jpg' },
+  { id: 'events', src: '/backgrounds/bg-events.jpg' },
+  { id: 'media', src: '/backgrounds/bg-programs.jpg' },
+  { id: 'cta', src: '/backgrounds/bg-cta.jpg' },
+];
+
 export default function DynamicBackground() {
   const location = useLocation();
   const [theme, setTheme] = useState('hero');
@@ -107,6 +116,22 @@ export default function DynamicBackground() {
       className={`dynamic-bg-container theme-${theme}`}
       aria-hidden="true"
     >
+      {/* 0. Cinematic Multi-Layer Image Crossfade Stack */}
+      <div className="dynamic-image-stack">
+        {backgroundLayers.map((layer) => {
+          const isActive = theme === layer.id;
+          return (
+            <div
+              key={layer.id}
+              className={`bg-layer-item bg-layer-${layer.id} ${isActive ? 'is-active' : ''}`}
+              style={{
+                backgroundImage: `url(${layer.src})`
+              }}
+            />
+          );
+        })}
+      </div>
+
       {/* 1. Seamless Fixed Islamic Sacred Geometry Pattern with Subtle Parallax */}
       <div
         className="dynamic-islamic-pattern"
