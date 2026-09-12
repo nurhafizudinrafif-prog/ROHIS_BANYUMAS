@@ -16,44 +16,10 @@
   margin: 0 auto;
   text-align: center;
   padding: var(--space-3xl) var(--space-2xl);
-  background:
-    radial-gradient(100% 100% at 50% 0%, rgba(215, 184, 102, 0.12) 0%, transparent 65%),
-    var(--liquid-glass);
-  backdrop-filter: var(--liquid-blur);
-  -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1px solid rgba(215, 184, 102, 0.35);
-  border-radius: var(--radius-xl);
-  box-shadow:
-    var(--liquid-shadow),
-    0 0 35px rgba(215, 184, 102, 0.12),
-    var(--liquid-inset);
-  position: relative;
-  overflow: hidden;
-  transition: var(--transition-liquid);
-}
-
-.quote-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(
-      115deg,
-      rgba(255,255,255,0.10) 0%,
-      rgba(255,255,255,0.025) 18%,
-      transparent 40%
-    );
-  opacity: 0.65;
-  pointer-events: none;
 }
 
 .quote-card:hover {
-  transform: translateY(-4px);
   border-color: rgba(215, 184, 102, 0.55);
-  box-shadow:
-    var(--liquid-shadow-hover),
-    0 0 45px rgba(215, 184, 102, 0.22),
-    var(--liquid-inset);
 }
 
 .quote-arabic {

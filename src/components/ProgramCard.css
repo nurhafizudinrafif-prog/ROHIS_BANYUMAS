@@ -5,78 +5,9 @@
    ============================================ */
 
 .program-glass-card {
-  position: relative;
   display: flex;
   flex-direction: column;
   padding: 2.2rem 1.85rem;
-  border-radius: var(--radius-glass);
-  background: var(--liquid-glass);
-  backdrop-filter: var(--liquid-blur);
-  -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1px solid var(--liquid-border);
-  box-shadow:
-    var(--liquid-shadow),
-    var(--liquid-inset);
-  transition:
-    background 0.45s cubic-bezier(.22,1,.36,1),
-    border-color 0.45s ease,
-    box-shadow 0.45s ease,
-    transform 0.45s cubic-bezier(.22,1,.36,1);
-  overflow: hidden;
-}
-
-/* Soft Top Reflection */
-.program-glass-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(
-      115deg,
-      rgba(255,255,255,0.10) 0%,
-      rgba(255,255,255,0.025) 18%,
-      transparent 40%
-    );
-  opacity: 0.65;
-  pointer-events: none;
-}
-
-/* Subtle Liquid Glow */
-.program-glass-card::after {
-  content: "";
-  position: absolute;
-  width: 220px;
-  height: 220px;
-  top: -150px;
-  right: -100px;
-  border-radius: 50%;
-  background:
-    radial-gradient(
-      circle,
-      rgba(0,255,210,0.13),
-      transparent 68%
-    );
-  filter: blur(35px);
-  opacity: 0.65;
-  pointer-events: none;
-  transition:
-    transform 0.6s ease,
-    opacity 0.5s ease;
-}
-
-/* Hover effect */
-.program-glass-card:hover {
-  transform: translateY(-4px);
-  background: var(--liquid-glass-hover);
-  border-color: var(--liquid-border-hover);
-  box-shadow:
-    var(--liquid-shadow-hover),
-    var(--liquid-inset);
-}
-
-.program-glass-card:hover::after {
-  transform: translate(-15px, 15px) scale(1.12);
-  opacity: 0.9;
 }
 
 /* Content layer above glass shine */

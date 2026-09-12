@@ -19,83 +19,14 @@
   margin: 0 auto;
 }
 
-/* Liquid Glass Card — Semi-Transparent */
+/* Liquid Glass Card — Semi-Transparent Layout */
 .stat-glass-card {
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.85rem;
   padding: 2.2rem 1.35rem 1.85rem;
-  border-radius: var(--radius-glass);
-  background: var(--liquid-glass);
-  backdrop-filter: var(--liquid-blur);
-  -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1px solid var(--liquid-border);
-  box-shadow:
-    var(--liquid-shadow),
-    var(--liquid-inset);
   text-align: center;
-  transition:
-    background 0.45s cubic-bezier(.22,1,.36,1),
-    border-color 0.45s ease,
-    box-shadow 0.45s ease,
-    transform 0.45s cubic-bezier(.22,1,.36,1);
-  overflow: hidden;
-}
-
-/* Soft Top Reflection */
-.stat-glass-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(
-      115deg,
-      rgba(255,255,255,0.10) 0%,
-      rgba(255,255,255,0.025) 18%,
-      transparent 40%
-    );
-  opacity: 0.65;
-  pointer-events: none;
-}
-
-/* Subtle Liquid Glow */
-.stat-glass-card::after {
-  content: "";
-  position: absolute;
-  width: 160px;
-  height: 160px;
-  top: -90px;
-  right: -60px;
-  border-radius: 50%;
-  background:
-    radial-gradient(
-      circle,
-      rgba(0,255,210,0.12),
-      transparent 68%
-    );
-  filter: blur(30px);
-  opacity: 0.65;
-  pointer-events: none;
-  transition:
-    transform 0.6s ease,
-    opacity 0.5s ease;
-}
-
-/* Hover effect */
-.stat-glass-card:hover {
-  transform: translateY(-4px);
-  background: var(--liquid-glass-hover);
-  border-color: var(--liquid-border-hover);
-  box-shadow:
-    var(--liquid-shadow-hover),
-    var(--liquid-inset);
-}
-
-.stat-glass-card:hover::after {
-  transform: translate(-10px, 10px) scale(1.15);
-  opacity: 0.9;
 }
 
 /* Color Variant Accents */
