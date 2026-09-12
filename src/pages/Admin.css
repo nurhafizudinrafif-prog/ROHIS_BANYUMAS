@@ -22,26 +22,32 @@
   padding: var(--space-2xl);
   background:
     linear-gradient(
-      140deg,
-      rgba(0, 255, 200, 0.05) 0%,
-      rgba(4, 16, 20, 0.68) 45%,
-      rgba(24, 10, 36, 0.68) 100%
+      135deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(0, 255, 200, 0.03) 25%,
+      rgba(4, 18, 22, 0.28) 55%,
+      rgba(20, 10, 32, 0.35) 100%
     );
-  backdrop-filter: blur(16px) saturate(165%) contrast(105%);
-  -webkit-backdrop-filter: blur(16px) saturate(165%) contrast(105%);
-  border: 1px solid rgba(0, 255, 200, 0.25);
-  border-top: 1.5px solid rgba(0, 255, 200, 0.60);
-  border-left: 1.5px solid rgba(0, 255, 200, 0.38);
-  border-right: 1.5px solid rgba(168, 85, 247, 0.45);
+  backdrop-filter: blur(24px) saturate(190%) contrast(110%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%) contrast(110%);
+  border: 1.5px solid rgba(0, 255, 200, 0.28);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.65);
+  border-left: 1.5px solid rgba(0, 255, 200, 0.45);
+  border-right: 1.5px solid rgba(168, 85, 247, 0.42);
   border-bottom: 1.5px solid rgba(168, 85, 247, 0.28);
   border-radius: var(--radius-xl);
   box-shadow:
-    0 30px 70px -10px rgba(0, 0, 0, 0.80),
-    0 10px 25px -4px rgba(0, 0, 0, 0.50),
-    0 0 30px rgba(0, 255, 200, 0.10),
-    0 12px 35px rgba(168, 85, 247, 0.12),
-    inset 0 1.5px 0 rgba(0, 255, 200, 0.45),
-    inset 0 -2px 0 rgba(168, 85, 247, 0.40);
+    0 35px 80px -10px rgba(0, 0, 0, 0.85),
+    0 12px 30px -4px rgba(0, 0, 0, 0.55),
+    0 0 35px rgba(0, 255, 200, 0.12),
+    0 12px 38px rgba(168, 85, 247, 0.12),
+    inset 0 2px 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 4px 8px 0 rgba(0, 255, 200, 0.35),
+    inset 2px 0 2px 0 rgba(255, 255, 255, 0.25),
+    inset -2px 0 3px 0 rgba(168, 85, 247, 0.35),
+    inset 0 -3px 3px 0 rgba(168, 85, 247, 0.45),
+    inset 0 -6px 14px 0 rgba(0, 0, 0, 0.55),
+    inset 0 0 25px rgba(0, 255, 200, 0.06);
   position: relative;
   overflow: hidden;
 }
@@ -207,15 +213,16 @@
 .admin-topbar {
   background: linear-gradient(
     180deg,
-    rgba(4, 16, 20, 0.82) 0%,
-    rgba(18, 8, 28, 0.82) 100%
+    rgba(4, 18, 22, 0.45) 0%,
+    rgba(18, 8, 28, 0.45) 100%
   );
-  backdrop-filter: blur(16px) saturate(165%);
-  -webkit-backdrop-filter: blur(16px) saturate(165%);
-  border-bottom: 1px solid rgba(0, 255, 200, 0.25);
+  backdrop-filter: blur(22px) saturate(190%) contrast(110%);
+  -webkit-backdrop-filter: blur(22px) saturate(190%) contrast(110%);
+  border-bottom: 1.5px solid rgba(0, 255, 200, 0.28);
   box-shadow:
-    0 8px 25px rgba(0, 0, 0, 0.45),
-    inset 0 -1px 0 rgba(168, 85, 247, 0.25);
+    0 10px 30px rgba(0, 0, 0, 0.55),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.50),
+    inset 0 -1.5px 0 rgba(168, 85, 247, 0.35);
   padding: 0.75rem 2rem;
   display: flex;
   align-items: center;
@@ -307,13 +314,15 @@
   width: 260px;
   background: linear-gradient(
     180deg,
-    rgba(4, 16, 20, 0.68) 0%,
-    rgba(18, 8, 28, 0.68) 100%
+    rgba(4, 18, 22, 0.35) 0%,
+    rgba(18, 8, 28, 0.40) 100%
   );
-  backdrop-filter: blur(16px) saturate(165%);
-  -webkit-backdrop-filter: blur(16px) saturate(165%);
-  border-right: 1px solid rgba(0, 255, 200, 0.20);
-  box-shadow: inset -1px 0 0 rgba(168, 85, 247, 0.18);
+  backdrop-filter: blur(22px) saturate(190%) contrast(110%);
+  -webkit-backdrop-filter: blur(22px) saturate(190%) contrast(110%);
+  border-right: 1.5px solid rgba(0, 255, 200, 0.25);
+  box-shadow:
+    inset 1.5px 0 0 rgba(255, 255, 255, 0.35),
+    inset -1.5px 0 0 rgba(168, 85, 247, 0.25);
   padding: var(--space-xl) var(--space-md);
   display: flex;
   flex-direction: column;
@@ -462,25 +471,30 @@
   border-radius: var(--radius-lg);
   background:
     linear-gradient(
-      140deg,
-      rgba(0, 255, 200, 0.05) 0%,
-      rgba(4, 16, 20, 0.65) 45%,
-      rgba(24, 10, 36, 0.65) 100%
+      135deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(0, 255, 200, 0.03) 25%,
+      rgba(4, 18, 22, 0.22) 55%,
+      rgba(20, 10, 32, 0.28) 100%
     );
-  backdrop-filter: blur(16px) saturate(165%) contrast(105%);
-  -webkit-backdrop-filter: blur(16px) saturate(165%) contrast(105%);
-  border: 1px solid rgba(0, 255, 200, 0.22);
-  border-top: 1.5px solid rgba(0, 255, 200, 0.55);
-  border-left: 1.5px solid rgba(0, 255, 200, 0.35);
-  border-right: 1.5px solid rgba(168, 85, 247, 0.40);
-  border-bottom: 1.5px solid rgba(168, 85, 247, 0.25);
+  backdrop-filter: blur(22px) saturate(190%) contrast(110%);
+  -webkit-backdrop-filter: blur(22px) saturate(190%) contrast(110%);
+  border: 1.5px solid rgba(0, 255, 200, 0.28);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.65);
+  border-left: 1.5px solid rgba(0, 255, 200, 0.45);
+  border-right: 1.5px solid rgba(168, 85, 247, 0.42);
+  border-bottom: 1.5px solid rgba(168, 85, 247, 0.28);
   box-shadow:
-    0 20px 50px -8px rgba(0, 0, 0, 0.70),
-    0 6px 18px rgba(0, 0, 0, 0.40),
-    0 0 20px rgba(0, 255, 200, 0.08),
-    0 10px 25px rgba(168, 85, 247, 0.08),
-    inset 0 1.5px 0 rgba(0, 255, 200, 0.40),
-    inset 0 -2px 0 rgba(168, 85, 247, 0.35);
+    0 24px 60px -8px rgba(0, 0, 0, 0.80),
+    0 8px 24px -4px rgba(0, 0, 0, 0.50),
+    0 0 25px rgba(0, 255, 200, 0.10),
+    0 10px 30px rgba(168, 85, 247, 0.10),
+    inset 0 2px 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 4px 8px 0 rgba(0, 255, 200, 0.30),
+    inset 2px 0 2px 0 rgba(255, 255, 255, 0.20),
+    inset -2px 0 3px 0 rgba(168, 85, 247, 0.30),
+    inset 0 -3px 3px 0 rgba(168, 85, 247, 0.45),
+    inset 0 -6px 12px 0 rgba(0, 0, 0, 0.50);
   transition:
     transform 400ms cubic-bezier(0.2, 0.8, 0.2, 1),
     box-shadow 400ms cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -490,14 +504,18 @@
 
 .admin-stat-card:hover {
   transform: translateY(-6px) scale(1.02);
-  border-top-color: rgba(0, 255, 200, 0.80);
+  border-top-color: rgba(255, 255, 255, 0.90);
+  border-left-color: rgba(0, 255, 200, 0.70);
   border-right-color: rgba(168, 85, 247, 0.70);
+  border-bottom-color: rgba(168, 85, 247, 0.50);
   box-shadow:
-    0 28px 65px -8px rgba(0, 0, 0, 0.82),
-    0 0 30px rgba(0, 255, 200, 0.22),
-    0 12px 35px rgba(168, 85, 247, 0.20),
-    inset 0 2px 0 rgba(0, 255, 200, 0.60),
-    inset 0 -2px 0 rgba(168, 85, 247, 0.45);
+    0 35px 80px -8px rgba(0, 0, 0, 0.90),
+    0 0 35px rgba(0, 255, 200, 0.35),
+    0 12px 35px rgba(168, 85, 247, 0.28),
+    inset 0 2.5px 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 5px 10px 0 rgba(0, 255, 200, 0.50),
+    inset 0 -3.5px 3px 0 rgba(168, 85, 247, 0.60),
+    inset 0 -8px 16px 0 rgba(0, 0, 0, 0.65);
 }
 
 /* 3D Embossed Stat Icon (no white glare) */
@@ -598,21 +616,31 @@
   justify-content: space-between;
   padding: var(--space-xl) var(--space-2xl);
   background: 
-    radial-gradient(100% 100% at 20% 0%, rgba(0, 255, 200, 0.12) 0%, transparent 70%),
-    linear-gradient(140deg, rgba(0, 255, 200, 0.05) 0%, rgba(4, 16, 20, 0.7) 45%, rgba(24, 10, 36, 0.7) 100%);
-  backdrop-filter: blur(16px) saturate(165%) contrast(105%);
-  -webkit-backdrop-filter: blur(16px) saturate(165%) contrast(105%);
-  border: 1px solid rgba(0, 255, 200, 0.25);
-  border-top: 1.5px solid rgba(0, 255, 200, 0.60);
-  border-right: 1.5px solid rgba(168, 85, 247, 0.45);
+    radial-gradient(100% 100% at 20% 0%, rgba(0, 255, 200, 0.08) 0%, transparent 70%),
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(0, 255, 200, 0.03) 25%,
+      rgba(4, 18, 22, 0.25) 55%,
+      rgba(20, 10, 32, 0.30) 100%
+    );
+  backdrop-filter: blur(22px) saturate(190%) contrast(110%);
+  -webkit-backdrop-filter: blur(22px) saturate(190%) contrast(110%);
+  border: 1.5px solid rgba(0, 255, 200, 0.28);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.65);
+  border-left: 1.5px solid rgba(0, 255, 200, 0.45);
+  border-right: 1.5px solid rgba(168, 85, 247, 0.42);
   border-bottom: 1.5px solid rgba(168, 85, 247, 0.28);
   border-radius: var(--radius-xl);
   box-shadow:
-    0 24px 60px -8px rgba(0, 0, 0, 0.75),
-    0 0 30px rgba(0, 255, 200, 0.10),
-    0 10px 30px rgba(168, 85, 247, 0.10),
-    inset 0 1.5px 0 rgba(0, 255, 200, 0.45),
-    inset 0 -2px 0 rgba(168, 85, 247, 0.35);
+    0 28px 70px -8px rgba(0, 0, 0, 0.85),
+    0 12px 30px -4px rgba(0, 0, 0, 0.55),
+    0 0 32px rgba(0, 255, 200, 0.12),
+    0 12px 38px rgba(168, 85, 247, 0.12),
+    inset 0 2px 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 4px 8px 0 rgba(0, 255, 200, 0.30),
+    inset 0 -3px 3px 0 rgba(168, 85, 247, 0.45),
+    inset 0 -6px 14px 0 rgba(0, 0, 0, 0.50);
   margin-bottom: var(--space-2xl);
   flex-wrap: wrap;
   gap: var(--space-lg);
@@ -668,25 +696,31 @@
   padding: var(--space-xl);
   background:
     linear-gradient(
-      140deg,
-      rgba(0, 255, 200, 0.05) 0%,
-      rgba(4, 16, 20, 0.68) 45%,
-      rgba(24, 10, 36, 0.68) 100%
+      135deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(0, 255, 200, 0.03) 25%,
+      rgba(4, 18, 22, 0.22) 55%,
+      rgba(20, 10, 32, 0.28) 100%
     );
-  backdrop-filter: blur(16px) saturate(165%) contrast(105%);
-  -webkit-backdrop-filter: blur(16px) saturate(165%) contrast(105%);
-  border: 1px solid rgba(0, 255, 200, 0.25);
-  border-top: 1.5px solid rgba(0, 255, 200, 0.55);
-  border-left: 1.5px solid rgba(0, 255, 200, 0.35);
-  border-right: 1.5px solid rgba(168, 85, 247, 0.40);
-  border-bottom: 1.5px solid rgba(168, 85, 247, 0.25);
+  backdrop-filter: blur(22px) saturate(190%) contrast(110%);
+  -webkit-backdrop-filter: blur(22px) saturate(190%) contrast(110%);
+  border: 1.5px solid rgba(0, 255, 200, 0.28);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.65);
+  border-left: 1.5px solid rgba(0, 255, 200, 0.45);
+  border-right: 1.5px solid rgba(168, 85, 247, 0.42);
+  border-bottom: 1.5px solid rgba(168, 85, 247, 0.28);
   border-radius: var(--radius-xl);
   box-shadow:
-    0 24px 60px -8px rgba(0, 0, 0, 0.75),
-    0 0 25px rgba(0, 255, 200, 0.08),
-    0 10px 30px rgba(168, 85, 247, 0.08),
-    inset 0 1.5px 0 rgba(0, 255, 200, 0.40),
-    inset 0 -2px 0 rgba(168, 85, 247, 0.35);
+    0 24px 60px -8px rgba(0, 0, 0, 0.80),
+    0 8px 24px -4px rgba(0, 0, 0, 0.50),
+    0 0 25px rgba(0, 255, 200, 0.10),
+    0 10px 30px rgba(168, 85, 247, 0.10),
+    inset 0 2px 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 4px 8px 0 rgba(0, 255, 200, 0.30),
+    inset 2px 0 2px 0 rgba(255, 255, 255, 0.20),
+    inset -2px 0 3px 0 rgba(168, 85, 247, 0.30),
+    inset 0 -3px 3px 0 rgba(168, 85, 247, 0.45),
+    inset 0 -6px 12px 0 rgba(0, 0, 0, 0.50);
   position: relative;
   overflow: hidden;
 }
@@ -749,36 +783,41 @@
   border-radius: var(--radius-md);
   background: linear-gradient(
     135deg,
-    rgba(0, 255, 200, 0.04) 0%,
-    rgba(4, 16, 20, 0.60) 50%,
-    rgba(24, 10, 36, 0.55) 100%
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(0, 255, 200, 0.02) 25%,
+    rgba(4, 18, 22, 0.22) 55%,
+    rgba(20, 10, 32, 0.28) 100%
   );
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(0, 255, 200, 0.18);
-  border-top: 1.5px solid rgba(0, 255, 200, 0.38);
-  border-right: 1.5px solid rgba(168, 85, 247, 0.32);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(0, 255, 200, 0.25);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.50);
+  border-right: 1.5px solid rgba(168, 85, 247, 0.35);
   box-shadow:
-    inset 0 1px 0 rgba(0, 255, 200, 0.25),
-    inset 0 -1px 0 rgba(168, 85, 247, 0.20),
-    0 4px 14px rgba(0, 0, 0, 0.40);
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.40),
+    inset 0 3px 6px rgba(0, 255, 200, 0.20),
+    inset 0 -2px 2px rgba(168, 85, 247, 0.30),
+    0 8px 20px rgba(0, 0, 0, 0.45);
   transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .overview-item:hover {
   background: linear-gradient(
     135deg,
-    rgba(0, 255, 200, 0.08) 0%,
-    rgba(4, 16, 20, 0.75) 50%,
-    rgba(24, 10, 36, 0.70) 100%
+    rgba(255, 255, 255, 0.10) 0%,
+    rgba(0, 255, 200, 0.05) 25%,
+    rgba(6, 24, 28, 0.30) 55%,
+    rgba(26, 12, 42, 0.38) 100%
   );
-  border-color: rgba(0, 255, 200, 0.45);
-  border-right-color: rgba(168, 85, 247, 0.45);
+  border-color: rgba(0, 255, 200, 0.60);
+  border-top-color: rgba(255, 255, 255, 0.80);
+  border-right-color: rgba(168, 85, 247, 0.60);
   transform: translateX(4px);
   box-shadow:
-    0 6px 20px rgba(0, 0, 0, 0.50),
-    0 0 16px rgba(0, 255, 200, 0.15),
-    inset 0 1.5px 0 rgba(0, 255, 200, 0.45);
+    0 10px 25px rgba(0, 0, 0, 0.55),
+    0 0 20px rgba(0, 255, 200, 0.25),
+    inset 0 2px 0 rgba(255, 255, 255, 0.60),
+    inset 0 -2px 0 rgba(168, 85, 247, 0.45);
 }
 
 .overview-item-title strong {
@@ -822,30 +861,31 @@
   padding: 0.65rem 2.2rem 0.65rem 2.5rem;
   background: linear-gradient(
     135deg,
-    rgba(0, 255, 200, 0.03) 0%,
-    rgba(4, 16, 20, 0.70) 50%,
-    rgba(24, 10, 36, 0.70) 100%
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(4, 18, 22, 0.28) 50%,
+    rgba(20, 10, 32, 0.32) 100%
   );
-  backdrop-filter: blur(14px) saturate(160%);
-  -webkit-backdrop-filter: blur(14px) saturate(160%);
-  border: 1px solid rgba(0, 255, 200, 0.22);
-  border-top: 1.5px solid rgba(0, 255, 200, 0.45);
+  backdrop-filter: blur(16px) saturate(170%);
+  -webkit-backdrop-filter: blur(16px) saturate(170%);
+  border: 1px solid rgba(0, 255, 200, 0.25);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.40);
   border-right: 1.5px solid rgba(168, 85, 247, 0.35);
   border-radius: var(--radius-md);
   color: var(--color-text);
   font-size: 0.875rem;
   box-shadow:
     inset 0 2px 5px rgba(0, 0, 0, 0.50),
-    inset 0 -1px 0 rgba(168, 85, 247, 0.20);
+    inset 0 -1px 0 rgba(168, 85, 247, 0.25);
   transition: all var(--transition-fast);
 }
 
 .search-input-wrapper input:focus {
   outline: none;
-  border-color: rgba(0, 255, 200, 0.70);
+  border-color: rgba(0, 255, 200, 0.75);
+  border-top-color: rgba(255, 255, 255, 0.75);
   box-shadow:
-    0 0 16px rgba(0, 255, 200, 0.25),
-    0 0 24px rgba(168, 85, 247, 0.15),
+    0 0 18px rgba(0, 255, 200, 0.28),
+    0 0 24px rgba(168, 85, 247, 0.18),
     inset 0 2px 4px rgba(0, 0, 0, 0.50);
 }
 
@@ -883,24 +923,28 @@
   border-radius: var(--radius-xl);
   background:
     linear-gradient(
-      140deg,
-      rgba(0, 255, 200, 0.04) 0%,
-      rgba(4, 16, 20, 0.70) 45%,
-      rgba(24, 10, 36, 0.70) 100%
+      135deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(0, 255, 200, 0.03) 25%,
+      rgba(4, 18, 22, 0.25) 55%,
+      rgba(20, 10, 32, 0.30) 100%
     );
-  backdrop-filter: blur(16px) saturate(165%) contrast(105%);
-  -webkit-backdrop-filter: blur(16px) saturate(165%) contrast(105%);
-  border: 1px solid rgba(0, 255, 200, 0.22);
-  border-top: 1.5px solid rgba(0, 255, 200, 0.55);
-  border-left: 1.5px solid rgba(0, 255, 200, 0.35);
-  border-right: 1.5px solid rgba(168, 85, 247, 0.40);
-  border-bottom: 1.5px solid rgba(168, 85, 247, 0.25);
+  backdrop-filter: blur(22px) saturate(190%) contrast(110%);
+  -webkit-backdrop-filter: blur(22px) saturate(190%) contrast(110%);
+  border: 1.5px solid rgba(0, 255, 200, 0.28);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.65);
+  border-left: 1.5px solid rgba(0, 255, 200, 0.45);
+  border-right: 1.5px solid rgba(168, 85, 247, 0.42);
+  border-bottom: 1.5px solid rgba(168, 85, 247, 0.28);
   box-shadow:
-    0 24px 60px -8px rgba(0, 0, 0, 0.75),
-    0 0 25px rgba(0, 255, 200, 0.08),
-    0 10px 30px rgba(168, 85, 247, 0.08),
-    inset 0 1.5px 0 rgba(0, 255, 200, 0.40),
-    inset 0 -2px 0 rgba(168, 85, 247, 0.35);
+    0 24px 60px -8px rgba(0, 0, 0, 0.80),
+    0 8px 24px -4px rgba(0, 0, 0, 0.50),
+    0 0 25px rgba(0, 255, 200, 0.10),
+    0 10px 30px rgba(168, 85, 247, 0.10),
+    inset 0 2px 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 4px 8px 0 rgba(0, 255, 200, 0.30),
+    inset 0 -3px 3px 0 rgba(168, 85, 247, 0.45),
+    inset 0 -6px 12px 0 rgba(0, 0, 0, 0.50);
   position: relative;
 }
 
@@ -913,8 +957,8 @@
 .admin-table th {
   text-align: left;
   padding: 1.1rem 1.25rem;
-  background: rgba(4, 16, 20, 0.85);
-  color: rgba(255, 255, 255, 0.78);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(4, 18, 22, 0.28) 100%);
+  color: rgba(255, 255, 255, 0.90);
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -1048,25 +1092,28 @@
   flex-direction: column;
   background:
     linear-gradient(
-      140deg,
-      rgba(0, 255, 200, 0.04) 0%,
-      rgba(4, 16, 20, 0.68) 45%,
-      rgba(24, 10, 36, 0.68) 100%
+      135deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(0, 255, 200, 0.03) 25%,
+      rgba(4, 18, 22, 0.22) 55%,
+      rgba(20, 10, 32, 0.28) 100%
     );
-  backdrop-filter: blur(16px) saturate(165%) contrast(105%);
-  -webkit-backdrop-filter: blur(16px) saturate(165%) contrast(105%);
-  border: 1px solid rgba(0, 255, 200, 0.22);
-  border-top: 1.5px solid rgba(0, 255, 200, 0.55);
-  border-left: 1.5px solid rgba(0, 255, 200, 0.35);
-  border-right: 1.5px solid rgba(168, 85, 247, 0.40);
-  border-bottom: 1.5px solid rgba(168, 85, 247, 0.25);
+  backdrop-filter: blur(22px) saturate(190%) contrast(110%);
+  -webkit-backdrop-filter: blur(22px) saturate(190%) contrast(110%);
+  border: 1.5px solid rgba(0, 255, 200, 0.28);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.65);
+  border-left: 1.5px solid rgba(0, 255, 200, 0.45);
+  border-right: 1.5px solid rgba(168, 85, 247, 0.42);
+  border-bottom: 1.5px solid rgba(168, 85, 247, 0.28);
   border-radius: var(--radius-xl);
   box-shadow:
-    0 20px 50px -8px rgba(0, 0, 0, 0.75),
-    0 6px 18px rgba(0, 0, 0, 0.40),
-    0 0 20px rgba(0, 255, 200, 0.06),
-    inset 0 1.5px 0 rgba(0, 255, 200, 0.40),
-    inset 0 -2px 0 rgba(168, 85, 247, 0.35);
+    0 20px 50px -8px rgba(0, 0, 0, 0.80),
+    0 6px 18px rgba(0, 0, 0, 0.45),
+    0 0 20px rgba(0, 255, 200, 0.08),
+    inset 0 2px 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 4px 8px 0 rgba(0, 255, 200, 0.30),
+    inset 0 -3px 3px 0 rgba(168, 85, 247, 0.45),
+    inset 0 -6px 12px 0 rgba(0, 0, 0, 0.50);
   transition:
     transform 400ms cubic-bezier(0.2, 0.8, 0.2, 1),
     box-shadow 400ms cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -1076,14 +1123,18 @@
 
 .admin-gallery-card:hover {
   transform: translateY(-6px) scale(1.02);
-  border-top-color: rgba(0, 255, 200, 0.80);
+  border-top-color: rgba(255, 255, 255, 0.90);
+  border-left-color: rgba(0, 255, 200, 0.70);
   border-right-color: rgba(168, 85, 247, 0.70);
+  border-bottom-color: rgba(168, 85, 247, 0.50);
   box-shadow:
-    0 28px 65px -8px rgba(0, 0, 0, 0.82),
-    0 0 30px rgba(0, 255, 200, 0.22),
-    0 12px 35px rgba(168, 85, 247, 0.20),
-    inset 0 2px 0 rgba(0, 255, 200, 0.60),
-    inset 0 -2px 0 rgba(168, 85, 247, 0.45);
+    0 30px 70px -8px rgba(0, 0, 0, 0.88),
+    0 0 32px rgba(0, 255, 200, 0.30),
+    0 12px 35px rgba(168, 85, 247, 0.25),
+    inset 0 2.5px 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 5px 10px 0 rgba(0, 255, 200, 0.50),
+    inset 0 -3.5px 3px 0 rgba(168, 85, 247, 0.60),
+    inset 0 -8px 16px 0 rgba(0, 0, 0, 0.65);
 }
 
 .admin-gallery-preview {
@@ -1147,25 +1198,31 @@
   margin-bottom: var(--space-xl);
   background:
     linear-gradient(
-      140deg,
-      rgba(0, 255, 200, 0.04) 0%,
-      rgba(4, 16, 20, 0.68) 45%,
-      rgba(24, 10, 36, 0.68) 100%
+      135deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(0, 255, 200, 0.03) 25%,
+      rgba(4, 18, 22, 0.22) 55%,
+      rgba(20, 10, 32, 0.28) 100%
     );
-  backdrop-filter: blur(16px) saturate(165%) contrast(105%);
-  -webkit-backdrop-filter: blur(16px) saturate(165%) contrast(105%);
-  border: 1px solid rgba(0, 255, 200, 0.22);
-  border-top: 1.5px solid rgba(0, 255, 200, 0.55);
-  border-left: 1.5px solid rgba(0, 255, 200, 0.35);
-  border-right: 1.5px solid rgba(168, 85, 247, 0.40);
-  border-bottom: 1.5px solid rgba(168, 85, 247, 0.25);
+  backdrop-filter: blur(22px) saturate(190%) contrast(110%);
+  -webkit-backdrop-filter: blur(22px) saturate(190%) contrast(110%);
+  border: 1.5px solid rgba(0, 255, 200, 0.28);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.65);
+  border-left: 1.5px solid rgba(0, 255, 200, 0.45);
+  border-right: 1.5px solid rgba(168, 85, 247, 0.42);
+  border-bottom: 1.5px solid rgba(168, 85, 247, 0.28);
   border-radius: var(--radius-xl);
   box-shadow:
-    0 24px 60px -8px rgba(0, 0, 0, 0.75),
-    0 0 25px rgba(0, 255, 200, 0.08),
-    0 10px 30px rgba(168, 85, 247, 0.08),
-    inset 0 1.5px 0 rgba(0, 255, 200, 0.40),
-    inset 0 -2px 0 rgba(168, 85, 247, 0.35);
+    0 24px 60px -8px rgba(0, 0, 0, 0.80),
+    0 8px 24px -4px rgba(0, 0, 0, 0.50),
+    0 0 25px rgba(0, 255, 200, 0.10),
+    0 10px 30px rgba(168, 85, 247, 0.10),
+    inset 0 2px 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 4px 8px 0 rgba(0, 255, 200, 0.30),
+    inset 2px 0 2px 0 rgba(255, 255, 255, 0.20),
+    inset -2px 0 3px 0 rgba(168, 85, 247, 0.30),
+    inset 0 -3px 3px 0 rgba(168, 85, 247, 0.45),
+    inset 0 -6px 12px 0 rgba(0, 0, 0, 0.50);
   position: relative;
   overflow: hidden;
 }
@@ -1202,25 +1259,31 @@
   padding: var(--space-xl);
   background:
     linear-gradient(
-      140deg,
-      rgba(0, 255, 200, 0.04) 0%,
-      rgba(4, 16, 20, 0.68) 45%,
-      rgba(24, 10, 36, 0.68) 100%
+      135deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(0, 255, 200, 0.03) 25%,
+      rgba(4, 18, 22, 0.22) 55%,
+      rgba(20, 10, 32, 0.28) 100%
     );
-  backdrop-filter: blur(16px) saturate(165%) contrast(105%);
-  -webkit-backdrop-filter: blur(16px) saturate(165%) contrast(105%);
-  border: 1px solid rgba(0, 255, 200, 0.22);
-  border-top: 1.5px solid rgba(0, 255, 200, 0.55);
-  border-left: 1.5px solid rgba(0, 255, 200, 0.35);
-  border-right: 1.5px solid rgba(168, 85, 247, 0.40);
-  border-bottom: 1.5px solid rgba(168, 85, 247, 0.25);
+  backdrop-filter: blur(22px) saturate(190%) contrast(110%);
+  -webkit-backdrop-filter: blur(22px) saturate(190%) contrast(110%);
+  border: 1.5px solid rgba(0, 255, 200, 0.28);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.65);
+  border-left: 1.5px solid rgba(0, 255, 200, 0.45);
+  border-right: 1.5px solid rgba(168, 85, 247, 0.42);
+  border-bottom: 1.5px solid rgba(168, 85, 247, 0.28);
   border-radius: var(--radius-xl);
   box-shadow:
-    0 24px 60px -8px rgba(0, 0, 0, 0.75),
-    0 0 25px rgba(0, 255, 200, 0.08),
-    0 10px 30px rgba(168, 85, 247, 0.08),
-    inset 0 1.5px 0 rgba(0, 255, 200, 0.40),
-    inset 0 -2px 0 rgba(168, 85, 247, 0.35);
+    0 24px 60px -8px rgba(0, 0, 0, 0.80),
+    0 8px 24px -4px rgba(0, 0, 0, 0.50),
+    0 0 25px rgba(0, 255, 200, 0.10),
+    0 10px 30px rgba(168, 85, 247, 0.10),
+    inset 0 2px 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 4px 8px 0 rgba(0, 255, 200, 0.30),
+    inset 2px 0 2px 0 rgba(255, 255, 255, 0.20),
+    inset -2px 0 3px 0 rgba(168, 85, 247, 0.30),
+    inset 0 -3px 3px 0 rgba(168, 85, 247, 0.45),
+    inset 0 -6px 12px 0 rgba(0, 0, 0, 0.50);
   position: relative;
   overflow: hidden;
 }
@@ -1259,34 +1322,43 @@
   padding: var(--space-xl);
   background:
     linear-gradient(
-      140deg,
-      rgba(0, 255, 200, 0.04) 0%,
-      rgba(4, 16, 20, 0.70) 45%,
-      rgba(24, 10, 36, 0.70) 100%
+      135deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(0, 255, 200, 0.04) 25%,
+      rgba(4, 18, 22, 0.24) 55%,
+      rgba(20, 10, 32, 0.30) 100%
     );
-  backdrop-filter: blur(16px) saturate(165%);
-  -webkit-backdrop-filter: blur(16px) saturate(165%);
-  border: 1px solid rgba(0, 255, 200, 0.22);
-  border-top: 1.5px solid rgba(0, 255, 200, 0.55);
-  border-right: 1.5px solid rgba(168, 85, 247, 0.40);
-  border-bottom: 1.5px solid rgba(168, 85, 247, 0.25);
+  backdrop-filter: blur(28px) saturate(190%) contrast(110%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%) contrast(110%);
+  border: 1.5px solid rgba(0, 255, 200, 0.28);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.65);
+  border-left: 1.5px solid rgba(0, 255, 200, 0.45);
+  border-right: 1.5px solid rgba(168, 85, 247, 0.42);
+  border-bottom: 1.5px solid rgba(168, 85, 247, 0.28);
   border-radius: var(--radius-lg);
   box-shadow:
-    0 16px 45px rgba(0, 0, 0, 0.65),
-    inset 0 1.5px 0 rgba(0, 255, 200, 0.40),
-    inset 0 -1.5px 0 rgba(168, 85, 247, 0.30);
+    0 24px 50px -8px rgba(0, 0, 0, 0.75),
+    0 10px 20px -3px rgba(0, 0, 0, 0.50),
+    0 0 25px rgba(0, 255, 200, 0.12),
+    inset 0 2px 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 4px 8px 0 rgba(0, 255, 200, 0.30),
+    inset 0 -3px 3px 0 rgba(168, 85, 247, 0.45),
+    inset 0 -6px 14px 0 rgba(0, 0, 0, 0.55);
   gap: var(--space-md);
   transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .backup-box:hover {
-  transform: translateY(-3px);
-  border-top-color: rgba(0, 255, 200, 0.80);
-  border-right-color: rgba(168, 85, 247, 0.70);
+  transform: translateY(-4px);
+  border-top-color: rgba(255, 255, 255, 0.90);
   box-shadow:
-    0 24px 55px rgba(0, 0, 0, 0.75),
-    0 0 25px rgba(0, 255, 200, 0.18),
-    inset 0 2px 0 rgba(0, 255, 200, 0.55);
+    0 35px 70px -8px rgba(0, 0, 0, 0.85),
+    0 16px 30px -4px rgba(0, 0, 0, 0.60),
+    0 0 35px rgba(0, 255, 200, 0.28),
+    inset 0 2.5px 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 5px 10px 0 rgba(0, 255, 200, 0.45),
+    inset 0 -3.5px 3px 0 rgba(168, 85, 247, 0.60),
+    inset 0 -7px 16px 0 rgba(0, 0, 0, 0.60);
 }
 
 .backup-box strong {
@@ -1308,20 +1380,42 @@
 }
 
 .backup-danger-box {
-  border-color: rgba(239, 68, 68, 0.35);
-  border-top: 1.5px solid rgba(239, 68, 68, 0.65);
-  border-right: 1.5px solid rgba(168, 85, 247, 0.40);
-  background: radial-gradient(100% 100% at 50% 0%, rgba(239, 68, 68, 0.12) 0%, rgba(24, 10, 25, 0.65) 100%);
+  border: 1.5px solid rgba(239, 68, 68, 0.35);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.70);
+  border-left: 1.5px solid rgba(239, 68, 68, 0.50);
+  border-right: 1.5px solid rgba(168, 85, 247, 0.42);
+  border-bottom: 1.5px solid rgba(239, 68, 68, 0.35);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(239, 68, 68, 0.08) 25%,
+      rgba(24, 10, 25, 0.26) 55%,
+      rgba(30, 5, 20, 0.30) 100%
+    );
+  backdrop-filter: blur(28px) saturate(190%) contrast(110%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%) contrast(110%);
   box-shadow:
-    0 16px 45px rgba(0, 0, 0, 0.65),
-    inset 0 1.5px 0 rgba(239, 68, 68, 0.45),
-    inset 0 -1.5px 0 rgba(168, 85, 247, 0.30);
+    0 24px 50px -8px rgba(0, 0, 0, 0.75),
+    0 10px 20px -3px rgba(0, 0, 0, 0.50),
+    0 0 25px rgba(239, 68, 68, 0.15),
+    inset 0 2px 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 4px 8px 0 rgba(239, 68, 68, 0.35),
+    inset 0 -3px 3px 0 rgba(168, 85, 247, 0.45),
+    inset 0 -6px 14px 0 rgba(0, 0, 0, 0.55);
 }
 
 .backup-danger-box:hover {
-  border-top-color: rgba(239, 68, 68, 0.85);
-  border-right-color: rgba(168, 85, 247, 0.60);
-  box-shadow: 0 24px 55px rgba(239, 68, 68, 0.25), inset 0 2px 0 rgba(239, 68, 68, 0.65);
+  transform: translateY(-4px);
+  border-top-color: rgba(255, 255, 255, 0.90);
+  box-shadow:
+    0 35px 70px -8px rgba(0, 0, 0, 0.85),
+    0 16px 30px -4px rgba(0, 0, 0, 0.60),
+    0 0 35px rgba(239, 68, 68, 0.30),
+    inset 0 2.5px 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 5px 10px 0 rgba(239, 68, 68, 0.50),
+    inset 0 -3.5px 3px 0 rgba(168, 85, 247, 0.60),
+    inset 0 -7px 16px 0 rgba(0, 0, 0, 0.60);
 }
 
 .file-upload-label {
@@ -1351,27 +1445,30 @@
   overflow-y: auto;
   background: 
     linear-gradient(
-      140deg,
-      rgba(0, 255, 200, 0.05) 0%,
-      rgba(4, 16, 20, 0.88) 45%,
-      rgba(24, 10, 36, 0.88) 100%
+      135deg,
+      rgba(255, 255, 255, 0.10) 0%,
+      rgba(0, 255, 200, 0.04) 25%,
+      rgba(4, 18, 22, 0.42) 55%,
+      rgba(20, 10, 32, 0.48) 100%
     );
-  backdrop-filter: blur(18px) saturate(170%) contrast(105%);
-  -webkit-backdrop-filter: blur(18px) saturate(170%) contrast(105%);
-  border: 1px solid rgba(0, 255, 200, 0.30);
-  border-top: 2px solid rgba(0, 255, 200, 0.70);
-  border-left: 1.5px solid rgba(0, 255, 200, 0.45);
+  backdrop-filter: blur(28px) saturate(190%) contrast(110%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%) contrast(110%);
+  border: 1.5px solid rgba(0, 255, 200, 0.32);
+  border-top: 2px solid rgba(255, 255, 255, 0.75);
+  border-left: 1.5px solid rgba(0, 255, 200, 0.50);
   border-right: 1.5px solid rgba(168, 85, 247, 0.50);
-  border-bottom: 1.5px solid rgba(168, 85, 247, 0.32);
+  border-bottom: 1.5px solid rgba(168, 85, 247, 0.35);
   border-radius: var(--radius-xl);
   padding: var(--space-2xl);
   box-shadow: 
-    0 40px 90px -10px rgba(0, 0, 0, 0.90),
-    0 15px 35px -4px rgba(0, 0, 0, 0.65),
-    0 0 35px rgba(0, 255, 200, 0.18),
-    0 15px 40px rgba(168, 85, 247, 0.14),
-    inset 0 1.5px 0 rgba(0, 255, 200, 0.50),
-    inset 0 -2px 0 rgba(168, 85, 247, 0.40);
+    0 45px 100px -10px rgba(0, 0, 0, 0.92),
+    0 18px 40px -4px rgba(0, 0, 0, 0.70),
+    0 0 45px rgba(0, 255, 200, 0.22),
+    0 18px 45px rgba(168, 85, 247, 0.18),
+    inset 0 2.5px 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 5px 10px 0 rgba(0, 255, 200, 0.40),
+    inset 0 -3.5px 3px 0 rgba(168, 85, 247, 0.55),
+    inset 0 -8px 18px 0 rgba(0, 0, 0, 0.60);
   position: relative;
   overflow: hidden;
 }
@@ -1438,18 +1535,20 @@
   transform: translateX(-50%);
   background: linear-gradient(
     135deg,
-    rgba(4, 16, 20, 0.92) 0%,
-    rgba(24, 10, 36, 0.92) 100%
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(0, 255, 200, 0.05) 25%,
+    rgba(4, 18, 22, 0.35) 55%,
+    rgba(20, 10, 32, 0.40) 100%
   );
-  backdrop-filter: blur(16px) saturate(170%);
-  -webkit-backdrop-filter: blur(16px) saturate(170%);
+  backdrop-filter: blur(24px) saturate(190%) contrast(110%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%) contrast(110%);
   border-radius: var(--radius-full);
   padding: 0.75rem 1.5rem;
   box-shadow:
-    0 16px 40px rgba(0, 0, 0, 0.70),
+    0 24px 50px rgba(0, 0, 0, 0.75),
     0 0 25px rgba(0, 255, 200, 0.18),
-    inset 0 1px 0 rgba(0, 255, 200, 0.40),
-    inset 0 -1px 0 rgba(168, 85, 247, 0.30);
+    inset 0 2px 1px 0 rgba(255, 255, 255, 0.70),
+    inset 0 -2px 2px 0 rgba(0, 0, 0, 0.45);
   display: flex;
   align-items: center;
   gap: 0.75rem;

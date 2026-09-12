@@ -39,25 +39,26 @@
      TRUE LIQUID GLASS — NEON GREEN & PURPLE (NO OVER-WHITE)
      ========================================================= */
 
-  /* KACA DASAR: Dark, translucent, subtle dual neon tint */
+  /* KACA DASAR BENING: Ultra-translucent, crystal clear with delicate dual neon prism glaze */
   --glass-bg:
     linear-gradient(
-      140deg,
-      rgba(0, 255, 200, 0.05) 0%,
-      rgba(4, 16, 20, 0.65) 45%,
-      rgba(24, 10, 36, 0.65) 100%
+      135deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(0, 255, 200, 0.03) 25%,
+      rgba(4, 18, 22, 0.22) 55%,
+      rgba(20, 10, 32, 0.28) 100%
     );
 
-  /* Aurora neon hijau & ungu */
+  /* Aurora neon hijau & ungu jernih */
   --glass-aurora:
     radial-gradient(
-      circle at 15% 15%,
-      rgba(0, 255, 200, 0.16),
+      circle at 12% 12%,
+      rgba(0, 255, 200, 0.20),
       transparent 45%
     ),
     radial-gradient(
-      circle at 85% 85%,
-      rgba(168, 85, 247, 0.16),
+      circle at 88% 88%,
+      rgba(168, 85, 247, 0.20),
       transparent 45%
     );
 
@@ -67,55 +68,58 @@
 
   --liquid-glass-hover:
     radial-gradient(
-      circle at 20% 20%,
-      rgba(0, 255, 200, 0.22),
+      circle at 15% 15%,
+      rgba(0, 255, 200, 0.28),
       transparent 50%
     ),
     radial-gradient(
-      circle at 80% 80%,
-      rgba(168, 85, 247, 0.22),
+      circle at 85% 85%,
+      rgba(168, 85, 247, 0.28),
       transparent 50%
     ),
     linear-gradient(
-      140deg,
-      rgba(0, 255, 200, 0.09) 0%,
-      rgba(5, 18, 22, 0.70) 45%,
-      rgba(30, 12, 45, 0.70) 100%
+      135deg,
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(0, 255, 200, 0.05) 25%,
+      rgba(6, 24, 28, 0.26) 55%,
+      rgba(26, 12, 42, 0.32) 100%
     );
 
-  /* BORDER: Dual Neon Green & Purple */
+  /* BORDER: Crisp Crystal Edge with Specular Neon Glaze */
   --liquid-border:
-    rgba(0, 255, 200, 0.25);
+    rgba(0, 255, 200, 0.35);
 
   --liquid-border-hover:
-    rgba(0, 255, 200, 0.55);
+    rgba(0, 255, 200, 0.70);
 
   /* BLUR */
   --liquid-blur:
-    blur(16px)
-    saturate(165%)
-    contrast(105%);
+    blur(22px)
+    saturate(190%)
+    contrast(110%);
 
-  /* 3D SHADOW (Neon Green on top-left, Neon Purple on bottom-right) */
+  /* THICK 3D SHADOW (Deep Floating Lift + Dual Neon Back-Glow) */
   --liquid-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.70),
-    0 8px 24px rgba(0, 0, 0, 0.40),
-    0 0 24px rgba(0, 255, 200, 0.08),
-    0 10px 30px rgba(168, 85, 247, 0.08);
+    0 28px 70px -10px rgba(0, 0, 0, 0.85),
+    0 12px 30px -4px rgba(0, 0, 0, 0.55),
+    0 0 32px rgba(0, 255, 200, 0.12),
+    0 12px 38px rgba(168, 85, 247, 0.12);
 
   --liquid-shadow-hover:
-    0 35px 80px -10px rgba(0, 0, 0, 0.85),
-    0 14px 32px -4px rgba(0, 0, 0, 0.55),
-    0 0 35px rgba(0, 255, 200, 0.25),
-    0 12px 40px rgba(168, 85, 247, 0.22);
+    0 40px 90px -12px rgba(0, 0, 0, 0.92),
+    0 18px 40px -4px rgba(0, 0, 0, 0.65),
+    0 0 45px rgba(0, 255, 200, 0.30),
+    0 16px 50px rgba(168, 85, 247, 0.28);
 
-  /* INSET BEVELS: Neon Green top, Neon Purple bottom (NO over-white) */
+  /* THICK 3D INSET BEVELS: Specular Glass Top Rim + Prism Refraction */
   --liquid-inset:
-    inset 0 1.5px 0 rgba(0, 255, 200, 0.40),
-    inset 0 -2px 0 rgba(168, 85, 247, 0.35),
-    inset 1.5px 0 0 rgba(0, 255, 200, 0.20),
-    inset -1.5px 0 0 rgba(168, 85, 247, 0.20),
-    inset 0 0 20px rgba(0, 255, 200, 0.04);
+    inset 0 2px 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 4px 8px 0 rgba(0, 255, 200, 0.35),
+    inset 2px 0 2px 0 rgba(255, 255, 255, 0.25),
+    inset -2px 0 3px 0 rgba(168, 85, 247, 0.35),
+    inset 0 -3px 3px 0 rgba(168, 85, 247, 0.45),
+    inset 0 -6px 14px 0 rgba(0, 0, 0, 0.55),
+    inset 0 0 25px rgba(0, 255, 200, 0.06);
 
   --radius-glass: 28px;
 
@@ -347,37 +351,40 @@ p {
   isolation: isolate;
   overflow: hidden;
 
-  /* KACA DASAR TRANSLUSEN (Bisa melihat blur di belakangnya dengan jelas) */
+  /* KACA DASAR BENING: Crystal clear & translucent so background shines through */
   background:
     linear-gradient(
-      140deg,
-      rgba(0, 255, 200, 0.06) 0%,
-      rgba(4, 16, 20, 0.35) 45%,
-      rgba(24, 10, 36, 0.38) 100%
+      135deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(0, 255, 200, 0.03) 25%,
+      rgba(4, 18, 22, 0.22) 55%,
+      rgba(20, 10, 32, 0.28) 100%
     );
 
   /* BLUR BACKGROUND JERNIH & PEKAT DENGAN SATURASI TINGGI */
-  -webkit-backdrop-filter: blur(20px) saturate(190%) contrast(108%);
-  backdrop-filter: blur(20px) saturate(190%) contrast(108%);
+  -webkit-backdrop-filter: blur(22px) saturate(190%) contrast(110%);
+  backdrop-filter: blur(22px) saturate(190%) contrast(110%);
 
-  border: 1px solid rgba(0, 255, 200, 0.22);
-  border-top-color: rgba(0, 255, 200, 0.50);
-  border-left-color: rgba(0, 255, 200, 0.32);
-  border-right-color: rgba(168, 85, 247, 0.38);
-  border-bottom-color: rgba(168, 85, 247, 0.22);
+  border: 1.5px solid rgba(0, 255, 200, 0.28);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.65);
+  border-left: 1.5px solid rgba(0, 255, 200, 0.45);
+  border-right: 1.5px solid rgba(168, 85, 247, 0.42);
+  border-bottom: 1.5px solid rgba(168, 85, 247, 0.28);
   border-radius: var(--radius-glass);
 
-  /* 3D DEPTH + NEON GREEN & PURPLE (TIDAK OVER-PUTIH) */
+  /* EFEK 3D LEBIH TEBAL: Specular top edge + bottom counter-bevel + deep multi-layer shadow */
   box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.70),
-    0 8px 24px rgba(0, 0, 0, 0.40),
-    0 0 24px rgba(0, 255, 200, 0.08),
-    0 10px 30px rgba(168, 85, 247, 0.08),
-    inset 0 1.5px 0 rgba(0, 255, 200, 0.40),
-    inset 0 -2px 0 rgba(168, 85, 247, 0.35),
-    inset 1.5px 0 0 rgba(0, 255, 200, 0.20),
-    inset -1.5px 0 0 rgba(168, 85, 247, 0.20),
-    inset 0 0 20px rgba(0, 255, 200, 0.04);
+    0 28px 70px -10px rgba(0, 0, 0, 0.85),
+    0 12px 30px -4px rgba(0, 0, 0, 0.55),
+    0 0 32px rgba(0, 255, 200, 0.12),
+    0 12px 38px rgba(168, 85, 247, 0.12),
+    inset 0 2px 1px 0 rgba(255, 255, 255, 0.65),
+    inset 0 4px 8px 0 rgba(0, 255, 200, 0.35),
+    inset 2px 0 2px 0 rgba(255, 255, 255, 0.25),
+    inset -2px 0 3px 0 rgba(168, 85, 247, 0.35),
+    inset 0 -3px 3px 0 rgba(168, 85, 247, 0.45),
+    inset 0 -6px 14px 0 rgba(0, 0, 0, 0.55),
+    inset 0 0 25px rgba(0, 255, 200, 0.06);
 
   transition:
     transform 450ms cubic-bezier(.2,.8,.2,1),
@@ -479,35 +486,37 @@ p {
   pointer-events: none;
   z-index: 4;
 
-  /* SHEEN NEON HIJAU DI ATAS & UNGU DI BAWAH/SAMPING (TIDAK OVER-PUTIH) */
+  /* SHEEN 3D DI ATAS & REFLEKSI KRISTAL */
   background:
-    /* Highlight neon hijau atas */
+    /* Highlight putih kristal & neon hijau atas */
     linear-gradient(
       180deg,
-      rgba(0, 255, 200, 0.20) 0%,
-      rgba(0, 255, 200, 0.03) 14%,
-      transparent 35%
+      rgba(255, 255, 255, 0.22) 0%,
+      rgba(0, 255, 200, 0.10) 12%,
+      rgba(0, 255, 200, 0.02) 28%,
+      transparent 45%
     ),
     /* Refleksi samping: Hijau kiri, Ungu kanan */
     linear-gradient(
       90deg,
-      rgba(0, 255, 200, 0.12) 0%,
-      transparent 12%,
-      transparent 88%,
-      rgba(168, 85, 247, 0.16) 100%
+      rgba(0, 255, 200, 0.15) 0%,
+      transparent 10%,
+      transparent 90%,
+      rgba(168, 85, 247, 0.18) 100%
     ),
     /* Aurora neon ungu pojok kanan bawah */
     radial-gradient(
       circle at 85% 90%,
-      rgba(168, 85, 247, 0.22),
+      rgba(168, 85, 247, 0.25),
       transparent 45%
     );
 
   box-shadow:
-    inset 0 1.5px 0 rgba(0, 255, 200, 0.35),
-    inset 1.5px 0 0 rgba(0, 255, 200, 0.15),
-    inset -1.5px 0 0 rgba(168, 85, 247, 0.20),
-    inset 0 -2px 0 rgba(168, 85, 247, 0.28);
+    inset 0 2px 1px rgba(255, 255, 255, 0.50),
+    inset 0 3px 6px rgba(0, 255, 200, 0.30),
+    inset 2px 0 0 rgba(0, 255, 200, 0.20),
+    inset -2px 0 0 rgba(168, 85, 247, 0.25),
+    inset 0 -2.5px 0 rgba(168, 85, 247, 0.35);
 
   mix-blend-mode: screen;
 }
@@ -541,21 +550,23 @@ p {
 
   transform: translateY(-10px) scale(1.03) !important;
 
-  border-top-color: rgba(0, 255, 200, 0.85) !important;
-  border-left-color: rgba(0, 255, 200, 0.55) !important;
-  border-right-color: rgba(168, 85, 247, 0.75) !important;
-  border-bottom-color: rgba(168, 85, 247, 0.45) !important;
+  border-top-color: rgba(255, 255, 255, 0.90) !important;
+  border-left-color: rgba(0, 255, 200, 0.70) !important;
+  border-right-color: rgba(168, 85, 247, 0.70) !important;
+  border-bottom-color: rgba(168, 85, 247, 0.50) !important;
 
   box-shadow:
-    0 35px 80px -10px rgba(0, 0, 0, 0.85),
-    0 14px 32px -4px rgba(0, 0, 0, 0.55),
-    0 0 35px rgba(0, 255, 200, 0.28),
-    0 12px 40px rgba(168, 85, 247, 0.25),
-    inset 0 2px 0 rgba(0, 255, 200, 0.60),
-    inset 0 -2.5px 0 rgba(168, 85, 247, 0.50),
-    inset 1.5px 0 0 rgba(0, 255, 200, 0.35),
-    inset -1.5px 0 0 rgba(168, 85, 247, 0.35),
-    inset 0 0 25px rgba(0, 255, 200, 0.10) !important;
+    0 40px 90px -10px rgba(0, 0, 0, 0.90),
+    0 16px 36px -4px rgba(0, 0, 0, 0.60),
+    0 0 45px rgba(0, 255, 200, 0.32),
+    0 14px 45px rgba(168, 85, 247, 0.28),
+    inset 0 2.5px 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 5px 10px 0 rgba(0, 255, 200, 0.50),
+    inset 2px 0 2px 0 rgba(255, 255, 255, 0.35),
+    inset -2px 0 3px 0 rgba(168, 85, 247, 0.45),
+    inset 0 -3.5px 3px 0 rgba(168, 85, 247, 0.60),
+    inset 0 -8px 18px 0 rgba(0, 0, 0, 0.65),
+    inset 0 0 30px rgba(0, 255, 200, 0.12) !important;
 }
 
 
@@ -1000,38 +1011,59 @@ p {
   min-height: 48px;
   padding: 0.85rem 1.15rem;
   color: rgba(255, 255, 255, 0.95);
-  background: rgba(2, 10, 11, 0.60);
-  backdrop-filter: blur(28px) saturate(170%);
-  -webkit-backdrop-filter: blur(28px) saturate(170%);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  background:
+    linear-gradient(
+      140deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(0, 255, 200, 0.03) 25%,
+      rgba(4, 18, 22, 0.25) 55%,
+      rgba(20, 10, 32, 0.32) 100%
+    );
+  backdrop-filter: blur(28px) saturate(190%) contrast(110%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%) contrast(110%);
+  border: 1.5px solid rgba(0, 255, 200, 0.28);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.65);
+  border-left: 1.5px solid rgba(0, 255, 200, 0.40);
+  border-right: 1.5px solid rgba(168, 85, 247, 0.35);
+  border-bottom: 1.5px solid rgba(168, 85, 247, 0.25);
   border-radius: var(--radius-md);
   outline: none;
   box-sizing: border-box;
   font-family: var(--font-body);
   font-size: 0.95rem;
   box-shadow:
-    inset 0 2px 6px rgba(0, 0, 0, 0.65),
-    inset 0 0 16px rgba(0, 0, 0, 0.35),
-    0 1px 0 rgba(255, 255, 255, 0.10);
+    inset 0 2px 4px rgba(0, 0, 0, 0.50),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.15),
+    inset 0 1px 1px rgba(255, 255, 255, 0.40),
+    0 4px 12px rgba(0, 0, 0, 0.25);
   transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .glass-input::placeholder,
 .form-input::placeholder,
 .form-textarea::placeholder {
-  color: rgba(255, 255, 255, 0.40);
+  color: rgba(255, 255, 255, 0.45);
 }
 
 .glass-input:focus,
 .form-input:focus,
 .form-textarea:focus,
 .form-select:focus {
-  background: rgba(2, 10, 11, 0.80);
-  border-color: rgba(0, 255, 210, 0.55);
+  background:
+    linear-gradient(
+      140deg,
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(0, 255, 200, 0.06) 25%,
+      rgba(4, 18, 22, 0.35) 55%,
+      rgba(20, 10, 32, 0.40) 100%
+    );
+  border-color: rgba(0, 255, 210, 0.65);
+  border-top-color: rgba(255, 255, 255, 0.85);
   box-shadow:
-    inset 0 2px 4px rgba(0, 0, 0, 0.50),
-    0 0 0 3px rgba(0, 255, 210, 0.18),
-    0 0 24px rgba(0, 255, 210, 0.15);
+    inset 0 2px 4px rgba(0, 0, 0, 0.40),
+    inset 0 1px 2px rgba(255, 255, 255, 0.60),
+    0 0 0 3px rgba(0, 255, 210, 0.20),
+    0 0 24px rgba(0, 255, 210, 0.20);
 }
 
 .form-textarea {
