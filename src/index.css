@@ -35,93 +35,87 @@
      TRUE LIQUID GLASS — BLUR + ZOOM + REFRACTION + 3D DEPTH
      ========================================================= */
 
-  /* KACA DASAR */
+  /* =========================================================
+     TRUE LIQUID GLASS — NEON GREEN & PURPLE (NO OVER-WHITE)
+     ========================================================= */
+
+  /* KACA DASAR: Dark, translucent, subtle dual neon tint */
   --glass-bg:
     linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.13),
-      rgba(255, 255, 255, 0.045) 45%,
-      rgba(0, 255, 180, 0.045)
+      140deg,
+      rgba(0, 255, 200, 0.05) 0%,
+      rgba(4, 16, 20, 0.65) 45%,
+      rgba(24, 10, 36, 0.65) 100%
     );
 
-  /* Aurora halus pendukung */
+  /* Aurora neon hijau & ungu */
   --glass-aurora:
     radial-gradient(
-      circle at 15% 10%,
-      rgba(110, 255, 220, 0.13),
-      transparent 40%
+      circle at 15% 15%,
+      rgba(0, 255, 200, 0.16),
+      transparent 45%
     ),
     radial-gradient(
-      circle at 85% 90%,
-      rgba(0, 255, 145, 0.10),
-      transparent 38%
+      circle at 85% 85%,
+      rgba(168, 85, 247, 0.16),
+      transparent 45%
     );
 
   --liquid-glass:
-    linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.13),
-      rgba(255, 255, 255, 0.045) 45%,
-      rgba(0, 255, 180, 0.045)
-    );
-
-  /* =========================================================
-     HOVER
-     ========================================================= */
+    var(--glass-aurora),
+    var(--glass-bg);
 
   --liquid-glass-hover:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(0, 255, 200, 0.22),
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(168, 85, 247, 0.22),
+      transparent 50%
+    ),
     linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.18),
-      rgba(255, 255, 255, 0.065) 45%,
-      rgba(0, 255, 180, 0.08)
+      140deg,
+      rgba(0, 255, 200, 0.09) 0%,
+      rgba(5, 18, 22, 0.70) 45%,
+      rgba(30, 12, 45, 0.70) 100%
     );
 
-  /* =========================================================
-     BORDER
-     ========================================================= */
-
+  /* BORDER: Dual Neon Green & Purple */
   --liquid-border:
-    rgba(255, 255, 255, 0.20);
+    rgba(0, 255, 200, 0.25);
 
   --liquid-border-hover:
-    rgba(80, 255, 210, 0.48);
+    rgba(0, 255, 200, 0.55);
 
-  /* =========================================================
-     BLUR
-     ========================================================= */
-
+  /* BLUR */
   --liquid-blur:
-    blur(28px)
-    saturate(175%)
-    contrast(108%);
+    blur(24px)
+    saturate(180%)
+    contrast(105%);
 
-  /* =========================================================
-     3D SHADOW
-     ========================================================= */
-
+  /* 3D SHADOW (Neon Green on top-left, Neon Purple on bottom-right) */
   --liquid-shadow:
-    0 30px 70px rgba(0, 0, 0, 0.60),
-    0 12px 30px rgba(0, 0, 0, 0.35),
-    inset 0 2px 0 rgba(255, 255, 255, 0.42),
-    inset 0 -3px 0 rgba(0, 0, 0, 0.42),
-    inset 0 0 25px rgba(255, 255, 255, 0.05);
+    0 24px 60px rgba(0, 0, 0, 0.70),
+    0 8px 24px rgba(0, 0, 0, 0.40),
+    0 0 24px rgba(0, 255, 200, 0.08),
+    0 10px 30px rgba(168, 85, 247, 0.08);
 
   --liquid-shadow-hover:
-    0 40px 85px -10px rgba(0, 0, 0, 0.76),
-    0 16px 36px -8px rgba(0, 0, 0, 0.50),
-    0 0 35px rgba(0, 255, 190, 0.12),
-    inset 0 2px 0 rgba(255, 255, 255, 0.50),
-    inset 0 -3px 0 rgba(0, 0, 0, 0.42);
+    0 35px 80px -10px rgba(0, 0, 0, 0.85),
+    0 14px 32px -4px rgba(0, 0, 0, 0.55),
+    0 0 35px rgba(0, 255, 200, 0.25),
+    0 12px 40px rgba(168, 85, 247, 0.22);
 
-  /* =========================================================
-     INNER GLASS / BEVEL
-     ========================================================= */
-
+  /* INSET BEVELS: Neon Green top, Neon Purple bottom (NO over-white) */
   --liquid-inset:
-    inset 0 2px 0 rgba(255, 255, 255, 0.42),
-    inset 0 -3px 0 rgba(0, 0, 0, 0.42),
-    inset 0 0 25px rgba(255, 255, 255, 0.05);
+    inset 0 1.5px 0 rgba(0, 255, 200, 0.40),
+    inset 0 -2px 0 rgba(168, 85, 247, 0.35),
+    inset 1.5px 0 0 rgba(0, 255, 200, 0.20),
+    inset -1.5px 0 0 rgba(168, 85, 247, 0.20),
+    inset 0 0 20px rgba(0, 255, 200, 0.04);
 
   --radius-glass: 28px;
 
@@ -209,7 +203,6 @@
 
 body {
   background: var(--dark-bg);
-  background-attachment: fixed;
   color: rgba(255, 255, 255, 0.92);
   min-height: 100vh;
   margin: 0;
@@ -354,65 +347,50 @@ p {
   isolation: isolate;
   overflow: hidden;
 
-  /* KACA DASAR */
+  /* KACA DASAR TRANSLUSEN (Bisa melihat blur di belakangnya) */
   background:
     linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.13),
-      rgba(255, 255, 255, 0.045) 45%,
-      rgba(0, 255, 180, 0.045)
+      140deg,
+      rgba(0, 255, 200, 0.05) 0%,
+      rgba(4, 16, 20, 0.65) 45%,
+      rgba(24, 10, 36, 0.65) 100%
     );
 
-  /* BLUR BACKGROUND */
-  backdrop-filter:
-    blur(28px)
-    saturate(175%)
-    contrast(108%);
+  /* BLUR BACKGROUND BERJALAN SEMPURNA TANPA PRESERVE-3D */
+  backdrop-filter: blur(24px) saturate(180%) contrast(105%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%) contrast(105%);
 
-  -webkit-backdrop-filter:
-    blur(28px)
-    saturate(175%)
-    contrast(108%);
-
-  border: 1px solid rgba(255, 255, 255, 0.20);
+  border: 1px solid rgba(0, 255, 200, 0.22);
+  border-top-color: rgba(0, 255, 200, 0.50);
+  border-left-color: rgba(0, 255, 200, 0.32);
+  border-right-color: rgba(168, 85, 247, 0.38);
+  border-bottom-color: rgba(168, 85, 247, 0.22);
   border-radius: var(--radius-glass);
 
-  /* 3D DEPTH */
+  /* 3D DEPTH + NEON GREEN & PURPLE (TIDAK OVER-PUTIH) */
   box-shadow:
-    0 30px 70px rgba(0, 0, 0, 0.60),
-    0 12px 30px rgba(0, 0, 0, 0.35),
-    inset 0 2px 0 rgba(255, 255, 255, 0.42),
-    inset 0 -3px 0 rgba(0, 0, 0, 0.42),
-    inset 0 0 25px rgba(255, 255, 255, 0.05);
-
-  transform-style: preserve-3d;
-  transform: translateZ(0);
+    0 24px 60px rgba(0, 0, 0, 0.70),
+    0 8px 24px rgba(0, 0, 0, 0.40),
+    0 0 24px rgba(0, 255, 200, 0.08),
+    0 10px 30px rgba(168, 85, 247, 0.08),
+    inset 0 1.5px 0 rgba(0, 255, 200, 0.40),
+    inset 0 -2px 0 rgba(168, 85, 247, 0.35),
+    inset 1.5px 0 0 rgba(0, 255, 200, 0.20),
+    inset -1.5px 0 0 rgba(168, 85, 247, 0.20),
+    inset 0 0 20px rgba(0, 255, 200, 0.04);
 
   transition:
-    transform 500ms cubic-bezier(.2,.8,.2,1),
-    box-shadow 500ms cubic-bezier(.2,.8,.2,1),
+    transform 450ms cubic-bezier(.2,.8,.2,1),
+    box-shadow 450ms cubic-bezier(.2,.8,.2,1),
     border-color 400ms ease;
 
-  will-change: transform;
-
-  /* sedikit bevel */
-  border-top-color:
-    rgba(255,255,255,.34);
-
-  border-left-color:
-    rgba(255,255,255,.18);
-
-  border-right-color:
-    rgba(0,255,190,.16);
-
-  border-bottom-color:
-    rgba(0,0,0,.30);
+  will-change: transform, box-shadow;
 }
 
 
 /* =========================================================
-   LIQUID REFRACTION LAYER
-   INI YANG MEMBERIKAN KESAN ZOOM PADA BACKGROUND
+   LIQUID REFRACTION LAYER — NEON GREEN & PURPLE AURORA
+   Memberikan kedalaman & ilusi cairan tanpa menghalangi blur
    ========================================================= */
 
 .liquid-glass::before,
@@ -436,63 +414,42 @@ p {
 .gallery-item::before {
 
   content: "";
-
   position: absolute;
   z-index: -1;
+  inset: -12%;
 
-  /* LAYER DIPERBESAR */
-  inset: -15%;
-
+  /* AURORA NEON HIJAU & UNGU - halus & tidak menghalangi transparansi */
   background:
     radial-gradient(
-      ellipse 65% 55% at 20% 20%,
-      rgba(0, 255, 210, 0.22) 0%,
-      transparent 60%
+      ellipse 65% 55% at 15% 15%,
+      rgba(0, 255, 200, 0.18) 0%,
+      transparent 65%
     ),
     radial-gradient(
-      ellipse 60% 60% at 80% 80%,
-      rgba(0, 200, 255, 0.18) 0%,
-      transparent 60%
+      ellipse 65% 55% at 85% 85%,
+      rgba(168, 85, 247, 0.18) 0%,
+      transparent 65%
     ),
     radial-gradient(
-      ellipse 45% 45% at 50% 50%,
-      rgba(255, 255, 255, 0.12) 0%,
+      ellipse 40% 40% at 50% 50%,
+      rgba(0, 230, 255, 0.07) 0%,
       transparent 60%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(130, 255, 225, 0.16) 0%,
-      transparent 40%,
-      rgba(0, 255, 170, 0.14) 100%
     );
 
-  /*
-   * SCALE = SIMULASI PEMBESARAN / REFRAKSI
-   * Semakin besar → background terasa semakin zoom
-   */
-  transform:
-    scale(1.18);
-
-  /*
-   * BLUR KACA
-   */
-  filter:
-    blur(12px)
-    saturate(160%);
-
-  opacity: 0.85;
-
+  transform: scale(1.08);
+  filter: blur(14px);
+  opacity: 0.55;
   pointer-events: none;
 
   transition:
-    transform 800ms cubic-bezier(.16, 1, .3, 1),
-    filter 800ms cubic-bezier(.16, 1, .3, 1),
-    opacity 500ms ease;
+    transform 700ms cubic-bezier(.16, 1, .3, 1),
+    filter 700ms cubic-bezier(.16, 1, .3, 1),
+    opacity 400ms ease;
 }
 
 
 /* =========================================================
-   3D GLASS THICKNESS
+   3D GLASS THICKNESS & SHEEN — NEON DUAL LIGHT (NO OVER-WHITE)
    ========================================================= */
 
 .liquid-glass::after,
@@ -516,51 +473,47 @@ p {
 .gallery-item::after {
 
   content: "";
-
   position: absolute;
   inset: 0;
-
   border-radius: inherit;
-
   pointer-events: none;
 
+  /* SHEEN NEON HIJAU DI ATAS & UNGU DI BAWAH/SAMPING (TIDAK OVER-PUTIH) */
   background:
-
-    /* HIGHLIGHT ATAS */
+    /* Highlight neon hijau atas */
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.26),
-      transparent 18%
+      rgba(0, 255, 200, 0.20) 0%,
+      rgba(0, 255, 200, 0.03) 14%,
+      transparent 35%
     ),
-
-    /* REFLEKSI SAMPING */
+    /* Refleksi samping: Hijau kiri, Ungu kanan */
     linear-gradient(
       90deg,
-      rgba(255, 255, 255, 0.14),
-      transparent 10%,
+      rgba(0, 255, 200, 0.12) 0%,
+      transparent 12%,
       transparent 88%,
-      rgba(0, 255, 190, 0.11)
+      rgba(168, 85, 247, 0.16) 100%
     ),
-
-    /* AURORA DALAM KACA */
+    /* Aurora neon ungu pojok kanan bawah */
     radial-gradient(
-      circle at 80% 90%,
-      rgba(0, 255, 180, 0.12),
-      transparent 40%
+      circle at 85% 90%,
+      rgba(168, 85, 247, 0.22),
+      transparent 45%
     );
 
   box-shadow:
-    inset 0 2px 0 rgba(255,255,255,.40),
-    inset 2px 0 0 rgba(255,255,255,.16),
-    inset -2px 0 0 rgba(0,0,0,.18),
-    inset 0 -3px 0 rgba(0,0,0,.38);
+    inset 0 1.5px 0 rgba(0, 255, 200, 0.35),
+    inset 1.5px 0 0 rgba(0, 255, 200, 0.15),
+    inset -1.5px 0 0 rgba(168, 85, 247, 0.20),
+    inset 0 -2px 0 rgba(168, 85, 247, 0.28);
 
   mix-blend-mode: screen;
 }
 
 
 /* =========================================================
-   HOVER — FLOAT + ZOOM
+   HOVER — FLOAT + DUAL NEON GLOW (HIJAU & UNGU)
    ========================================================= */
 
 .liquid-glass:hover,
@@ -582,24 +535,28 @@ p {
 .admin-gallery-card:hover,
 .gallery-item:hover {
 
-  transform:
-    translateY(-8px)
-    scale(1.028);
+  transform: translateY(-8px) scale(1.02);
 
-  border-color:
-    var(--liquid-border-hover);
-
-  border-top-color:
-    rgba(255,255,255,.55);
+  border-top-color: rgba(0, 255, 200, 0.75);
+  border-left-color: rgba(0, 255, 200, 0.48);
+  border-right-color: rgba(168, 85, 247, 0.65);
+  border-bottom-color: rgba(168, 85, 247, 0.40);
 
   box-shadow:
-    var(--liquid-shadow-hover),
-    var(--liquid-inset);
+    0 35px 80px -10px rgba(0, 0, 0, 0.85),
+    0 14px 32px -4px rgba(0, 0, 0, 0.55),
+    0 0 35px rgba(0, 255, 200, 0.25),
+    0 12px 40px rgba(168, 85, 247, 0.22),
+    inset 0 2px 0 rgba(0, 255, 200, 0.55),
+    inset 0 -2.5px 0 rgba(168, 85, 247, 0.45),
+    inset 1.5px 0 0 rgba(0, 255, 200, 0.30),
+    inset -1.5px 0 0 rgba(168, 85, 247, 0.30),
+    inset 0 0 25px rgba(0, 255, 200, 0.08);
 }
 
 
 /* =========================================================
-   ZOOM / LIQUID MOVEMENT
+   ZOOM / LIQUID MOVEMENT ON HOVER
    ========================================================= */
 
 .liquid-glass:hover::before,
@@ -621,19 +578,16 @@ p {
 .admin-gallery-card:hover::before,
 .gallery-item:hover::before {
 
-  transform:
-    scale(1.38) rotate(1.5deg);
+  transform: scale(1.22) rotate(1.5deg);
 
-  filter:
-    blur(16px)
-    saturate(220%);
+  filter: blur(18px);
 
-  opacity: 1;
+  opacity: 0.80;
 
   transition:
-    transform 800ms cubic-bezier(.16,1,.3,1),
-    filter 800ms cubic-bezier(.16,1,.3,1),
-    opacity 400ms ease;
+    transform 700ms cubic-bezier(.16,1,.3,1),
+    filter 700ms cubic-bezier(.16,1,.3,1),
+    opacity 350ms ease;
 }
 
 
@@ -964,37 +918,37 @@ p {
 }
 
 /* =========================================================
-   BACKGROUND GLOW / NEON ORB
+   BACKGROUND GLOW / NEON ORB — NEON GREEN & PURPLE
    ========================================================= */
 
 .neon-orb,
 .liquid-glow {
   position: fixed;
-  width: 480px;
-  height: 480px;
+  width: 520px;
+  height: 520px;
   border-radius: 50%;
   pointer-events: none;
-  filter: blur(80px);
+  filter: blur(90px);
   z-index: 0;
-  opacity: 0.55;
+  opacity: 0.65;
 }
 
 .neon-orb-1 {
   top: -120px;
   left: -100px;
-  background: radial-gradient(circle, rgba(0, 255, 210, 0.18), transparent 68%);
+  background: radial-gradient(circle, rgba(0, 255, 200, 0.22), transparent 70%);
 }
 
 .neon-orb-2 {
   top: 45%;
   right: -150px;
-  background: radial-gradient(circle, rgba(0, 180, 255, 0.14), transparent 68%);
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.22), transparent 70%);
 }
 
 .neon-orb-3 {
   bottom: -100px;
   left: 25%;
-  background: radial-gradient(circle, rgba(124, 92, 255, 0.12), transparent 68%);
+  background: radial-gradient(circle, rgba(0, 255, 180, 0.18), transparent 70%);
 }
 
 /* =========================================================
@@ -1002,10 +956,14 @@ p {
    ========================================================= */
 
 .islamic-pattern {
-  position: fixed;
-  inset: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
   pointer-events: none;
-  opacity: 0.035;
+  opacity: 0.04;
   background-image:
     url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2300ffd2' stroke-width='1.2'%3E%3Cpath d='M60 5L115 60L60 115L5 60Z'/%3E%3Cpath d='M60 20L100 60L60 100L20 60Z'/%3E%3Ccircle cx='60' cy='60' r='25'/%3E%3C/g%3E%3C/svg%3E");
   background-size: 120px 120px;
