@@ -9,20 +9,22 @@
   width: 100%;
   max-width: 100vw;
   height: 100vh;
+  height: 100dvh;
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
   background: #030c0e;
-  transition: background 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background 3.5s cubic-bezier(0.25, 1, 0.35, 1);
 }
 
-/* 0. Cinematic Multi-Layer Image Stack with Smooth Cross-Fade */
+/* 0. Cinematic Multi-Layer Image Stack with Smooth Prolonged Cross-Fade */
 .dynamic-image-stack {
   position: absolute;
   inset: 0;
   width: 100%;
   max-width: 100vw;
   height: 100vh;
+  height: 100dvh;
   pointer-events: none;
   overflow: hidden;
   z-index: 0;
@@ -30,20 +32,41 @@
 
 .bg-layer-item {
   position: absolute;
-  inset: -20px;
+  inset: -35px;
   background-size: cover;
-  background-position: center 38%;
+  background-position: center 35%;
+  background-repeat: no-repeat;
   opacity: 0;
-  transform: scale(1.05);
+  transform: scale(1.07);
   transition:
-    opacity 1.6s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 2.4s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 3.6s cubic-bezier(0.25, 1, 0.35, 1),
+    transform 5.5s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: opacity, transform;
 }
 
 .bg-layer-item.is-active {
-  opacity: 0.40;
+  opacity: 0.50;
   transform: scale(1);
+}
+
+/* Slightly more luminous hero for grand mosque presentation */
+.bg-layer-hero.is-active {
+  opacity: 0.58;
+}
+
+/* High-DPI & Mobile Screen Support for Background Images */
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
+  .bg-layer-item {
+    image-rendering: auto;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+}
+
+@media (max-width: 768px), (orientation: portrait) {
+  .bg-layer-item {
+    background-position: center center;
+  }
 }
 
 /* 1. Islamic Pattern with Parallax Drift */
@@ -53,13 +76,14 @@
   width: 100%;
   max-width: 100vw;
   height: calc(100vh + 120px);
+  height: calc(100dvh + 120px);
   pointer-events: none;
   opacity: 0.085;
   background-image:
     url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2300ffd2' stroke-width='1.2'%3E%3Cpath d='M60 5L115 60L60 115L5 60Z'/%3E%3Cpath d='M60 20L100 60L60 100L20 60Z'/%3E%3Ccircle cx='60' cy='60' r='25'/%3E%3C/g%3E%3C/svg%3E");
   background-size: 120px 120px;
   will-change: transform;
-  transition: opacity 1s ease;
+  transition: opacity 2.5s ease;
   z-index: 1;
 }
 
@@ -73,9 +97,9 @@
   z-index: 2;
   will-change: transform, background, opacity;
   transition:
-    transform 1.2s cubic-bezier(0.16, 1, 0.3, 1),
-    background 1.6s cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 1.4s ease;
+    transform 2.2s cubic-bezier(0.16, 1, 0.3, 1),
+    background 3.5s cubic-bezier(0.25, 1, 0.35, 1),
+    opacity 3.2s ease;
   animation: livingAuroraPulse 14s ease-in-out infinite alternate;
 }
 

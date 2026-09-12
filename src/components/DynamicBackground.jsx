@@ -34,29 +34,48 @@ export default function DynamicBackground() {
       { sel: '.stats-section, .home-programs-grid', theme: 'programs' },
       { sel: '.quote-section, .about-story', theme: 'quote' },
       { sel: '.home-events-list, .agenda-container', theme: 'events' },
-      { sel: '.gallery-grid, .instagram-section, .articles-grid', theme: 'media' },
+      { sel: '.gallery-grid, .instagram-section, .articles-grid, .grid-3', theme: 'media' },
       { sel: '.home-cta-section, .contact-form-wrapper, footer', theme: 'cta' }
     ];
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const matchedTheme = entry.target.getAttribute('data-bg-theme');
-            if (matchedTheme) {
-              setTheme(matchedTheme);
-            }
+    const elementsToObserve = [];
+
+    const evaluateDominantTheme = () => {
+      const focalY = window.innerHeight * 0.42;
+      let closestElement = null;
+      let minDistance = Infinity;
+
+      elementsToObserve.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.bottom > 40 && rect.top < window.innerHeight - 40) {
+          const elCenter = (rect.top + rect.bottom) / 2;
+          const dist = Math.abs(elCenter - focalY);
+          if (dist < minDistance) {
+            minDistance = dist;
+            closestElement = el;
           }
-        });
+        }
+      });
+
+      if (closestElement) {
+        const matched = closestElement.getAttribute('data-bg-theme');
+        if (matched) {
+          setTheme((current) => (current !== matched ? matched : current));
+        }
+      }
+    };
+
+    const observer = new IntersectionObserver(
+      () => {
+        evaluateDominantTheme();
       },
       {
-        threshold: 0.2,
-        rootMargin: '-15% 0px -25% 0px'
+        threshold: [0.1, 0.25, 0.5, 0.75],
+        rootMargin: '-5% 0px -15% 0px'
       }
     );
 
     // Attach data-bg-theme to target elements
-    const elementsToObserve = [];
     sectionSelectors.forEach(({ sel, theme: t }) => {
       document.querySelectorAll(sel).forEach((el) => {
         el.setAttribute('data-bg-theme', t);
@@ -64,6 +83,9 @@ export default function DynamicBackground() {
         elementsToObserve.push(el);
       });
     });
+
+    // Check once after elements are mounted
+    evaluateDominantTheme();
 
     return () => {
       elementsToObserve.forEach((el) => observer.unobserve(el));
