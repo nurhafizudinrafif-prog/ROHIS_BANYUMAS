@@ -29,42 +29,50 @@
 }
 
 .reg-step-num {
-  width: 32px;
-  height: 32px;
+  width: 38px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--glass-border);
-  transition: all var(--transition-base);
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.5);
+  background: radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.04) 60%, rgba(0, 0, 0, 0.4) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 
+    0 4px 10px rgba(0, 0, 0, 0.4),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.3),
+    inset 0 -1.5px 2px rgba(0, 0, 0, 0.4);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .reg-step.active .reg-step-num {
-  background: rgba(0, 212, 170, 0.12);
-  border-color: rgba(0, 212, 170, 0.3);
-  color: var(--color-primary-light);
-  box-shadow: 0 0 12px rgba(0, 212, 170, 0.15);
+  background: radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.35) 0%, rgba(0, 221, 184, 0.25) 50%, rgba(2, 20, 18, 0.8) 100%);
+  border-color: rgba(0, 255, 210, 0.55);
+  color: #00F0CF;
+  box-shadow: 
+    0 6px 18px rgba(0, 0, 0, 0.5),
+    0 0 18px rgba(0, 255, 210, 0.35),
+    inset 0 2px 3px rgba(255, 255, 255, 0.6),
+    inset 0 -1.5px 2px rgba(0, 0, 0, 0.4);
+  transform: scale(1.1);
 }
 
 .reg-step span {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
   font-family: var(--font-heading);
 }
 
 .reg-step.active span {
-  color: var(--color-text);
+  color: #ffffff;
 }
 
 .reg-step-arrow {
-  color: var(--color-text-muted);
-  opacity: 0.3;
+  color: rgba(255, 255, 255, 0.3);
 }
 
 /* Form */
@@ -72,12 +80,27 @@
   background: var(--liquid-glass);
   backdrop-filter: var(--liquid-blur);
   -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1px solid var(--liquid-border);
+  border: 1.5px solid var(--liquid-border);
   border-radius: var(--radius-xl);
-  padding: var(--space-xl);
+  padding: var(--space-2xl);
   box-shadow: var(--liquid-shadow), var(--liquid-inset);
   position: relative;
   overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reg-form::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    125deg,
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.05) 25%,
+    transparent 55%
+  );
+  border-radius: inherit;
+  pointer-events: none;
 }
 
 .reg-form-step {
