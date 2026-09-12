@@ -39,87 +39,70 @@
      TRUE LIQUID GLASS — NEON GREEN & PURPLE (NO OVER-WHITE)
      ========================================================= */
 
-  /* KACA DASAR BENING: Ultra-translucent, crystal clear with delicate dual neon prism glaze */
+  /* KACA DASAR BENING TOTAL: Pure crystal clear transparent glass */
   --glass-bg:
     linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.08) 0%,
-      rgba(0, 255, 200, 0.03) 25%,
-      rgba(4, 18, 22, 0.22) 55%,
-      rgba(20, 10, 32, 0.28) 100%
+      rgba(255, 255, 255, 0.16) 0%,
+      rgba(255, 255, 255, 0.05) 45%,
+      rgba(255, 255, 255, 0.02) 100%
     );
 
-  /* Aurora neon hijau & ungu jernih */
+  /* Aksen aurora sangat halus agar kaca tetap bening tembus pandang */
   --glass-aurora:
     radial-gradient(
       circle at 12% 12%,
-      rgba(0, 255, 200, 0.20),
+      rgba(0, 255, 200, 0.08),
       transparent 45%
     ),
     radial-gradient(
       circle at 88% 88%,
-      rgba(168, 85, 247, 0.20),
+      rgba(168, 85, 247, 0.08),
       transparent 45%
     );
 
   --liquid-glass:
-    var(--glass-aurora),
     var(--glass-bg);
 
   --liquid-glass-hover:
-    radial-gradient(
-      circle at 15% 15%,
-      rgba(0, 255, 200, 0.28),
-      transparent 50%
-    ),
-    radial-gradient(
-      circle at 85% 85%,
-      rgba(168, 85, 247, 0.28),
-      transparent 50%
-    ),
     linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.12) 0%,
-      rgba(0, 255, 200, 0.05) 25%,
-      rgba(6, 24, 28, 0.26) 55%,
-      rgba(26, 12, 42, 0.32) 100%
+      rgba(255, 255, 255, 0.22) 0%,
+      rgba(255, 255, 255, 0.08) 45%,
+      rgba(255, 255, 255, 0.03) 100%
     );
 
-  /* BORDER: Crisp Crystal Edge with Specular Neon Glaze */
+  /* BORDER: Crisp Crystal Edge with Specular Highlight */
   --liquid-border:
-    rgba(0, 255, 200, 0.35);
+    rgba(255, 255, 255, 0.35);
 
   --liquid-border-hover:
-    rgba(0, 255, 200, 0.70);
+    rgba(255, 255, 255, 0.80);
 
-  /* BLUR */
+  /* BLUR HALUS: Tidak pekat/buram agar latar belakang terlihat jernih */
   --liquid-blur:
-    blur(22px)
-    saturate(190%)
-    contrast(110%);
+    blur(12px)
+    saturate(160%);
 
-  /* THICK 3D SHADOW (Deep Floating Lift + Dual Neon Back-Glow) */
+  /* THICK 3D SHADOW (Physical Floating Elevation) */
   --liquid-shadow:
-    0 28px 70px -10px rgba(0, 0, 0, 0.85),
-    0 12px 30px -4px rgba(0, 0, 0, 0.55),
-    0 0 32px rgba(0, 255, 200, 0.12),
-    0 12px 38px rgba(168, 85, 247, 0.12);
+    0 30px 70px -10px rgba(0, 0, 0, 0.80),
+    0 16px 36px -6px rgba(0, 0, 0, 0.55),
+    0 4px 14px rgba(0, 0, 0, 0.35);
 
   --liquid-shadow-hover:
-    0 40px 90px -12px rgba(0, 0, 0, 0.92),
-    0 18px 40px -4px rgba(0, 0, 0, 0.65),
-    0 0 45px rgba(0, 255, 200, 0.30),
-    0 16px 50px rgba(168, 85, 247, 0.28);
+    0 42px 90px -12px rgba(0, 0, 0, 0.90),
+    0 20px 45px -6px rgba(0, 0, 0, 0.65),
+    0 0 35px rgba(0, 255, 200, 0.25);
 
-  /* THICK 3D INSET BEVELS: Specular Glass Top Rim + Prism Refraction */
+  /* THICK 3D INSET BEVELS: Specular Top Rim + Inner Counter-Bevel */
   --liquid-inset:
-    inset 0 2px 1px 0 rgba(255, 255, 255, 0.65),
-    inset 0 4px 8px 0 rgba(0, 255, 200, 0.35),
-    inset 2px 0 2px 0 rgba(255, 255, 255, 0.25),
-    inset -2px 0 3px 0 rgba(168, 85, 247, 0.35),
-    inset 0 -3px 3px 0 rgba(168, 85, 247, 0.45),
-    inset 0 -6px 14px 0 rgba(0, 0, 0, 0.55),
-    inset 0 0 25px rgba(0, 255, 200, 0.06);
+    inset 0 2.5px 2px 0 rgba(255, 255, 255, 0.85),
+    inset 0 6px 14px 0 rgba(255, 255, 255, 0.18),
+    inset 2px 0 3px 0 rgba(255, 255, 255, 0.35),
+    inset -2px 0 3px 0 rgba(255, 255, 255, 0.20),
+    inset 0 -2.5px 4px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -8px 18px 0 rgba(0, 0, 0, 0.35);
 
   --radius-glass: 28px;
 
@@ -291,12 +274,8 @@ p {
 }
 
 .section-alt {
-  background: rgba(4, 19, 21, 0.45);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: transparent;
   position: relative;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 /* --- Flex & Grid Utilities --- */
@@ -351,40 +330,38 @@ p {
   isolation: isolate;
   overflow: hidden;
 
-  /* KACA DASAR BENING: Crystal clear & translucent so background shines through */
+  /* KACA DASAR BENING TOTAL (CRYSTAL CLEAR LIQUID GLASS) */
   background:
     linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.08) 0%,
-      rgba(0, 255, 200, 0.03) 25%,
-      rgba(4, 18, 22, 0.22) 55%,
-      rgba(20, 10, 32, 0.28) 100%
+      rgba(255, 255, 255, 0.16) 0%,
+      rgba(255, 255, 255, 0.05) 45%,
+      rgba(255, 255, 255, 0.02) 100%
     );
 
-  /* BLUR BACKGROUND JERNIH & PEKAT DENGAN SATURASI TINGGI */
-  -webkit-backdrop-filter: blur(22px) saturate(190%) contrast(110%);
-  backdrop-filter: blur(22px) saturate(190%) contrast(110%);
+  /* BLUR HALUS AGAR LATAR BELAKANG TERLIHAT SANGAT BENING DAN JELAS */
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  backdrop-filter: blur(12px) saturate(160%);
 
-  border: 1.5px solid rgba(0, 255, 200, 0.28);
-  border-top: 1.5px solid rgba(255, 255, 255, 0.65);
-  border-left: 1.5px solid rgba(0, 255, 200, 0.45);
-  border-right: 1.5px solid rgba(168, 85, 247, 0.42);
-  border-bottom: 1.5px solid rgba(168, 85, 247, 0.28);
+  /* BINGKAI KACA KRISTAL 3D TEBAL DENGAN PANTULAN CAHAYA */
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  border-top: 2.5px solid rgba(255, 255, 255, 0.85);
+  border-left: 1.5px solid rgba(255, 255, 255, 0.50);
+  border-right: 1.5px solid rgba(255, 255, 255, 0.30);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.25);
   border-radius: var(--radius-glass);
 
-  /* EFEK 3D LEBIH TEBAL: Specular top edge + bottom counter-bevel + deep multi-layer shadow */
+  /* EFEK 3D SLAB TEBAL: SPECULAR TOP BEVEL + COUNTER BEVEL BAWAH + DEEP ELEVATION */
   box-shadow:
-    0 28px 70px -10px rgba(0, 0, 0, 0.85),
-    0 12px 30px -4px rgba(0, 0, 0, 0.55),
-    0 0 32px rgba(0, 255, 200, 0.12),
-    0 12px 38px rgba(168, 85, 247, 0.12),
-    inset 0 2px 1px 0 rgba(255, 255, 255, 0.65),
-    inset 0 4px 8px 0 rgba(0, 255, 200, 0.35),
-    inset 2px 0 2px 0 rgba(255, 255, 255, 0.25),
-    inset -2px 0 3px 0 rgba(168, 85, 247, 0.35),
-    inset 0 -3px 3px 0 rgba(168, 85, 247, 0.45),
-    inset 0 -6px 14px 0 rgba(0, 0, 0, 0.55),
-    inset 0 0 25px rgba(0, 255, 200, 0.06);
+    0 30px 70px -10px rgba(0, 0, 0, 0.80),
+    0 16px 36px -6px rgba(0, 0, 0, 0.55),
+    0 4px 14px rgba(0, 0, 0, 0.35),
+    inset 0 2.5px 2px 0 rgba(255, 255, 255, 0.85),
+    inset 0 6px 14px 0 rgba(255, 255, 255, 0.18),
+    inset 2px 0 3px 0 rgba(255, 255, 255, 0.35),
+    inset -2px 0 3px 0 rgba(255, 255, 255, 0.20),
+    inset 0 -2.5px 4px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -8px 18px 0 rgba(0, 0, 0, 0.35);
 
   transition:
     transform 450ms cubic-bezier(.2,.8,.2,1),
@@ -425,27 +402,22 @@ p {
   z-index: -1;
   inset: -12%;
 
-  /* AURORA NEON HIJAU & UNGU - halus & tidak menghalangi transparansi */
+  /* AURORA SANGAT HALUS AGAR KACA TETAP BENING KRISTAL */
   background:
     radial-gradient(
       ellipse 65% 55% at 15% 15%,
-      rgba(0, 255, 200, 0.18) 0%,
+      rgba(0, 255, 200, 0.08) 0%,
       transparent 65%
     ),
     radial-gradient(
       ellipse 65% 55% at 85% 85%,
-      rgba(168, 85, 247, 0.18) 0%,
+      rgba(168, 85, 247, 0.08) 0%,
       transparent 65%
-    ),
-    radial-gradient(
-      ellipse 40% 40% at 50% 50%,
-      rgba(0, 230, 255, 0.07) 0%,
-      transparent 60%
     );
 
   transform: scale(1.08);
   filter: blur(10px);
-  opacity: 0.55;
+  opacity: 0.15;
   pointer-events: none;
 
   transition:
@@ -1010,60 +982,42 @@ p {
   width: 100%;
   min-height: 48px;
   padding: 0.85rem 1.15rem;
-  color: rgba(255, 255, 255, 0.95);
-  background:
-    linear-gradient(
-      140deg,
-      rgba(255, 255, 255, 0.08) 0%,
-      rgba(0, 255, 200, 0.03) 25%,
-      rgba(4, 18, 22, 0.25) 55%,
-      rgba(20, 10, 32, 0.32) 100%
-    );
-  backdrop-filter: blur(28px) saturate(190%) contrast(110%);
-  -webkit-backdrop-filter: blur(28px) saturate(190%) contrast(110%);
-  border: 1.5px solid rgba(0, 255, 200, 0.28);
-  border-top: 1.5px solid rgba(255, 255, 255, 0.65);
-  border-left: 1.5px solid rgba(0, 255, 200, 0.40);
-  border-right: 1.5px solid rgba(168, 85, 247, 0.35);
-  border-bottom: 1.5px solid rgba(168, 85, 247, 0.25);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(10px) saturate(160%);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.50);
   border-radius: var(--radius-md);
   outline: none;
   box-sizing: border-box;
   font-family: var(--font-body);
   font-size: 0.95rem;
   box-shadow:
-    inset 0 2px 4px rgba(0, 0, 0, 0.50),
-    inset 0 -1px 2px rgba(255, 255, 255, 0.15),
+    inset 0 2px 4px rgba(0, 0, 0, 0.35),
     inset 0 1px 1px rgba(255, 255, 255, 0.40),
-    0 4px 12px rgba(0, 0, 0, 0.25);
+    0 4px 10px rgba(0, 0, 0, 0.15);
   transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .glass-input::placeholder,
 .form-input::placeholder,
 .form-textarea::placeholder {
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .glass-input:focus,
 .form-input:focus,
 .form-textarea:focus,
 .form-select:focus {
-  background:
-    linear-gradient(
-      140deg,
-      rgba(255, 255, 255, 0.12) 0%,
-      rgba(0, 255, 200, 0.06) 25%,
-      rgba(4, 18, 22, 0.35) 55%,
-      rgba(20, 10, 32, 0.40) 100%
-    );
-  border-color: rgba(0, 255, 210, 0.65);
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(0, 255, 210, 0.70);
   border-top-color: rgba(255, 255, 255, 0.85);
   box-shadow:
-    inset 0 2px 4px rgba(0, 0, 0, 0.40),
+    inset 0 2px 4px rgba(0, 0, 0, 0.25),
     inset 0 1px 2px rgba(255, 255, 255, 0.60),
-    0 0 0 3px rgba(0, 255, 210, 0.20),
-    0 0 24px rgba(0, 255, 210, 0.20);
+    0 0 0 3px rgba(0, 255, 210, 0.25),
+    0 0 20px rgba(0, 255, 210, 0.20);
 }
 
 .form-textarea {
@@ -1563,12 +1517,12 @@ p {
   .glass-card,
   .card {
     backdrop-filter:
-      blur(20px)
-      saturate(150%);
+      blur(12px)
+      saturate(160%);
 
     -webkit-backdrop-filter:
-      blur(20px)
-      saturate(150%);
+      blur(12px)
+      saturate(160%);
 
     border-radius:
       var(--radius-md);
