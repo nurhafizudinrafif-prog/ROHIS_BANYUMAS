@@ -2268,28 +2268,6 @@ export default function Admin() {
                       />
                     </div>
                   </div>
-
-                  <div className="form-group">
-                    <label className="form-label">Akun Instagram (Tanpa @)</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      value={formData.instagram || ''}
-                      onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
-                      placeholder="misal: a1frbee"
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label className="form-label">Bio / Tugas Utama</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      value={formData.bio || ''}
-                      onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                      placeholder="Tugas atau deskripsi peran..."
-                    />
-                  </div>
                 </>
               )}
 
