@@ -20,12 +20,14 @@
 
 .admin-login-card {
   padding: var(--space-2xl);
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1.2px solid rgba(0, 229, 255, 0.3);
+  background: var(--liquid-glass);
+  backdrop-filter: var(--liquid-blur);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  border: 1px solid var(--liquid-border);
   border-radius: var(--radius-xl);
-  box-shadow: var(--glass-shadow), 0 0 35px rgba(0, 229, 255, 0.12), var(--glass-inset);
+  box-shadow: var(--liquid-shadow), var(--liquid-inset);
+  position: relative;
+  overflow: hidden;
 }
 
 .admin-login-header {

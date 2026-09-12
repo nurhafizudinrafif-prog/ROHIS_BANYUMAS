@@ -76,29 +76,33 @@
   gap: 0.5rem;
   padding: 0.5rem 1rem;
   font-size: 0.88rem;
-  color: var(--color-text-muted);
-  background: var(--glass-recipe);
-  border: 1px solid var(--glass-border);
+  color: var(--color-text-secondary);
+  background: var(--liquid-glass);
+  backdrop-filter: var(--liquid-blur);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  border: 1px solid var(--liquid-border);
   border-radius: var(--radius-md);
   transition: all var(--transition-fast);
 }
 
 .contact-social-link:hover {
-  background: var(--glass-bg-hover);
-  border-color: var(--glass-border-hover);
-  color: var(--color-primary-light);
-  box-shadow: 0 0 16px rgba(0, 212, 170, 0.2);
+  background: var(--liquid-glass-hover);
+  border-color: var(--liquid-border-hover);
+  color: #00F0CF;
+  box-shadow: 0 0 16px rgba(0, 255, 210, 0.2);
 }
 
 /* Form */
 .contact-form-wrapper {
   padding: var(--space-xl);
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1.2px solid rgba(0, 229, 255, 0.3);
+  background: var(--liquid-glass);
+  backdrop-filter: var(--liquid-blur);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  border: 1px solid var(--liquid-border);
   border-radius: var(--radius-xl);
-  box-shadow: var(--glass-shadow), 0 0 30px rgba(0, 229, 255, 0.12), var(--glass-inset);
+  box-shadow: var(--liquid-shadow), var(--liquid-inset);
+  position: relative;
+  overflow: hidden;
 }
 
 .contact-form {
