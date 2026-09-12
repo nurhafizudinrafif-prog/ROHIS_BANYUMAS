@@ -13,12 +13,12 @@
 .home-programs-grid::before {
   content: '';
   position: absolute;
-  top: -15%;
-  left: 0;
-  width: 480px;
-  height: 420px;
-  background: radial-gradient(circle, rgba(0, 255, 200, 0.16), transparent 70%);
-  filter: blur(70px);
+  top: -12%;
+  left: -5%;
+  width: 540px;
+  height: 460px;
+  background: radial-gradient(circle, rgba(0, 255, 200, 0.28) 0%, rgba(0, 255, 180, 0.12) 45%, transparent 70%);
+  filter: blur(80px);
   pointer-events: none;
   z-index: 0;
 }
@@ -26,12 +26,12 @@
 .home-programs-grid::after {
   content: '';
   position: absolute;
-  bottom: -15%;
-  right: 0;
-  width: 500px;
-  height: 420px;
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.16), transparent 70%);
-  filter: blur(70px);
+  bottom: -12%;
+  right: -5%;
+  width: 540px;
+  height: 460px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.28) 0%, rgba(147, 51, 234, 0.12) 45%, transparent 70%);
+  filter: blur(80px);
   pointer-events: none;
   z-index: 0;
 }

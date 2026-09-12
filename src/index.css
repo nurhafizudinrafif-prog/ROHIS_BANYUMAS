@@ -347,18 +347,18 @@ p {
   isolation: isolate;
   overflow: hidden;
 
-  /* KACA DASAR TRANSLUSEN (Bisa melihat blur di belakangnya) */
+  /* KACA DASAR TRANSLUSEN (Bisa melihat blur di belakangnya dengan jelas) */
   background:
     linear-gradient(
       140deg,
-      rgba(0, 255, 200, 0.05) 0%,
-      rgba(4, 16, 20, 0.65) 45%,
-      rgba(24, 10, 36, 0.65) 100%
+      rgba(0, 255, 200, 0.04) 0%,
+      rgba(4, 16, 20, 0.50) 45%,
+      rgba(24, 10, 36, 0.50) 100%
     );
 
-  /* BLUR BACKGROUND BERJALAN SEMPURNA TANPA PRESERVE-3D (DIKURANGI SEDIKIT AGAR LEBIH JERNIH) */
-  backdrop-filter: blur(16px) saturate(165%) contrast(105%);
-  -webkit-backdrop-filter: blur(16px) saturate(165%) contrast(105%);
+  /* BLUR BACKGROUND JERNIH & PEKAT DENGAN SATURASI TINGGI */
+  backdrop-filter: blur(16px) saturate(180%) contrast(108%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%) contrast(108%);
 
   border: 1px solid rgba(0, 255, 200, 0.22);
   border-top-color: rgba(0, 255, 200, 0.50);
@@ -534,25 +534,28 @@ p {
 .admin-stat-card:hover,
 .settings-card:hover,
 .admin-gallery-card:hover,
-.gallery-item:hover {
+.gallery-item:hover,
+.school-card:hover,
+.article-card:hover,
+.event-card:hover {
 
-  transform: translateY(-8px) scale(1.02);
+  transform: translateY(-10px) scale(1.03) !important;
 
-  border-top-color: rgba(0, 255, 200, 0.75);
-  border-left-color: rgba(0, 255, 200, 0.48);
-  border-right-color: rgba(168, 85, 247, 0.65);
-  border-bottom-color: rgba(168, 85, 247, 0.40);
+  border-top-color: rgba(0, 255, 200, 0.85) !important;
+  border-left-color: rgba(0, 255, 200, 0.55) !important;
+  border-right-color: rgba(168, 85, 247, 0.75) !important;
+  border-bottom-color: rgba(168, 85, 247, 0.45) !important;
 
   box-shadow:
     0 35px 80px -10px rgba(0, 0, 0, 0.85),
     0 14px 32px -4px rgba(0, 0, 0, 0.55),
-    0 0 35px rgba(0, 255, 200, 0.25),
-    0 12px 40px rgba(168, 85, 247, 0.22),
-    inset 0 2px 0 rgba(0, 255, 200, 0.55),
-    inset 0 -2.5px 0 rgba(168, 85, 247, 0.45),
-    inset 1.5px 0 0 rgba(0, 255, 200, 0.30),
-    inset -1.5px 0 0 rgba(168, 85, 247, 0.30),
-    inset 0 0 25px rgba(0, 255, 200, 0.08);
+    0 0 35px rgba(0, 255, 200, 0.28),
+    0 12px 40px rgba(168, 85, 247, 0.25),
+    inset 0 2px 0 rgba(0, 255, 200, 0.60),
+    inset 0 -2.5px 0 rgba(168, 85, 247, 0.50),
+    inset 1.5px 0 0 rgba(0, 255, 200, 0.35),
+    inset -1.5px 0 0 rgba(168, 85, 247, 0.35),
+    inset 0 0 25px rgba(0, 255, 200, 0.10) !important;
 }
 
 
@@ -577,18 +580,21 @@ p {
 .admin-stat-card:hover::before,
 .settings-card:hover::before,
 .admin-gallery-card:hover::before,
-.gallery-item:hover::before {
+.gallery-item:hover::before,
+.school-card:hover::before,
+.article-card:hover::before,
+.event-card:hover::before {
 
-  transform: scale(1.22) rotate(1.5deg);
+  transform: scale(1.30) rotate(2deg) !important;
 
-  filter: blur(12px);
+  filter: blur(14px) !important;
 
-  opacity: 0.80;
+  opacity: 0.85 !important;
 
   transition:
-    transform 700ms cubic-bezier(.16,1,.3,1),
-    filter 700ms cubic-bezier(.16,1,.3,1),
-    opacity 350ms ease;
+    transform 600ms cubic-bezier(.16,1,.3,1),
+    filter 600ms cubic-bezier(.16,1,.3,1),
+    opacity 350ms ease !important;
 }
 
 
@@ -957,14 +963,12 @@ p {
    ========================================================= */
 
 .islamic-pattern {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  min-height: 100vh;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
   pointer-events: none;
-  opacity: 0.04;
+  opacity: 0.085;
   background-image:
     url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2300ffd2' stroke-width='1.2'%3E%3Cpath d='M60 5L115 60L60 115L5 60Z'/%3E%3Cpath d='M60 20L100 60L60 100L20 60Z'/%3E%3Ccircle cx='60' cy='60' r='25'/%3E%3C/g%3E%3C/svg%3E");
   background-size: 120px 120px;
@@ -1258,12 +1262,10 @@ p {
   from {
     opacity: 0;
     transform: translateY(40px) scale(0.98);
-    filter: blur(4px);
   }
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
-    filter: blur(0);
   }
 }
 
@@ -1271,12 +1273,10 @@ p {
   from {
     opacity: 0;
     transform: scale(0.92);
-    filter: blur(6px);
   }
   to {
     opacity: 1;
     transform: scale(1);
-    filter: blur(0);
   }
 }
 
@@ -1297,12 +1297,10 @@ p {
   from {
     opacity: 0;
     transform: translateX(-50px) scale(0.98);
-    filter: blur(4px);
   }
   to {
     opacity: 1;
     transform: translateX(0) scale(1);
-    filter: blur(0);
   }
 }
 
@@ -1310,12 +1308,10 @@ p {
   from {
     opacity: 0;
     transform: translateX(50px) scale(0.98);
-    filter: blur(4px);
   }
   to {
     opacity: 1;
     transform: translateX(0) scale(1);
-    filter: blur(0);
   }
 }
 
@@ -1380,44 +1376,42 @@ p {
   }
 }
 
-/* --- Scroll Animations (Enhanced) --- */
+/* --- Scroll Animations (Enhanced & Non-Destructive to Backdrop Filter) --- */
 .animate-on-scroll {
   opacity: 0;
-  transform: translateY(40px);
-  filter: blur(4px);
-  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.7s cubic-bezier(0.4, 0, 0.2, 1),
-              filter 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(32px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
 }
 
 .animate-on-scroll.visible {
   opacity: 1;
-  transform: translateY(0);
-  filter: blur(0);
+  transform: none;
 }
 
 /* Variant: slide from left */
 .animate-on-scroll.slide-left {
-  transform: translateX(-50px);
+  transform: translateX(-40px);
 }
 .animate-on-scroll.slide-left.visible {
-  transform: translateX(0);
+  transform: none;
 }
 
 /* Variant: slide from right */
 .animate-on-scroll.slide-right {
-  transform: translateX(50px);
+  transform: translateX(40px);
 }
 .animate-on-scroll.slide-right.visible {
-  transform: translateX(0);
+  transform: none;
 }
 
 /* Variant: scale up */
 .animate-on-scroll.scale-up {
-  transform: scale(0.9);
+  transform: scale(0.95);
 }
 .animate-on-scroll.scale-up.visible {
-  transform: scale(1);
+  transform: none;
 }
 
 /* Staggered delays */
