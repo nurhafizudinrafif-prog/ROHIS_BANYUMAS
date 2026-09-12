@@ -6,7 +6,8 @@
 .dynamic-bg-container {
   position: fixed;
   inset: 0;
-  width: 100vw;
+  width: 100%;
+  max-width: 100vw;
   height: 100vh;
   pointer-events: none;
   z-index: 0;
@@ -19,7 +20,8 @@
 .dynamic-image-stack {
   position: absolute;
   inset: 0;
-  width: 100vw;
+  width: 100%;
+  max-width: 100vw;
   height: 100vh;
   pointer-events: none;
   overflow: hidden;
@@ -48,7 +50,8 @@
 .dynamic-islamic-pattern {
   position: absolute;
   inset: -60px 0;
-  width: 100vw;
+  width: 100%;
+  max-width: 100vw;
   height: calc(100vh + 120px);
   pointer-events: none;
   opacity: 0.085;

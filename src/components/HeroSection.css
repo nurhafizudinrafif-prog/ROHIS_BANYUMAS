@@ -404,8 +404,15 @@
 @media (max-width: 1080px) {
   .hero-cinematic-container {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 2.5rem;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .hero-cinematic-left {
+    width: 100%;
+    max-width: 100%;
   }
 
   .hero-cinematic-right {
@@ -425,24 +432,112 @@
 
 @media (max-width: 768px) {
   .hero-cinematic {
-    padding-top: calc(var(--navbar-height) + 2.5rem);
+    padding-top: calc(var(--navbar-height) + 2.2rem);
+    padding-bottom: 3.5rem;
     min-height: 100svh;
+    width: 100%;
+    max-width: 100vw;
   }
 
+  /* Full seamless vertical gradient on mobile — eliminates 90deg horizontal cut-off seam */
   .hero-cinematic-bg {
-    background-position: center 30%;
+    background-image: 
+      linear-gradient(
+        180deg, 
+        rgba(2, 10, 11, 0.72) 0%, 
+        rgba(3, 15, 17, 0.82) 40%, 
+        rgba(2, 10, 11, 0.98) 100%
+      ),
+      radial-gradient(circle at 50% 25%, rgba(0, 255, 210, 0.12), transparent 70%),
+      url('/hero-bg.jpg');
+    background-size: cover;
+    background-position: center 25%;
+  }
+
+  .hero-cinematic-container {
+    width: 100%;
+    max-width: 100%;
+    padding: 0 1.25rem;
+    gap: 2rem;
+    align-items: stretch;
+  }
+
+  .hero-cinematic-left {
+    width: 100%;
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .hero-bismillah-bar {
+    margin-bottom: 1rem;
+    gap: 0.5rem;
+  }
+
+  .bismillah-arabic {
+    font-size: clamp(1.15rem, 4.5vw, 1.45rem);
+  }
+
+  .bismillah-line {
+    width: clamp(20px, 7vw, 40px);
   }
 
   .hero-cinematic-title {
-    font-size: 2.4rem;
+    font-size: clamp(2rem, 8.5vw, 2.75rem);
+    line-height: 1.18;
+    margin-bottom: 1rem;
+  }
+
+  .hero-cinematic-subtitle {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    max-width: 100%;
+    margin-bottom: 1.75rem;
+  }
+
+  .hero-cinematic-actions {
+    margin-bottom: 2rem;
   }
 
   .hero-cinematic-features {
     flex-direction: column;
     width: 100%;
+    gap: 0.75rem;
   }
 
   .hero-glass-mini-card {
     width: 100%;
+    padding: 0.85rem 1.15rem;
+  }
+
+  .hero-cinematic-right {
+    width: 100%;
+    align-self: center;
+    text-align: center;
+    padding: 1.5rem 0 0.5rem;
+  }
+
+  .hero-slogan-script-container {
+    text-align: center;
+    transform: none;
+  }
+
+  .hero-slogan-script {
+    font-size: clamp(1.85rem, 6vw, 2.25rem);
+  }
+
+  .hero-slogan-brush-line {
+    margin: 8px auto 0;
   }
 }
+
+@media (max-width: 480px) {
+  .hero-cinematic-title {
+    font-size: 2.15rem;
+  }
+
+  .hero-cta-pill {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
