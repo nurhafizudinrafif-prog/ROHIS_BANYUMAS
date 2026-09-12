@@ -190,7 +190,7 @@ export default function Home() {
               return (
                 <div
                   key={item.id}
-                  className={`gallery-item animate-on-scroll delay-${(i % 3) + 1}`}
+                  className={`gallery-item card animate-on-scroll delay-${(i % 3) + 1}`}
                   onClick={() => handleOpenAlbum(item)}
                   title="Klik untuk melihat album dokumentasi kegiatan"
                 >
