@@ -26,7 +26,7 @@ Kedua web saling terhubung secara *real-time* di seluruh dunia melalui **Upstash
 - **Framework Preset:** Vite
 - **Build Command:** `npm run build`
 - **Output Directory:** `dist`
-- **Domain:** misal `https://rohis-banyumas.vercel.app`
+- **Domain:** `https://www.rohis-banyumas.web.id/`
 
 ### 2. Panel Admin (Admin CMS)
 - Di Vercel Dashboard, klik tombol **Add New... > Project**.

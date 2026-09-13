@@ -509,7 +509,6 @@ export default function Admin() {
                     placeholder="Masukkan username"
                     required
                   />
-                  <small className="form-hint">Username: <code>rohis banyumas</code></small>
                 </div>
 
                 <div className="form-group">
@@ -532,7 +531,6 @@ export default function Admin() {
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
-                  <small className="form-hint">Password: <code>rbk banyumas</code></small>
                 </div>
 
                 <div className="login-options-row">

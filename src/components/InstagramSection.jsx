@@ -65,10 +65,10 @@ export default function InstagramSection() {
       try {
         res = await fetch('/api/instagram');
         if (!res.ok || res.headers.get('content-type')?.includes('text/html')) {
-          res = await fetch('https://rohis-banyumas.vercel.app/api/instagram');
+          res = await fetch('https://www.rohis-banyumas.web.id/api/instagram');
         }
       } catch {
-        res = await fetch('https://rohis-banyumas.vercel.app/api/instagram');
+        res = await fetch('https://www.rohis-banyumas.web.id/api/instagram');
       }
 
       if (res && res.ok) {

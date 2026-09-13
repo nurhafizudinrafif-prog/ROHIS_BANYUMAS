@@ -50,7 +50,7 @@ import {
 import logoImg from '../assets/logo.png';
 import './AdminDashboard.css';
 
-const PUBLIC_WEB_URL = 'https://rohis-banyumas.vercel.app';
+const PUBLIC_WEB_URL = 'https://www.rohis-banyumas.web.id';
 
 export default function AdminDashboard() {
   // Auth state
@@ -219,10 +219,10 @@ export default function AdminDashboard() {
       try {
         res = await fetch('/api/instagram');
         if (!res.ok || res.headers.get('content-type')?.includes('text/html')) {
-          res = await fetch('https://rohis-banyumas.vercel.app/api/instagram');
+          res = await fetch('https://www.rohis-banyumas.web.id/api/instagram');
         }
       } catch (e) {
-        res = await fetch('https://rohis-banyumas.vercel.app/api/instagram');
+        res = await fetch('https://www.rohis-banyumas.web.id/api/instagram');
       }
 
       if (res && res.ok) {
@@ -761,7 +761,6 @@ export default function AdminDashboard() {
                     placeholder="Username"
                     required
                   />
-                  <small className="form-hint">Default: <code>rohis banyumas</code></small>
                 </div>
 
                 <div className="form-group">
@@ -783,7 +782,6 @@ export default function AdminDashboard() {
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
-                  <small className="form-hint">Default: <code>rbk banyumas</code></small>
                 </div>
 
                 <div className="login-options-row">
