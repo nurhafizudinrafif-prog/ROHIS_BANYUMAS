@@ -136,7 +136,10 @@ export default function DynamicBackground() {
       aria-hidden="true"
     >
 
-      {/* 1. Seamless Fixed Islamic Sacred Geometry Pattern with Subtle Parallax */}
+      {/* 1. Divine Top Ambient Light Sweep */}
+      <div className="dynamic-divine-beam" />
+
+      {/* 2. Seamless Authentic Islamic Sacred Girih Pattern with Subtle Parallax */}
       <div
         className="dynamic-islamic-pattern"
         style={{
@@ -144,7 +147,10 @@ export default function DynamicBackground() {
         }}
       />
 
-      {/* 2. Fluid Living Aurora Orbs with Theme Morphing */}
+      {/* 3. Celestial Twinkling Stars / Spiritual Dust Particles */}
+      <div className="dynamic-celestial-stars" />
+
+      {/* 4. Fluid Living Aurora Orbs with Theme Morphing */}
       <div
         className="dynamic-aurora dynamic-aurora-1"
         style={{
@@ -164,7 +170,7 @@ export default function DynamicBackground() {
         }}
       />
 
-      {/* 3. Cinema Ambient Vignette Overlay */}
+      {/* 5. Cinema Ambient Vignette Overlay */}
       <div className="dynamic-ambient-mist" />
     </div>
   );

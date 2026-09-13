@@ -1,6 +1,6 @@
 /* =========================================================
-   DYNAMIC LIVING BACKGROUND — SIMPLE & ELEGANT DARK LUXURY
-   Tema Dark Yang Ciamik + Subtle Emerald Watermark & Soft Ambient Aurora
+   DYNAMIC LIVING BACKGROUND — ENHANCED LUXURY DARK ISLAMIC
+   Intricate Girih Arabesque • Celestial Stars • Luminous Auroras
    ========================================================= */
 
 .dynamic-bg-container {
@@ -13,181 +13,269 @@
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
-  background: #020708;
+  background: radial-gradient(ellipse 120% 90% at 50% 0%, #051a1e 0%, #031013 45%, #020708 85%, #010405 100%);
   transition: background 3.5s cubic-bezier(0.25, 1, 0.35, 1);
 }
 
-/* 1. Subtle Islamic Pattern Watermark with Gentle Parallax */
-.dynamic-islamic-pattern {
+/* 1. Divine Top Ambient Light Sweep (Spiritual Mosque Dome Illumination) */
+.dynamic-divine-beam {
   position: absolute;
-  inset: -60px 0;
-  width: 100%;
-  max-width: 100vw;
-  height: calc(100vh + 120px);
-  height: calc(100dvh + 120px);
+  top: -12%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120vw;
+  height: 60vh;
+  background: radial-gradient(
+    ellipse 70% 55% at 50% 0%,
+    rgba(0, 255, 200, 0.18) 0%,
+    rgba(0, 212, 170, 0.06) 45%,
+    transparent 75%
+  );
   pointer-events: none;
-  opacity: 0.035;
-  background-image:
-    url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2300ffd2' stroke-width='1.2'%3E%3Cpath d='M60 5L115 60L60 115L5 60Z'/%3E%3Cpath d='M60 20L100 60L60 100L20 60Z'/%3E%3Ccircle cx='60' cy='60' r='25'/%3E%3C/g%3E%3C/svg%3E");
-  background-size: 120px 120px;
-  will-change: transform;
-  transition: opacity 2.5s ease;
   z-index: 1;
+  animation: divineBeamBreathe 14s ease-in-out infinite alternate;
 }
 
-/* 2. Fluid Ambient Neon Aurora Glow Orbs (Soft & Non-Distracting) */
+@keyframes divineBeamBreathe {
+  0% {
+    opacity: 0.70;
+    transform: translateX(-50%) scale(0.96);
+  }
+  50% {
+    opacity: 1.0;
+    transform: translateX(-50%) scale(1.05);
+  }
+  100% {
+    opacity: 0.75;
+    transform: translateX(-50%) scale(0.98);
+  }
+}
+
+/* 2. Authentic Islamic Sacred Girih Watermark with Gentle Parallax */
+.dynamic-islamic-pattern {
+  position: absolute;
+  inset: -80px 0;
+  width: 100%;
+  max-width: 100vw;
+  height: calc(100vh + 160px);
+  height: calc(100dvh + 160px);
+  pointer-events: none;
+  opacity: 0.085;
+  background-image:
+    url("data:image/svg+xml,%3Csvg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2300ffd2' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M80.0,34.0L89.9,56.0L112.5,47.5L104.0,70.1L126.0,80.0L104.0,89.9L112.5,112.5L89.9,104.0L80.0,126.0L70.1,104.0L47.5,112.5L56.0,89.9L34.0,80.0L56.0,70.1L47.5,47.5L70.1,56.0Z' /%3E%3Cpath d='M0.0,-46.0L9.9,-24.0L32.5,-32.5L24.0,-9.9L46.0,0.0L24.0,9.9L32.5,32.5L9.9,24.0L0.0,46.0L-9.9,24.0L-32.5,32.5L-24.0,9.9L-46.0,0.0L-24.0,-9.9L-32.5,-32.5L-9.9,-24.0Z' /%3E%3Cpath d='M160.0,-46.0L169.9,-24.0L192.5,-32.5L184.0,-9.9L206.0,0.0L184.0,9.9L192.5,32.5L169.9,24.0L160.0,46.0L150.1,24.0L127.5,32.5L136.0,9.9L114.0,0.0L136.0,-9.9L127.5,-32.5L150.1,-24.0Z' /%3E%3Cpath d='M160.0,114.0L169.9,136.0L192.5,127.5L184.0,150.1L206.0,160.0L184.0,169.9L192.5,192.5L169.9,184.0L160.0,206.0L150.1,184.0L127.5,192.5L136.0,169.9L114.0,160.0L136.0,150.1L127.5,127.5L150.1,136.0Z' /%3E%3Cpath d='M0.0,114.0L9.9,136.0L32.5,127.5L24.0,150.1L46.0,160.0L24.0,169.9L32.5,192.5L9.9,184.0L0.0,206.0L-9.9,184.0L-32.5,192.5L-24.0,169.9L-46.0,160.0L-24.0,150.1L-32.5,127.5L-9.9,136.0Z' /%3E%3Ccircle cx='80' cy='80' r='16' stroke-width='0.8' stroke-dasharray='2 2' /%3E%3Ccircle cx='80' cy='80' r='46' stroke-width='0.7' /%3E%3Ccircle cx='0' cy='0' r='16' stroke-width='0.8' stroke-dasharray='2 2' /%3E%3Ccircle cx='160' cy='0' r='16' stroke-width='0.8' stroke-dasharray='2 2' /%3E%3Ccircle cx='160' cy='160' r='16' stroke-width='0.8' stroke-dasharray='2 2' /%3E%3Ccircle cx='0' cy='160' r='16' stroke-width='0.8' stroke-dasharray='2 2' /%3E%3Cpath d='M80 0 L80 34 M80 126 L80 160 M0 80 L34 80 M126 80 L160 80' stroke-width='1.2' /%3E%3Cpath d='M47.5 47.5 L26 26 M112.5 47.5 L134 26 M112.5 112.5 L134 134 M47.5 112.5 L26 134' stroke-width='1' /%3E%3Crect x='34' y='34' width='92' height='92' stroke-width='0.8' /%3E%3C/g%3E%3C/svg%3E");
+  background-size: 160px 160px;
+  will-change: transform;
+  mix-blend-mode: screen;
+  transition: opacity 2.5s ease;
+  z-index: 2;
+}
+
+/* 3. Celestial Twinkling Stars / Ethereal Dust Motes */
+.dynamic-celestial-stars {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    url("data:image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='45' cy='35' r='1.2' fill='%2300ffd2' opacity='0.8' /%3E%3Ccircle cx='120' cy='85' r='0.8' fill='%2300ffd2' opacity='0.6' /%3E%3Ccircle cx='230' cy='40' r='1.5' fill='%2300ffd2' opacity='0.9' /%3E%3Ccircle cx='340' cy='90' r='1' fill='%2300ffd2' opacity='0.5' /%3E%3Ccircle cx='80' cy='160' r='1' fill='%2300ffd2' opacity='0.7' /%3E%3Ccircle cx='175' cy='130' r='1.8' fill='%2300ffd2' opacity='0.95' /%3E%3Ccircle cx='290' cy='180' r='0.8' fill='%2300ffd2' opacity='0.6' /%3E%3Ccircle cx='370' cy='140' r='1.2' fill='%2300ffd2' opacity='0.75' /%3E%3Ccircle cx='30' cy='260' r='1.4' fill='%2300ffd2' opacity='0.85' /%3E%3Ccircle cx='140' cy='220' r='0.9' fill='%2300ffd2' opacity='0.5' /%3E%3Ccircle cx='220' cy='280' r='1.3' fill='%2300ffd2' opacity='0.8' /%3E%3Ccircle cx='330' cy='250' r='1.6' fill='%2300ffd2' opacity='0.9' /%3E%3Ccircle cx='60' cy='360' r='0.8' fill='%2300ffd2' opacity='0.6' /%3E%3Ccircle cx='180' cy='340' r='1.5' fill='%2300ffd2' opacity='0.85' /%3E%3Ccircle cx='270' cy='370' r='1' fill='%2300ffd2' opacity='0.7' /%3E%3Ccircle cx='360' cy='330' r='1.2' fill='%2300ffd2' opacity='0.75' /%3E%3Ccircle cx='95' cy='295' r='0.7' fill='%2300ffd2' opacity='0.5' /%3E%3Ccircle cx='255' cy='105' r='0.9' fill='%2300ffd2' opacity='0.65' /%3E%3C/svg%3E");
+  background-size: 400px 400px;
+  opacity: 0.60;
+  pointer-events: none;
+  z-index: 3;
+  animation: starsTwinkle 9s ease-in-out infinite alternate;
+}
+
+@keyframes starsTwinkle {
+  0% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 0.50;
+  }
+}
+
+/* 4. Fluid Living Emerald Aurora Orbs (Luminous & Majestic) */
 .dynamic-aurora {
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
-  filter: blur(110px);
+  filter: blur(100px);
   mix-blend-mode: screen;
-  z-index: 2;
+  z-index: 4;
   will-change: transform, background, opacity;
   transition:
     transform 2.2s cubic-bezier(0.16, 1, 0.3, 1),
     background 3.5s cubic-bezier(0.25, 1, 0.35, 1),
     opacity 3.2s ease;
-  animation: livingAuroraPulse 16s ease-in-out infinite alternate;
 }
 
-@keyframes livingAuroraPulse {
-  0% {
-    filter: blur(100px);
-  }
-  50% {
-    filter: blur(125px);
-  }
-  100% {
-    filter: blur(105px);
-  }
-}
-
-/* Base Dimensions & Anchor Positions */
+/* Orb Dimensions & Floating Ambient Drift Animations */
 .dynamic-aurora-1 {
-  width: 600px;
-  height: 600px;
-  top: -140px;
-  left: -100px;
-  opacity: 0.28;
+  width: 650px;
+  height: 650px;
+  top: -120px;
+  left: -80px;
+  opacity: 0.38;
+  animation: floatOrb1 18s ease-in-out infinite alternate;
 }
 
 .dynamic-aurora-2 {
-  width: 560px;
-  height: 560px;
-  top: 36%;
-  right: -130px;
-  opacity: 0.22;
-  animation-delay: -5s;
+  width: 600px;
+  height: 600px;
+  top: 38%;
+  right: -100px;
+  opacity: 0.32;
+  animation: floatOrb2 22s ease-in-out infinite alternate;
+  animation-delay: -6s;
 }
 
 .dynamic-aurora-3 {
-  width: 620px;
-  height: 620px;
-  bottom: -150px;
-  left: 20%;
-  opacity: 0.20;
-  animation-delay: -9s;
+  width: 680px;
+  height: 680px;
+  bottom: -120px;
+  left: 18%;
+  opacity: 0.30;
+  animation: floatOrb3 20s ease-in-out infinite alternate;
+  animation-delay: -10s;
+}
+
+@keyframes floatOrb1 {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(50px, 35px) scale(1.08);
+  }
+  100% {
+    transform: translate(-30px, 60px) scale(0.96);
+  }
+}
+
+@keyframes floatOrb2 {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-60px, -45px) scale(1.10);
+  }
+  100% {
+    transform: translate(40px, -20px) scale(0.94);
+  }
+}
+
+@keyframes floatOrb3 {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(45px, -50px) scale(1.06);
+  }
+  100% {
+    transform: translate(-50px, 30px) scale(0.98);
+  }
 }
 
 /* =========================================================
-   THEME PALETTES — ELEGANT DARK LUXURY
+   THEME PALETTES — RICH LUMINOUS DARK LUXURY
    ========================================================= */
 
 /* Theme: Hero Section */
 .theme-hero {
-  background: radial-gradient(ellipse 90% 70% at 50% 12%, #05191d 0%, #020708 75%);
+  background: radial-gradient(ellipse 110% 80% at 50% 10%, #062228 0%, #031215 50%, #010608 90%);
 }
 .theme-hero .dynamic-aurora-1 {
-  background: radial-gradient(circle, rgba(0, 255, 180, 0.22) 0%, rgba(0, 212, 170, 0.08) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 255, 200, 0.32) 0%, rgba(0, 212, 170, 0.12) 50%, transparent 70%);
 }
 .theme-hero .dynamic-aurora-2 {
-  background: radial-gradient(circle, rgba(0, 230, 200, 0.18) 0%, rgba(14, 165, 233, 0.05) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 230, 220, 0.26) 0%, rgba(14, 165, 233, 0.08) 50%, transparent 70%);
 }
 .theme-hero .dynamic-aurora-3 {
-  background: radial-gradient(circle, rgba(0, 255, 200, 0.16) 0%, rgba(16, 185, 129, 0.04) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 255, 180, 0.24) 0%, rgba(16, 185, 129, 0.07) 50%, transparent 70%);
 }
 
 /* Theme: Programs & Stats */
 .theme-programs {
-  background: radial-gradient(ellipse 85% 65% at 40% 35%, #04161a 0%, #020708 80%);
+  background: radial-gradient(ellipse 110% 80% at 40% 30%, #051f24 0%, #021114 55%, #010507 90%);
 }
 .theme-programs .dynamic-aurora-1 {
-  background: radial-gradient(circle, rgba(0, 255, 210, 0.24) 0%, rgba(0, 255, 180, 0.08) 48%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 255, 210, 0.34) 0%, rgba(0, 255, 180, 0.14) 48%, transparent 70%);
 }
 .theme-programs .dynamic-aurora-2 {
-  background: radial-gradient(circle, rgba(0, 255, 180, 0.20) 0%, rgba(0, 221, 184, 0.06) 48%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 255, 180, 0.28) 0%, rgba(0, 221, 184, 0.10) 48%, transparent 70%);
 }
 .theme-programs .dynamic-aurora-3 {
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.16) 0%, rgba(5, 150, 105, 0.05) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.08) 50%, transparent 70%);
 }
 
 /* Theme: Quote / Hadith */
 .theme-quote {
-  background: radial-gradient(ellipse 85% 65% at 50% 50%, #05181b 0%, #020708 80%);
+  background: radial-gradient(ellipse 110% 80% at 50% 50%, #062226 0%, #031316 55%, #010507 90%);
 }
 .theme-quote .dynamic-aurora-1 {
-  background: radial-gradient(circle, rgba(0, 255, 200, 0.22) 0%, rgba(5, 150, 105, 0.08) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 255, 200, 0.32) 0%, rgba(5, 150, 105, 0.12) 50%, transparent 70%);
 }
 .theme-quote .dynamic-aurora-2 {
-  background: radial-gradient(circle, rgba(0, 221, 184, 0.18) 0%, rgba(20, 184, 166, 0.06) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 221, 184, 0.26) 0%, rgba(20, 184, 166, 0.10) 50%, transparent 70%);
 }
 .theme-quote .dynamic-aurora-3 {
-  background: radial-gradient(circle, rgba(5, 150, 105, 0.16) 0%, rgba(4, 120, 87, 0.05) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(5, 150, 105, 0.24) 0%, rgba(4, 120, 87, 0.08) 50%, transparent 70%);
 }
 
 /* Theme: Events & Agenda */
 .theme-events {
-  background: radial-gradient(ellipse 85% 65% at 60% 30%, #06171a 0%, #020708 80%);
+  background: radial-gradient(ellipse 110% 80% at 60% 25%, #062429 0%, #031215 55%, #010507 90%);
 }
 .theme-events .dynamic-aurora-1 {
-  background: radial-gradient(circle, rgba(0, 255, 200, 0.22) 0%, rgba(13, 148, 136, 0.07) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 255, 210, 0.32) 0%, rgba(13, 148, 136, 0.12) 50%, transparent 70%);
 }
 .theme-events .dynamic-aurora-2 {
-  background: radial-gradient(circle, rgba(20, 184, 166, 0.20) 0%, rgba(13, 148, 136, 0.06) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.28) 0%, rgba(13, 148, 136, 0.10) 50%, transparent 70%);
 }
 .theme-events .dynamic-aurora-3 {
-  background: radial-gradient(circle, rgba(0, 255, 180, 0.16) 0%, rgba(13, 148, 136, 0.05) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 255, 180, 0.24) 0%, rgba(13, 148, 136, 0.08) 50%, transparent 70%);
 }
 
 /* Theme: Media, Gallery & Articles */
 .theme-media {
-  background: radial-gradient(ellipse 85% 65% at 35% 60%, #041417 0%, #020708 80%);
+  background: radial-gradient(ellipse 110% 80% at 35% 55%, #051e22 0%, #021013 55%, #010507 90%);
 }
 .theme-media .dynamic-aurora-1 {
-  background: radial-gradient(circle, rgba(0, 255, 200, 0.22) 0%, rgba(45, 212, 191, 0.08) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 255, 200, 0.32) 0%, rgba(45, 212, 191, 0.12) 50%, transparent 70%);
 }
 .theme-media .dynamic-aurora-2 {
-  background: radial-gradient(circle, rgba(0, 255, 180, 0.20) 0%, rgba(16, 185, 129, 0.06) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 255, 180, 0.28) 0%, rgba(16, 185, 129, 0.10) 50%, transparent 70%);
 }
 .theme-media .dynamic-aurora-3 {
-  background: radial-gradient(circle, rgba(6, 182, 212, 0.18) 0%, rgba(14, 165, 233, 0.05) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.25) 0%, rgba(14, 165, 233, 0.08) 50%, transparent 70%);
 }
 
 /* Theme: CTA & Footer */
 .theme-cta {
-  background: radial-gradient(ellipse 85% 65% at 50% 80%, #05181b 0%, #020708 80%);
+  background: radial-gradient(ellipse 110% 80% at 50% 80%, #062327 0%, #031316 55%, #010507 90%);
 }
 .theme-cta .dynamic-aurora-1 {
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.22) 0%, rgba(5, 150, 105, 0.08) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.32) 0%, rgba(5, 150, 105, 0.12) 50%, transparent 70%);
 }
 .theme-cta .dynamic-aurora-2 {
-  background: radial-gradient(circle, rgba(0, 255, 200, 0.18) 0%, rgba(13, 148, 136, 0.06) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 255, 200, 0.26) 0%, rgba(13, 148, 136, 0.10) 50%, transparent 70%);
 }
 .theme-cta .dynamic-aurora-3 {
-  background: radial-gradient(circle, rgba(0, 255, 210, 0.16) 0%, rgba(5, 150, 105, 0.05) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 255, 210, 0.24) 0%, rgba(5, 150, 105, 0.08) 50%, transparent 70%);
 }
 
-/* 3. Cinema Ambient Vignette Overlay */
+/* 5. Cinema Ambient Vignette Overlay */
 .dynamic-ambient-mist {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 3;
+  z-index: 5;
   background: radial-gradient(
-    ellipse 120% 120% at 50% 50%,
-    transparent 40%,
-    rgba(2, 7, 8, 0.65) 85%,
-    rgba(1, 5, 6, 0.95) 100%
+    ellipse 130% 120% at 50% 45%,
+    transparent 45%,
+    rgba(2, 7, 8, 0.55) 80%,
+    rgba(1, 4, 5, 0.92) 100%
   );
 }

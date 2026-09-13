@@ -10,9 +10,9 @@ export default defineConfig({
     target: 'es2022',
     rollupOptions: {
       output: {
-        entryFileNames: 'assets/[name]-admin-v10-[hash].js',
-        chunkFileNames: 'assets/[name]-admin-v10-[hash].js',
-        assetFileNames: 'assets/[name]-admin-v10-[hash].[ext]',
+        entryFileNames: 'assets/[name]-admin-v11-[hash].js',
+        chunkFileNames: 'assets/[name]-admin-v11-[hash].js',
+        assetFileNames: 'assets/[name]-admin-v11-[hash].[ext]',
       },
     },
   },
