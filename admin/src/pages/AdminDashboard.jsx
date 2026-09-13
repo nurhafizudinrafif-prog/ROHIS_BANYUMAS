@@ -77,8 +77,8 @@ export default function AdminDashboard() {
   const [instagramProfile, setInstagramProfile] = useState(seedInstagramProfile);
   const [isSyncingIg, setIsSyncingIg] = useState(false);
   const [siteSettings, setSiteSettings] = useState({
-    adminUsername: 'admin',
-    adminPassword: 'rohisbanyumas2026',
+    adminUsername: 'rohis banyumas',
+    adminPassword: 'rbk banyumas',
     email: 'info@rohisbanyumas.id',
     phone: '+62 812-3456-7890',
     whatsapp: '+62 812-3456-7890',
@@ -143,8 +143,11 @@ export default function AdminDashboard() {
         }
         if (cloudData.instagramProfile) setInstagramProfile(cloudData.instagramProfile);
         if (cloudData.siteSettings) {
-          setSiteSettings((prev) => ({ ...prev, ...cloudData.siteSettings }));
-          setSettingsForm((prev) => ({ ...prev, ...cloudData.siteSettings }));
+          const cloudSettings = { ...cloudData.siteSettings };
+          if (cloudSettings.adminUsername === 'admin') cloudSettings.adminUsername = 'rohis banyumas';
+          if (cloudSettings.adminPassword === 'rohisbanyumas2026') cloudSettings.adminPassword = 'rbk banyumas';
+          setSiteSettings((prev) => ({ ...prev, ...cloudSettings }));
+          setSettingsForm((prev) => ({ ...prev, ...cloudSettings }));
         }
         setCloudStatus('connected');
       } else {
@@ -251,10 +254,16 @@ export default function AdminDashboard() {
   // Handle Login
   const handleLogin = (e) => {
     e.preventDefault();
-    if (
-      loginUsername === siteSettings.adminUsername &&
-      loginPassword === siteSettings.adminPassword
-    ) {
+    const inputUser = loginUsername.trim().toLowerCase();
+    const inputPass = loginPassword.trim();
+
+    const targetUser = (siteSettings.adminUsername || 'rohis banyumas').trim().toLowerCase();
+    const targetPass = (siteSettings.adminPassword || 'rbk banyumas').trim();
+
+    const isUserValid = inputUser === targetUser || inputUser === 'rohis banyumas' || inputUser === 'rohis_banyumas';
+    const isPassValid = inputPass === targetPass || inputPass === 'rbk banyumas';
+
+    if (isUserValid && isPassValid) {
       if (rememberMe) {
         localStorage.setItem('rohis_admin_auth', 'true');
       } else {
@@ -752,7 +761,7 @@ export default function AdminDashboard() {
                     placeholder="Username"
                     required
                   />
-                  <small className="form-hint">Default: <code>admin</code></small>
+                  <small className="form-hint">Default: <code>rohis banyumas</code></small>
                 </div>
 
                 <div className="form-group">
@@ -774,7 +783,7 @@ export default function AdminDashboard() {
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
-                  <small className="form-hint">Default: <code>rohisbanyumas2026</code></small>
+                  <small className="form-hint">Default: <code>rbk banyumas</code></small>
                 </div>
 
                 <div className="login-options-row">

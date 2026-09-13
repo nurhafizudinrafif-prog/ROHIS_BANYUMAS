@@ -13,8 +13,8 @@ Kedua web saling terhubung secara *real-time* di seluruh dunia melalui **Upstash
 - **Website Publik:** Klik ganda `JALANKAN_WEB.bat` (berjalan di `http://localhost:5173`).
 - **Panel Admin:** Klik ganda `JALANKAN_ADMIN.bat` (berjalan di `http://localhost:5174`).
 - **Kredensial Login Admin:**
-  - Username: `admin`
-  - Password: `rohisbanyumas2026`
+  - Username: `rohis banyumas`
+  - Password: `rbk banyumas`
 
 ---
 

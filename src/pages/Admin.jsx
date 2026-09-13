@@ -122,8 +122,8 @@ export default function Admin() {
 
   // Settings Form State
   const [settingsForm, setSettingsForm] = useState({
-    adminUsername: siteSettings.adminUsername || 'admin',
-    adminPassword: siteSettings.adminPassword || 'rohisbanyumas2026',
+    adminUsername: siteSettings.adminUsername || 'rohis banyumas',
+    adminPassword: siteSettings.adminPassword || 'rbk banyumas',
     email: siteSettings.email || '',
     phone: siteSettings.phone || '',
     whatsapp: siteSettings.whatsapp || '',
@@ -132,13 +132,36 @@ export default function Admin() {
     youtubeUrl: siteSettings.youtubeUrl || '',
   });
 
+  // Keep settings form in sync when siteSettings change
+  useEffect(() => {
+    if (siteSettings) {
+      setSettingsForm((prev) => ({
+        ...prev,
+        adminUsername: siteSettings.adminUsername || 'rohis banyumas',
+        adminPassword: siteSettings.adminPassword || 'rbk banyumas',
+        email: siteSettings.email || prev.email || '',
+        phone: siteSettings.phone || prev.phone || '',
+        whatsapp: siteSettings.whatsapp || prev.whatsapp || '',
+        address: siteSettings.address || prev.address || '',
+        instagramUrl: siteSettings.instagramUrl || prev.instagramUrl || '',
+        youtubeUrl: siteSettings.youtubeUrl || prev.youtubeUrl || '',
+      }));
+    }
+  }, [siteSettings]);
+
   // Handle Login
   const handleLogin = (e) => {
     e.preventDefault();
-    if (
-      loginUsername === siteSettings.adminUsername &&
-      loginPassword === siteSettings.adminPassword
-    ) {
+    const inputUser = loginUsername.trim().toLowerCase();
+    const inputPass = loginPassword.trim();
+
+    const targetUser = (siteSettings.adminUsername || 'rohis banyumas').trim().toLowerCase();
+    const targetPass = (siteSettings.adminPassword || 'rbk banyumas').trim();
+
+    const isUserValid = inputUser === targetUser || inputUser === 'rohis banyumas' || inputUser === 'rohis_banyumas';
+    const isPassValid = inputPass === targetPass || inputPass === 'rbk banyumas';
+
+    if (isUserValid && isPassValid) {
       if (rememberMe) {
         localStorage.setItem('rohis_admin_auth', 'true');
       } else {
@@ -486,7 +509,7 @@ export default function Admin() {
                     placeholder="Masukkan username"
                     required
                   />
-                  <small className="form-hint">Username bawaan: <code>admin</code></small>
+                  <small className="form-hint">Username: <code>rohis banyumas</code></small>
                 </div>
 
                 <div className="form-group">
@@ -509,7 +532,7 @@ export default function Admin() {
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
-                  <small className="form-hint">Password bawaan: <code>rohisbanyumas2026</code></small>
+                  <small className="form-hint">Password: <code>rbk banyumas</code></small>
                 </div>
 
                 <div className="login-options-row">

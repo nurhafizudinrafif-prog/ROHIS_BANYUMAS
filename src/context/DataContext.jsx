@@ -10,8 +10,8 @@ import { fetchCloudCMSData, saveCloudCMSData } from '../services/cloudSync';
 const STORAGE_KEY = 'rohis_banyumas_cms_data_v2';
 
 const defaultSettings = {
-  adminUsername: 'admin',
-  adminPassword: 'rohisbanyumas2026',
+  adminUsername: 'rohis banyumas',
+  adminPassword: 'rbk banyumas',
   email: 'info@rohisbanyumas.id',
   phone: '+62 812-3456-7890',
   whatsapp: '+62 812-3456-7890',
@@ -46,7 +46,13 @@ export function DataProvider({ children }) {
   const [team, setTeam] = useState(stored?.team || initialTeam);
   const [instagramReels, setInstagramReels] = useState(stored?.instagramReels || initialInstagramReels);
   const [instagramProfile, setInstagramProfile] = useState(stored?.instagramProfile || initialInstagramProfile);
-  const [siteSettings, setSiteSettings] = useState({ ...defaultSettings, ...(stored?.siteSettings || {}) });
+  const [siteSettings, setSiteSettings] = useState(() => {
+    const raw = stored?.siteSettings;
+    const settings = { ...defaultSettings, ...(raw || {}) };
+    if (settings.adminUsername === 'admin') settings.adminUsername = 'rohis banyumas';
+    if (settings.adminPassword === 'rohisbanyumas2026') settings.adminPassword = 'rbk banyumas';
+    return settings;
+  });
 
   // Sync from Upstash Cloud Database on load, periodically, and on tab focus
   useEffect(() => {
@@ -64,7 +70,12 @@ export function DataProvider({ children }) {
           setInstagramReels(cloudData.instagramReels);
         }
         if (cloudData.instagramProfile) setInstagramProfile(cloudData.instagramProfile);
-        if (cloudData.siteSettings) setSiteSettings((prev) => ({ ...prev, ...cloudData.siteSettings }));
+        if (cloudData.siteSettings) {
+          const cloudSettings = { ...cloudData.siteSettings };
+          if (cloudSettings.adminUsername === 'admin') cloudSettings.adminUsername = 'rohis banyumas';
+          if (cloudSettings.adminPassword === 'rohisbanyumas2026') cloudSettings.adminPassword = 'rbk banyumas';
+          setSiteSettings((prev) => ({ ...prev, ...cloudSettings }));
+        }
       }
     }
 
