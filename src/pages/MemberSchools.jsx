@@ -13,10 +13,22 @@ export default function MemberSchools() {
 
   const totalMembers = memberSchools.reduce((sum, s) => sum + s.members, 0);
 
+  const bphDivision = {
+    id: 'bph',
+    name: 'Badan Pengurus Harian (BPH)',
+    shortName: 'BPH',
+    color: '#00F0CF',
+    description: `Pimpinan inti yang mengarahkan visi dan roda pergerakan ${organizationFullName} Periode ${structurePeriod}.`,
+    members: team.bph || [],
+  };
+
+  const allDivisions = [bphDivision, ...(team.divisions || [])];
+  const totalStructureMembers = allDivisions.reduce((acc, d) => acc + (d.members?.length || 0), 0);
+
   const displayedDivisions =
     activeDivision === 'Semua'
-      ? team.divisions
-      : team.divisions.filter((d) => d.shortName === activeDivision);
+      ? allDivisions
+      : allDivisions.filter((d) => d.shortName === activeDivision);
 
   return (
     <main className="page-member-schools">
@@ -31,29 +43,13 @@ export default function MemberSchools() {
         </div>
       </section>
 
-      {/* Leadership / BPH Showcase (Sebelum SDM) */}
-      <section className="section" id="bph">
+      {/* Struktur & Divisi Kepengurusan ROKABA Section */}
+      <section className="section" id="divisi">
         <div className="container">
           <SectionHeader
             badge={`Struktur ${structurePeriod}`}
-            title="Badan Pengurus Harian (BPH)"
-            subtitle={`Pimpinan inti yang mengarahkan visi dan roda pergerakan ${organizationFullName} Periode ${structurePeriod}.`}
-          />
-          <div className="team-grid-bph">
-            {team.bph.map((member, i) => (
-              <TeamCard key={member.id} member={member} index={i} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 5 Divisi Kepengurusan ROKABA Section (Mulai dari SDM) */}
-      <section className="section section-alt" id="divisi">
-        <div className="container">
-          <SectionHeader
-            badge="5 Pilar Gerakan"
-            title={`Divisi Kepengurusan ROKABA ${structurePeriod}`}
-            subtitle="Kader-kader dakwah terpilih dari sekolah-sekolah se-Banyumas yang mengemban amanah di setiap divisi."
+            title={`Struktur & Divisi Kepengurusan ${organizationFullName}`}
+            subtitle="Kader-kader dakwah terpilih dari sekolah-sekolah se-Banyumas yang mengemban amanah di BPH dan seluruh divisi."
           />
 
           {/* Division Filter Tabs */}
@@ -62,17 +58,9 @@ export default function MemberSchools() {
               className={`about-div-tab ${activeDivision === 'Semua' ? 'active' : ''}`}
               onClick={() => setActiveDivision('Semua')}
             >
-              Semua Divisi ({team.divisions.reduce((acc, d) => acc + d.members.length, 0)})
+              Semua Divisi ({totalStructureMembers})
             </button>
-            <button
-              className="about-div-tab"
-              onClick={() => {
-                document.getElementById('bph')?.scrollIntoView({ behavior: 'smooth' });
-              }}
-            >
-              BPH ({team.bph.length})
-            </button>
-            {team.divisions.map((d) => (
+            {allDivisions.map((d) => (
               <button
                 key={d.id}
                 className={`about-div-tab ${activeDivision === d.shortName ? 'active' : ''}`}
@@ -124,7 +112,7 @@ export default function MemberSchools() {
       </section>
 
       {/* Jaringan ROHIS Sekolah Anggota */}
-      <section className="section">
+      <section className="section section-alt">
         <div className="container">
           <SectionHeader
             badge="Jaringan Sekolah"
