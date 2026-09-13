@@ -21,8 +21,12 @@ export default function ProgramCard({ program, index = 0 }) {
     >
       {/* Glossy App Icon */}
       <div className="program-glass-icon-wrapper">
-        <div className="program-glass-icon">
-          <Icon size={28} />
+        <div className={`program-glass-icon ${program.logoImg ? 'has-custom-logo' : ''}`}>
+          {program.logoImg ? (
+            <img src={program.logoImg} alt={program.title} className="program-custom-logo-img" />
+          ) : (
+            <Icon size={28} />
+          )}
         </div>
       </div>
 

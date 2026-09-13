@@ -1454,7 +1454,26 @@ export default function AdminDashboard() {
               {team.divisions?.map((div) => (
                 <div key={div.id} className="admin-subpanel card mb-4">
                   <div className="subpanel-header">
-                    <h3>{div.name}</h3>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                      {div.logoImg && (
+                        <img
+                          src={div.logoImg}
+                          alt={div.name}
+                          style={{
+                            width: '40px',
+                            height: '40px',
+                            borderRadius: '50%',
+                            objectFit: 'cover',
+                            border: '1.5px solid rgba(0, 255, 200, 0.4)',
+                            boxShadow: '0 0 12px rgba(0, 255, 200, 0.25)',
+                            flexShrink: 0,
+                          }}
+                        />
+                      )}
+                      <div>
+                        <h3>{div.name}</h3>
+                      </div>
+                    </div>
                     <button onClick={() => openAddModal('member', div.shortName || div.id)} className="btn btn-outline btn-xs">
                       <Plus size={13} /> Tambah ke {div.shortName}
                     </button>

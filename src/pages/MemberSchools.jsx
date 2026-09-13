@@ -75,21 +75,38 @@ export default function MemberSchools() {
           {displayedDivisions.map((div) => (
             <div key={div.id} className="about-division-block">
               <div className="about-division-header">
-                <div className="about-division-header-info">
-                  <span
-                    className="badge badge-primary"
-                    style={{
-                      borderColor: div.color,
-                      color: div.color,
-                      background: `color-mix(in srgb, ${div.color} 12%, transparent)`,
-                      marginBottom: '6px',
-                      display: 'inline-block',
-                    }}
-                  >
-                    {div.shortName}
-                  </span>
-                  <h3>{div.name}</h3>
-                  <p>{div.description}</p>
+                <div className="about-division-header-info" style={{ display: 'flex', alignItems: 'flex-start', gap: '1.25rem' }}>
+                  {div.logoImg && (
+                    <div style={{
+                      width: '60px',
+                      height: '60px',
+                      borderRadius: '50%',
+                      padding: '3px',
+                      background: 'radial-gradient(circle at 35% 25%, rgba(0, 255, 200, 0.25) 0%, rgba(4, 18, 22, 0.85) 75%)',
+                      border: '1.5px solid rgba(0, 255, 200, 0.4)',
+                      boxShadow: '0 0 20px rgba(0, 255, 200, 0.25), inset 0 1px 2px rgba(0, 255, 200, 0.4)',
+                      flexShrink: 0,
+                      overflow: 'hidden'
+                    }}>
+                      <img src={div.logoImg} alt={div.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                    </div>
+                  )}
+                  <div>
+                    <span
+                      className="badge badge-primary"
+                      style={{
+                        borderColor: div.color,
+                        color: div.color,
+                        background: `color-mix(in srgb, ${div.color} 12%, transparent)`,
+                        marginBottom: '6px',
+                        display: 'inline-block',
+                      }}
+                    >
+                      {div.shortName}
+                    </span>
+                    <h3>{div.name}</h3>
+                    <p>{div.description}</p>
+                  </div>
                 </div>
                 <span style={{ fontSize: '0.82rem', color: 'var(--color-text-muted)', fontWeight: 600 }}>
                   {div.members.length} Pengurus

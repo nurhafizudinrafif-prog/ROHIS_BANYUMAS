@@ -32,6 +32,7 @@ export const programs = [
   {
     id: 3,
     icon: 'Newspaper',
+    logoImg: '/divisi-jurnalistik.jpg',
     division: 'Jurnalistik',
     title: 'Divisi Jurnalistik',
     description: 'Mengelola publikasi informasi, dokumentasi kegiatan, buletin dakwah, konten multimedia kreatif, dan syiar digital di era modern.',

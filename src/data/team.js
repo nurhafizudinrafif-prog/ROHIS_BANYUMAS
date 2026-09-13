@@ -322,8 +322,9 @@ export const team = {
       id: 'jurnalistik',
       name: 'Divisi Jurnalistik',
       shortName: 'Jurnalistik',
-      color: '#8B5CF6',
+      color: '#00F0CF',
       icon: 'Newspaper',
+      logoImg: '/divisi-jurnalistik.jpg',
       description: 'Mengelola publikasi informasi, dokumentasi kegiatan, buletin dakwah digital, dan konten multimedia kreatif.',
       members: [
         {

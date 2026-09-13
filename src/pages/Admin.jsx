@@ -1458,11 +1458,28 @@ export default function Admin() {
               {team.divisions?.map((div) => (
                 <div key={div.id} className="admin-subpanel card mb-4">
                   <div className="subpanel-header">
-                    <div>
-                      <h3>{div.name}</h3>
-                      <p>
-                        Koordinator: <strong>{div.head}</strong> &bull; {div.members?.length || 0} Kader
-                      </p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                      {div.logoImg && (
+                        <img
+                          src={div.logoImg}
+                          alt={div.name}
+                          style={{
+                            width: '42px',
+                            height: '42px',
+                            borderRadius: '50%',
+                            objectFit: 'cover',
+                            border: '1.5px solid rgba(0, 255, 200, 0.4)',
+                            boxShadow: '0 0 12px rgba(0, 255, 200, 0.25)',
+                            flexShrink: 0,
+                          }}
+                        />
+                      )}
+                      <div>
+                        <h3>{div.name}</h3>
+                        <p>
+                          Koordinator: <strong>{div.head}</strong> &bull; {div.members?.length || 0} Kader
+                        </p>
+                      </div>
                     </div>
                     <button
                       onClick={() => openAddModal('member', div.shortName || div.id)}

@@ -166,38 +166,12 @@
 /* --- Admin Layout --- */
 .admin-layout {
   min-height: 100vh;
-  background: var(--dark-bg);
+  background: transparent;
   color: var(--color-text);
   display: flex;
   flex-direction: column;
   position: relative;
   overflow-x: hidden;
-}
-
-.admin-layout::before {
-  content: '';
-  position: fixed;
-  top: 12%;
-  left: 15%;
-  width: 550px;
-  height: 550px;
-  background: radial-gradient(circle, rgba(0, 255, 200, 0.08) 0%, transparent 70%);
-  filter: blur(90px);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.admin-layout::after {
-  content: '';
-  position: fixed;
-  bottom: 8%;
-  right: 12%;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(0, 255, 180, 0.08) 0%, transparent 70%);
-  filter: blur(100px);
-  pointer-events: none;
-  z-index: 0;
 }
 
 /* Topbar */
@@ -256,6 +230,47 @@
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.4; transform: scale(0.85); }
 }
+
+.cloud-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.cloud-connected {
+  color: #00F0CF;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 600;
+}
+
+.cloud-connecting {
+  color: #facc15;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.cloud-offline {
+  color: #f87171;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.saving-tag {
+  background: rgba(0, 255, 200, 0.15);
+  color: #00F0CF;
+  border: 1px solid rgba(0, 255, 200, 0.3);
+  padding: 0.1rem 0.4rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.65rem;
+}
+
+.dot-yellow { background-color: #facc15 !important; box-shadow: 0 0 8px #facc15 !important; }
+.dot-red { background-color: #f87171 !important; box-shadow: 0 0 8px #f87171 !important; }
 
 .admin-topbar-right {
   display: flex;

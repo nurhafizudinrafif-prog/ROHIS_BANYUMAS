@@ -6,4 +6,14 @@ export default defineConfig({
   server: {
     port: 5174,
   },
+  build: {
+    target: 'es2022',
+    rollupOptions: {
+      output: {
+        entryFileNames: 'assets/[name]-admin-v10-[hash].js',
+        chunkFileNames: 'assets/[name]-admin-v10-[hash].js',
+        assetFileNames: 'assets/[name]-admin-v10-[hash].[ext]',
+      },
+    },
+  },
 });
