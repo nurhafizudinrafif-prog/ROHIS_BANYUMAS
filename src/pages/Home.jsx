@@ -145,7 +145,7 @@ export default function Home() {
               ))}
           </div>
           <div className="text-center" style={{ marginTop: 'var(--space-2xl)' }}>
-            <Link to="/agenda" className="btn btn-outline">
+            <Link to="/program#agenda" className="btn btn-outline">
               Lihat Semua Agenda <ArrowRight size={16} />
             </Link>
           </div>

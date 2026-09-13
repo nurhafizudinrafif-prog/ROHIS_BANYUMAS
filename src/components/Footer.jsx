@@ -61,9 +61,9 @@ export default function Footer() {
             <ul className="footer-links">
               <li><Link to="/">Beranda</Link></li>
               <li><Link to="/tentang">Tentang Kami</Link></li>
-              <li><Link to="/program">Program Kerja</Link></li>
+              <li><Link to="/program">Program & Agenda</Link></li>
               <li><Link to="/artikel">Artikel Dakwah</Link></li>
-              <li><Link to="/agenda">Agenda Kegiatan</Link></li>
+              <li><Link to="/galeri">Galeri Kegiatan</Link></li>
             </ul>
           </div>
 

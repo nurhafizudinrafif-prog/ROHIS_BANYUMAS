@@ -7,10 +7,9 @@ import './Navbar.css';
 const navLinks = [
   { path: '/', label: 'Beranda' },
   { path: '/tentang', label: 'Tentang' },
-  { path: '/program', label: 'Program' },
+  { path: '/program', label: 'Program & Agenda' },
   { path: '/artikel', label: 'Artikel' },
   { path: '/galeri', label: 'Galeri' },
-  { path: '/agenda', label: 'Agenda' },
   { path: '/rohis-anggota', label: 'ROHIS Anggota' },
   { path: '/kontak', label: 'Kontak' },
 ];
@@ -30,6 +29,13 @@ export default function Navbar() {
     setIsOpen(false);
   }, [location]);
 
+  const isLinkActive = (path) => {
+    if (path === '/program') {
+      return location.pathname === '/program' || location.pathname === '/agenda';
+    }
+    return location.pathname === path;
+  };
+
   return (
     <nav className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`}>
       <div className="navbar-container container">
@@ -46,7 +52,7 @@ export default function Navbar() {
             <Link
               key={link.path}
               to={link.path}
-              className={`navbar-link ${location.pathname === link.path ? 'active' : ''}`}
+              className={`navbar-link ${isLinkActive(link.path) ? 'active' : ''}`}
             >
               {link.label}
             </Link>
