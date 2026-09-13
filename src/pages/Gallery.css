@@ -31,7 +31,7 @@
   right: -3%;
   width: 500px;
   height: 400px;
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.14), transparent 70%);
+  background: radial-gradient(circle, rgba(0, 255, 180, 0.14), transparent 70%);
   filter: blur(55px);
   pointer-events: none;
   z-index: 0;
@@ -90,17 +90,17 @@
   transform: translateY(-8px) scale(1.02);
   border-top-color: rgba(255, 255, 255, 0.85);
   border-left-color: rgba(0, 255, 200, 0.65);
-  border-right-color: rgba(168, 85, 247, 0.65);
-  border-bottom-color: rgba(168, 85, 247, 0.45);
+  border-right-color: rgba(0, 255, 200, 0.65);
+  border-bottom-color: rgba(0, 255, 180, 0.45);
 
   box-shadow:
     0 38px 90px -10px rgba(0, 0, 0, 0.90),
     0 18px 42px -4px rgba(0, 0, 0, 0.65),
-    0 0 45px rgba(0, 255, 200, 0.32),
-    0 20px 55px rgba(168, 85, 247, 0.28),
+    0 0 45px rgba(0, 255, 200, 0.35),
+    0 20px 55px rgba(0, 255, 180, 0.25),
     inset 0 2.5px 1px 0 rgba(255, 255, 255, 0.85),
     inset 0 5px 10px 0 rgba(0, 255, 200, 0.45),
-    inset 0 -3.5px 3px 0 rgba(168, 85, 247, 0.60),
+    inset 0 -3.5px 3px 0 rgba(0, 255, 180, 0.50),
     inset 0 -7px 16px 0 rgba(0, 0, 0, 0.60);
 }
 
@@ -179,7 +179,7 @@
   box-shadow:
     0 6px 18px rgba(0, 0, 0, 0.65),
     inset 0 1px 0 rgba(0, 255, 200, 0.35),
-    inset 0 -1px 0 rgba(168, 85, 247, 0.25);
+    inset 0 -1px 0 rgba(0, 255, 180, 0.25);
 }
 
 /* Video indicator: Center Red 3D Play Button */

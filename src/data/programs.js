@@ -42,7 +42,7 @@ export const programs = [
       'Workshop jurnalistik, desain grafis & media dakwah',
       'Pengelolaan portal informasi dan website resmi',
     ],
-    color: '#a855f7',
+    color: '#00F0CF',
   },
   {
     id: 4,

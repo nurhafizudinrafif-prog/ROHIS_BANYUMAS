@@ -143,10 +143,10 @@
 }
 
 /* =========================================================
-   THEME PALETTES — SMOOTH SECTION COLOR MORPHING
+   THEME PALETTES — SMOOTH SECTION COLOR MORPHING (PURE GREEN NEON)
    ========================================================= */
 
-/* Theme: Hero Section (Emerald Mint, Luminous Cyan & Subtle Violet) */
+/* Theme: Hero Section (Emerald Mint & Luminous Cyan) */
 .theme-hero {
   background: radial-gradient(circle at 50% 10%, #06191c 0%, #030c0e 80%);
 }
@@ -157,10 +157,10 @@
   background: radial-gradient(circle, rgba(0, 220, 255, 0.22) 0%, rgba(14, 165, 233, 0.08) 50%, transparent 70%);
 }
 .theme-hero .dynamic-aurora-3 {
-  background: radial-gradient(circle, rgba(147, 51, 234, 0.18) 0%, rgba(124, 58, 237, 0.06) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 255, 200, 0.18) 0%, rgba(16, 185, 129, 0.06) 50%, transparent 70%);
 }
 
-/* Theme: Programs & Stats (Cyber Teal & Electric Purple) */
+/* Theme: Programs & Stats (Cyber Teal & Vibrant Mint Neon) */
 .theme-programs {
   background: radial-gradient(circle at 40% 40%, #04161a 0%, #030c0e 85%);
 }
@@ -168,18 +168,18 @@
   background: radial-gradient(circle, rgba(0, 255, 210, 0.30) 0%, rgba(0, 255, 180, 0.12) 48%, transparent 70%);
 }
 .theme-programs .dynamic-aurora-2 {
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.30) 0%, rgba(147, 51, 234, 0.12) 48%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 255, 180, 0.28) 0%, rgba(0, 221, 184, 0.12) 48%, transparent 70%);
 }
 .theme-programs .dynamic-aurora-3 {
   background: radial-gradient(circle, rgba(16, 185, 129, 0.22) 0%, rgba(5, 150, 105, 0.08) 50%, transparent 70%);
 }
 
-/* Theme: Quote / Hadith (Royal Deep Purple & Warm Spiritual Amber Gold) */
+/* Theme: Quote / Hadith (Emerald Forest & Spiritual Gold) */
 .theme-quote {
-  background: radial-gradient(circle at 50% 50%, #0d0818 0%, #030c0e 85%);
+  background: radial-gradient(circle at 50% 50%, #06191c 0%, #030c0e 85%);
 }
 .theme-quote .dynamic-aurora-1 {
-  background: radial-gradient(circle, rgba(147, 51, 234, 0.30) 0%, rgba(126, 34, 206, 0.14) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 255, 200, 0.26) 0%, rgba(5, 150, 105, 0.12) 50%, transparent 70%);
 }
 .theme-quote .dynamic-aurora-2 {
   background: radial-gradient(circle, rgba(217, 119, 6, 0.26) 0%, rgba(180, 83, 9, 0.10) 50%, transparent 70%);
@@ -188,7 +188,7 @@
   background: radial-gradient(circle, rgba(5, 150, 105, 0.22) 0%, rgba(4, 120, 87, 0.08) 50%, transparent 70%);
 }
 
-/* Theme: Events & Agenda (Amber Dusk & Cyan Seafoam) */
+/* Theme: Events & Agenda (Amber Dusk & Cyan-Green Seafoam) */
 .theme-events {
   background: radial-gradient(circle at 60% 30%, #120e06 0%, #030c0e 85%);
 }
@@ -199,10 +199,10 @@
   background: radial-gradient(circle, rgba(20, 184, 166, 0.26) 0%, rgba(13, 148, 136, 0.10) 50%, transparent 70%);
 }
 .theme-events .dynamic-aurora-3 {
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.22) 0%, rgba(109, 40, 217, 0.08) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 255, 200, 0.20) 0%, rgba(13, 148, 136, 0.08) 50%, transparent 70%);
 }
 
-/* Theme: Media, Gallery & Articles (Vivid Neon Emerald, Cyan & Magenta Violet) */
+/* Theme: Media, Gallery & Articles (Vivid Neon Emerald & Mint Teal) */
 .theme-media {
   background: radial-gradient(circle at 35% 60%, #051417 0%, #030c0e 85%);
 }
@@ -210,7 +210,7 @@
   background: radial-gradient(circle, rgba(0, 255, 200, 0.28) 0%, rgba(45, 212, 191, 0.12) 50%, transparent 70%);
 }
 .theme-media .dynamic-aurora-2 {
-  background: radial-gradient(circle, rgba(192, 38, 211, 0.26) 0%, rgba(168, 85, 247, 0.12) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 255, 180, 0.26) 0%, rgba(16, 185, 129, 0.12) 50%, transparent 70%);
 }
 .theme-media .dynamic-aurora-3 {
   background: radial-gradient(circle, rgba(6, 182, 212, 0.24) 0%, rgba(14, 165, 233, 0.08) 50%, transparent 70%);
@@ -227,7 +227,7 @@
   background: radial-gradient(circle, rgba(217, 119, 6, 0.26) 0%, rgba(180, 83, 9, 0.10) 50%, transparent 70%);
 }
 .theme-cta .dynamic-aurora-3 {
-  background: radial-gradient(circle, rgba(124, 58, 237, 0.24) 0%, rgba(91, 33, 182, 0.08) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 255, 210, 0.22) 0%, rgba(5, 150, 105, 0.08) 50%, transparent 70%);
 }
 
 /* 3. Cinema Ambient Vignette Overlay */

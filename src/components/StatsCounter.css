@@ -33,7 +33,7 @@
   transform: translate(50%, -50%);
   width: 520px;
   height: 240px;
-  background: radial-gradient(ellipse, rgba(168, 85, 247, 0.22) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(0, 255, 180, 0.22) 0%, transparent 70%);
   filter: blur(70px);
   pointer-events: none;
   z-index: 1;
@@ -81,8 +81,8 @@
 }
 
 .stat-glass-card.stat-purple:hover {
-  border-color: rgba(124, 92, 255, 0.45);
-  box-shadow: var(--liquid-shadow-hover), 0 0 35px rgba(124, 92, 255, 0.15), var(--liquid-inset);
+  border-color: rgba(0, 255, 210, 0.45);
+  box-shadow: var(--liquid-shadow-hover), 0 0 35px rgba(0, 255, 210, 0.20), var(--liquid-inset);
 }
 
 /* Glossy Icon Box (Translucent Jewel) */
@@ -120,10 +120,10 @@
 }
 
 .stat-purple .stat-glass-icon-box {
-  background: radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.25) 0%, rgba(124, 92, 255, 0.2) 50%, rgba(80, 50, 200, 0.08) 100%);
-  border: 1px solid rgba(124, 92, 255, 0.4);
-  color: #a78bfa;
-  box-shadow: 0 4px 16px rgba(124, 92, 255, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.3);
+  background: radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.25) 0%, rgba(0, 255, 200, 0.2) 50%, rgba(0, 180, 150, 0.08) 100%);
+  border: 1px solid rgba(0, 255, 200, 0.4);
+  color: #00F0CF;
+  box-shadow: 0 4px 16px rgba(0, 255, 200, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.3);
 }
 
 .stat-glass-card:hover .stat-glass-icon-box {

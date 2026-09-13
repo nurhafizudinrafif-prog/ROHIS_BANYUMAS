@@ -20,7 +20,7 @@
     ),
     radial-gradient(
       70% 70% at 80% 90%,
-      rgba(100, 60, 220, 0.06),
+      rgba(0, 255, 180, 0.05),
       transparent 60%
     ),
     linear-gradient(
@@ -36,7 +36,7 @@
      ========================================================= */
 
   /* =========================================================
-     TRUE LIQUID GLASS — NEON GREEN & PURPLE (NO OVER-WHITE)
+     TRUE LIQUID GLASS — PURE NEON GREEN (EMERALD & MINT)
      ========================================================= */
 
   /* KACA DASAR BENING TOTAL: Pure crystal clear transparent glass */
@@ -48,7 +48,7 @@
       rgba(255, 255, 255, 0.02) 100%
     );
 
-  /* Aksen aurora sangat halus agar kaca tetap bening tembus pandang */
+  /* Aksen aurora hijau neon sangat halus agar kaca tetap bening tembus pandang */
   --glass-aurora:
     radial-gradient(
       circle at 12% 12%,
@@ -57,7 +57,7 @@
     ),
     radial-gradient(
       circle at 88% 88%,
-      rgba(168, 85, 247, 0.08),
+      rgba(0, 255, 180, 0.08),
       transparent 45%
     );
 
@@ -373,7 +373,7 @@ p {
 
 
 /* =========================================================
-   LIQUID REFRACTION LAYER — NEON GREEN & PURPLE AURORA
+   LIQUID REFRACTION LAYER — PURE NEON GREEN AURORA
    Memberikan kedalaman & ilusi cairan tanpa menghalangi blur
    ========================================================= */
 
@@ -402,7 +402,7 @@ p {
   z-index: -1;
   inset: -12%;
 
-  /* AURORA SANGAT HALUS AGAR KACA TETAP BENING KRISTAL */
+  /* AURORA HIJAU NEON HALUS AGAR KACA TETAP BENING KRISTAL */
   background:
     radial-gradient(
       ellipse 65% 55% at 15% 15%,
@@ -411,7 +411,7 @@ p {
     ),
     radial-gradient(
       ellipse 65% 55% at 85% 85%,
-      rgba(168, 85, 247, 0.08) 0%,
+      rgba(0, 255, 180, 0.08) 0%,
       transparent 65%
     );
 
@@ -428,7 +428,7 @@ p {
 
 
 /* =========================================================
-   3D GLASS THICKNESS & SHEEN — NEON DUAL LIGHT (NO OVER-WHITE)
+   3D GLASS THICKNESS & SHEEN — PURE NEON GREEN
    ========================================================= */
 
 .liquid-glass::after,
@@ -458,7 +458,7 @@ p {
   pointer-events: none;
   z-index: 4;
 
-  /* SHEEN 3D DI ATAS & REFLEKSI KRISTAL */
+  /* SHEEN 3D DI ATAS & REFLEKSI KRISTAL HIJAU NEON */
   background:
     /* Highlight putih kristal & neon hijau atas */
     linear-gradient(
@@ -468,18 +468,18 @@ p {
       rgba(0, 255, 200, 0.02) 28%,
       transparent 45%
     ),
-    /* Refleksi samping: Hijau kiri, Ungu kanan */
+    /* Refleksi samping: Hijau lembut kiri dan kanan */
     linear-gradient(
       90deg,
       rgba(0, 255, 200, 0.15) 0%,
       transparent 10%,
       transparent 90%,
-      rgba(168, 85, 247, 0.18) 100%
+      rgba(0, 255, 200, 0.15) 100%
     ),
-    /* Aurora neon ungu pojok kanan bawah */
+    /* Aurora neon hijau pojok kanan bawah */
     radial-gradient(
       circle at 85% 90%,
-      rgba(168, 85, 247, 0.25),
+      rgba(0, 255, 180, 0.20),
       transparent 45%
     );
 
@@ -487,15 +487,15 @@ p {
     inset 0 2px 1px rgba(255, 255, 255, 0.50),
     inset 0 3px 6px rgba(0, 255, 200, 0.30),
     inset 2px 0 0 rgba(0, 255, 200, 0.20),
-    inset -2px 0 0 rgba(168, 85, 247, 0.25),
-    inset 0 -2.5px 0 rgba(168, 85, 247, 0.35);
+    inset -2px 0 0 rgba(0, 255, 200, 0.20),
+    inset 0 -2.5px 0 rgba(0, 255, 180, 0.25);
 
   mix-blend-mode: screen;
 }
 
 
 /* =========================================================
-   HOVER — FLOAT + DUAL NEON GLOW (HIJAU & UNGU)
+   HOVER — FLOAT + PURE NEON GREEN GLOW
    ========================================================= */
 
 .liquid-glass:hover,
@@ -524,21 +524,21 @@ p {
 
   border-top-color: rgba(255, 255, 255, 0.90) !important;
   border-left-color: rgba(0, 255, 200, 0.70) !important;
-  border-right-color: rgba(168, 85, 247, 0.70) !important;
-  border-bottom-color: rgba(168, 85, 247, 0.50) !important;
+  border-right-color: rgba(0, 255, 200, 0.70) !important;
+  border-bottom-color: rgba(0, 255, 180, 0.50) !important;
 
   box-shadow:
     0 40px 90px -10px rgba(0, 0, 0, 0.90),
     0 16px 36px -4px rgba(0, 0, 0, 0.60),
-    0 0 45px rgba(0, 255, 200, 0.32),
-    0 14px 45px rgba(168, 85, 247, 0.28),
+    0 0 45px rgba(0, 255, 200, 0.35),
+    0 14px 45px rgba(0, 255, 180, 0.25),
     inset 0 2.5px 1px 0 rgba(255, 255, 255, 0.85),
     inset 0 5px 10px 0 rgba(0, 255, 200, 0.50),
     inset 2px 0 2px 0 rgba(255, 255, 255, 0.35),
-    inset -2px 0 3px 0 rgba(168, 85, 247, 0.45),
-    inset 0 -3.5px 3px 0 rgba(168, 85, 247, 0.60),
+    inset -2px 0 3px 0 rgba(0, 255, 200, 0.35),
+    inset 0 -3.5px 3px 0 rgba(0, 255, 180, 0.50),
     inset 0 -8px 18px 0 rgba(0, 0, 0, 0.65),
-    inset 0 0 30px rgba(0, 255, 200, 0.12) !important;
+    inset 0 0 30px rgba(0, 255, 200, 0.15) !important;
 }
 
 
@@ -908,7 +908,7 @@ p {
 }
 
 /* =========================================================
-   BACKGROUND GLOW / NEON ORB — NEON GREEN & PURPLE
+   BACKGROUND GLOW / NEON ORB — PURE NEON GREEN
    ========================================================= */
 
 .neon-orb,
@@ -932,7 +932,7 @@ p {
 .neon-orb-2 {
   top: 45%;
   right: -150px;
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.22), transparent 70%);
+  background: radial-gradient(circle, rgba(0, 255, 200, 0.22), transparent 70%);
 }
 
 .neon-orb-3 {

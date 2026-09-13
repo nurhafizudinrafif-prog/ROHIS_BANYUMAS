@@ -200,7 +200,7 @@
   right: 12%;
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 255, 180, 0.08) 0%, transparent 70%);
   filter: blur(100px);
   pointer-events: none;
   z-index: 0;
@@ -361,7 +361,7 @@
   background: linear-gradient(
     135deg,
     rgba(0, 255, 200, 0.20) 0%,
-    rgba(168, 85, 247, 0.16) 100%
+    rgba(0, 212, 170, 0.12) 100%
   );
   color: #00F0CF;
   border: 1px solid rgba(0, 255, 200, 0.40);
@@ -370,7 +370,7 @@
   box-shadow:
     0 4px 16px rgba(0, 0, 0, 0.35),
     inset 0 1px 0 rgba(0, 255, 200, 0.35),
-    inset 0 -1px 0 rgba(168, 85, 247, 0.25);
+    inset 0 -1px 0 rgba(0, 255, 180, 0.20);
 }
 
 .nav-counter {
@@ -391,7 +391,7 @@
 
 .admin-nav-separator {
   height: 1px;
-  background: linear-gradient(90deg, rgba(0, 255, 200, 0.25) 0%, rgba(168, 85, 247, 0.25) 100%);
+  background: linear-gradient(90deg, rgba(0, 255, 200, 0.25) 0%, rgba(0, 212, 170, 0.15) 100%);
   margin: var(--space-md) 0;
 }
 
@@ -551,10 +551,10 @@
 }
 
 .stat-icon-purple { 
-  background: radial-gradient(circle at 35% 25%, rgba(168, 85, 247, 0.25) 0%, rgba(147, 51, 234, 0.35) 50%, rgba(25, 10, 45, 0.7) 100%);
-  color: #c084fc; 
-  border: 1.5px solid rgba(168, 85, 247, 0.45);
-  box-shadow: 0 0 18px rgba(168, 85, 247, 0.25);
+  background: radial-gradient(circle at 35% 25%, rgba(0, 255, 200, 0.25) 0%, rgba(5, 150, 105, 0.35) 50%, rgba(2, 25, 20, 0.7) 100%);
+  color: #00F0CF; 
+  border: 1.5px solid rgba(0, 255, 210, 0.45);
+  box-shadow: 0 0 18px rgba(0, 255, 210, 0.25);
 }
 
 .stat-icon-rose { 
@@ -644,7 +644,7 @@
     125deg,
     rgba(0, 255, 200, 0.16) 0%,
     transparent 45%,
-    rgba(168, 85, 247, 0.12) 100%
+    rgba(0, 255, 180, 0.08) 100%
   );
   border-radius: inherit;
   pointer-events: none;
@@ -719,7 +719,7 @@
     125deg,
     rgba(255, 255, 255, 0.12) 0%,
     transparent 50%,
-    rgba(168, 85, 247, 0.05) 100%
+    rgba(0, 255, 180, 0.05) 100%
   );
   border-radius: inherit;
   pointer-events: none;
@@ -958,16 +958,16 @@
 }
 
 .table-ig-link {
-  color: #c084fc !important;
+  color: #00F0CF !important;
   font-weight: 500;
   text-decoration: none;
   transition: all var(--transition-fast);
 }
 
 .table-ig-link:hover {
-  color: #00F0CF !important;
+  color: #ffffff !important;
   text-decoration: underline;
-  text-shadow: 0 0 10px rgba(0, 255, 200, 0.4);
+  text-shadow: 0 0 10px rgba(0, 255, 200, 0.5);
 }
 
 .badge-completed {
@@ -988,11 +988,11 @@
   background: linear-gradient(
     135deg,
     rgba(0, 255, 200, 0.06) 0%,
-    rgba(24, 10, 36, 0.40) 100%
+    rgba(255, 255, 255, 0.04) 100%
   );
   border: 1px solid rgba(0, 255, 200, 0.22);
   border-top: 1px solid rgba(0, 255, 200, 0.45);
-  border-bottom: 1px solid rgba(168, 85, 247, 0.35);
+  border-bottom: 1px solid rgba(0, 255, 180, 0.35);
   color: var(--color-text);
   width: 34px;
   height: 34px;
@@ -1011,7 +1011,7 @@
   background: linear-gradient(
     135deg,
     rgba(0, 255, 200, 0.16) 0%,
-    rgba(168, 85, 247, 0.16) 100%
+    rgba(0, 212, 170, 0.16) 100%
   );
   border-color: rgba(0, 255, 200, 0.55);
   color: #00F0CF;
@@ -1398,7 +1398,7 @@
   left: 0;
   right: 0;
   height: 55px;
-  background: linear-gradient(180deg, rgba(0, 255, 200, 0.12) 0%, rgba(168, 85, 247, 0.05) 50%, transparent 100%);
+  background: linear-gradient(180deg, rgba(0, 255, 200, 0.12) 0%, rgba(0, 255, 180, 0.04) 50%, transparent 100%);
   pointer-events: none;
 }
 
@@ -1645,11 +1645,11 @@
 }
 
 .media-type-btn.active {
-  background: linear-gradient(135deg, rgba(0, 255, 200, 0.25) 0%, rgba(168, 85, 247, 0.20) 100%);
+  background: linear-gradient(135deg, rgba(0, 255, 200, 0.30) 0%, rgba(0, 212, 170, 0.20) 100%);
   border-color: #00F0CF;
   color: #00F0CF;
   font-weight: 600;
-  box-shadow: 0 0 14px rgba(0, 255, 200, 0.30);
+  box-shadow: 0 0 14px rgba(0, 255, 200, 0.35);
 }
 
 .add-media-row-action {
@@ -1758,8 +1758,8 @@
 }
 
 .media-type-tag.tag-video {
-  background: rgba(168, 85, 247, 0.90);
-  color: #ffffff;
+  background: rgba(0, 221, 184, 0.90);
+  color: #041014;
 }
 
 .cover-badge {
