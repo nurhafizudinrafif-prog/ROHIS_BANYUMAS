@@ -18,41 +18,39 @@
   font-family: var(--font-heading);
   border-radius: var(--radius-pill);
   color: rgba(255, 255, 255, 0.75);
-  background: 
-    radial-gradient(100% 100% at 50% 0%, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%),
-    rgba(255, 255, 255, 0.04);
+  background: rgba(4, 18, 22, 0.65);
   backdrop-filter: var(--liquid-blur);
   -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(0, 255, 200, 0.15);
   box-shadow: 
-    0 8px 18px -4px rgba(0, 0, 0, 0.4),
-    inset 0 1.2px 0 rgba(255, 255, 255, 0.4),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.35);
+    0 8px 18px -4px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(0, 255, 200, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4);
   transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   cursor: pointer;
 }
 
 .articles-filter-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(0, 255, 210, 0.45);
+  background: rgba(0, 255, 200, 0.08);
+  border-color: rgba(0, 255, 200, 0.5);
   color: #ffffff;
   transform: translateY(-2px);
   box-shadow: 
-    0 12px 24px -4px rgba(0, 0, 0, 0.55),
-    0 0 16px rgba(0, 255, 210, 0.2),
-    inset 0 1.2px 0 rgba(255, 255, 255, 0.6);
+    0 12px 24px -4px rgba(0, 0, 0, 0.6),
+    0 0 16px rgba(0, 255, 200, 0.25),
+    inset 0 1px 0 rgba(0, 255, 200, 0.3);
 }
 
 .articles-filter-btn.active {
   background: 
-    radial-gradient(100% 100% at 50% 0%, rgba(0, 255, 210, 0.28) 0%, rgba(0, 255, 210, 0.08) 100%),
-    rgba(0, 221, 184, 0.12);
-  border-color: rgba(0, 255, 210, 0.55);
+    radial-gradient(100% 100% at 50% 0%, rgba(0, 255, 200, 0.22) 0%, rgba(4, 18, 22, 0.8) 100%),
+    rgba(0, 255, 200, 0.08);
+  border-color: rgba(0, 255, 200, 0.6);
   color: #00F0CF;
   box-shadow: 
-    0 12px 24px -4px rgba(0, 0, 0, 0.55),
-    0 0 24px rgba(0, 255, 210, 0.35),
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.6),
+    0 12px 24px -4px rgba(0, 0, 0, 0.6),
+    0 0 24px rgba(0, 255, 200, 0.35),
+    inset 0 1px 0 rgba(0, 255, 200, 0.4),
     inset 0 -1px 0 rgba(0, 0, 0, 0.4);
   transform: translateY(-2px);
 }

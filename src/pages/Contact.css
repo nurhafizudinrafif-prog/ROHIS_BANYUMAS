@@ -42,12 +42,12 @@
   justify-content: center;
   border-radius: var(--radius-md);
   color: #00F0CF;
-  background: radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.32) 0%, rgba(0, 221, 184, 0.2) 50%, rgba(2, 20, 18, 0.7) 100%);
+  background: radial-gradient(circle at 35% 25%, rgba(0, 255, 200, 0.25) 0%, rgba(0, 221, 184, 0.12) 50%, rgba(2, 20, 18, 0.85) 100%);
   border: 1.5px solid rgba(0, 255, 210, 0.42);
   box-shadow: 
     0 8px 18px rgba(0, 0, 0, 0.4),
     0 0 16px rgba(0, 255, 210, 0.2),
-    inset 0 2px 3px rgba(255, 255, 255, 0.55),
+    inset 0 1.5px 2px rgba(0, 255, 200, 0.45),
     inset 0 -1.5px 2px rgba(0, 0, 0, 0.45);
   flex-shrink: 0;
   transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
@@ -58,7 +58,7 @@
   box-shadow: 
     0 12px 24px rgba(0, 0, 0, 0.5),
     0 0 24px rgba(0, 255, 210, 0.4),
-    inset 0 2px 3px rgba(255, 255, 255, 0.75);
+    inset 0 2px 3px rgba(0, 255, 200, 0.65);
 }
 
 .contact-info-item h4 {
@@ -96,29 +96,27 @@
   font-size: 0.9rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.85);
-  background: 
-    radial-gradient(100% 100% at 50% 0%, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%),
-    rgba(255, 255, 255, 0.04);
+  background: rgba(4, 18, 22, 0.65);
   backdrop-filter: var(--liquid-blur);
   -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(0, 255, 200, 0.15);
   border-radius: var(--radius-md);
   box-shadow: 
-    0 8px 18px -4px rgba(0, 0, 0, 0.4),
-    inset 0 1.2px 0 rgba(255, 255, 255, 0.4),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.35);
+    0 8px 18px -4px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(0, 255, 200, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4);
   transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .contact-social-link:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(0, 255, 210, 0.45);
+  background: rgba(0, 255, 200, 0.08);
+  border-color: rgba(0, 255, 200, 0.5);
   color: #00F0CF;
   transform: translateY(-3px) scale(1.02);
   box-shadow: 
-    0 12px 24px -4px rgba(0, 0, 0, 0.55),
-    0 0 20px rgba(0, 255, 210, 0.25),
-    inset 0 1.2px 0 rgba(255, 255, 255, 0.6);
+    0 12px 24px -4px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(0, 255, 200, 0.25),
+    inset 0 1px 0 rgba(0, 255, 200, 0.3);
 }
 
 /* 3D Form Wrapper */

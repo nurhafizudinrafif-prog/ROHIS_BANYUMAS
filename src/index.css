@@ -9,25 +9,20 @@
 
   --dark-bg:
     radial-gradient(
-      80% 70% at 10% 10%,
-      rgba(0, 190, 160, 0.10),
-      transparent 60%
+      ellipse 80% 60% at 50% 15%,
+      rgba(0, 221, 184, 0.05),
+      transparent 70%
     ),
     radial-gradient(
-      70% 60% at 90% 15%,
-      rgba(0, 150, 255, 0.07),
-      transparent 60%
-    ),
-    radial-gradient(
-      70% 70% at 80% 90%,
-      rgba(0, 255, 180, 0.05),
-      transparent 60%
+      ellipse 70% 50% at 85% 85%,
+      rgba(0, 200, 160, 0.03),
+      transparent 65%
     ),
     linear-gradient(
-      135deg,
-      #020A0B 0%,
-      #041315 45%,
-      #06191A 100%
+      180deg,
+      #020708 0%,
+      #030d0f 45%,
+      #010506 100%
     );
 
 
@@ -39,25 +34,25 @@
      TRUE LIQUID GLASS — PURE NEON GREEN (EMERALD & MINT)
      ========================================================= */
 
-  /* KACA DASAR BENING TOTAL: Pure crystal clear transparent glass */
+  /* KACA DASAR BENING GELAP: Sleek dark transparent smoked glass (NO WHITE EFFECT) */
   --glass-bg:
     linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.16) 0%,
-      rgba(255, 255, 255, 0.05) 45%,
-      rgba(255, 255, 255, 0.02) 100%
+      rgba(0, 255, 200, 0.04) 0%,
+      rgba(4, 18, 22, 0.62) 45%,
+      rgba(2, 9, 11, 0.78) 100%
     );
 
-  /* Aksen aurora hijau neon sangat halus agar kaca tetap bening tembus pandang */
+  /* Aksen aurora hijau neon sangat halus */
   --glass-aurora:
     radial-gradient(
       circle at 12% 12%,
-      rgba(0, 255, 200, 0.08),
+      rgba(0, 255, 200, 0.06),
       transparent 45%
     ),
     radial-gradient(
       circle at 88% 88%,
-      rgba(0, 255, 180, 0.08),
+      rgba(0, 255, 180, 0.06),
       transparent 45%
     );
 
@@ -67,42 +62,39 @@
   --liquid-glass-hover:
     linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.22) 0%,
-      rgba(255, 255, 255, 0.08) 45%,
-      rgba(255, 255, 255, 0.03) 100%
+      rgba(0, 255, 200, 0.08) 0%,
+      rgba(6, 24, 28, 0.68) 45%,
+      rgba(3, 12, 15, 0.85) 100%
     );
 
-  /* BORDER: Crisp Crystal Edge with Specular Highlight */
+  /* BORDER: Subtle emerald neon micro-borders (NO WHITE) */
   --liquid-border:
-    rgba(255, 255, 255, 0.35);
+    rgba(0, 255, 200, 0.14);
 
   --liquid-border-hover:
-    rgba(255, 255, 255, 0.80);
+    rgba(0, 255, 200, 0.60);
 
   /* BLUR HALUS: Tidak pekat/buram agar latar belakang terlihat jernih */
   --liquid-blur:
-    blur(12px)
-    saturate(160%);
+    blur(14px)
+    saturate(150%);
 
   /* THICK 3D SHADOW (Physical Floating Elevation) */
   --liquid-shadow:
-    0 30px 70px -10px rgba(0, 0, 0, 0.80),
-    0 16px 36px -6px rgba(0, 0, 0, 0.55),
-    0 4px 14px rgba(0, 0, 0, 0.35);
+    0 25px 60px -10px rgba(0, 0, 0, 0.85),
+    0 12px 28px -6px rgba(0, 0, 0, 0.60),
+    0 4px 12px rgba(0, 0, 0, 0.40);
 
   --liquid-shadow-hover:
-    0 42px 90px -12px rgba(0, 0, 0, 0.90),
-    0 20px 45px -6px rgba(0, 0, 0, 0.65),
-    0 0 35px rgba(0, 255, 200, 0.25);
+    0 35px 80px -10px rgba(0, 0, 0, 0.90),
+    0 14px 32px -4px rgba(0, 0, 0, 0.65),
+    0 0 35px rgba(0, 255, 200, 0.28);
 
-  /* THICK 3D INSET BEVELS: Specular Top Rim + Inner Counter-Bevel */
+  /* 3D INSET DEPTH: Subtle green neon rim without any white effects */
   --liquid-inset:
-    inset 0 2.5px 2px 0 rgba(255, 255, 255, 0.85),
-    inset 0 6px 14px 0 rgba(255, 255, 255, 0.18),
-    inset 2px 0 3px 0 rgba(255, 255, 255, 0.35),
-    inset -2px 0 3px 0 rgba(255, 255, 255, 0.20),
-    inset 0 -2.5px 4px 0 rgba(255, 255, 255, 0.35),
-    inset 0 -8px 18px 0 rgba(0, 0, 0, 0.35);
+    inset 0 1.2px 0 0 rgba(0, 255, 200, 0.25),
+    inset 0 -1px 0 0 rgba(0, 255, 180, 0.12),
+    inset 0 0 24px 0 rgba(0, 0, 0, 0.45);
 
   --radius-glass: 28px;
 
@@ -330,38 +322,35 @@ p {
   isolation: isolate;
   overflow: hidden;
 
-  /* KACA DASAR BENING TOTAL (CRYSTAL CLEAR LIQUID GLASS) */
+  /* KACA DASAR BENING GELAP ELEGAN (NO WHITE EFFECT) */
   background:
     linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.16) 0%,
-      rgba(255, 255, 255, 0.05) 45%,
-      rgba(255, 255, 255, 0.02) 100%
+      rgba(0, 255, 200, 0.04) 0%,
+      rgba(4, 18, 22, 0.62) 45%,
+      rgba(2, 9, 11, 0.78) 100%
     );
 
   /* BLUR HALUS AGAR LATAR BELAKANG TERLIHAT SANGAT BENING DAN JELAS */
-  -webkit-backdrop-filter: blur(12px) saturate(160%);
-  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  backdrop-filter: blur(14px) saturate(150%);
 
-  /* BINGKAI KACA KRISTAL 3D TEBAL DENGAN PANTULAN CAHAYA */
-  border: 1.5px solid rgba(255, 255, 255, 0.35);
-  border-top: 2.5px solid rgba(255, 255, 255, 0.85);
-  border-left: 1.5px solid rgba(255, 255, 255, 0.50);
-  border-right: 1.5px solid rgba(255, 255, 255, 0.30);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.25);
+  /* BINGKAI HIJAU NEON ELEGAN TANPA PUTIH */
+  border: 1px solid rgba(0, 255, 200, 0.14);
+  border-top: 1.5px solid rgba(0, 255, 200, 0.32);
+  border-left: 1px solid rgba(0, 255, 200, 0.18);
+  border-right: 1px solid rgba(0, 255, 200, 0.18);
+  border-bottom: 1px solid rgba(0, 255, 180, 0.10);
   border-radius: var(--radius-glass);
 
-  /* EFEK 3D SLAB TEBAL: SPECULAR TOP BEVEL + COUNTER BEVEL BAWAH + DEEP ELEVATION */
+  /* DEPTH & ELEVATION TANPA INSET PUTIH */
   box-shadow:
-    0 30px 70px -10px rgba(0, 0, 0, 0.80),
-    0 16px 36px -6px rgba(0, 0, 0, 0.55),
-    0 4px 14px rgba(0, 0, 0, 0.35),
-    inset 0 2.5px 2px 0 rgba(255, 255, 255, 0.85),
-    inset 0 6px 14px 0 rgba(255, 255, 255, 0.18),
-    inset 2px 0 3px 0 rgba(255, 255, 255, 0.35),
-    inset -2px 0 3px 0 rgba(255, 255, 255, 0.20),
-    inset 0 -2.5px 4px 0 rgba(255, 255, 255, 0.35),
-    inset 0 -8px 18px 0 rgba(0, 0, 0, 0.35);
+    0 25px 60px -10px rgba(0, 0, 0, 0.85),
+    0 12px 28px -6px rgba(0, 0, 0, 0.60),
+    0 4px 12px rgba(0, 0, 0, 0.40),
+    inset 0 1.2px 0 0 rgba(0, 255, 200, 0.25),
+    inset 0 -1px 0 0 rgba(0, 255, 180, 0.12),
+    inset 0 0 24px 0 rgba(0, 0, 0, 0.45);
 
   transition:
     transform 450ms cubic-bezier(.2,.8,.2,1),
@@ -458,44 +447,43 @@ p {
   pointer-events: none;
   z-index: 4;
 
-  /* SHEEN 3D DI ATAS & REFLEKSI KRISTAL HIJAU NEON */
+  /* SHEEN 3D DI ATAS & REFLEKSI KRISTAL HIJAU NEON (TANPA PUTIH) */
   background:
-    /* Highlight putih kristal & neon hijau atas */
+    /* Highlight hijau neon halus atas */
     linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.22) 0%,
-      rgba(0, 255, 200, 0.10) 12%,
-      rgba(0, 255, 200, 0.02) 28%,
-      transparent 45%
+      rgba(0, 255, 200, 0.08) 0%,
+      rgba(0, 255, 200, 0.01) 18%,
+      transparent 40%
     ),
     /* Refleksi samping: Hijau lembut kiri dan kanan */
     linear-gradient(
       90deg,
-      rgba(0, 255, 200, 0.15) 0%,
+      rgba(0, 255, 200, 0.12) 0%,
       transparent 10%,
       transparent 90%,
-      rgba(0, 255, 200, 0.15) 100%
+      rgba(0, 255, 200, 0.12) 100%
     ),
     /* Aurora neon hijau pojok kanan bawah */
     radial-gradient(
       circle at 85% 90%,
-      rgba(0, 255, 180, 0.20),
+      rgba(0, 255, 180, 0.15),
       transparent 45%
     );
 
   box-shadow:
-    inset 0 2px 1px rgba(255, 255, 255, 0.50),
-    inset 0 3px 6px rgba(0, 255, 200, 0.30),
-    inset 2px 0 0 rgba(0, 255, 200, 0.20),
-    inset -2px 0 0 rgba(0, 255, 200, 0.20),
-    inset 0 -2.5px 0 rgba(0, 255, 180, 0.25);
+    inset 0 1.2px 0 rgba(0, 255, 200, 0.28),
+    inset 0 3px 6px rgba(0, 255, 200, 0.15),
+    inset 2px 0 0 rgba(0, 255, 200, 0.12),
+    inset -2px 0 0 rgba(0, 255, 200, 0.12),
+    inset 0 -2px 0 rgba(0, 255, 180, 0.18);
 
   mix-blend-mode: screen;
 }
 
 
 /* =========================================================
-   HOVER — FLOAT + PURE NEON GREEN GLOW
+   HOVER — FLOAT + PURE NEON GREEN GLOW (NO WHITE)
    ========================================================= */
 
 .liquid-glass:hover,
@@ -522,23 +510,23 @@ p {
 
   transform: translateY(-10px) scale(1.03) !important;
 
-  border-top-color: rgba(255, 255, 255, 0.90) !important;
-  border-left-color: rgba(0, 255, 200, 0.70) !important;
-  border-right-color: rgba(0, 255, 200, 0.70) !important;
-  border-bottom-color: rgba(0, 255, 180, 0.50) !important;
+  border-top-color: rgba(0, 255, 200, 0.80) !important;
+  border-left-color: rgba(0, 255, 200, 0.55) !important;
+  border-right-color: rgba(0, 255, 200, 0.55) !important;
+  border-bottom-color: rgba(0, 255, 180, 0.35) !important;
 
   box-shadow:
-    0 40px 90px -10px rgba(0, 0, 0, 0.90),
-    0 16px 36px -4px rgba(0, 0, 0, 0.60),
-    0 0 45px rgba(0, 255, 200, 0.35),
-    0 14px 45px rgba(0, 255, 180, 0.25),
-    inset 0 2.5px 1px 0 rgba(255, 255, 255, 0.85),
-    inset 0 5px 10px 0 rgba(0, 255, 200, 0.50),
-    inset 2px 0 2px 0 rgba(255, 255, 255, 0.35),
-    inset -2px 0 3px 0 rgba(0, 255, 200, 0.35),
-    inset 0 -3.5px 3px 0 rgba(0, 255, 180, 0.50),
+    0 35px 80px -10px rgba(0, 0, 0, 0.90),
+    0 14px 32px -4px rgba(0, 0, 0, 0.65),
+    0 0 35px rgba(0, 255, 200, 0.28),
+    0 10px 35px rgba(0, 255, 180, 0.18),
+    inset 0 1.5px 0 0 rgba(0, 255, 200, 0.50),
+    inset 0 4px 10px 0 rgba(0, 255, 200, 0.25),
+    inset 2px 0 2px 0 rgba(0, 255, 200, 0.20),
+    inset -2px 0 2px 0 rgba(0, 255, 200, 0.20),
+    inset 0 -2.5px 0 0 rgba(0, 255, 180, 0.35),
     inset 0 -8px 18px 0 rgba(0, 0, 0, 0.65),
-    inset 0 0 30px rgba(0, 255, 200, 0.15) !important;
+    inset 0 0 30px rgba(0, 255, 200, 0.10) !important;
 }
 
 
@@ -727,7 +715,7 @@ p {
   box-shadow: 
     0 20px 42px -6px rgba(0, 221, 184, 0.55),
     0 0 30px rgba(0, 255, 210, 0.35),
-    inset 0 2px 0 0 rgba(255, 255, 255, 0.85),
+    inset 0 1.5px 0 0 rgba(0, 255, 210, 0.60),
     inset 0 -2px 0 0 rgba(0, 100, 80, 0.50);
   color: #020A0B !important;
 }
@@ -737,7 +725,7 @@ p {
   transform: translateY(1px) scale(0.98);
   box-shadow: 
     0 6px 16px rgba(0, 221, 184, 0.30),
-    inset 0 1px 0 rgba(255, 255, 255, 0.30);
+    inset 0 1px 0 rgba(0, 255, 210, 0.35);
 }
 
 .glass-button-secondary,
@@ -1010,12 +998,12 @@ p {
 .form-input:focus,
 .form-textarea:focus,
 .form-select:focus {
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(0, 255, 200, 0.08);
   border-color: rgba(0, 255, 210, 0.70);
-  border-top-color: rgba(255, 255, 255, 0.85);
+  border-top-color: rgba(0, 255, 210, 0.85);
   box-shadow:
-    inset 0 2px 4px rgba(0, 0, 0, 0.25),
-    inset 0 1px 2px rgba(255, 255, 255, 0.60),
+    inset 0 2px 4px rgba(0, 0, 0, 0.35),
+    inset 0 1px 2px rgba(0, 255, 210, 0.35),
     0 0 0 3px rgba(0, 255, 210, 0.25),
     0 0 20px rgba(0, 255, 210, 0.20);
 }
