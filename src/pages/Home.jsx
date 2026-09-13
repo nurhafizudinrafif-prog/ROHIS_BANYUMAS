@@ -70,6 +70,17 @@ export default function Home() {
     setActiveMediaIndex(0);
   };
 
+  // Lock background body scroll when lightbox is open
+  useEffect(() => {
+    if (selectedItem) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow || '';
+      };
+    }
+  }, [selectedItem]);
+
   const handlePrevMedia = useCallback(() => {
     if (activeMediaList.length <= 1) return;
     setActiveMediaIndex((prev) => (prev > 0 ? prev - 1 : activeMediaList.length - 1));

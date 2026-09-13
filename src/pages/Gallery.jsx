@@ -58,6 +58,17 @@ export default function Gallery() {
     setActiveMediaIndex(0);
   };
 
+  // Lock background body scroll when lightbox is open
+  useEffect(() => {
+    if (selectedItem) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow || '';
+      };
+    }
+  }, [selectedItem]);
+
   // Navigation handlers
   const handlePrevMedia = useCallback(() => {
     if (activeMediaList.length <= 1) return;

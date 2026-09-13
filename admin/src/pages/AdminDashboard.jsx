@@ -112,6 +112,17 @@ export default function AdminDashboard() {
   const [modalDivision, setModalDivision] = useState('bph');
   const [formData, setFormData] = useState({});
 
+  // Lock background body scroll when modal is open
+  useEffect(() => {
+    if (modalType) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow || '';
+      };
+    }
+  }, [modalType]);
+
   // Settings form
   const [settingsForm, setSettingsForm] = useState(siteSettings);
 

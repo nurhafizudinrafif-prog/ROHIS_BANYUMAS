@@ -309,6 +309,11 @@
    Cinema Lightbox Modal — Liquid Glass
    ============================================ */
 
+body:has(.gallery-cinema-backdrop),
+html:has(.gallery-cinema-backdrop) {
+  overflow: hidden !important;
+}
+
 .gallery-cinema-backdrop {
   position: fixed;
   inset: 0;
@@ -321,6 +326,7 @@
   justify-content: center;
   padding: var(--space-md);
   animation: fadeIn 0.25s ease-out;
+  overscroll-behavior: contain;
 }
 
 .gallery-cinema-modal {
