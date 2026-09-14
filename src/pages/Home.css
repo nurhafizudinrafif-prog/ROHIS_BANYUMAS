@@ -7,6 +7,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-xl);
+  align-items: start;
   position: relative;
   overflow: visible;
   padding-top: 14px;
