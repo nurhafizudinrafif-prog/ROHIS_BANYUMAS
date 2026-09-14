@@ -217,6 +217,18 @@ export default function DynamicBackground() {
             <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
           </linearGradient>
 
+          {/* Combined Edge Dissolve & Central Readability Softening Mask */}
+          <mask id="celestial-readability-mask">
+            <rect x="0" y="0" width="1000" height="800" fill="url(#celestial-fade-grad)" />
+            {/* Gentle center softening to guarantee 100% crystal clear typography */}
+            <ellipse cx="500" cy="400" rx="360" ry="220" fill="url(#readability-center-fade)" />
+          </mask>
+          <radialGradient id="readability-center-fade" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#000000" stopOpacity="0.40" />
+            <stop offset="65%" stopColor="#000000" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+          </radialGradient>
+
           {/* Starlight Flare Radial Gradients */}
           <radialGradient id="flare-gold" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
@@ -247,7 +259,7 @@ export default function DynamicBackground() {
         <g
           ref={astrolabeRef}
           className="astrolabe-layer"
-          mask="url(#celestial-fade-mask)"
+          mask="url(#celestial-readability-mask)"
         >
           <g className="astrolabe-rotating-group">
             {/* Concentric Coordinate Circles */}
@@ -300,13 +312,7 @@ export default function DynamicBackground() {
               className="astrolabe-ring astrolabe-ecliptic"
             />
 
-            {/* Crosshair Axes with degree ticks */}
-            <line x1="120" y1="400" x2="880" y2="400" className="astrolabe-axis" />
-            <line x1="500" y1="20" x2="500" y2="780" className="astrolabe-axis" />
-            <line x1="230" y1="130" x2="770" y2="670" className="astrolabe-axis-subtle" />
-            <line x1="770" y1="130" x2="230" y2="670" className="astrolabe-axis-subtle" />
-
-            {/* Astrolabe Pointer Markers */}
+            {/* Astrolabe Cardinal Direction Markers */}
             <circle cx="500" cy="30" r="3.5" className="astrolabe-marker" />
             <circle cx="870" cy="400" r="3.5" className="astrolabe-marker" />
             <circle cx="500" cy="770" r="3.5" className="astrolabe-marker" />
@@ -315,7 +321,7 @@ export default function DynamicBackground() {
         </g>
 
         {/* 5B. RENDER EACH CONSTELLATION (Scroll wrapper + 3.2s silky cross-fade content) */}
-        <g className="all-constellations-mask-group" mask="url(#celestial-fade-mask)">
+        <g className="all-constellations-mask-group" mask="url(#celestial-readability-mask)">
           {CONSTELLATIONS.map((c) => {
             const isActive = c.id === theme;
             return (
@@ -397,9 +403,9 @@ export default function DynamicBackground() {
 
                       const fSize = star.flareSize || 24;
                       const half = fSize;
-                      const thin = 1.35;
-                      const diagHalf = fSize * 0.46;
-                      const diagThin = 0.9;
+                      const thin = 1.0;
+                      const diagHalf = fSize * 0.44;
+                      const diagThin = 0.55;
 
                       return (
                         <g
