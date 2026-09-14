@@ -6,12 +6,10 @@ export default function DynamicBackground() {
   const location = useLocation();
   const [theme, setTheme] = useState('hero');
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [parallaxY, setParallaxY] = useState(0);
   const rafRef = useRef(null);
 
   // 1. Observe sections to change color theme smoothly
   useEffect(() => {
-    // Initial theme based on route
     const path = location.pathname;
     if (path.includes('agenda')) setTheme('events');
     else if (path.includes('artikel') || path.includes('galeri')) setTheme('media');
@@ -19,7 +17,6 @@ export default function DynamicBackground() {
     else if (path.includes('tentang')) setTheme('quote');
     else setTheme('hero');
 
-    // Section triggers for scroll-based morphing
     const sectionSelectors = [
       { sel: '.hero-cinematic, .page-hero', theme: 'hero' },
       { sel: '.stats-section, .home-programs-grid', theme: 'programs' },
@@ -66,7 +63,6 @@ export default function DynamicBackground() {
       }
     );
 
-    // Attach data-bg-theme to target elements
     sectionSelectors.forEach(({ sel, theme: t }) => {
       document.querySelectorAll(sel).forEach((el) => {
         el.setAttribute('data-bg-theme', t);
@@ -75,7 +71,6 @@ export default function DynamicBackground() {
       });
     });
 
-    // Check once after elements are mounted
     evaluateDominantTheme();
 
     return () => {
@@ -84,7 +79,7 @@ export default function DynamicBackground() {
     };
   }, [location.pathname]);
 
-  // 2. Smooth parallax and dynamic fluid aurora drift on scroll
+  // 2. Smooth parallax on scroll
   useEffect(() => {
     const handleScroll = () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
@@ -97,8 +92,6 @@ export default function DynamicBackground() {
         );
         const progress = Math.min(1, Math.max(0, scrollY / maxScroll));
         setScrollProgress(progress);
-        // Subtle parallax on Islamic geometric pattern (slow drift)
-        setParallaxY(-(scrollY * 0.09) % 120);
       });
     };
 
@@ -111,18 +104,16 @@ export default function DynamicBackground() {
     };
   }, []);
 
-  // Compute organic dynamic drift offsets based on scroll progress
-  // Orb 1 moves smoothly from top-left toward center-left
-  const orb1DriftX = Math.sin(scrollProgress * Math.PI * 2) * 80;
-  const orb1DriftY = Math.cos(scrollProgress * Math.PI * 2) * 50 + scrollProgress * 100;
+  // Nebula drift based on scroll
+  const nebula1X = Math.sin(scrollProgress * Math.PI * 2) * 60;
+  const nebula1Y = Math.cos(scrollProgress * Math.PI * 2) * 40 + scrollProgress * 80;
+  const nebula2X = -Math.cos(scrollProgress * Math.PI * 2) * 70;
+  const nebula2Y = Math.sin(scrollProgress * Math.PI * 2) * 50 - scrollProgress * 90;
 
-  // Orb 2 moves smoothly across the right side
-  const orb2DriftX = -Math.cos(scrollProgress * Math.PI * 2) * 90;
-  const orb2DriftY = Math.sin(scrollProgress * Math.PI * 2) * 60 - scrollProgress * 120;
-
-  // Orb 3 floats in the lower center
-  const orb3DriftX = Math.sin(scrollProgress * Math.PI * 1.5) * 110;
-  const orb3DriftY = -Math.cos(scrollProgress * Math.PI * 1.5) * 70;
+  // Star parallax layers move at different speeds
+  const starLayer1Y = -(scrollProgress * 30);
+  const starLayer2Y = -(scrollProgress * 60);
+  const starLayer3Y = -(scrollProgress * 15);
 
   return (
     <div
@@ -130,42 +121,51 @@ export default function DynamicBackground() {
       aria-hidden="true"
     >
 
-      {/* 1. Divine Top Ambient Light Sweep */}
-      <div className="dynamic-divine-beam" />
+      {/* 1. Deep Space Base Gradient */}
+      <div className="constellation-base" />
 
-      {/* 2. Seamless Authentic Islamic Sacred Girih Pattern with Subtle Parallax */}
+      {/* 2. Distant Star Layer (tiny, slow parallax) */}
       <div
-        className="dynamic-islamic-pattern"
+        className="star-layer star-layer-distant"
+        style={{ transform: `translate3d(0, ${starLayer3Y}px, 0)` }}
+      />
+
+      {/* 3. Mid Star Layer (medium stars, moderate parallax) */}
+      <div
+        className="star-layer star-layer-mid"
+        style={{ transform: `translate3d(0, ${starLayer1Y}px, 0)` }}
+      />
+
+      {/* 4. Close Star Layer (brighter, faster parallax) */}
+      <div
+        className="star-layer star-layer-close"
+        style={{ transform: `translate3d(0, ${starLayer2Y}px, 0)` }}
+      />
+
+      {/* 5. Constellation Lines Overlay */}
+      <div className="constellation-lines" />
+
+      {/* 6. Shooting Stars */}
+      <div className="shooting-star shooting-star-1" />
+      <div className="shooting-star shooting-star-2" />
+      <div className="shooting-star shooting-star-3" />
+
+      {/* 7. Nebula Clouds (Emerald — theme morphing) */}
+      <div
+        className="nebula nebula-1"
         style={{
-          transform: `translate3d(0, ${parallaxY}px, 0)`
+          transform: `translate3d(${nebula1X}px, ${nebula1Y}px, 0)`
+        }}
+      />
+      <div
+        className="nebula nebula-2"
+        style={{
+          transform: `translate3d(${nebula2X}px, ${nebula2Y}px, 0)`
         }}
       />
 
-      {/* 3. Celestial Twinkling Stars / Spiritual Dust Particles */}
-      <div className="dynamic-celestial-stars" />
-
-      {/* 4. Fluid Living Aurora Orbs with Theme Morphing */}
-      <div
-        className="dynamic-aurora dynamic-aurora-1"
-        style={{
-          transform: `translate3d(${orb1DriftX}px, ${orb1DriftY}px, 0)`
-        }}
-      />
-      <div
-        className="dynamic-aurora dynamic-aurora-2"
-        style={{
-          transform: `translate3d(${orb2DriftX}px, ${orb2DriftY}px, 0)`
-        }}
-      />
-      <div
-        className="dynamic-aurora dynamic-aurora-3"
-        style={{
-          transform: `translate3d(${orb3DriftX}px, ${orb3DriftY}px, 0)`
-        }}
-      />
-
-      {/* 5. Cinema Ambient Vignette Overlay */}
-      <div className="dynamic-ambient-mist" />
+      {/* 8. Ambient Cosmic Vignette */}
+      <div className="cosmic-vignette" />
     </div>
   );
 }

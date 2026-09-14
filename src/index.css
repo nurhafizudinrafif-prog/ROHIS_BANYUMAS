@@ -1516,11 +1516,40 @@ p {
       var(--radius-md);
   }
 
+  /* Reduce hover transform on mobile for better UX */
   .liquid-glass:hover,
   .glass-card:hover,
-  .card:hover {
-    transform:
-      translateY(-2px);
+  .card:hover,
+  .stat-glass-card:hover,
+  .quote-card:hover,
+  .team-card:hover,
+  .program-glass-card:hover,
+  .about-story-card:hover,
+  .about-vm-card:hover,
+  .about-value-card:hover,
+  .contact-form-wrapper:hover,
+  .gallery-item:hover,
+  .school-card:hover,
+  .article-card:hover,
+  .event-card:hover {
+    transform: translateY(-3px) !important;
+  }
+
+  /* Reduce pseudo-element effects on mobile for performance */
+  .liquid-glass::before,
+  .glass-card::before,
+  .card::before,
+  .stat-glass-card::before,
+  .quote-card::before,
+  .team-card::before,
+  .program-glass-card::before,
+  .about-story-card::before,
+  .about-vm-card::before,
+  .about-value-card::before,
+  .contact-form-wrapper::before,
+  .gallery-item::before {
+    filter: blur(6px);
+    opacity: 0.08;
   }
 
   .glass-button,
@@ -1528,22 +1557,68 @@ p {
   .btn-primary,
   .btn-outline,
   .btn-gold {
-    min-height:
-      46px;
-
-    padding:
-      0 18px;
+    min-height: 46px;
+    padding: 0 18px;
   }
 
   .liquid-glow {
-    width:
-      180px;
+    width: 180px;
+    height: 180px;
+    filter: blur(35px);
+  }
 
-    height:
-      180px;
+  /* Reduce section padding on mobile */
+  .quote-card {
+    padding: var(--space-xl) var(--space-lg);
+  }
 
-    filter:
-      blur(35px);
+  .quote-arabic {
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
+  }
+
+  .quote-translation {
+    font-size: 0.9rem;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 0.75rem;
+  }
+
+  .section {
+    padding: var(--space-2xl) 0;
+  }
+
+  /* Disable heavy hover pseudo effects on small touch screens */
+  .liquid-glass:hover::before,
+  .glass-card:hover::before,
+  .card:hover::before,
+  .stat-glass-card:hover::before {
+    transform: scale(1.08) !important;
+    filter: blur(6px) !important;
+    opacity: 0.10 !important;
+  }
+}
+
+/* Touch devices — reduce hover hover-specific effects */
+@media (hover: none) and (pointer: coarse) {
+  .liquid-glass:hover,
+  .glass-card:hover,
+  .card:hover,
+  .stat-glass-card:hover,
+  .quote-card:hover,
+  .team-card:hover,
+  .program-glass-card:hover,
+  .about-story-card:hover,
+  .about-vm-card:hover,
+  .about-value-card:hover,
+  .gallery-item:hover,
+  .school-card:hover,
+  .article-card:hover,
+  .event-card:hover {
+    transform: none !important;
   }
 }
 

@@ -297,6 +297,8 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
+    padding: var(--space-md);
+    gap: var(--space-md);
   }
 
   .ig-handle-row {
@@ -306,4 +308,47 @@
   .ig-bio-links {
     justify-content: center;
   }
+
+  .ig-avatar-ring {
+    width: 72px;
+    height: 72px;
+  }
+
+  .ig-handle {
+    font-size: 1.1rem;
+  }
+
+  .ig-card-footer {
+    padding: var(--space-sm) var(--space-md);
+  }
 }
+
+@media (max-width: 480px) {
+  .ig-avatar-ring {
+    width: 60px;
+    height: 60px;
+  }
+
+  .ig-handle {
+    font-size: 1rem;
+  }
+
+  .ig-bio-text {
+    font-size: 0.82rem;
+  }
+
+  .ig-link-pill {
+    font-size: 0.72rem;
+    padding: 0.3rem 0.65rem;
+  }
+
+  .btn-ig-follow {
+    font-size: 0.8rem;
+    padding: 0.45rem 1.1rem;
+  }
+
+  .section-ig-showcase {
+    padding: var(--space-2xl) 0;
+  }
+}
+

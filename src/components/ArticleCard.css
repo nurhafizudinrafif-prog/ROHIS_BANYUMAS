@@ -111,3 +111,30 @@
   color: var(--color-primary);
   gap: 0.55rem;
 }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .article-card-thumb {
+    height: 170px;
+  }
+
+  .article-card-title {
+    font-size: 0.95rem;
+  }
+
+  .article-card-excerpt {
+    font-size: 0.82rem;
+    -webkit-line-clamp: 2;
+  }
+}
+
+@media (max-width: 480px) {
+  .article-card-thumb {
+    height: 150px;
+  }
+
+  .article-card-body {
+    gap: 0.5rem;
+  }
+}
+

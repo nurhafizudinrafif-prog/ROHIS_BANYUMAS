@@ -149,3 +149,43 @@
 .check-text {
   flex: 1;
 }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .program-glass-card {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .program-card-title {
+    font-size: 1.1rem;
+  }
+
+  .program-card-desc {
+    font-size: 0.84rem;
+    margin-bottom: 1rem;
+  }
+
+  .program-glass-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .program-glass-icon-wrapper {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .program-glass-card {
+    padding: 1.25rem 1rem;
+  }
+
+  .program-check-item {
+    font-size: 0.8rem;
+  }
+
+  .program-card-checklist {
+    gap: 0.55rem;
+  }
+}
+
