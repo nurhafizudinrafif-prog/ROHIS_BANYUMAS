@@ -8,7 +8,9 @@
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-xl);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  padding-top: 14px;
+  margin-top: -14px;
   max-width: 100%;
 }
 

@@ -9,25 +9,30 @@
   flex-direction: column;
   padding: 2.2rem 1.85rem;
   cursor: pointer;
+  position: relative;
+  z-index: 1;
   will-change: transform, box-shadow;
   transition: transform 450ms cubic-bezier(.16, 1, .3, 1), box-shadow 450ms cubic-bezier(.16, 1, .3, 1), border-color 400ms ease;
 }
 
-.program-glass-card:hover {
+.program-glass-card:hover,
+.program-glass-card:active,
+.program-glass-card:focus-within {
   transform: translateY(-10px) scale(1.03) !important;
+  z-index: 20 !important;
 }
 
-/* Content layer above glass shine */
+/* Content layer above glass shine and all reflections */
 .program-card-content {
   position: relative;
-  z-index: 3;
+  z-index: 5;
 }
 
 /* Glossy Neon App Icon */
 .program-glass-icon-wrapper {
   margin-bottom: 1.5rem;
   position: relative;
-  z-index: 3;
+  z-index: 5;
 }
 
 .program-glass-icon {

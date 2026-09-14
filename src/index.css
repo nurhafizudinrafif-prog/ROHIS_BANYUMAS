@@ -267,14 +267,22 @@ p {
 /* --- Layout Utilities --- */
 .container {
   width: 100%;
-  max-width: var(--max-width);
+  max-width: min(var(--max-width), calc(100vw - 120px));
   margin: 0 auto;
   padding: 0 var(--space-lg);
+}
+
+@media (max-width: 768px) {
+  .container {
+    max-width: 100%;
+    padding: 0 var(--space-md);
+  }
 }
 
 .section {
   padding: var(--space-4xl) 0;
   position: relative;
+  overflow-x: clip;
 }
 
 .section-alt {
@@ -521,6 +529,7 @@ p {
 .event-card:hover {
 
   transform: translateY(-10px) scale(1.03) !important;
+  z-index: 20 !important;
 
   border-top-color: rgba(0, 255, 200, 0.80) !important;
   border-left-color: rgba(0, 255, 200, 0.55) !important;
