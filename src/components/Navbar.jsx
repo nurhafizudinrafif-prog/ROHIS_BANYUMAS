@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Search } from 'lucide-react';
 import logoImg from '../assets/logo.png';
 import './Navbar.css';
 
@@ -15,19 +14,18 @@ const navLinks = [
 ];
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const menuRef = useRef(null);
 
+  // Auto-scroll the active menu link to the center on mobile swipe bar
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    setIsOpen(false);
-  }, [location]);
+    if (menuRef.current) {
+      const activeLink = menuRef.current.querySelector('.navbar-link.active');
+      if (activeLink) {
+        activeLink.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+  }, [location.pathname]);
 
   const isLinkActive = (path) => {
     if (path === '/program') {
@@ -37,8 +35,9 @@ export default function Navbar() {
   };
 
   return (
-    <nav className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`}>
+    <nav className="navbar">
       <div className="navbar-container container">
+        {/* Brand Logo & Name */}
         <Link to="/" className="navbar-brand">
           <img src={logoImg} alt="Logo ROHIS Kabupaten Banyumas" className="navbar-logo-img" />
           <div className="navbar-brand-text">
@@ -47,7 +46,11 @@ export default function Navbar() {
           </div>
         </Link>
 
-        <div className={`navbar-menu ${isOpen ? 'open' : ''}`}>
+        {/* Separator on mobile */}
+        <div className="navbar-brand-divider" aria-hidden="true" />
+
+        {/* Horizontal Navigation Menu (Always visible & swipeable on mobile, matching Gambar 2) */}
+        <div className="navbar-menu" ref={menuRef}>
           {navLinks.map((link) => (
             <Link
               key={link.path}
@@ -58,20 +61,6 @@ export default function Navbar() {
             </Link>
           ))}
         </div>
-
-        <div className="navbar-actions">
-          <button className="navbar-search-btn" aria-label="Cari">
-            <Search size={18} />
-          </button>
-        </div>
-
-        <button
-          className="navbar-toggle"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle menu"
-        >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
       </div>
     </nav>
   );
