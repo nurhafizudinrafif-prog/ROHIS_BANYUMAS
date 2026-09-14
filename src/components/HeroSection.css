@@ -14,49 +14,6 @@
   background: transparent;
 }
 
-/* Ambient lighting & atmospheric vignette over DynamicBackground */
-.hero-cinematic-bg {
-  position: absolute;
-  inset: 0;
-  background: 
-    radial-gradient(ellipse 90% 70% at 50% 28%, rgba(0, 255, 210, 0.07), transparent 70%),
-    linear-gradient(180deg, rgba(2, 10, 11, 0.20) 0%, transparent 25%, transparent 70%, rgba(2, 10, 11, 0.95) 100%);
-  pointer-events: none;
-  z-index: 0;
-  transition: opacity 1.5s ease;
-}
-
-/* Subtle particle glow */
-.hero-cinematic-particles {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.hero-star-particle {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 0 8px rgba(0, 212, 170, 0.8), 0 0 16px rgba(232, 184, 77, 0.6);
-  animation: starTwinkle 4s ease-in-out infinite;
-}
-
-.particle-p1 { width: 3px; height: 3px; top: 22%; left: 12%; animation-delay: 0s; }
-.particle-p2 { width: 4px; height: 4px; top: 38%; left: 28%; animation-delay: 1.2s; }
-.particle-p3 { width: 2px; height: 2px; top: 15%; left: 45%; animation-delay: 2.5s; }
-.particle-p4 { width: 4px; height: 4px; top: 55%; left: 18%; animation-delay: 0.8s; }
-.particle-p5 { width: 3px; height: 3px; top: 28%; left: 35%; animation-delay: 1.8s; }
-.particle-p6 { width: 2px; height: 2px; top: 68%; left: 8%; animation-delay: 3.1s; }
-.particle-p7 { width: 3px; height: 3px; top: 48%; left: 42%; animation-delay: 2.1s; }
-.particle-p8 { width: 4px; height: 4px; top: 18%; left: 52%; animation-delay: 1.5s; }
-
-@keyframes starTwinkle {
-  0%, 100% { opacity: 0.2; transform: scale(0.8); }
-  50% { opacity: 1; transform: scale(1.4); }
-}
-
 /* Main Container: Left content + Right slogan */
 .hero-cinematic-container {
   display: flex;
@@ -398,12 +355,7 @@
     box-sizing: border-box;
   }
 
-  /* Seamless ambient glow on mobile / portrait viewports */
-  .hero-cinematic-bg {
-    background: 
-      radial-gradient(circle at 50% 25%, rgba(0, 255, 210, 0.10), transparent 75%),
-      linear-gradient(180deg, rgba(2, 10, 11, 0.40) 0%, transparent 35%, rgba(2, 10, 11, 0.95) 100%);
-  }
+
 
   .hero-cinematic-container {
     width: 100%;

@@ -942,23 +942,6 @@ p {
 }
 
 /* =========================================================
-   DARK ISLAMIC PATTERN
-   ========================================================= */
-
-.islamic-pattern {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  opacity: 0.085;
-  background-image:
-    url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2300ffd2' stroke-width='1.2'%3E%3Cpath d='M60 5L115 60L60 115L5 60Z'/%3E%3Cpath d='M60 20L100 60L60 100L20 60Z'/%3E%3Ccircle cx='60' cy='60' r='25'/%3E%3C/g%3E%3C/svg%3E");
-  background-size: 120px 120px;
-  z-index: 0;
-}
-
-/* =========================================================
    GLASS INPUT & FORMS
    ========================================================= */
 
@@ -1407,30 +1390,10 @@ p {
 .animate-on-scroll.visible.delay-4 { transition-delay: 0.4s; }
 .animate-on-scroll.visible.delay-5 { transition-delay: 0.5s; }
 
-/* --- Geometric Pattern Background (Subtle Glass) --- */
+/* --- Clean Section Container --- */
 .pattern-bg {
   position: relative;
-}
-
-.pattern-bg::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  opacity: 0.02;
-  background-image:
-    linear-gradient(30deg, var(--color-gold) 12%, transparent 12.5%, transparent 87%, var(--color-gold) 87.5%, var(--color-gold)),
-    linear-gradient(150deg, var(--color-gold) 12%, transparent 12.5%, transparent 87%, var(--color-gold) 87.5%, var(--color-gold)),
-    linear-gradient(30deg, var(--color-gold) 12%, transparent 12.5%, transparent 87%, var(--color-gold) 87.5%, var(--color-gold)),
-    linear-gradient(150deg, var(--color-gold) 12%, transparent 12.5%, transparent 87%, var(--color-gold) 87.5%, var(--color-gold)),
-    linear-gradient(60deg, var(--color-gold-dark) 25%, transparent 25.5%, transparent 75%, var(--color-gold-dark) 75%, var(--color-gold-dark)),
-    linear-gradient(60deg, var(--color-gold-dark) 25%, transparent 25.5%, transparent 75%, var(--color-gold-dark) 75%, var(--color-gold-dark));
-  background-size: 80px 140px;
-  background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
-  pointer-events: none;
-  z-index: 0;
+  background: transparent;
 }
 
 .pattern-bg > * {

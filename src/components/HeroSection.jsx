@@ -5,16 +5,6 @@ import './HeroSection.css';
 export default function HeroSection() {
   return (
     <section className="hero-cinematic">
-      {/* Background with panoramic Nabawi & Arch framing */}
-      <div className="hero-cinematic-bg"></div>
-      
-      {/* Subtle floating particles & ethereal aura */}
-      <div className="hero-cinematic-particles">
-        {[...Array(8)].map((_, i) => (
-          <div key={i} className={`hero-star-particle particle-p${i + 1}`}></div>
-        ))}
-      </div>
-
       <div className="container hero-cinematic-container">
         {/* Left-Aligned Hero Content */}
         <div className="hero-cinematic-left">
