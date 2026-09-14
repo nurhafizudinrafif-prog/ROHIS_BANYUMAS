@@ -180,21 +180,6 @@
    BODY
    ========================================================= */
 
-body {
-  background: var(--dark-bg);
-  color: rgba(255, 255, 255, 0.92);
-  min-height: 100vh;
-  margin: 0;
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.7;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-  position: relative;
-}
-
-/* --- CSS Reset --- */
 *,
 *::before,
 *::after {
@@ -206,6 +191,33 @@ body {
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--dark-bg);
+  color: rgba(255, 255, 255, 0.92);
+  min-height: 100vh;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+}
+
+#root,
+main {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  position: relative;
 }
 
 a {
@@ -1535,21 +1547,28 @@ p {
     transform: translateY(-3px) !important;
   }
 
-  /* Reduce pseudo-element effects on mobile for performance */
+  /* Clamp pseudo-element effects strictly within card boundaries on mobile to prevent overflow */
   .liquid-glass::before,
   .glass-card::before,
   .card::before,
   .stat-glass-card::before,
   .quote-card::before,
+  .home-cta::before,
   .team-card::before,
   .program-glass-card::before,
   .about-story-card::before,
   .about-vm-card::before,
   .about-value-card::before,
   .contact-form-wrapper::before,
-  .gallery-item::before {
-    filter: blur(6px);
-    opacity: 0.08;
+  .reg-form::before,
+  .gallery-item::before,
+  .school-card::before,
+  .article-card::before,
+  .event-card::before {
+    inset: 0 !important;
+    transform: none !important;
+    filter: blur(6px) !important;
+    opacity: 0.08 !important;
   }
 
   .glass-button,

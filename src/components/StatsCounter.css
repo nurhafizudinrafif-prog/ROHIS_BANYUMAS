@@ -9,6 +9,8 @@
   padding: 2.5rem 0 3.5rem;
   z-index: 5;
   margin-top: -3.5rem;
+  overflow: hidden;
+  max-width: 100%;
 }
 
 .stats-section::before {
@@ -186,6 +188,13 @@
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-section::before,
+  .stats-section::after {
+    display: none;
   }
 }
 

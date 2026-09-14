@@ -8,6 +8,8 @@
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-xl);
   position: relative;
+  overflow: hidden;
+  max-width: 100%;
 }
 
 .home-programs-grid::before {
@@ -39,6 +41,13 @@
 @media (max-width: 1024px) {
   .home-programs-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .home-programs-grid::before,
+  .home-programs-grid::after {
+    display: none;
   }
 }
 

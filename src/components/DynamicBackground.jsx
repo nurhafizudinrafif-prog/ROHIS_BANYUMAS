@@ -146,9 +146,11 @@ export default function DynamicBackground() {
       <div className="constellation-lines" />
 
       {/* 6. Shooting Stars */}
-      <div className="shooting-star shooting-star-1" />
-      <div className="shooting-star shooting-star-2" />
-      <div className="shooting-star shooting-star-3" />
+      <div className="shooting-stars-wrapper">
+        <div className="shooting-star shooting-star-1" />
+        <div className="shooting-star shooting-star-2" />
+        <div className="shooting-star shooting-star-3" />
+      </div>
 
       {/* 7. Nebula Clouds (Emerald — theme morphing) */}
       <div

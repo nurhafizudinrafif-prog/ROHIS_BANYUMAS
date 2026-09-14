@@ -9,6 +9,8 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   position: relative;
+  overflow: hidden;
+  max-width: 100%;
 }
 
 .gallery-grid::before {
@@ -636,6 +638,13 @@ html:has(.gallery-cinema-backdrop) {
 @media (max-width: 900px) {
   .gallery-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .gallery-grid::before,
+  .gallery-grid::after {
+    display: none;
   }
 }
 
