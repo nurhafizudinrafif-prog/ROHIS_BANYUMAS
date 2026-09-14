@@ -13,7 +13,6 @@ import {
 } from 'lucide-react';
 import { useScrollAnimation } from '../utils';
 import HeroSection from '../components/HeroSection';
-import StatsCounter from '../components/StatsCounter';
 import SectionHeader from '../components/SectionHeader';
 import ProgramCard from '../components/ProgramCard';
 import ArticleCard from '../components/ArticleCard';
@@ -114,7 +113,6 @@ export default function Home() {
   return (
     <main>
       <HeroSection />
-      <StatsCounter />
 
       {/* Programs Section */}
       <section className="section">
