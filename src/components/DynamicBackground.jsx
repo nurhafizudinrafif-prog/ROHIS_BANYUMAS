@@ -105,9 +105,6 @@ export default function DynamicBackground() {
     };
   }, []);
 
-  // Active constellation details for the celestial badge
-  const activeConstellation = CONSTELLATIONS.find((c) => c.id === theme) || CONSTELLATIONS[0];
-
   return (
     <div
       ref={containerRef}
@@ -317,18 +314,6 @@ export default function DynamicBackground() {
       <div className="shooting-stars-wrapper">
         <div className="shooting-star shooting-star-1" />
         <div className="shooting-star shooting-star-2" />
-      </div>
-
-      {/* 7. Subtle Celestial Constellation Badge (Bottom Left) */}
-      <div className="celestial-badge">
-        <div className="celestial-badge-pulse" />
-        <div className="celestial-badge-content">
-          <div className="celestial-badge-top">
-            <span className="celestial-badge-icon">✦</span>
-            <span className="celestial-badge-arabic">{activeConstellation.arabic}</span>
-          </div>
-          <div className="celestial-badge-name">{activeConstellation.name}</div>
-        </div>
       </div>
     </div>
   );

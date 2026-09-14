@@ -6,7 +6,7 @@ import './Navbar.css';
 const navLinks = [
   { path: '/', label: 'Beranda' },
   { path: '/tentang', label: 'Tentang' },
-  { path: '/program', label: 'Program & Agenda' },
+  { path: '/program', label: 'Agenda' },
   { path: '/artikel', label: 'Artikel' },
   { path: '/galeri', label: 'Galeri' },
   { path: '/rohis-anggota', label: 'ROHIS Anggota' },
