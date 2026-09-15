@@ -1,72 +1,72 @@
 /* =========================================================
    ROHIS KABUPATEN BANYUMAS — Official Digital Platform
-   LIGHT PREMIUM • WARM IVORY • FOREST GREEN • EMERALD
-   Editorial Typography • Subtle Modern Islamic Geometry
+   DARK LIQUID GLASS • CELESTIAL CONSTELLATION ("RASI BINTANG")
+   Editorial Typography • Deep Obsidian • Emerald & Cyan Glow
    ========================================================= */
 
 :root {
-  /* ---------- PRIMARY COLOR SYSTEM (Light Premium) ---------- */
-  --color-bg:                     #F7F5EE; /* Warm Ivory primary background (60%) */
-  --color-bg-secondary:           #EFEDE4; /* Soft Warm Beige secondary background */
-  --color-surface-pure:           #FFFFFF; /* Pure white surface */
-  --color-forest:                 #0D3B2E; /* Forest Green authoritative identity (20%) */
-  --color-forest-dark:            #092A21; /* Dark Forest for grounded footer */
-  --color-emerald:                #087F62; /* Primary Emerald accent (15%) */
-  --color-emerald-light:          #39B99A; /* Light Emerald */
-  --color-cyan:                   #54C9CF; /* Subtle Cyan (5%) */
-  --color-gold:                   #B99A5E; /* Muted Gold (subtle, restrained <2%) */
-  --color-gold-light:             #C8AD72;
+  /* ---------- PRIMARY COLOR SYSTEM (Dark Liquid Glass) ---------- */
+  --color-bg:                     #061510; /* Deep Obsidian Forest background */
+  --color-bg-secondary:           #0B2019; /* Secondary Dark Emerald */
+  --color-surface-pure:           #0E2A21; /* Solid dark card surface */
+  --color-forest:                 #F5FAF7; /* Primary Heading / Title on dark: crisp luminous ivory */
+  --color-forest-dark:            #030C09; /* Deepest footer grounding */
+  --color-emerald:                #39B99A; /* Vibrant Light Emerald primary accent */
+  --color-emerald-light:          #5FE3C2; /* Luminous emerald neon accent */
+  --color-cyan:                   #54C9CF; /* Ethereal celestial cyan */
+  --color-gold:                   #E5C378; /* Subtle celestial gold */
+  --color-gold-light:             #F3D89A;
   
-  --color-text:                   #17342C; /* Primary Text: rich dark forest for high legibility */
-  --color-text-secondary:         #61706A; /* Secondary Text: balanced editorial slate */
-  --color-text-muted:             #83918B; /* Muted Text */
-  --color-border:                 rgba(13, 59, 46, 0.10); /* Soft organic border */
-  --color-border-hover:           rgba(8, 127, 98, 0.28); /* Emerald hover border */
+  --color-text:                   #E8F2EE; /* Primary Text: luminous light sage-ivory */
+  --color-text-secondary:         #9EB3AB; /* Secondary Text: soft mint-slate editorial readability */
+  --color-text-muted:             #6E857C; /* Muted text */
+  --color-border:                 rgba(57, 185, 154, 0.16); /* Translucent emerald border */
+  --color-border-hover:           rgba(57, 185, 154, 0.38); /* Hover neon border */
 
   /* Legacy & Semantic Component Aliases */
-  --color-emerald-deep:           #0D3B2E;
+  --color-emerald-deep:           #061510;
   --color-emerald-mid:            #087F62;
-  --color-emerald-accent:         #087F62;
-  --color-ivory:                  #17342C; /* Replaced dark-mode ivory text with primary forest text */
-  --color-warm-ivory:             #F7F5EE;
+  --color-emerald-accent:         #39B99A;
+  --color-ivory:                  #F5FAF7;
+  --color-warm-ivory:             #E8F2EE;
 
-  --color-surface:                #FFFFFF;
-  --color-surface-card:           #FFFFFF;
-  --color-surface-hover:          #FAF9F5;
-  --color-surface-solid:          #FFFFFF;
+  --color-surface:                rgba(11, 33, 26, 0.65);
+  --color-surface-card:           rgba(11, 33, 26, 0.65);
+  --color-surface-hover:          rgba(16, 48, 38, 0.75);
+  --color-surface-solid:          #0E2A21;
 
   --color-primary:                var(--color-emerald);
   --color-primary-light:          var(--color-emerald-light);
-  --color-primary-dark:           var(--color-forest);
-  --color-primary-glow:           rgba(8, 127, 98, 0.12);
-  --color-cyan-glow:              rgba(84, 201, 207, 0.15);
-  --color-gold-glow:              rgba(185, 154, 94, 0.12);
+  --color-primary-dark:           #087F62;
+  --color-primary-glow:           rgba(57, 185, 154, 0.25);
+  --color-cyan-glow:              rgba(84, 201, 207, 0.25);
+  --color-gold-glow:              rgba(229, 195, 120, 0.20);
 
-  --color-text-on-dark:           #F7F5EE;
-  --color-text-on-dark-secondary: #D1DBD6;
+  --color-text-on-dark:           #F5FAF7;
+  --color-text-on-dark-secondary: #9EB3AB;
 
-  /* ---------- 4-TIER LIGHT LIQUID GLASS SYSTEM ---------- */
-  /* Level 1: Very subtle transparent glass (dividers, secondary pills) */
-  --glass-l1-bg:                  rgba(255, 255, 255, 0.55);
-  --glass-l1-border:              rgba(13, 59, 46, 0.08);
+  /* ---------- 4-TIER DARK LIQUID GLASS SYSTEM ---------- */
+  /* Level 1: Very subtle dark glass (pills, metadata chips) */
+  --glass-l1-bg:                  rgba(13, 38, 30, 0.45);
+  --glass-l1-border:              rgba(57, 185, 154, 0.14);
 
-  /* Level 2: Frosted crystal glass + blur (cards, events, articles, dialogs) */
-  --glass-l2-bg:                  rgba(255, 255, 255, 0.82);
-  --glass-l2-blur:                blur(16px) saturate(160%);
-  --glass-l2-border:              rgba(255, 255, 255, 0.85);
-  --glass-l2-shadow:              0 6px 22px rgba(13, 59, 46, 0.05), 0 1px 3px rgba(13, 59, 46, 0.03);
+  /* Level 2: Frosted dark liquid crystal + blur (cards, events, articles) */
+  --glass-l2-bg:                  rgba(11, 33, 26, 0.68);
+  --glass-l2-blur:                blur(20px) saturate(180%);
+  --glass-l2-border:              rgba(57, 185, 154, 0.20);
+  --glass-l2-shadow:              inset 0 1px 1px rgba(255, 255, 255, 0.10), 0 16px 36px rgba(0, 0, 0, 0.45);
 
   /* Level 3: Elevated glass + reflection + depth (navbar, sticky elements) */
-  --glass-l3-bg:                  rgba(255, 255, 255, 0.92);
-  --glass-l3-blur:                blur(20px) saturate(180%);
-  --glass-l3-border:              rgba(13, 59, 46, 0.10);
-  --glass-l3-shadow:              0 12px 36px rgba(13, 59, 46, 0.08), 0 2px 6px rgba(13, 59, 46, 0.04);
+  --glass-l3-bg:                  rgba(8, 26, 20, 0.85);
+  --glass-l3-blur:                blur(24px) saturate(190%);
+  --glass-l3-border:              rgba(57, 185, 154, 0.28);
+  --glass-l3-shadow:              inset 0 1px 1px rgba(255, 255, 255, 0.16), 0 20px 48px rgba(0, 0, 0, 0.55);
 
-  /* Level 4: Interactive highlighted glass with subtle emerald glow */
-  --glass-l4-bg:                  rgba(255, 255, 255, 0.96);
-  --glass-l4-blur:                blur(24px);
-  --glass-l4-border:              rgba(8, 127, 98, 0.25);
-  --glass-l4-shadow:              0 16px 44px rgba(13, 59, 46, 0.10), 0 0 20px rgba(8, 127, 98, 0.10);
+  /* Level 4: Interactive highlighted glass with neon glow */
+  --glass-l4-bg:                  rgba(13, 42, 33, 0.90);
+  --glass-l4-blur:                blur(28px);
+  --glass-l4-border:              rgba(84, 201, 207, 0.42);
+  --glass-l4-shadow:              inset 0 1px 2px rgba(255, 255, 255, 0.22), 0 20px 50px rgba(0, 0, 0, 0.65), 0 0 24px rgba(57, 185, 154, 0.25);
 
   /* Standard aliases */
   --glass-bg:                     var(--glass-l2-bg);
@@ -125,13 +125,13 @@
   --space-3xl:                    var(--space-64);
   --space-4xl:                    var(--space-96);
 
-  /* ---------- MULTI-TIER SHADOWS (Soft Depth on Light Surfaces) ---------- */
-  --shadow-sm:                    0 2px 8px rgba(13, 59, 46, 0.04);
-  --shadow-md:                    0 6px 20px rgba(13, 59, 46, 0.06);
-  --shadow-lg:                    0 12px 32px rgba(13, 59, 46, 0.08), 0 2px 6px rgba(13, 59, 46, 0.03);
-  --shadow-xl:                    0 20px 48px rgba(13, 59, 46, 0.10), 0 4px 12px rgba(13, 59, 46, 0.04);
-  --shadow-glow:                  0 0 20px var(--color-primary-glow);
-  --shadow-gold:                  0 0 20px var(--color-gold-glow);
+  /* ---------- MULTI-TIER SHADOWS (Specular Depth on Dark Liquid Glass) ---------- */
+  --shadow-sm:                    0 2px 8px rgba(0, 0, 0, 0.30);
+  --shadow-md:                    0 6px 20px rgba(0, 0, 0, 0.45);
+  --shadow-lg:                    inset 0 1px 1px rgba(255, 255, 255, 0.10), 0 16px 36px rgba(0, 0, 0, 0.55);
+  --shadow-xl:                    inset 0 1px 2px rgba(255, 255, 255, 0.16), 0 24px 52px rgba(0, 0, 0, 0.65);
+  --shadow-glow:                  0 0 24px var(--color-primary-glow);
+  --shadow-gold:                  0 0 24px var(--color-gold-glow);
 
   /* ---------- LAYOUT ---------- */
   --max-width:                    1260px;
@@ -234,19 +234,23 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-  font-size: clamp(2.25rem, 5.5vw, 3.85rem);
+  font-size: clamp(2.5rem, 5.5vw, 4.5rem);
   font-weight: 800;
-  line-height: 1.15;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
 }
 
 h2 {
-  font-size: clamp(1.75rem, 4vw, 2.65rem);
+  font-size: clamp(1.875rem, 3.8vw, 3rem);
   font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
 }
 
 h3 {
-  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-size: clamp(1.375rem, 2.4vw, 1.85rem);
   font-weight: 600;
+  line-height: 1.28;
 }
 
 h4 {
@@ -376,18 +380,31 @@ p {
 .grid-2 { grid-template-columns: repeat(2, 1fr); }
 .grid-3 { grid-template-columns: repeat(3, 1fr); }
 .grid-4 { grid-template-columns: repeat(4, 1fr); }
+.grid-6-6 { grid-template-columns: 1fr 1fr; }
+.grid-7-5 { grid-template-columns: 7fr 5fr; }
+.grid-5-7 { grid-template-columns: 5fr 7fr; }
+.grid-8-4 { grid-template-columns: 8fr 4fr; }
 
 .text-center { text-align: center; }
 
 @media (max-width: 1024px) {
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .grid-7-5,
+  .grid-5-7,
+  .grid-8-4 {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .grid-2,
   .grid-3,
-  .grid-4 {
+  .grid-4,
+  .grid-6-6,
+  .grid-7-5,
+  .grid-5-7,
+  .grid-8-4 {
     grid-template-columns: 1fr;
   }
 }
@@ -507,12 +524,12 @@ p {
   min-height: 48px;
   padding: 0 26px;
   color: var(--color-forest) !important;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(13, 59, 46, 0.16);
+  background: rgba(14, 41, 32, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(57, 185, 154, 0.25);
   border-radius: var(--radius-pill);
-  box-shadow: 0 4px 14px rgba(13, 59, 46, 0.05);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
   font-weight: 600;
   font-size: 0.95rem;
   font-family: var(--font-heading);
@@ -525,11 +542,11 @@ p {
 .glass-button-secondary:hover,
 .btn-outline:hover,
 .btn-secondary:hover {
-  background: #FFFFFF;
+  background: rgba(20, 58, 46, 0.80);
   border-color: var(--color-emerald);
-  color: var(--color-emerald) !important;
+  color: #5FE3C2 !important;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(13, 59, 46, 0.09);
+  box-shadow: 0 6px 22px rgba(57, 185, 154, 0.25);
 }
 
 /* Gold Button Accent (<2% use) */
@@ -541,11 +558,11 @@ p {
   gap: 10px;
   min-height: 48px;
   padding: 0 28px;
-  color: #092A21 !important;
-  background: linear-gradient(135deg, #B99A5E 0%, #D4BC84 100%);
-  border: 1px solid rgba(185, 154, 94, 0.4);
+  color: #030C09 !important;
+  background: linear-gradient(135deg, #E5C378 0%, #F3D89A 100%);
+  border: 1px solid rgba(229, 195, 120, 0.5);
   border-radius: var(--radius-pill);
-  box-shadow: 0 4px 18px rgba(185, 154, 94, 0.25);
+  box-shadow: 0 4px 18px rgba(229, 195, 120, 0.30);
   font-weight: 700;
   font-family: var(--font-heading);
   cursor: pointer;
@@ -556,8 +573,8 @@ p {
 
 .btn-gold:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(185, 154, 94, 0.38);
-  color: #092A21 !important;
+  box-shadow: 0 8px 24px rgba(229, 195, 120, 0.45);
+  color: #030C09 !important;
 }
 
 /* Button Sizes */
@@ -589,27 +606,27 @@ p {
   font-family: var(--font-heading);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  background: rgba(8, 127, 98, 0.08);
-  color: var(--color-emerald);
-  border: 1px solid rgba(8, 127, 98, 0.20);
+  background: rgba(57, 185, 154, 0.12);
+  color: var(--color-emerald-light);
+  border: 1px solid rgba(57, 185, 154, 0.28);
 }
 
 .badge-primary {
-  background: rgba(8, 127, 98, 0.08);
-  color: var(--color-emerald);
-  border-color: rgba(8, 127, 98, 0.22);
+  background: rgba(57, 185, 154, 0.12);
+  color: var(--color-emerald-light);
+  border-color: rgba(57, 185, 154, 0.28);
 }
 
 .badge-cyan {
-  background: rgba(84, 201, 207, 0.12);
-  color: #178388;
-  border-color: rgba(84, 201, 207, 0.30);
+  background: rgba(84, 201, 207, 0.14);
+  color: #54C9CF;
+  border-color: rgba(84, 201, 207, 0.35);
 }
 
 .badge-gold {
-  background: rgba(185, 154, 94, 0.10);
-  color: #8F7239;
-  border-color: rgba(185, 154, 94, 0.25);
+  background: rgba(229, 195, 120, 0.14);
+  color: #E5C378;
+  border-color: rgba(229, 195, 120, 0.35);
 }
 
 /* =========================================================

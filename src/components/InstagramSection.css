@@ -26,14 +26,14 @@
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: rgba(8, 127, 98, 0.08);
-  border: 2px solid rgba(8, 127, 98, 0.35);
+  background: rgba(57, 185, 154, 0.12);
+  border: 2px solid rgba(57, 185, 154, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-emerald);
+  color: var(--color-emerald-light);
   overflow: hidden;
-  box-shadow: 0 4px 14px rgba(13, 59, 46, 0.08);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.15);
 }
 
 .instagram-avatar img {
@@ -59,21 +59,21 @@
   align-items: center;
   gap: 8px;
   padding: 8px 22px;
-  background: var(--color-forest);
-  color: #FFFFFF !important;
+  background: linear-gradient(135deg, #087F62 0%, #39B99A 100%);
+  color: #061510 !important;
   font-family: var(--font-heading);
-  font-weight: 700;
+  font-weight: 800;
   font-size: 0.86rem;
   border-radius: var(--radius-pill);
   text-decoration: none;
-  box-shadow: 0 4px 16px rgba(13, 59, 46, 0.18);
+  box-shadow: 0 4px 16px rgba(57, 185, 154, 0.30);
   transition: all var(--transition-base);
 }
 
 .instagram-follow-btn:hover {
-  background: var(--color-emerald);
+  background: linear-gradient(135deg, #0A9B77 0%, #5FE3C2 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(8, 127, 98, 0.25);
+  box-shadow: 0 6px 22px rgba(57, 185, 154, 0.45);
 }
 
 /* Reels Grid */
@@ -89,16 +89,16 @@
   border-radius: var(--radius-md);
   overflow: hidden;
   cursor: pointer;
-  background: #FFFFFF;
-  border: 1px solid rgba(13, 59, 46, 0.10);
-  box-shadow: 0 6px 20px rgba(13, 59, 46, 0.06);
+  background: rgba(11, 33, 26, 0.72);
+  border: 1px solid rgba(57, 185, 154, 0.20);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08), 0 8px 24px rgba(0, 0, 0, 0.40);
   transition: all var(--transition-base);
 }
 
 .instagram-reel-card:hover {
   transform: translateY(-4px) scale(1.01);
-  border-color: var(--color-emerald);
-  box-shadow: 0 14px 32px rgba(13, 59, 46, 0.12);
+  border-color: rgba(57, 185, 154, 0.50);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.16), 0 14px 34px rgba(0, 0, 0, 0.60), 0 0 20px rgba(57, 185, 154, 0.25);
 }
 
 .instagram-reel-card img {

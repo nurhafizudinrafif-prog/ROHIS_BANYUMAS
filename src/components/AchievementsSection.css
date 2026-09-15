@@ -16,10 +16,12 @@
   gap: var(--space-md);
   margin-bottom: var(--space-3xl);
   padding: var(--space-lg) var(--space-xl);
-  background: #FFFFFF;
-  border: 1px solid rgba(13, 59, 46, 0.08);
+  background: rgba(11, 33, 26, 0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(57, 185, 154, 0.20);
   border-radius: var(--radius-lg);
-  box-shadow: 0 4px 16px rgba(13, 59, 46, 0.04);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08), 0 8px 32px rgba(2, 10, 7, 0.45);
 }
 
 .achievements-filter-group {
@@ -45,8 +47,8 @@
 }
 
 .filter-pill-btn {
-  background: var(--color-bg);
-  border: 1px solid rgba(13, 59, 46, 0.10);
+  background: rgba(13, 38, 30, 0.60);
+  border: 1px solid rgba(57, 185, 154, 0.20);
   border-radius: var(--radius-full);
   color: var(--color-text-secondary);
   font-size: 0.8125rem;
@@ -59,15 +61,15 @@
 
 .filter-pill-btn:hover {
   color: var(--color-forest);
-  background: rgba(8, 127, 98, 0.06);
-  border-color: rgba(8, 127, 98, 0.25);
+  background: rgba(57, 185, 154, 0.15);
+  border-color: rgba(57, 185, 154, 0.40);
 }
 
 .filter-pill-btn.active {
-  background: rgba(8, 127, 98, 0.10);
-  border-color: var(--color-emerald);
-  color: var(--color-emerald);
-  box-shadow: 0 2px 8px rgba(8, 127, 98, 0.10);
+  background: rgba(57, 185, 154, 0.25);
+  border-color: var(--color-emerald-light);
+  color: var(--color-emerald-light);
+  box-shadow: 0 0 14px rgba(57, 185, 154, 0.35);
 }
 
 /* Grid Layout */
@@ -82,12 +84,14 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  background: #FFFFFF;
-  border: 1px solid rgba(13, 59, 46, 0.08);
+  background: rgba(11, 33, 26, 0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(57, 185, 154, 0.20);
   border-radius: var(--radius-xl);
   padding: var(--space-xl);
-  box-shadow: 0 6px 20px rgba(13, 59, 46, 0.04), 0 1px 3px rgba(13, 59, 46, 0.02);
-  transition: transform var(--motion-medium), border-color var(--motion-medium), box-shadow var(--motion-medium);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08), 0 12px 32px rgba(2, 10, 7, 0.45);
+  transition: transform var(--motion-medium), border-color var(--motion-medium), box-shadow var(--motion-medium), background var(--motion-medium);
   overflow: hidden;
 }
 
@@ -104,7 +108,8 @@
 
 .achievement-card:hover {
   transform: translateY(-3px) scale(1.006);
-  box-shadow: 0 14px 32px rgba(13, 59, 46, 0.08);
+  background: rgba(14, 42, 33, 0.85);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.16), 0 18px 40px rgba(0, 0, 0, 0.55), 0 0 20px rgba(57, 185, 154, 0.20);
 }
 
 /* Rank Distinction — Subtle metallic cues on Light Surface */
@@ -171,24 +176,25 @@
 }
 
 .rank-gold .achievement-rank-badge {
-  background: rgba(185, 154, 94, 0.12);
-  color: #8F7239;
-  border: 1px solid rgba(185, 154, 94, 0.35);
+  background: rgba(229, 195, 120, 0.15);
+  color: #F3D89A;
+  border: 1px solid rgba(229, 195, 120, 0.35);
+  box-shadow: 0 0 14px rgba(229, 195, 120, 0.20);
 }
 .rank-silver .achievement-rank-badge {
-  background: rgba(97, 112, 106, 0.10);
-  color: #4D5C56;
-  border: 1px solid rgba(97, 112, 106, 0.25);
+  background: rgba(158, 179, 171, 0.15);
+  color: #D3E0DA;
+  border: 1px solid rgba(158, 179, 171, 0.30);
 }
 .rank-bronze .achievement-rank-badge {
-  background: rgba(184, 126, 82, 0.10);
-  color: #A06538;
-  border: 1px solid rgba(184, 126, 82, 0.28);
+  background: rgba(217, 140, 80, 0.15);
+  color: #E8A87C;
+  border: 1px solid rgba(217, 140, 80, 0.35);
 }
 .rank-special .achievement-rank-badge {
-  background: rgba(8, 127, 98, 0.08);
-  color: var(--color-emerald);
-  border: 1px solid rgba(8, 127, 98, 0.25);
+  background: rgba(57, 185, 154, 0.15);
+  color: var(--color-emerald-light);
+  border: 1px solid rgba(57, 185, 154, 0.35);
 }
 
 .achievement-meta-pills {
@@ -204,20 +210,20 @@
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--color-text-secondary);
-  background: var(--color-bg);
+  background: rgba(13, 38, 30, 0.60);
   padding: 3px 8px;
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(13, 59, 46, 0.08);
+  border: 1px solid rgba(57, 185, 154, 0.18);
 }
 
 .achievement-category-tag {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--color-emerald);
-  background: rgba(8, 127, 98, 0.08);
+  color: var(--color-emerald-light);
+  background: rgba(57, 185, 154, 0.14);
   padding: 3px 8px;
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(8, 127, 98, 0.18);
+  border: 1px solid rgba(57, 185, 154, 0.28);
 }
 
 /* Title */
@@ -236,7 +242,7 @@
   gap: 6px;
   margin-bottom: var(--space-md);
   padding-bottom: var(--space-md);
-  border-bottom: 1px solid rgba(13, 59, 46, 0.08);
+  border-bottom: 1px solid rgba(57, 185, 154, 0.15);
 }
 
 .achievement-info-item {
