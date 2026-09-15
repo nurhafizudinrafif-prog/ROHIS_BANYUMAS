@@ -1,98 +1,94 @@
-/* ============================================
-   Articles Page — Liquid Glass Premium
-   ============================================ */
+/* =========================================================
+   ARTICLES PAGE
+   ========================================================= */
 
-/* Filter Buttons */
+.articles-page .page-hero {
+  padding-bottom: var(--space-3xl);
+}
+
 .articles-filter {
   display: flex;
+  gap: 8px;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  justify-content: center;
-  margin-bottom: var(--space-2xl);
+  margin-bottom: var(--space-xl);
 }
 
 .articles-filter-btn {
-  padding: 0.6rem 1.35rem;
-  font-size: 0.88rem;
-  font-weight: 600;
+  padding: 6px 16px;
   font-family: var(--font-heading);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: 1px solid rgba(11, 47, 38, 0.10);
   border-radius: var(--radius-pill);
-  color: rgba(255, 255, 255, 0.75);
-  background: rgba(4, 18, 22, 0.65);
-  backdrop-filter: var(--liquid-blur);
-  -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1px solid rgba(0, 255, 200, 0.15);
-  box-shadow: 
-    0 8px 18px -4px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(0, 255, 200, 0.15),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.4);
-  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .articles-filter-btn:hover {
-  background: rgba(0, 255, 200, 0.08);
-  border-color: rgba(0, 255, 200, 0.5);
-  color: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 
-    0 12px 24px -4px rgba(0, 0, 0, 0.6),
-    0 0 16px rgba(0, 255, 200, 0.25),
-    inset 0 1px 0 rgba(0, 255, 200, 0.3);
+  border-color: var(--color-emerald);
+  color: var(--color-emerald);
 }
 
 .articles-filter-btn.active {
-  background: 
-    radial-gradient(100% 100% at 50% 0%, rgba(0, 255, 200, 0.22) 0%, rgba(4, 18, 22, 0.8) 100%),
-    rgba(0, 255, 200, 0.08);
-  border-color: rgba(0, 255, 200, 0.6);
-  color: #00F0CF;
-  box-shadow: 
-    0 12px 24px -4px rgba(0, 0, 0, 0.6),
-    0 0 24px rgba(0, 255, 200, 0.35),
-    inset 0 1px 0 rgba(0, 255, 200, 0.4),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.4);
-  transform: translateY(-2px);
+  background: var(--color-emerald);
+  color: #FFFFFF;
+  border-color: var(--color-emerald);
 }
 
 /* Article Detail */
 .article-detail {
-  max-width: 800px;
+  max-width: 780px;
   margin: 0 auto;
+  padding-top: calc(var(--navbar-height) + var(--space-2xl));
+}
+
+.article-detail-header {
+  margin-bottom: var(--space-2xl);
+}
+
+.article-detail-category {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 14px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-emerald);
+  background: rgba(15, 107, 82, 0.08);
+  border-radius: var(--radius-pill);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-md);
+}
+
+.article-detail-title {
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  font-weight: 800;
+  color: var(--color-forest);
+  line-height: 1.25;
+  margin-bottom: var(--space-md);
 }
 
 .article-detail-meta {
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  gap: var(--space-md);
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
   flex-wrap: wrap;
 }
 
-.article-detail-meta-item {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.88rem;
-  color: rgba(255, 255, 255, 0.65);
-}
-
-.article-detail-meta-item svg {
-  color: #00F0CF;
-  filter: drop-shadow(0 0 6px rgba(0, 255, 210, 0.4));
-}
-
-.article-detail-cover-wrapper {
-  border-radius: var(--radius-xl);
+.article-detail-image {
+  width: 100%;
+  border-radius: var(--radius-lg);
   overflow: hidden;
   margin-bottom: var(--space-2xl);
-  border: 1.5px solid var(--liquid-border);
-  box-shadow: var(--liquid-shadow), var(--liquid-inset);
 }
 
-.article-detail-cover-img {
+.article-detail-image img {
   width: 100%;
+  height: auto;
   object-fit: cover;
-  max-height: 420px;
 }
 
 .article-detail-content {
@@ -106,12 +102,6 @@
 }
 
 .article-detail-content strong {
-  color: var(--color-text);
+  color: var(--color-forest);
   font-weight: 600;
-}
-
-.article-detail-back {
-  margin-top: var(--space-3xl);
-  padding-top: var(--space-xl);
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
 }

@@ -1,105 +1,83 @@
-/* ============================================
-   Home Page — Liquid Glass Premium
-   ROHIS DARK LIQUID GLASS
-   ============================================ */
+/* =========================================================
+   HOME PAGE — Section Layouts
+   ========================================================= */
 
+/* Programs Grid */
 .home-programs-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-xl);
-  align-items: start;
-  position: relative;
-  overflow: visible;
-  padding-top: 14px;
-  margin-top: -14px;
-  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
 }
 
-.home-programs-grid::before {
-  content: '';
-  position: absolute;
-  top: -12%;
-  left: -5%;
-  width: 540px;
-  height: 460px;
-  background: radial-gradient(circle, rgba(0, 255, 200, 0.28) 0%, rgba(0, 255, 180, 0.12) 45%, transparent 70%);
-  filter: blur(80px);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.home-programs-grid::after {
-  content: '';
-  position: absolute;
-  bottom: -12%;
-  right: -5%;
-  width: 540px;
-  height: 460px;
-  background: radial-gradient(circle, rgba(0, 255, 180, 0.25) 0%, rgba(0, 212, 170, 0.10) 45%, transparent 70%);
-  filter: blur(80px);
-  pointer-events: none;
-  z-index: 0;
-}
-
-@media (max-width: 1024px) {
-  .home-programs-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .home-programs-grid::before,
-  .home-programs-grid::after {
-    display: none;
-  }
-}
-
-@media (max-width: 600px) {
-  .home-programs-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
+/* Events List */
 .home-events-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg);
+  gap: var(--space-md);
 }
 
 /* CTA Section */
 .home-cta-section {
-  position: relative;
+  background: var(--color-forest);
+  padding: var(--space-4xl) 0;
 }
 
 .home-cta {
   max-width: 640px;
   margin: 0 auto;
-  padding: var(--space-3xl) var(--space-xl);
+  padding: var(--space-2xl);
   text-align: center;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 .home-cta h2 {
+  color: #FFFFFF;
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
   margin-bottom: var(--space-md);
-  background: linear-gradient(
-    90deg,
-    #00DDB8,
-    #00F0CF 45%,
-    #4DD7E8
-  );
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
 .home-cta p {
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.60);
+  font-size: 1rem;
+  margin-bottom: var(--space-2xl);
   line-height: 1.7;
-  margin-bottom: var(--space-xl);
 }
 
 .home-cta-actions {
   display: flex;
-  gap: var(--space-md);
+  align-items: center;
   justify-content: center;
+  gap: 14px;
   flex-wrap: wrap;
+}
+
+/* On dark bg, outline button needs light colors */
+.home-cta-section .btn-outline {
+  color: rgba(255, 255, 255, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.home-cta-section .btn-outline:hover {
+  background: rgba(255, 255, 255, 0.10) !important;
+  border-color: rgba(255, 255, 255, 0.40) !important;
+  color: #FFFFFF !important;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+  .home-cta-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .home-cta-actions .btn-lg {
+    width: 100%;
+    justify-content: center;
+  }
 }

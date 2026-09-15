@@ -94,6 +94,7 @@ export const team = {
       shortName: 'SDM',
       color: '#3B82F6',
       icon: 'UserCheck',
+      logoImg: '/divisi-sdm.svg',
       description: 'Fokus pada pembinaan karakter, peningkatan kapasitas kader, regenerasi kepengurusan, serta penguatan soliditas anggota.',
       members: [
         {
@@ -184,6 +185,7 @@ export const team = {
       shortName: 'Dakwah',
       color: '#059669',
       icon: 'BookOpen',
+      logoImg: '/divisi-dakwah.svg',
       description: 'Jantung gerakan dakwah Islam yang menyelenggarakan kajian keilmuan, pembinaan ruhiyah, serta syiar Islam.',
       members: [
         {
@@ -250,6 +252,7 @@ export const team = {
       shortName: 'HUMAS',
       color: '#06B6D4',
       icon: 'Megaphone',
+      logoImg: '/divisi-humas.svg',
       description: 'Menjadi jembatan komunikasi, relasi, kemitraan strategis, dan sinergi antara ROHIS sekolah dengan masyarakat.',
       members: [
         {
@@ -383,6 +386,7 @@ export const team = {
       shortName: 'DANUS',
       color: '#D4A843',
       icon: 'Wallet',
+      logoImg: '/divisi-danus.svg',
       description: 'Membangun kemandirian finansial organisasi melalui kegiatan kewirausahaan halal dan pengadaan merchandise resmi.',
       members: [
         {

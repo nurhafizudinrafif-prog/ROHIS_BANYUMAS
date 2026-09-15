@@ -1,50 +1,49 @@
-/* ============================================
-   Quote Section — Liquid Glass Premium
-   ROHIS DARK LIQUID GLASS
-   Transparent • Blurred • Subtle Neon • Elegant
-   ============================================ */
+/* =========================================================
+   QUOTE SECTION — Clean & Elegant
+   ========================================================= */
 
 .quote-section {
-  padding: var(--space-4xl) 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: var(--space-3xl) 0;
 }
 
 .quote-card {
-  max-width: 760px;
+  max-width: 680px;
   margin: 0 auto;
+  padding: var(--space-2xl) var(--space-xl);
   text-align: center;
-  padding: var(--space-3xl) var(--space-2xl);
-}
-
-.quote-card:hover {
-  border-color: rgba(215, 184, 102, 0.55);
+  background: var(--color-surface);
+  border: 1px solid rgba(11, 47, 38, 0.06);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  position: relative;
 }
 
 .quote-arabic {
-  font-family: var(--font-arabic);
-  font-size: clamp(1.5rem, 3.5vw, 2rem);
-  color: #D7B866;
-  direction: rtl;
-  line-height: 2;
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+  color: var(--color-forest);
+  line-height: 1.7;
   margin-bottom: var(--space-md);
-  text-shadow: 0 0 14px rgba(215, 184, 102, 0.25);
+  font-weight: 500;
+  font-style: normal;
+  direction: rtl;
 }
 
 .quote-translation {
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.90);
-  line-height: 1.8;
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
   font-style: italic;
+  line-height: 1.7;
   margin-bottom: var(--space-md);
 }
 
-.quote-reference {
-  font-family: var(--font-heading);
-  font-size: 0.85rem;
-  color: #00F0CF;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  text-shadow: 0 0 10px rgba(0, 240, 207, 0.2);
+.quote-source {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .quote-card {
+    padding: var(--space-xl) var(--space-lg);
+  }
 }

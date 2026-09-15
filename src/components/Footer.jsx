@@ -1,113 +1,107 @@
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, MessageCircle, Lock } from 'lucide-react';
-import { InstagramIcon, YoutubeIcon } from './InstagramSection';
-import logoImg from '../assets/logo.png';
+import { Mail, Phone, Globe, ExternalLink, MapPin } from 'lucide-react';
+import { useData } from '../context/DataContext';
 import './Footer.css';
 
+const footerLinks = [
+  { label: 'Beranda', path: '/' },
+  { label: 'Tentang', path: '/tentang' },
+  { label: 'Program', path: '/program' },
+  { label: 'Artikel', path: '/artikel' },
+  { label: 'Galeri', path: '/galeri' },
+  { label: 'ROHIS Anggota', path: '/rohis-anggota' },
+  { label: 'Kontak', path: '/kontak' },
+];
+
 export default function Footer() {
+  const { siteSettings } = useData();
+  const year = new Date().getFullYear();
+
   return (
-    <footer className="footer pattern-bg">
-      <div className="footer-ornament">
-        <div className="ornament-separator">
-          <span className="ornament-diamond"></span>
-        </div>
-      </div>
-
+    <footer className="footer">
       <div className="container">
-        <div className="footer-grid">
-          <div className="footer-col footer-about">
-            <div className="footer-brand">
-              <img src={logoImg} alt="Logo ROHIS Kabupaten Banyumas" className="footer-logo-img" />
-              <div>
-                <h4 className="footer-brand-name">ROHIS Kabupaten Banyumas</h4>
-              </div>
-            </div>
-            <p className="footer-desc">
-              Organisasi koordinasi antar ROHIS sekolah dan pusat dakwah pemuda Islam se-Kabupaten Banyumas. Bersatu dalam dakwah, bergerak untuk umat.
+        {/* Top Section */}
+        <div className="footer-top">
+          {/* Brand */}
+          <div className="footer-brand">
+            <h3 className="footer-brand-name">ROHIS Kabupaten Banyumas</h3>
+            <p className="footer-brand-tagline">
+              Bersatu dalam Dakwah, Bergerak untuk Umat.
             </p>
-            <div className="footer-social">
-              <a
-                href="https://www.instagram.com/rohis_banyumas/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-social-link"
-                aria-label="Instagram Resmi ROHIS Kabupaten Banyumas (@rohis_banyumas)"
-              >
-                <InstagramIcon size={18} />
-              </a>
-              <a
-                href="https://youtube.com/@rohisbanyumas9?si=bJpq4dcozF81AHGr"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-social-link"
-                aria-label="YouTube Resmi ROHIS Banyumas"
-              >
-                <YoutubeIcon size={18} />
-              </a>
-              <a
-                href="https://wa.me/6281234567890"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-social-link"
-                aria-label="WhatsApp ROHIS Kabupaten Banyumas"
-              >
-                <MessageCircle size={18} />
-              </a>
+            <div className="footer-socials">
+              {siteSettings.instagramUrl && (
+                <a
+                  href={siteSettings.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-social-link"
+                  aria-label="Instagram"
+                >
+                  <Globe size={18} />
+                </a>
+              )}
+              {siteSettings.youtubeUrl && (
+                <a
+                  href={siteSettings.youtubeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-social-link"
+                  aria-label="YouTube"
+                >
+                  <ExternalLink size={18} />
+                </a>
+              )}
             </div>
           </div>
 
-          <div className="footer-col">
-            <h5 className="footer-heading">Navigasi</h5>
+          {/* Navigation */}
+          <div className="footer-nav-col">
+            <h4 className="footer-col-title">Navigasi</h4>
             <ul className="footer-links">
-              <li><Link to="/">Beranda</Link></li>
-              <li><Link to="/tentang">Tentang Kami</Link></li>
-              <li><Link to="/program">Agenda</Link></li>
-              <li><Link to="/artikel">Artikel Dakwah</Link></li>
-              <li><Link to="/galeri">Galeri Kegiatan</Link></li>
+              {footerLinks.map((link) => (
+                <li key={link.path}>
+                  <Link to={link.path} className="footer-link">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          <div className="footer-col">
-            <h5 className="footer-heading">Layanan</h5>
-            <ul className="footer-links">
-              <li><Link to="/galeri">Galeri Kegiatan</Link></li>
-              <li><Link to="/rohis-anggota">ROHIS Anggota</Link></li>
-              <li><Link to="/pendaftaran">Pendaftaran</Link></li>
-              <li><Link to="/kontak">Hubungi Kami</Link></li>
-            </ul>
-          </div>
-
-          <div className="footer-col">
-            <h5 className="footer-heading">Kontak</h5>
-            <ul className="footer-contact">
-              <li>
-                <MapPin size={16} />
-                <span>Purwokerto, Kabupaten Banyumas, Jawa Tengah</span>
-              </li>
-              <li>
-                <Mail size={16} />
-                <span>info@rohisbanyumas.id</span>
-              </li>
-              <li>
-                <Phone size={16} />
-                <span>+62 812-3456-7890</span>
-              </li>
+          {/* Contact */}
+          <div className="footer-nav-col">
+            <h4 className="footer-col-title">Kontak</h4>
+            <ul className="footer-contact-list">
+              {siteSettings.email && (
+                <li className="footer-contact-item">
+                  <Mail size={14} />
+                  <a href={`mailto:${siteSettings.email}`}>{siteSettings.email}</a>
+                </li>
+              )}
+              {siteSettings.phone && (
+                <li className="footer-contact-item">
+                  <Phone size={14} />
+                  <a href={`tel:${siteSettings.phone}`}>{siteSettings.phone}</a>
+                </li>
+              )}
+              {siteSettings.address && (
+                <li className="footer-contact-item">
+                  <MapPin size={14} />
+                  <span>{siteSettings.address}</span>
+                </li>
+              )}
             </ul>
           </div>
         </div>
 
-        <div className="footer-quote">
-          <p className="footer-quote-arabic">
-            ادْعُ إِلَىٰ سَبِيلِ رَبِّكَ بِالْحِكْمَةِ وَالْمَوْعِظَةِ الْحَسَنَةِ
-          </p>
-          <p className="footer-quote-translation">
-            "Serulah (manusia) kepada jalan Tuhanmu dengan hikmah dan pengajaran yang baik"
-            <span className="footer-quote-ref"> — QS. An-Nahl: 125</span>
-          </p>
-        </div>
+        {/* Divider */}
+        <div className="footer-divider" />
 
+        {/* Bottom */}
         <div className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} Organisasi ROHIS Kabupaten Banyumas. Hak Cipta Dilindungi.</p>
+          <p className="footer-copyright">
+            © {year} ROHIS Kabupaten Banyumas. Hak cipta dilindungi.
+          </p>
         </div>
       </div>
     </footer>

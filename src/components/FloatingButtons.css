@@ -1,113 +1,55 @@
-/* ============================================
-   Floating Buttons — 3D Liquid Glass Spheres
-   ============================================ */
+/* =========================================================
+   FLOATING BUTTONS — Clean
+   ========================================================= */
 
 .floating-buttons {
   position: fixed;
-  bottom: 1.25rem;
-  right: 1.25rem;
-  z-index: 100;
+  bottom: 24px;
+  right: 24px;
+  z-index: 900;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
-  pointer-events: none;
+  gap: 10px;
 }
 
 .floating-btn {
-  pointer-events: auto;
-  width: 46px;
-  height: 46px;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  color: white;
-  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  box-shadow: 
-    0 16px 36px -6px rgba(0, 0, 0, 0.65),
-    0 6px 14px -3px rgba(0, 0, 0, 0.45),
-    inset 0 2px 0 0 rgba(255, 255, 255, 0.60),
-    inset 0 -2px 0 0 rgba(0, 0, 0, 0.45);
-  border: 1.5px solid rgba(255, 255, 255, 0.35);
-  backdrop-filter: blur(28px) saturate(180%);
-  -webkit-backdrop-filter: blur(28px) saturate(180%);
-  position: relative;
-  overflow: hidden;
-}
-
-.floating-btn::before {
-  content: '';
-  position: absolute;
-  top: 2px;
-  left: 6px;
-  right: 6px;
-  height: 44%;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.55) 0%,
-    rgba(255, 255, 255, 0.08) 70%,
-    transparent 100%
-  );
-  border-radius: 50% 50% 40% 40%;
-  pointer-events: none;
+  background: var(--color-emerald);
+  color: #FFFFFF;
+  box-shadow: 0 4px 16px rgba(15, 107, 82, 0.25);
+  transition: all 0.3s var(--ease-out);
+  text-decoration: none;
 }
 
 .floating-btn:hover {
-  transform: translateY(-4px) scale(1.10);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(15, 107, 82, 0.35);
+  color: #FFFFFF;
 }
 
-.floating-btn:active {
-  transform: translateY(1px) scale(0.96);
+.floating-btn-whatsapp {
+  background: #25D366;
+  box-shadow: 0 4px 16px rgba(37, 211, 102, 0.25);
 }
 
-/* Instagram */
-.floating-instagram {
-  background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-  border-color: rgba(255, 255, 255, 0.40);
+.floating-btn-whatsapp:hover {
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35);
 }
 
-.floating-instagram:hover {
-  box-shadow: 
-    0 20px 42px -6px rgba(225, 48, 108, 0.55),
-    0 0 28px rgba(225, 48, 108, 0.45),
-    inset 0 2px 0 0 rgba(255, 255, 255, 0.80),
-    inset 0 -2px 0 0 rgba(0, 0, 0, 0.45);
+.floating-btn-top {
+  background: var(--color-forest);
+  box-shadow: 0 4px 16px rgba(11, 47, 38, 0.20);
 }
 
-/* WhatsApp */
-.floating-whatsapp {
-  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
-  border-color: rgba(255, 255, 255, 0.40);
-}
-
-.floating-whatsapp:hover {
-  box-shadow: 
-    0 20px 42px -6px rgba(37, 211, 102, 0.55),
-    0 0 28px rgba(37, 211, 102, 0.45),
-    inset 0 2px 0 0 rgba(255, 255, 255, 0.80),
-    inset 0 -2px 0 0 rgba(0, 0, 0, 0.45);
-}
-
-/* Back to top */
-.floating-back-top {
-  background: linear-gradient(135deg, #00d4aa 0%, #009977 100%);
-  border-color: rgba(255, 255, 255, 0.45);
-  color: #ffffff;
-}
-
-.floating-back-top:hover {
-  background: linear-gradient(135deg, #00f0c0 0%, #00b892 100%);
-  box-shadow: 
-    0 20px 42px -6px rgba(0, 212, 170, 0.60),
-    0 0 32px rgba(0, 212, 170, 0.50),
-    inset 0 2px 0 0 rgba(255, 255, 255, 0.85),
-    inset 0 -2px 0 0 rgba(0, 0, 0, 0.45);
-}
-
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .floating-buttons {
-    bottom: 1rem;
-    right: 1rem;
+    bottom: 16px;
+    right: 16px;
   }
 
   .floating-btn {

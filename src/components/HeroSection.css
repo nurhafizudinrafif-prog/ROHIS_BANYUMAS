@@ -1,268 +1,271 @@
-/* ============================================
-   Hero Section — Cinematic & Elegant Centered
-   ============================================ */
+/* =========================================================
+   HERO SECTION — Professional & Warm
+   ========================================================= */
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 92vh;
+  padding-top: var(--navbar-height);
+  background: var(--color-forest);
+  overflow: hidden;
+}
+
+/* Subtle gradient overlay */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 20%, rgba(15, 107, 82, 0.15), transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(196, 163, 90, 0.06), transparent 60%);
+  pointer-events: none;
+}
+
+.hero-container {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4xl) 0;
+}
+
+.hero-content {
+  max-width: 720px;
+  text-align: center;
+}
+
+
+/* ── Badge ── */
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 18px 6px 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-pill);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.82rem;
+  font-weight: 500;
+  font-family: var(--font-heading);
+  letter-spacing: 0.02em;
+  margin-bottom: var(--space-xl);
+}
+
+.hero-badge-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--color-mint);
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+
+/* ── Title ── */
+
+.hero-title {
+  font-size: clamp(2rem, 5.5vw, 3.5rem);
+  font-weight: 800;
+  color: #FFFFFF;
+  line-height: 1.15;
+  margin-bottom: var(--space-lg);
+  letter-spacing: -0.03em;
+}
+
+.hero-title-accent {
+  color: var(--color-mint);
+}
+
+.hero-br {
+  display: block;
+}
+
+
+/* ── Subtitle ── */
+
+.hero-subtitle {
+  font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+  color: rgba(255, 255, 255, 0.62);
+  line-height: 1.75;
+  margin-bottom: var(--space-2xl);
+  max-width: 580px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* ── Actions ── */
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+/* Override outline button for dark bg */
+.hero-btn-secondary {
+  color: rgba(255, 255, 255, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.hero-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.10) !important;
+  border-color: rgba(255, 255, 255, 0.40) !important;
+  color: #FFFFFF !important;
+}
+
+
+/* ── Decorative Edge ── */
+
+.hero-edge {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: var(--color-ivory);
+  clip-path: ellipse(55% 100% at 50% 100%);
+}
+
+
+/* ── Legacy classes (prevent breakage) ── */
 
 .hero-cinematic {
   position: relative;
-  min-height: 100vh;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: calc(var(--navbar-height) + 3rem) 0 4rem;
+  min-height: 92vh;
+  padding-top: var(--navbar-height);
+  background: var(--color-forest);
   overflow: hidden;
-  background: transparent;
 }
 
-/* Main Container: Centered hero presentation */
+.hero-cinematic::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 20%, rgba(15, 107, 82, 0.15), transparent 70%);
+  pointer-events: none;
+}
+
 .hero-cinematic-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
   position: relative;
-  z-index: 2;
-}
-
-/* Centered Content Wrapper */
-.hero-cinematic-content,
-.hero-cinematic-left {
-  width: 100%;
-  max-width: 860px;
+  z-index: 1;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-/* Bismillah Decorative Bar */
-.hero-bismillah-bar {
-  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.85rem;
-  margin-bottom: 1.5rem;
+  padding: var(--space-4xl) 0;
 }
 
-.bismillah-line {
-  width: 60px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, #e8b84d, transparent);
+.hero-cinematic-content {
+  max-width: 720px;
+  text-align: center;
 }
 
-.bismillah-ornament {
-  color: #e8b84d;
-  font-size: 0.85rem;
-  opacity: 0.9;
-  animation: glowPulse 3s ease-in-out infinite;
-}
-
-.bismillah-arabic {
-  font-family: var(--font-arabic);
-  font-size: 1.6rem;
-  color: #f5d076;
-  text-shadow: 0 0 20px rgba(232, 184, 77, 0.55);
-  letter-spacing: 0.06em;
-}
-
-/* Title: Exact Serif styling */
 .hero-cinematic-title {
-  font-family: var(--font-serif);
-  font-size: clamp(2.5rem, 5.2vw, 4.4rem);
-  font-weight: 700;
-  line-height: 1.15;
-  margin-bottom: 1.35rem;
-  letter-spacing: -0.01em;
-  text-align: center;
-}
-
-.title-serif {
-  color: #ffffff;
-  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.85), 0 2px 6px rgba(0, 0, 0, 0.6);
-}
-
-.title-gold {
-  font-family: var(--font-serif);
+  font-size: clamp(2rem, 5.5vw, 3.5rem);
   font-weight: 800;
-  background: linear-gradient(
-    135deg, 
-    #FFF8D6 0%, 
-    #FCE490 20%, 
-    #E8B84D 45%, 
-    #B58012 75%, 
-    #FCE490 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  display: inline-block;
-  filter: drop-shadow(0 2px 14px rgba(232, 184, 77, 0.5));
+  color: #FFFFFF;
+  line-height: 1.15;
+  margin-bottom: var(--space-lg);
 }
 
-/* Subtitle */
 .hero-cinematic-subtitle {
-  font-size: clamp(1rem, 1.4vw, 1.18rem);
-  color: rgba(225, 238, 245, 0.9);
-  line-height: 1.8;
-  max-width: 680px;
-  margin: 0 auto 2.5rem;
-  text-align: center;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.75);
+  color: rgba(255, 255, 255, 0.62);
+  font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+  margin-bottom: var(--space-2xl);
 }
 
-/* CTA Pill Button */
 .hero-cinematic-actions {
   display: flex;
+  align-items: center;
   justify-content: center;
-  margin-bottom: 0;
+  gap: 14px;
+  flex-wrap: wrap;
 }
 
 .hero-cta-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.85rem;
-  padding: 0.9rem 2.5rem;
-  border-radius: var(--radius-full);
-  background: linear-gradient(135deg, rgba(0, 195, 155, 0.9) 0%, rgba(0, 130, 105, 0.95) 100%);
-  border: 1.5px solid rgba(0, 245, 185, 0.6);
-  color: #ffffff;
+  gap: 10px;
+  padding: 14px 28px;
+  background: var(--color-emerald);
+  color: #FFFFFF !important;
   font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 1.05rem;
-  letter-spacing: 0.02em;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: var(--radius-pill);
   text-decoration: none;
-  box-shadow: 
-    0 8px 30px rgba(0, 212, 170, 0.35), 
-    0 0 18px rgba(0, 212, 170, 0.25),
-    inset 0 1px 1px rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: all var(--transition-base);
-  position: relative;
-  overflow: hidden;
-}
-
-.hero-cta-pill::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
-  transition: left 0.65s ease;
+  transition: all 0.3s var(--ease-out);
+  box-shadow: 0 4px 14px rgba(15, 107, 82, 0.25);
 }
 
 .hero-cta-pill:hover {
-  transform: translateY(-3px) scale(1.03);
-  border-color: #00f0c0;
-  box-shadow: 
-    0 14px 44px rgba(0, 212, 170, 0.5), 
-    0 0 32px rgba(0, 212, 170, 0.4),
-    inset 0 1px 2px rgba(255, 255, 255, 0.6);
-  color: #ffffff;
-}
-
-.hero-cta-pill:hover::before {
-  left: 100%;
+  background: var(--color-forest-mid);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(15, 107, 82, 0.30);
+  color: #FFFFFF !important;
 }
 
 .hero-cta-arrow {
   display: flex;
   align-items: center;
-  transition: transform var(--transition-base);
 }
 
-.hero-cta-pill:hover .hero-cta-arrow {
-  transform: translateX(4px);
-}
+/* Legacy bismillah/ornament (hidden, not removed for safety) */
+.hero-bismillah-bar { display: none; }
+.bismillah-line { display: none; }
+.bismillah-ornament { display: none; }
+.bismillah-arabic { display: none; }
+.title-serif { color: #FFFFFF; }
+.title-gold { color: var(--color-mint); }
 
-/* Responsive — Universal DPI & All Portrait Screens */
-@media (max-width: 1200px), (orientation: portrait), (pointer: coarse) {
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+  .hero,
   .hero-cinematic {
-    padding-top: calc(var(--navbar-height) + 2rem);
-    padding-bottom: 3.5rem;
-    min-height: 100svh;
-    min-height: 100dvh;
-    width: 100%;
-    max-width: 100vw;
-    box-sizing: border-box;
+    min-height: 80vh;
+    padding-top: calc(var(--navbar-height) + var(--space-xl));
   }
 
+  .hero-container,
   .hero-cinematic-container {
-    width: 100%;
-    max-width: 100%;
-    padding: 0 1.25rem;
-    box-sizing: border-box;
+    padding: var(--space-2xl) 0;
   }
 
-  .hero-cinematic-content,
-  .hero-cinematic-left {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-
-  .hero-bismillah-bar {
-    margin-bottom: 1rem;
-    gap: 0.5rem;
-    max-width: 100%;
-    flex-wrap: wrap;
-  }
-
-  .bismillah-arabic {
-    font-size: clamp(1.15rem, 4.2vw, 1.45rem);
-  }
-
-  .bismillah-line {
-    width: clamp(20px, 6vw, 40px);
-  }
-
-  .hero-cinematic-title {
-    font-size: clamp(2rem, 7.5vw, 3.2rem);
-    line-height: 1.18;
-    margin-bottom: 1rem;
-    word-break: break-word;
-  }
-
-  .hero-cinematic-subtitle {
-    font-size: clamp(0.92rem, 2.5vw, 1.05rem);
-    line-height: 1.65;
-    max-width: 100%;
-    margin-bottom: 2rem;
-  }
-
+  .hero-actions,
   .hero-cinematic-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .hero-actions .btn-lg,
+  .hero-cinematic-actions .btn-lg {
     width: 100%;
-  }
-
-  .hero-cta-pill {
-    width: auto;
-    max-width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero-cinematic-title {
-    font-size: clamp(1.85rem, 8vw, 2.2rem);
+    justify-content: center;
   }
 
   .hero-cta-pill {
     width: 100%;
     justify-content: center;
   }
-}
 
-/* High-DPI & Retina Screen Typography Crispness */
-@media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi) {
-  .title-serif,
-  .title-gold,
-  .bismillah-arabic {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
+  .hero-edge {
+    height: 32px;
+  }
+
+  .hero-br {
+    display: none;
   }
 }

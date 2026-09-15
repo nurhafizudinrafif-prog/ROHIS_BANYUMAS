@@ -3,32 +3,19 @@ import { useScrollAnimation } from '../utils';
 import SectionHeader from '../components/SectionHeader';
 import MemberSchoolCard from '../components/MemberSchoolCard';
 import TeamCard from '../components/TeamCard';
+import DivisionShowcase from '../components/DivisionShowcase';
 import { useData } from '../context/DataContext';
 import './About.css';
 
 export default function MemberSchools() {
   useScrollAnimation();
   const { memberSchools, team, organizationFullName, structurePeriod } = useData();
-  const [activeDivision, setActiveDivision] = useState('Semua');
 
   const totalMembers = memberSchools.reduce((sum, s) => sum + s.members, 0);
-
-  const bphDivision = {
-    id: 'bph',
-    name: 'Badan Pengurus Harian (BPH)',
-    shortName: 'BPH',
-    color: '#00F0CF',
-    description: `Pimpinan inti yang mengarahkan visi dan roda pergerakan ${organizationFullName} Periode ${structurePeriod}.`,
-    members: team.bph || [],
-  };
-
-  const allDivisions = [bphDivision, ...(team.divisions || [])];
-  const totalStructureMembers = allDivisions.reduce((acc, d) => acc + (d.members?.length || 0), 0);
-
-  const displayedDivisions =
-    activeDivision === 'Semua'
-      ? allDivisions
-      : allDivisions.filter((d) => d.shortName === activeDivision);
+  const totalDivisionMembers = (team.divisions || []).reduce(
+    (acc, d) => acc + (d.members?.length || 0),
+    0
+  );
 
   return (
     <main className="page-member-schools">
@@ -38,98 +25,46 @@ export default function MemberSchools() {
           <span className="badge badge-primary animate-hero delay-0">Jaringan & Kepengurusan</span>
           <h1 className="page-hero-title animate-hero delay-1">ROHIS Anggota & Struktur Kepengurusan</h1>
           <p className="page-hero-subtitle animate-hero delay-2">
-            Sinergi jaringan {memberSchools.length} ROHIS sekolah, BPH, dan 5 divisi gerakan {organizationFullName} Periode {structurePeriod}.
+            Sinergi jaringan {memberSchools.length} ROHIS sekolah, BPH, dan 5 divisi pergerakan {organizationFullName} Periode {structurePeriod}.
           </p>
         </div>
       </section>
 
-      {/* Struktur & Divisi Kepengurusan ROKABA Section */}
+      {/* ── 5 Divisi Gerakan ROKABA (Cinematic Interactive Cards) ── */}
       <section className="section" id="divisi">
         <div className="container">
           <SectionHeader
-            badge={`Struktur ${structurePeriod}`}
-            title={`Struktur & Divisi Kepengurusan ${organizationFullName}`}
-            subtitle="Kader-kader dakwah terpilih dari sekolah-sekolah se-Banyumas yang mengemban amanah di BPH dan seluruh divisi."
+            badge="5 Divisi Gerakan"
+            title={`Divisi Kepengurusan ${organizationFullName}`}
+            subtitle={`Klik salah satu divisi di bawah untuk membuka profil lengkap, koordinator, dan seluruh ${totalDivisionMembers} anggota pengurus dengan tampilan sinematik.`}
           />
 
-          {/* Division Filter Tabs */}
-          <div className="about-div-tabs">
-            <button
-              className={`about-div-tab ${activeDivision === 'Semua' ? 'active' : ''}`}
-              onClick={() => setActiveDivision('Semua')}
-            >
-              Semua Divisi ({totalStructureMembers})
-            </button>
-            {allDivisions.map((d) => (
-              <button
-                key={d.id}
-                className={`about-div-tab ${activeDivision === d.shortName ? 'active' : ''}`}
-                onClick={() => setActiveDivision(d.shortName)}
-              >
-                {d.shortName} ({d.members.length})
-              </button>
-            ))}
-          </div>
-
-          {/* Division Blocks */}
-          {displayedDivisions.map((div) => (
-            <div key={div.id} className="about-division-block">
-              <div className="about-division-header">
-                <div className="about-division-header-info" style={{ display: 'flex', alignItems: 'flex-start', gap: '1.25rem' }}>
-                  {div.logoImg && (
-                    <div style={{
-                      width: '60px',
-                      height: '60px',
-                      borderRadius: '50%',
-                      padding: '3px',
-                      background: 'radial-gradient(circle at 35% 25%, rgba(0, 255, 200, 0.25) 0%, rgba(4, 18, 22, 0.85) 75%)',
-                      border: '1.5px solid rgba(0, 255, 200, 0.4)',
-                      boxShadow: '0 0 20px rgba(0, 255, 200, 0.25), inset 0 1px 2px rgba(0, 255, 200, 0.4)',
-                      flexShrink: 0,
-                      overflow: 'hidden'
-                    }}>
-                      <img src={div.logoImg} alt={div.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-                    </div>
-                  )}
-                  <div>
-                    <span
-                      className="badge badge-primary"
-                      style={{
-                        borderColor: div.color,
-                        color: div.color,
-                        background: `color-mix(in srgb, ${div.color} 12%, transparent)`,
-                        marginBottom: '6px',
-                        display: 'inline-block',
-                      }}
-                    >
-                      {div.shortName}
-                    </span>
-                    <h3>{div.name}</h3>
-                    <p>{div.description}</p>
-                  </div>
-                </div>
-                <span style={{ fontSize: '0.82rem', color: 'var(--color-text-muted)', fontWeight: 600 }}>
-                  {div.members.length} Pengurus
-                </span>
-              </div>
-
-              <div className="grid grid-3">
-                {div.members.map((member, i) => (
-                  <TeamCard
-                    key={member.id}
-                    member={member}
-                    index={i}
-                    accentColor={div.color}
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
+          {/* Interactive Division Showcase Component */}
+          <DivisionShowcase
+            divisions={team.divisions || []}
+            defaultOpenId="sdm"
+          />
         </div>
       </section>
 
-      {/* Jaringan ROHIS Sekolah Anggota */}
-      <section className="section section-alt">
+      {/* ── Badan Pengurus Harian (BPH) ── */}
+      <section className="section section-alt" id="bph">
+        <div className="container">
+          <SectionHeader
+            badge={`BPH ${structurePeriod}`}
+            title="Badan Pengurus Harian (BPH)"
+            subtitle={`Pimpinan inti yang mengarahkan visi dan pergerakan ${organizationFullName} Periode ${structurePeriod}.`}
+          />
+          <div className="team-grid-bph">
+            {team.bph?.map((member, i) => (
+              <TeamCard key={member.id} member={member} index={i} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Jaringan ROHIS Sekolah Anggota ── */}
+      <section className="section">
         <div className="container">
           <SectionHeader
             badge="Jaringan Sekolah"

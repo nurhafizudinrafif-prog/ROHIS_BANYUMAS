@@ -2317,6 +2317,29 @@ export default function Admin() {
                       />
                     </div>
                   </div>
+
+                  <div className="form-grid-2">
+                    <div className="form-group">
+                      <label className="form-label">Username Instagram (opsional)</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        value={formData.instagram || ''}
+                        onChange={(e) => setFormData({ ...formData, instagram: e.target.value.replace(/^@/, '') })}
+                        placeholder="username_ig"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">URL Foto Profil (opsional)</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        value={formData.photo || formData.image || ''}
+                        onChange={(e) => setFormData({ ...formData, photo: e.target.value, image: e.target.value })}
+                        placeholder="/foto.jpg atau https://..."
+                      />
+                    </div>
+                  </div>
                 </>
               )}
 
