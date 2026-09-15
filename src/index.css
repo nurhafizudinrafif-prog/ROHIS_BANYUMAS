@@ -1,132 +1,141 @@
 /* =========================================================
    ROHIS KABUPATEN BANYUMAS — Official Digital Platform
-   Dark Emerald • Liquid Glass • Editorial Typography • Modern Islamic
+   LIGHT PREMIUM • WARM IVORY • FOREST GREEN • EMERALD
+   Editorial Typography • Subtle Modern Islamic Geometry
    ========================================================= */
 
 :root {
-  /* ---------- OFFICIAL PALETTE ---------- */
-  --color-bg:             #061713; /* Primary dark base */
-  --color-bg-secondary:   #081F1A; /* Secondary dark background */
-  --color-emerald-deep:   #0B2B24; /* Deep emerald surface */
-  --color-emerald-mid:    #0D6F56; /* Secondary emerald */
-  --color-emerald-accent: #19C79A; /* Accent emerald */
-  --color-cyan:           #20D9E8; /* Subtle cyan */
-  --color-ivory:          #F4F1E8; /* Warm ivory text & headings */
-  --color-text-secondary: #D1DBD6; /* Readable secondary text */
-  --color-text-muted:     #A9B8B2; /* Muted text */
-  --color-gold:           #C8AD72; /* Muted gold accent (<2%) */
-  --color-gold-light:     #DFC993;
+  /* ---------- PRIMARY COLOR SYSTEM (Light Premium) ---------- */
+  --color-bg:                     #F7F5EE; /* Warm Ivory primary background (60%) */
+  --color-bg-secondary:           #EFEDE4; /* Soft Warm Beige secondary background */
+  --color-surface-pure:           #FFFFFF; /* Pure white surface */
+  --color-forest:                 #0D3B2E; /* Forest Green authoritative identity (20%) */
+  --color-forest-dark:            #092A21; /* Dark Forest for grounded footer */
+  --color-emerald:                #087F62; /* Primary Emerald accent (15%) */
+  --color-emerald-light:          #39B99A; /* Light Emerald */
+  --color-cyan:                   #54C9CF; /* Subtle Cyan (5%) */
+  --color-gold:                   #B99A5E; /* Muted Gold (subtle, restrained <2%) */
+  --color-gold-light:             #C8AD72;
+  
+  --color-text:                   #17342C; /* Primary Text: rich dark forest for high legibility */
+  --color-text-secondary:         #61706A; /* Secondary Text: balanced editorial slate */
+  --color-text-muted:             #83918B; /* Muted Text */
+  --color-border:                 rgba(13, 59, 46, 0.10); /* Soft organic border */
+  --color-border-hover:           rgba(8, 127, 98, 0.28); /* Emerald hover border */
 
-  /* ---------- SEMANTIC COMPONENT TOKENS ---------- */
-  --color-surface:        rgba(8, 31, 26, 0.72);
-  --color-surface-card:   rgba(11, 43, 36, 0.65);
-  --color-surface-hover:  rgba(13, 56, 47, 0.85);
-  --color-surface-solid:  #0B2B24;
-  --color-border:         rgba(25, 199, 154, 0.14);
-  --color-border-hover:   rgba(32, 217, 232, 0.32);
+  /* Legacy & Semantic Component Aliases */
+  --color-emerald-deep:           #0D3B2E;
+  --color-emerald-mid:            #087F62;
+  --color-emerald-accent:         #087F62;
+  --color-ivory:                  #17342C; /* Replaced dark-mode ivory text with primary forest text */
+  --color-warm-ivory:             #F7F5EE;
 
-  --color-primary:        var(--color-emerald-accent);
-  --color-primary-light:  #4EEDB7;
-  --color-primary-dark:   var(--color-emerald-mid);
-  --color-primary-glow:   rgba(25, 199, 154, 0.18);
-  --color-cyan-glow:      rgba(32, 217, 232, 0.20);
-  --color-gold-glow:      rgba(200, 173, 114, 0.16);
+  --color-surface:                #FFFFFF;
+  --color-surface-card:           #FFFFFF;
+  --color-surface-hover:          #FAF9F5;
+  --color-surface-solid:          #FFFFFF;
 
-  --color-text:           var(--color-ivory);
-  --color-text-on-dark:   var(--color-ivory);
-  --color-text-on-dark-secondary: var(--color-text-secondary);
+  --color-primary:                var(--color-emerald);
+  --color-primary-light:          var(--color-emerald-light);
+  --color-primary-dark:           var(--color-forest);
+  --color-primary-glow:           rgba(8, 127, 98, 0.12);
+  --color-cyan-glow:              rgba(84, 201, 207, 0.15);
+  --color-gold-glow:              rgba(185, 154, 94, 0.12);
 
-  /* ---------- 4-TIER LIQUID GLASS SYSTEM ---------- */
-  /* Level 1: Subtle transparent glass */
-  --glass-l1-bg:          rgba(11, 43, 36, 0.45);
-  --glass-l1-border:      rgba(25, 199, 154, 0.10);
+  --color-text-on-dark:           #F7F5EE;
+  --color-text-on-dark-secondary: #D1DBD6;
 
-  /* Level 2: Glass + blur */
-  --glass-l2-bg:          rgba(8, 31, 26, 0.68);
-  --glass-l2-blur:        blur(16px) saturate(140%);
-  --glass-l2-border:      rgba(25, 199, 154, 0.16);
-  --glass-l2-shadow:      0 8px 32px rgba(0, 0, 0, 0.35);
+  /* ---------- 4-TIER LIGHT LIQUID GLASS SYSTEM ---------- */
+  /* Level 1: Very subtle transparent glass (dividers, secondary pills) */
+  --glass-l1-bg:                  rgba(255, 255, 255, 0.55);
+  --glass-l1-border:              rgba(13, 59, 46, 0.08);
 
-  /* Level 3: Glass + highlight + depth */
-  --glass-l3-bg:          linear-gradient(135deg, rgba(11, 43, 36, 0.80) 0%, rgba(8, 31, 26, 0.90) 100%);
-  --glass-l3-blur:        blur(20px) saturate(150%);
-  --glass-l3-border:      rgba(25, 199, 154, 0.22);
-  --glass-l3-shadow:      0 16px 36px -10px rgba(0, 0, 0, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.10);
+  /* Level 2: Frosted crystal glass + blur (cards, events, articles, dialogs) */
+  --glass-l2-bg:                  rgba(255, 255, 255, 0.82);
+  --glass-l2-blur:                blur(16px) saturate(160%);
+  --glass-l2-border:              rgba(255, 255, 255, 0.85);
+  --glass-l2-shadow:              0 6px 22px rgba(13, 59, 46, 0.05), 0 1px 3px rgba(13, 59, 46, 0.03);
 
-  /* Level 4: Special accent glass + subtle emerald/cyan glow */
-  --glass-l4-bg:          linear-gradient(135deg, rgba(13, 111, 86, 0.42) 0%, rgba(8, 31, 26, 0.92) 100%);
-  --glass-l4-blur:        blur(24px);
-  --glass-l4-border:      rgba(32, 217, 232, 0.35);
-  --glass-l4-shadow:      0 18px 44px -8px rgba(0, 0, 0, 0.65), 0 0 24px rgba(25, 199, 154, 0.18), inset 0 1px 2px rgba(255, 255, 255, 0.15);
+  /* Level 3: Elevated glass + reflection + depth (navbar, sticky elements) */
+  --glass-l3-bg:                  rgba(255, 255, 255, 0.92);
+  --glass-l3-blur:                blur(20px) saturate(180%);
+  --glass-l3-border:              rgba(13, 59, 46, 0.10);
+  --glass-l3-shadow:              0 12px 36px rgba(13, 59, 46, 0.08), 0 2px 6px rgba(13, 59, 46, 0.04);
 
-  /* Standard aliases for backwards compatibility */
-  --glass-bg:             var(--glass-l2-bg);
-  --glass-blur:           var(--glass-l2-blur);
-  --glass-border:         var(--glass-l2-border);
-  --glass-border-hover:   var(--color-border-hover);
-  --glass-shadow:         var(--glass-l2-shadow);
-  --glass-shadow-hover:   var(--glass-l3-shadow);
+  /* Level 4: Interactive highlighted glass with subtle emerald glow */
+  --glass-l4-bg:                  rgba(255, 255, 255, 0.96);
+  --glass-l4-blur:                blur(24px);
+  --glass-l4-border:              rgba(8, 127, 98, 0.25);
+  --glass-l4-shadow:              0 16px 44px rgba(13, 59, 46, 0.10), 0 0 20px rgba(8, 127, 98, 0.10);
+
+  /* Standard aliases */
+  --glass-bg:                     var(--glass-l2-bg);
+  --glass-blur:                   var(--glass-l2-blur);
+  --glass-border:                 var(--glass-l2-border);
+  --glass-border-hover:           var(--color-border-hover);
+  --glass-shadow:                 var(--glass-l2-shadow);
+  --glass-shadow-hover:           var(--glass-l3-shadow);
 
   /* ---------- RESTRAINED BORDER RADIUS ---------- */
-  --radius-sm:            10px;
-  --radius-md:            16px;
-  --radius-lg:            24px;
-  --radius-xl:            32px;
-  --radius-pill:          999px;
-  --radius-full:          999px;
-  --radius-glass:         16px;
+  --radius-sm:                    10px;
+  --radius-md:                    16px;
+  --radius-lg:                    24px;
+  --radius-xl:                    32px;
+  --radius-pill:                  999px;
+  --radius-full:                  999px;
+  --radius-glass:                 16px;
 
   /* ---------- TRANSITIONS & MOTION (Quiet & Restrained) ---------- */
-  --ease-out:             cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-spring:          cubic-bezier(0.34, 1.56, 0.64, 1);
-  --transition-fast:      180ms var(--ease-out);
-  --transition-base:      280ms var(--ease-out);
-  --transition-slow:      450ms var(--ease-out);
+  --ease-out:                     cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring:                  cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-fast:              180ms var(--ease-out);
+  --transition-base:              280ms var(--ease-out);
+  --transition-slow:              450ms var(--ease-out);
 
   /* ---------- TYPOGRAPHY ---------- */
-  --font-sans:            'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-heading:         'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-body:            'Inter', system-ui, -apple-system, sans-serif;
-  --font-editorial:       'Newsreader', Georgia, serif;
+  --font-sans:                    'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-heading:                 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-body:                    'Inter', system-ui, -apple-system, sans-serif;
+  --font-editorial:               'Newsreader', Georgia, serif;
 
   /* Aliases */
-  --font-serif:           var(--font-editorial);
-  --font-script:          var(--font-sans);
-  --font-arabic:          var(--font-editorial);
+  --font-serif:                   var(--font-editorial);
+  --font-script:                  var(--font-sans);
+  --font-arabic:                  var(--font-editorial);
 
   /* ---------- STRICT SPACING SYSTEM ---------- */
-  --space-8:              8px;
-  --space-12:             12px;
-  --space-16:             16px;
-  --space-24:             24px;
-  --space-32:             32px;
-  --space-48:             48px;
-  --space-64:             64px;
-  --space-80:             80px;
-  --space-96:             96px;
-  --space-120:            120px;
+  --space-8:                      8px;
+  --space-12:                     12px;
+  --space-16:                     16px;
+  --space-24:                     24px;
+  --space-32:                     32px;
+  --space-48:                     48px;
+  --space-64:                     64px;
+  --space-80:                     80px;
+  --space-96:                     96px;
+  --space-120:                    120px;
 
   /* Semantic scale */
-  --space-xs:             var(--space-8);
-  --space-sm:             var(--space-12);
-  --space-md:             var(--space-16);
-  --space-lg:             var(--space-24);
-  --space-xl:             var(--space-32);
-  --space-2xl:            var(--space-48);
-  --space-3xl:            var(--space-64);
-  --space-4xl:            var(--space-96);
+  --space-xs:                     var(--space-8);
+  --space-sm:                     var(--space-12);
+  --space-md:                     var(--space-16);
+  --space-lg:                     var(--space-24);
+  --space-xl:                     var(--space-32);
+  --space-2xl:                    var(--space-48);
+  --space-3xl:                    var(--space-64);
+  --space-4xl:                    var(--space-96);
 
-  /* ---------- SHADOWS ---------- */
-  --shadow-sm:            0 4px 14px rgba(0, 0, 0, 0.35);
-  --shadow-md:            0 8px 24px rgba(0, 0, 0, 0.45);
-  --shadow-lg:            0 16px 40px -8px rgba(0, 0, 0, 0.55);
-  --shadow-xl:            0 24px 56px -12px rgba(0, 0, 0, 0.65);
-  --shadow-glow:          0 0 20px var(--color-primary-glow);
-  --shadow-gold:          0 0 20px var(--color-gold-glow);
+  /* ---------- MULTI-TIER SHADOWS (Soft Depth on Light Surfaces) ---------- */
+  --shadow-sm:                    0 2px 8px rgba(13, 59, 46, 0.04);
+  --shadow-md:                    0 6px 20px rgba(13, 59, 46, 0.06);
+  --shadow-lg:                    0 12px 32px rgba(13, 59, 46, 0.08), 0 2px 6px rgba(13, 59, 46, 0.03);
+  --shadow-xl:                    0 20px 48px rgba(13, 59, 46, 0.10), 0 4px 12px rgba(13, 59, 46, 0.04);
+  --shadow-glow:                  0 0 20px var(--color-primary-glow);
+  --shadow-gold:                  0 0 20px var(--color-gold-glow);
 
   /* ---------- LAYOUT ---------- */
-  --max-width:            1260px;
-  --navbar-height:        74px;
+  --max-width:                    1260px;
+  --navbar-height:                74px;
 }
 
 /* =========================================================
@@ -175,13 +184,13 @@ main {
 }
 
 a {
-  color: var(--color-emerald-accent);
+  color: var(--color-emerald);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
 a:hover {
-  color: var(--color-cyan);
+  color: var(--color-forest);
 }
 
 img {
@@ -211,7 +220,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   font-weight: 700;
   line-height: 1.25;
-  color: var(--color-ivory);
+  color: var(--color-forest);
   letter-spacing: -0.02em;
 }
 
@@ -225,13 +234,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-  font-size: clamp(2.25rem, 5.5vw, 4rem);
+  font-size: clamp(2.25rem, 5.5vw, 3.85rem);
   font-weight: 800;
   line-height: 1.15;
 }
 
 h2 {
-  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-size: clamp(1.75rem, 4vw, 2.65rem);
   font-weight: 700;
 }
 
@@ -254,8 +263,8 @@ p {
   color: var(--color-text-muted);
 }
 
-.text-ivory {
-  color: var(--color-ivory);
+.text-forest {
+  color: var(--color-forest);
 }
 
 .text-gold {
@@ -263,7 +272,7 @@ p {
 }
 
 .text-accent {
-  color: var(--color-emerald-accent);
+  color: var(--color-emerald);
 }
 
 .text-cyan {
@@ -294,15 +303,53 @@ p {
 }
 
 .section-alt {
-  background: rgba(8, 31, 26, 0.45);
+  background: var(--color-bg-secondary);
   position: relative;
 }
 
-/* Section divider */
+/* Subtle section divider */
 .section + .section,
 .section + .section-alt,
 .section-alt + .section {
-  border-top: 1px solid rgba(25, 199, 154, 0.08);
+  border-top: 1px solid rgba(13, 59, 46, 0.06);
+}
+
+/* =========================================================
+   PAGE HERO / SUBPAGE HEADER — LIGHT PREMIUM
+   ========================================================= */
+
+.page-hero {
+  position: relative;
+  padding-top: calc(var(--navbar-height) + var(--space-3xl));
+  padding-bottom: var(--space-3xl);
+  text-align: center;
+  background: var(--color-bg);
+  overflow: hidden;
+}
+
+.page-hero-title {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 800;
+  color: var(--color-forest);
+  margin-top: var(--space-md);
+  margin-bottom: var(--space-md);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.page-hero-subtitle {
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  color: var(--color-text-secondary);
+  max-width: 680px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+@media (max-width: 768px) {
+  .page-hero {
+    padding-top: calc(var(--navbar-height) + var(--space-xl));
+    padding-bottom: var(--space-2xl);
+  }
 }
 
 /* =========================================================
@@ -346,7 +393,7 @@ p {
 }
 
 /* =========================================================
-   CARD SYSTEM — 4-Tier Liquid Glass Hierarchy
+   CARD SYSTEM — Light Frosted Crystal & Pure Surface
    ========================================================= */
 
 .liquid-glass,
@@ -402,14 +449,13 @@ p {
   border-color: var(--color-border-hover);
 }
 
-/* Disable old messy pseudo-elements */
 .liquid-glass::before, .glass-card::before, .card::before,
 .liquid-glass::after, .glass-card::after, .card::after {
   display: none;
 }
 
 /* =========================================================
-   BUTTONS — Quietly Expensive & Confident
+   BUTTONS — Quietly Premium, Confident & Accessible
    ========================================================= */
 
 .glass-button,
@@ -421,11 +467,11 @@ p {
   gap: 10px;
   min-height: 48px;
   padding: 0 28px;
-  color: #061713 !important;
-  background: linear-gradient(135deg, #19C79A 0%, #20D9E8 100%);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #FFFFFF !important;
+  background: linear-gradient(135deg, #0D3B2E 0%, #087F62 100%);
+  border: 1px solid rgba(13, 59, 46, 0.15);
   border-radius: var(--radius-pill);
-  box-shadow: 0 4px 18px rgba(25, 199, 154, 0.35);
+  box-shadow: 0 4px 18px rgba(13, 59, 46, 0.20);
   font-weight: 700;
   font-size: 0.95rem;
   font-family: var(--font-heading);
@@ -437,16 +483,16 @@ p {
 
 .glass-button:hover,
 .btn-primary:hover {
-  background: linear-gradient(135deg, #20D9E8 0%, #19C79A 100%);
+  background: linear-gradient(135deg, #087F62 0%, #0D3B2E 100%);
   transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(32, 217, 232, 0.45);
-  color: #061713 !important;
+  box-shadow: 0 8px 26px rgba(13, 59, 46, 0.28);
+  color: #FFFFFF !important;
 }
 
 .glass-button:active,
 .btn-primary:active {
   transform: translateY(0);
-  box-shadow: 0 2px 10px rgba(25, 199, 154, 0.3);
+  box-shadow: 0 2px 10px rgba(13, 59, 46, 0.20);
 }
 
 /* Secondary / Outline Button */
@@ -460,13 +506,13 @@ p {
   gap: 10px;
   min-height: 48px;
   padding: 0 26px;
-  color: var(--color-ivory) !important;
-  background: rgba(11, 43, 36, 0.5);
+  color: var(--color-forest) !important;
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(25, 199, 154, 0.3);
+  border: 1px solid rgba(13, 59, 46, 0.16);
   border-radius: var(--radius-pill);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 14px rgba(13, 59, 46, 0.05);
   font-weight: 600;
   font-size: 0.95rem;
   font-family: var(--font-heading);
@@ -479,11 +525,11 @@ p {
 .glass-button-secondary:hover,
 .btn-outline:hover,
 .btn-secondary:hover {
-  background: rgba(25, 199, 154, 0.15);
-  border-color: var(--color-emerald-accent);
-  color: #FFFFFF !important;
+  background: #FFFFFF;
+  border-color: var(--color-emerald);
+  color: var(--color-emerald) !important;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(25, 199, 154, 0.22);
+  box-shadow: 0 6px 20px rgba(13, 59, 46, 0.09);
 }
 
 /* Gold Button Accent (<2% use) */
@@ -495,11 +541,11 @@ p {
   gap: 10px;
   min-height: 48px;
   padding: 0 28px;
-  color: #061713 !important;
-  background: linear-gradient(135deg, #C8AD72 0%, #DFC993 100%);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #092A21 !important;
+  background: linear-gradient(135deg, #B99A5E 0%, #D4BC84 100%);
+  border: 1px solid rgba(185, 154, 94, 0.4);
   border-radius: var(--radius-pill);
-  box-shadow: 0 4px 18px rgba(200, 173, 114, 0.3);
+  box-shadow: 0 4px 18px rgba(185, 154, 94, 0.25);
   font-weight: 700;
   font-family: var(--font-heading);
   cursor: pointer;
@@ -510,8 +556,8 @@ p {
 
 .btn-gold:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 26px rgba(200, 173, 114, 0.45);
-  color: #061713 !important;
+  box-shadow: 0 8px 24px rgba(185, 154, 94, 0.38);
+  color: #092A21 !important;
 }
 
 /* Button Sizes */
@@ -543,27 +589,27 @@ p {
   font-family: var(--font-heading);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  background: rgba(25, 199, 154, 0.12);
-  color: var(--color-emerald-accent);
-  border: 1px solid rgba(25, 199, 154, 0.25);
+  background: rgba(8, 127, 98, 0.08);
+  color: var(--color-emerald);
+  border: 1px solid rgba(8, 127, 98, 0.20);
 }
 
 .badge-primary {
-  background: rgba(25, 199, 154, 0.14);
-  color: var(--color-emerald-accent);
-  border-color: rgba(25, 199, 154, 0.3);
+  background: rgba(8, 127, 98, 0.08);
+  color: var(--color-emerald);
+  border-color: rgba(8, 127, 98, 0.22);
 }
 
 .badge-cyan {
-  background: rgba(32, 217, 232, 0.14);
-  color: var(--color-cyan);
-  border-color: rgba(32, 217, 232, 0.3);
+  background: rgba(84, 201, 207, 0.12);
+  color: #178388;
+  border-color: rgba(84, 201, 207, 0.30);
 }
 
 .badge-gold {
-  background: rgba(200, 173, 114, 0.14);
-  color: var(--color-gold);
-  border-color: rgba(200, 173, 114, 0.3);
+  background: rgba(185, 154, 94, 0.10);
+  color: #8F7239;
+  border-color: rgba(185, 154, 94, 0.25);
 }
 
 /* =========================================================

@@ -1,6 +1,6 @@
 /* =========================================================
-   FLOATING LIQUID GLASS NAVBAR — Official District Platform
-   Light • Transparent Top → Dark Emerald Glass on Scroll
+   FLOATING LIQUID GLASS NAVBAR — LIGHT PREMIUM
+   Warm Ivory Tint • Translucent Crystal Glass • Forest Green Typography
    ========================================================= */
 
 .navbar {
@@ -28,19 +28,19 @@
   justify-content: space-between;
   height: 52px;
   padding: 0 16px 0 20px;
-  background: rgba(8, 31, 26, 0.65);
-  backdrop-filter: blur(20px) saturate(150%);
-  -webkit-backdrop-filter: blur(20px) saturate(150%);
-  border: 1px solid rgba(25, 199, 154, 0.16);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(13, 59, 46, 0.08);
   border-radius: var(--radius-pill);
-  box-shadow: 0 8px 28px -6px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 8px 30px rgba(13, 59, 46, 0.06), 0 1px 3px rgba(13, 59, 46, 0.03);
   transition: all 0.3s var(--ease-out);
 }
 
 .navbar-scrolled .navbar-inner {
-  background: rgba(6, 23, 19, 0.88);
-  border-color: rgba(25, 199, 154, 0.24);
-  box-shadow: 0 12px 36px -8px rgba(0, 0, 0, 0.65), 0 0 16px rgba(25, 199, 154, 0.10);
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(13, 59, 46, 0.12);
+  box-shadow: 0 12px 36px rgba(13, 59, 46, 0.09), 0 2px 6px rgba(13, 59, 46, 0.04);
 }
 
 /* ── Brand ── */
@@ -57,14 +57,14 @@
   height: 34px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1.5px solid rgba(25, 199, 154, 0.4);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1.5px solid rgba(8, 127, 98, 0.35);
+  box-shadow: 0 2px 8px rgba(13, 59, 46, 0.10);
   transition: transform 0.25s ease, border-color 0.25s ease;
 }
 
 .navbar-brand:hover .navbar-logo-img {
   transform: scale(1.05);
-  border-color: var(--color-cyan);
+  border-color: var(--color-emerald);
 }
 
 .navbar-brand-text {
@@ -77,15 +77,15 @@
   font-family: var(--font-heading);
   font-weight: 800;
   font-size: 0.98rem;
-  color: var(--color-ivory);
+  color: var(--color-forest);
   letter-spacing: -0.01em;
 }
 
 .navbar-brand-sub {
   font-size: 0.70rem;
-  color: var(--color-text-muted);
-  font-weight: 500;
-  letter-spacing: 0.04em;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
@@ -103,172 +103,118 @@
   padding: 6px 14px;
   font-family: var(--font-heading);
   font-size: 0.86rem;
-  font-weight: 500;
-  color: var(--color-text-secondary);
-  text-decoration: none;
+  font-weight: 600;
+  color: var(--color-forest);
   border-radius: var(--radius-pill);
-  transition: all 0.22s var(--ease-out);
+  text-decoration: none;
+  transition: color 0.22s var(--ease-out), background 0.22s var(--ease-out);
   white-space: nowrap;
 }
 
 .navbar-link:hover {
-  color: var(--color-ivory);
-  background: rgba(25, 199, 154, 0.08);
+  color: var(--color-emerald);
+  background: rgba(8, 127, 98, 0.05);
 }
 
+/* Active Pill Highlight */
 .navbar-link.active {
-  color: var(--color-emerald-accent);
-  font-weight: 600;
-  background: rgba(25, 199, 154, 0.12);
-  border: 1px solid rgba(25, 199, 154, 0.24);
-  box-shadow: 0 0 12px rgba(25, 199, 154, 0.12);
+  color: var(--color-emerald);
+  background: rgba(8, 127, 98, 0.08);
+  font-weight: 700;
 }
 
-/* ── Hamburger (Mobile only) ── */
-.navbar-hamburger {
+.navbar-active-indicator {
+  display: none;
+}
+
+/* ── Utility Actions ── */
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar-toggle-btn {
   display: none;
   align-items: center;
   justify-content: center;
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: rgba(25, 199, 154, 0.10);
-  border: 1px solid rgba(25, 199, 154, 0.2);
-  color: var(--color-ivory);
+  color: var(--color-forest);
+  background: rgba(13, 59, 46, 0.05);
+  border: 1px solid rgba(13, 59, 46, 0.10);
   transition: all 0.2s ease;
 }
 
-.navbar-hamburger:hover {
-  background: rgba(25, 199, 154, 0.20);
-  color: var(--color-cyan);
+.navbar-toggle-btn:hover {
+  background: rgba(8, 127, 98, 0.10);
+  color: var(--color-emerald);
 }
 
-/* ── Mobile Navigation Sheet / Drawer ── */
-.navbar-mobile-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  z-index: 1100;
-  animation: fadeIn 0.25s ease forwards;
+/* ── Mobile Drawer ── */
+.navbar-mobile-drawer {
+  display: none;
 }
 
-.navbar-mobile-sheet {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 82%;
-  max-width: 340px;
-  background: rgba(6, 23, 19, 0.95);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-  border-left: 1px solid rgba(25, 199, 154, 0.2);
-  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.7);
-  display: flex;
-  flex-direction: column;
-  padding: var(--space-xl);
-  animation: slideLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.navbar-sheet-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: var(--space-lg);
-  border-bottom: 1px solid rgba(25, 199, 154, 0.12);
-  margin-bottom: var(--space-xl);
-}
-
-.navbar-sheet-close {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba(25, 199, 154, 0.1);
-  border: 1px solid rgba(25, 199, 154, 0.2);
-  color: var(--color-ivory);
-  transition: all 0.2s ease;
-}
-
-.navbar-sheet-close:hover {
-  background: rgba(25, 199, 154, 0.25);
-  color: var(--color-cyan);
-}
-
-.navbar-sheet-links {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  flex: 1;
-}
-
-.navbar-sheet-link {
-  display: flex;
-  align-items: center;
-  padding: 12px 18px;
-  font-family: var(--font-heading);
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--color-text-secondary);
-  text-decoration: none;
-  border-radius: var(--radius-sm);
-  transition: all 0.2s ease;
-  border: 1px solid transparent;
-}
-
-.navbar-sheet-link:hover {
-  background: rgba(25, 199, 154, 0.1);
-  color: var(--color-ivory);
-}
-
-.navbar-sheet-link.active {
-  background: rgba(25, 199, 154, 0.16);
-  color: var(--color-emerald-accent);
-  font-weight: 600;
-  border-color: rgba(25, 199, 154, 0.3);
-  box-shadow: 0 0 16px rgba(25, 199, 154, 0.15);
-}
-
-.navbar-sheet-footer {
-  padding-top: var(--space-lg);
-  border-top: 1px solid rgba(25, 199, 154, 0.12);
-  text-align: center;
-}
-
-.navbar-sheet-footer p:first-child {
-  font-weight: 700;
-  color: var(--color-ivory);
-  font-size: 0.88rem;
-  margin-bottom: 4px;
-}
-
-.navbar-sheet-footer p:last-child {
-  font-size: 0.78rem;
-  color: var(--color-text-muted);
-}
-
-/* ── Keyframe Animations ── */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideLeft {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
-}
-
-/* ── Responsive ── */
 @media (max-width: 900px) {
   .navbar-desktop-links {
     display: none;
   }
 
-  .navbar-hamburger {
+  .navbar-toggle-btn {
     display: flex;
+  }
+
+  .navbar-mobile-drawer {
+    display: block;
+    position: fixed;
+    top: calc(var(--navbar-height) + 8px);
+    left: 16px;
+    right: 16px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(13, 59, 46, 0.12);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 16px 44px rgba(13, 59, 46, 0.14);
+    padding: var(--space-lg);
+    transform: translateY(-12px);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.28s var(--ease-out);
+    z-index: 999;
+  }
+
+  .navbar-mobile-drawer.is-open {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .navbar-mobile-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .navbar-mobile-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    font-family: var(--font-heading);
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: var(--color-forest);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .navbar-mobile-link:hover,
+  .navbar-mobile-link.active {
+    background: rgba(8, 127, 98, 0.08);
+    color: var(--color-emerald);
   }
 }

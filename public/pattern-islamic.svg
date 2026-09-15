@@ -2,13 +2,13 @@
   <defs>
     <style>
       .geom-line {
-        stroke: #19C79A;
+        stroke: #0D3B2E;
         stroke-width: 0.75;
         fill: none;
-        stroke-opacity: 0.35;
+        stroke-opacity: 0.30;
       }
       .geom-fill {
-        fill: #20D9E8;
+        fill: #087F62;
         fill-opacity: 0.04;
       }
     </style>

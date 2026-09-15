@@ -1,5 +1,6 @@
 /* =========================================================
-   QUOTE SECTION — Liquid Glass & Subtle Gold Arabic Calligraphy
+   QUOTE SECTION — LIGHT PREMIUM
+   Warm Ivory / White Card • Restrained Gold Calligraphy • Forest Typography
    ========================================================= */
 
 .quote-section {
@@ -7,22 +8,20 @@
 }
 
 .quote-card {
-  max-width: 720px;
+  max-width: 760px;
   margin: 0 auto;
   padding: var(--space-2xl) var(--space-xl);
   text-align: center;
-  background: var(--glass-l2-bg);
-  backdrop-filter: var(--glass-l2-blur);
-  -webkit-backdrop-filter: var(--glass-l2-blur);
-  border: 1px solid var(--glass-l2-border);
+  background: #FFFFFF;
+  border: 1px solid rgba(13, 59, 46, 0.08);
   border-radius: var(--radius-lg);
-  box-shadow: var(--glass-l2-shadow);
+  box-shadow: 0 8px 28px rgba(13, 59, 46, 0.05), 0 1px 3px rgba(13, 59, 46, 0.02);
   position: relative;
 }
 
 .quote-arabic {
   font-size: clamp(1.4rem, 3.5vw, 1.9rem);
-  color: #DFC993; /* Subtle soft gold for Arabic quotation */
+  color: #8C6F34; /* Restrained warm gold/olive tone readable on light surface */
   line-height: 1.8;
   margin-bottom: var(--space-md);
   font-weight: 500;
@@ -31,8 +30,8 @@
 }
 
 .quote-translation {
-  font-size: 0.98rem;
-  color: var(--color-text-secondary);
+  font-size: 1.02rem;
+  color: var(--color-forest);
   font-style: italic;
   font-family: var(--font-editorial);
   line-height: 1.75;
@@ -41,9 +40,9 @@
 
 .quote-source {
   font-size: 0.82rem;
-  color: var(--color-emerald-accent);
+  color: var(--color-emerald);
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 

@@ -292,7 +292,7 @@ export default function Home() {
               Bersama, kita wujudkan generasi yang berilmu, berakhlak, dan berdampak.
             </p>
             <div className="home-cta-actions">
-              <Link to="/pendaftaran" className="btn btn-gold btn-lg">
+              <Link to="/pendaftaran" className="btn btn-primary btn-lg">
                 Daftar Sekarang
               </Link>
               <Link to="/kontak" className="btn btn-outline btn-lg">

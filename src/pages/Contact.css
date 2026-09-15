@@ -1,5 +1,6 @@
 /* =========================================================
-   CONTACT PAGE — Liquid Glass & Form Styles
+   CONTACT PAGE — LIGHT PREMIUM
+   Pure White Cards • Warm Ivory Inputs • Forest Green Typography
    ========================================================= */
 
 .contact-page .page-hero {
@@ -25,19 +26,17 @@
   align-items: flex-start;
   gap: var(--space-md);
   padding: var(--space-lg);
-  background: var(--glass-l2-bg);
-  backdrop-filter: var(--glass-l2-blur);
-  -webkit-backdrop-filter: var(--glass-l2-blur);
-  border: 1px solid var(--glass-l2-border);
+  background: #FFFFFF;
+  border: 1px solid rgba(13, 59, 46, 0.08);
   border-radius: var(--radius-md);
-  box-shadow: var(--glass-l2-shadow);
+  box-shadow: 0 6px 20px rgba(13, 59, 46, 0.04), 0 1px 3px rgba(13, 59, 46, 0.02);
   transition: all var(--transition-base);
 }
 
 .contact-info-card:hover {
   transform: translateY(-2px);
-  border-color: var(--color-border-hover);
-  box-shadow: var(--glass-l3-shadow);
+  border-color: rgba(8, 127, 98, 0.25);
+  box-shadow: 0 10px 28px rgba(13, 59, 46, 0.08);
 }
 
 .contact-info-icon {
@@ -47,17 +46,17 @@
   width: 44px;
   height: 44px;
   border-radius: var(--radius-sm);
-  background: rgba(25, 199, 154, 0.12);
-  color: var(--color-emerald-accent);
-  border: 1px solid rgba(25, 199, 154, 0.25);
+  background: rgba(8, 127, 98, 0.08);
+  color: var(--color-emerald);
+  border: 1px solid rgba(8, 127, 98, 0.18);
   flex-shrink: 0;
 }
 
 .contact-info-title {
   font-family: var(--font-heading);
-  font-size: 0.95rem;
+  font-size: 0.98rem;
   font-weight: 700;
-  color: var(--color-ivory);
+  color: var(--color-forest);
   margin-bottom: 4px;
 }
 
@@ -68,29 +67,28 @@
 }
 
 .contact-info-text a {
-  color: var(--color-cyan);
+  color: var(--color-emerald);
   text-decoration: none;
 }
 
 .contact-info-text a:hover {
+  color: var(--color-forest);
   text-decoration: underline;
 }
 
 /* ── Form Wrapper ── */
 .contact-form-wrapper {
   padding: var(--space-2xl);
-  background: var(--glass-l2-bg);
-  backdrop-filter: var(--glass-l2-blur);
-  -webkit-backdrop-filter: var(--glass-l2-blur);
-  border: 1px solid var(--glass-l2-border);
+  background: #FFFFFF;
+  border: 1px solid rgba(13, 59, 46, 0.08);
   border-radius: var(--radius-lg);
-  box-shadow: var(--glass-l2-shadow);
+  box-shadow: 0 8px 28px rgba(13, 59, 46, 0.05), 0 1px 3px rgba(13, 59, 46, 0.02);
 }
 
 .contact-form-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--color-ivory);
+  font-size: 1.30rem;
+  font-weight: 800;
+  color: var(--color-forest);
   margin-bottom: var(--space-xl);
 }
 
@@ -109,7 +107,7 @@
 .form-label {
   font-size: 0.86rem;
   font-weight: 600;
-  color: var(--color-ivory);
+  color: var(--color-forest);
 }
 
 .form-input,
@@ -117,10 +115,10 @@
 .form-select {
   width: 100%;
   padding: 12px 16px;
-  background: rgba(6, 23, 19, 0.75);
-  border: 1px solid rgba(25, 199, 154, 0.2);
+  background: #F7F5EE;
+  border: 1px solid rgba(13, 59, 46, 0.12);
   border-radius: var(--radius-sm);
-  color: var(--color-ivory);
+  color: var(--color-text);
   font-family: inherit;
   font-size: 0.92rem;
   outline: none;
@@ -130,9 +128,9 @@
 .form-input:focus,
 .form-textarea:focus,
 .form-select:focus {
-  border-color: var(--color-cyan);
-  box-shadow: 0 0 14px rgba(32, 217, 232, 0.25);
-  background: rgba(6, 23, 19, 0.95);
+  border-color: var(--color-emerald);
+  box-shadow: 0 0 0 3px rgba(8, 127, 98, 0.12);
+  background: #FFFFFF;
 }
 
 .form-textarea {

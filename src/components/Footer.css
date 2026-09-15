@@ -1,13 +1,13 @@
 /* =========================================================
-   FOOTER — Official District Platform
-   Dark Emerald • Clean 3-Column Layout • Subtle Glow Divider
+   FOOTER — LIGHT-TO-DARK GROUNDING TRANSITION
+   Deep Forest Green (#092A21) • Warm Ivory Typography • Emerald Accents
    ========================================================= */
 
 .footer {
-  background: rgba(4, 18, 14, 0.95);
-  color: var(--color-text-on-dark);
+  background: var(--color-forest-dark, #092A21);
+  color: #F7F5EE;
   padding: var(--space-4xl) 0 var(--space-xl);
-  border-top: 1px solid rgba(25, 199, 154, 0.16);
+  border-top: 1px solid rgba(57, 185, 154, 0.20);
   position: relative;
   overflow: hidden;
 }
@@ -19,7 +19,7 @@
   left: 20%;
   right: 20%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, #19C79A, #20D9E8, transparent);
+  background: linear-gradient(90deg, transparent, #39B99A, #54C9CF, transparent);
 }
 
 /* ── Top Grid ── */
@@ -35,17 +35,17 @@
   font-family: var(--font-heading);
   font-size: 1.25rem;
   font-weight: 800;
-  color: var(--color-ivory);
+  color: #F7F5EE;
   margin-bottom: 8px;
   letter-spacing: -0.01em;
 }
 
 .footer-brand-tagline {
-  font-size: 0.9rem;
-  color: var(--color-text-secondary);
+  font-size: 0.90rem;
+  color: #A9B8B2;
   margin-bottom: var(--space-lg);
-  line-height: 1.6;
-  max-width: 320px;
+  line-height: 1.65;
+  max-width: 340px;
 }
 
 .footer-socials {
@@ -60,18 +60,18 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: rgba(25, 199, 154, 0.10);
-  border: 1px solid rgba(25, 199, 154, 0.22);
-  color: var(--color-ivory);
+  background: rgba(57, 185, 154, 0.10);
+  border: 1px solid rgba(57, 185, 154, 0.25);
+  color: #F7F5EE;
   transition: all var(--transition-base);
 }
 
 .footer-social-link:hover {
-  background: rgba(25, 199, 154, 0.25);
-  border-color: var(--color-cyan);
-  color: var(--color-cyan);
+  background: rgba(57, 185, 154, 0.25);
+  border-color: #54C9CF;
+  color: #54C9CF;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(25, 199, 154, 0.25);
+  box-shadow: 0 4px 12px rgba(57, 185, 154, 0.25);
 }
 
 /* ── Columns ── */
@@ -79,7 +79,7 @@
   font-family: var(--font-heading);
   font-size: 0.82rem;
   font-weight: 700;
-  color: var(--color-emerald-accent);
+  color: #39B99A;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   margin-bottom: var(--space-lg);
@@ -92,19 +92,19 @@
 }
 
 .footer-link {
-  font-size: 0.9rem;
-  color: var(--color-text-secondary);
+  font-size: 0.90rem;
+  color: #D1DBD6;
   text-decoration: none;
   transition: all 0.2s ease;
 }
 
 .footer-link:hover {
-  color: var(--color-ivory);
-  transform: translateX(3px);
+  color: #39B99A;
+  padding-left: 4px;
 }
 
-/* ── Contact Column ── */
-.footer-contact-list {
+/* ── Contact Info ── */
+.footer-contact-items {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -112,32 +112,30 @@
 
 .footer-contact-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   font-size: 0.88rem;
-  color: var(--color-text-secondary);
-  text-decoration: none;
-  transition: color 0.2s ease;
+  color: #D1DBD6;
+  line-height: 1.5;
 }
 
 .footer-contact-item svg {
-  color: var(--color-emerald-accent);
+  color: #39B99A;
   flex-shrink: 0;
-}
-
-.footer-contact-item:hover {
-  color: var(--color-ivory);
+  margin-top: 3px;
 }
 
 /* ── Bottom Bar ── */
 .footer-bottom {
-  padding-top: var(--space-xl);
-  border-top: 1px solid rgba(25, 199, 154, 0.10);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding-top: var(--space-xl);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   font-size: 0.82rem;
-  color: var(--color-text-muted);
+  color: #A9B8B2;
+  flex-wrap: wrap;
+  gap: var(--space-md);
 }
 
 .footer-bottom-links {
@@ -146,16 +144,17 @@
 }
 
 .footer-bottom-link {
-  color: var(--color-text-muted);
+  color: #A9B8B2;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .footer-bottom-link:hover {
-  color: var(--color-ivory);
+  color: #F7F5EE;
 }
 
-@media (max-width: 768px) {
+/* ── Responsive ── */
+@media (max-width: 900px) {
   .footer-top {
     grid-template-columns: 1fr;
     gap: var(--space-2xl);
@@ -163,7 +162,7 @@
 
   .footer-bottom {
     flex-direction: column;
-    gap: 8px;
     text-align: center;
+    align-items: center;
   }
 }

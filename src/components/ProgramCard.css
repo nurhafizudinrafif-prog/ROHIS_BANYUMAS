@@ -1,6 +1,6 @@
 /* =========================================================
-   PROGRAM CARD — Liquid Glass & Refined Interactive Card
-   Dark Emerald • Smooth Expansion • High Contrast
+   PROGRAM CARD — LIGHT PREMIUM
+   Pure White / Warm Ivory Surface • Forest Green Typography • Emerald Accents
    ========================================================= */
 
 .program-glass-card {
@@ -8,27 +8,25 @@
   align-items: flex-start;
   gap: var(--space-lg);
   padding: var(--space-xl);
-  background: var(--glass-l2-bg);
-  backdrop-filter: var(--glass-l2-blur);
-  -webkit-backdrop-filter: var(--glass-l2-blur);
-  border: 1px solid var(--glass-l2-border);
+  background: #FFFFFF;
+  border: 1px solid rgba(13, 59, 46, 0.08);
   border-radius: var(--radius-md);
-  box-shadow: var(--glass-l2-shadow);
+  box-shadow: 0 6px 20px rgba(13, 59, 46, 0.04), 0 1px 3px rgba(13, 59, 46, 0.02);
   cursor: pointer;
   transition: all var(--transition-base);
   user-select: none;
 }
 
 .program-glass-card:hover {
-  box-shadow: var(--glass-l3-shadow);
-  border-color: var(--color-border-hover);
-  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(13, 59, 46, 0.08);
+  border-color: rgba(8, 127, 98, 0.25);
+  transform: translateY(-3px) scale(1.006);
 }
 
 .program-glass-card.is-expanded {
-  border-color: var(--accent-color, var(--color-emerald-accent));
-  background: var(--glass-l3-bg);
-  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.6), 0 0 18px rgba(25, 199, 154, 0.15);
+  border-color: var(--color-emerald);
+  background: #FFFFFF;
+  box-shadow: 0 16px 36px rgba(13, 59, 46, 0.10), 0 0 0 1px rgba(8, 127, 98, 0.20);
 }
 
 /* ── Icon Box ── */
@@ -43,18 +41,19 @@
   width: 50px;
   height: 50px;
   border-radius: var(--radius-sm);
-  background: rgba(25, 199, 154, 0.12);
-  color: var(--accent-color, var(--color-emerald-accent));
-  border: 1px solid rgba(25, 199, 154, 0.25);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  background: rgba(8, 127, 98, 0.08);
+  color: var(--color-emerald);
+  border: 1px solid rgba(8, 127, 98, 0.18);
+  box-shadow: 0 2px 8px rgba(13, 59, 46, 0.04);
   transition: all 0.25s ease;
 }
 
 .program-glass-icon.has-custom-logo {
-  background: #ffffff;
+  background: #FFFFFF;
   padding: 3px;
   border-radius: 50%;
   overflow: hidden;
+  border-color: rgba(8, 127, 98, 0.25);
 }
 
 .program-custom-logo-img {
@@ -65,9 +64,9 @@
 }
 
 .program-glass-card.is-expanded .program-glass-icon {
-  background: var(--accent-color, var(--color-emerald-accent));
-  color: #061713;
-  box-shadow: 0 0 20px rgba(25, 199, 154, 0.35);
+  background: var(--color-forest);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(13, 59, 46, 0.20);
 }
 
 /* ── Content ── */
@@ -85,7 +84,7 @@
   font-family: var(--font-heading);
   font-size: 0.72rem;
   font-weight: 700;
-  color: var(--accent-color, var(--color-emerald-accent));
+  color: var(--color-emerald);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -93,88 +92,115 @@
 .program-card-title {
   font-size: 1.15rem;
   font-weight: 700;
-  color: var(--color-ivory);
+  color: var(--color-forest);
   line-height: 1.35;
   margin-bottom: 6px;
 }
 
-.program-card-desc {
-  font-size: 0.92rem;
-  color: var(--color-text-secondary);
-  line-height: 1.65;
-  margin-bottom: var(--space-sm);
-}
-
-/* ── Expanded Content (Activity Items) ── */
-.program-expanded-content {
-  margin-top: var(--space-md);
-  padding-top: var(--space-md);
-  border-top: 1px solid rgba(25, 199, 154, 0.12);
-  animation: fadeIn 0.3s ease forwards;
-}
-
-.program-details-title {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--color-ivory);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-bottom: var(--space-xs);
-}
-
-.program-details-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.program-detail-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.88rem;
-  color: var(--color-text-secondary);
-}
-
-.program-detail-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--accent-color, var(--color-emerald-accent));
-  flex-shrink: 0;
-}
-
-/* ── Expand Toggle Indicator ── */
-.program-card-action {
+.program-preview-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 8px;
+  gap: 4px;
   font-size: 0.82rem;
   font-weight: 600;
-  color: var(--color-emerald-accent);
+  color: var(--color-emerald);
+  margin-bottom: 10px;
+  transition: color 0.2s ease;
+}
+
+.program-glass-card:hover .program-preview-toggle {
+  color: var(--color-forest);
 }
 
 .program-toggle-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: rgba(25, 199, 154, 0.12);
-  color: var(--color-emerald-accent);
   transition: transform 0.25s ease;
 }
 
-.program-glass-card.is-expanded .program-toggle-icon {
+.program-toggle-icon.is-rotated {
   transform: rotate(180deg);
 }
 
+.program-card-desc {
+  font-size: 0.90rem;
+  color: var(--color-text-secondary);
+  line-height: 1.65;
+  margin-bottom: 0;
+}
+
+/* ── Expanded Detail Drawer ── */
+.program-detail-drawer {
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid rgba(13, 59, 46, 0.08);
+  animation: drawerSlide 0.3s var(--ease-out) forwards;
+}
+
+@keyframes drawerSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.program-focus-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: var(--space-lg);
+}
+
+.program-focus-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.88rem;
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+.program-check-icon {
+  color: var(--color-emerald);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.program-action-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding-top: var(--space-xs);
+}
+
+.btn-program-detail {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  font-size: 0.80rem;
+  font-weight: 600;
+  font-family: var(--font-heading);
+  color: var(--color-forest);
+  background: rgba(13, 59, 46, 0.05);
+  border: 1px solid rgba(13, 59, 46, 0.12);
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-program-detail:hover {
+  background: var(--color-forest);
+  color: #FFFFFF;
+}
+
+/* ── Responsive ── */
 @media (max-width: 640px) {
   .program-glass-card {
     flex-direction: column;
-    align-items: flex-start;
+    gap: var(--space-md);
     padding: var(--space-lg);
   }
 }

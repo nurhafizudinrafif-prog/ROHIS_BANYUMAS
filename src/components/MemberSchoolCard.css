@@ -1,31 +1,30 @@
 /* =========================================================
-   MEMBER SCHOOL CARD — Liquid Glass on Dark Emerald
+   MEMBER SCHOOL CARD — LIGHT PREMIUM
+   Pure White Card • Forest Green Typography • Emerald Badge
    ========================================================= */
 
 .school-card {
   display: flex;
   flex-direction: column;
   padding: var(--space-lg);
-  background: var(--glass-l2-bg);
-  backdrop-filter: var(--glass-l2-blur);
-  -webkit-backdrop-filter: var(--glass-l2-blur);
-  border: 1px solid var(--glass-l2-border);
+  background: #FFFFFF;
+  border: 1px solid rgba(13, 59, 46, 0.08);
   border-radius: var(--radius-md);
-  box-shadow: var(--glass-l2-shadow);
+  box-shadow: 0 6px 20px rgba(13, 59, 46, 0.04), 0 1px 3px rgba(13, 59, 46, 0.02);
   transition: all var(--transition-base);
 }
 
 .school-card:hover {
-  transform: translateY(-3px) scale(1.008);
-  box-shadow: var(--glass-l3-shadow);
-  border-color: var(--color-border-hover);
+  transform: translateY(-3px) scale(1.006);
+  box-shadow: 0 12px 30px rgba(13, 59, 46, 0.08);
+  border-color: rgba(8, 127, 98, 0.25);
 }
 
 .school-card-name {
   font-family: var(--font-heading);
-  font-size: 1.02rem;
+  font-size: 1.05rem;
   font-weight: 700;
-  color: var(--color-ivory);
+  color: var(--color-forest);
   margin-bottom: 6px;
   line-height: 1.35;
 }
@@ -45,14 +44,14 @@
 
 .school-card-meta span {
   font-size: 0.80rem;
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
 .school-card-meta span svg {
-  color: var(--color-emerald-accent);
+  color: var(--color-emerald);
 }
 
 .school-card-members {
@@ -60,10 +59,10 @@
   align-items: center;
   gap: 4px;
   padding: 3px 10px;
-  background: rgba(25, 199, 154, 0.12);
-  border: 1px solid rgba(25, 199, 154, 0.22);
+  background: rgba(8, 127, 98, 0.08);
+  border: 1px solid rgba(8, 127, 98, 0.18);
   border-radius: var(--radius-pill);
   font-size: 0.75rem;
   font-weight: 700;
-  color: var(--color-emerald-accent);
+  color: var(--color-emerald);
 }

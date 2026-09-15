@@ -1,5 +1,6 @@
 /* ============================================================
-   ACHIEVEMENTS ARCHIVE SECTION — OFFICIAL EDITORIAL DESIGN
+   ACHIEVEMENTS ARCHIVE SECTION — LIGHT PREMIUM
+   Pure White Surfaces • Subtle Metallic Cues • Editorial Hierarchy
    ============================================================ */
 
 .achievements-section {
@@ -15,11 +16,10 @@
   gap: var(--space-md);
   margin-bottom: var(--space-3xl);
   padding: var(--space-lg) var(--space-xl);
-  background: var(--glass-l1-bg);
-  border: 1px solid var(--glass-l1-border);
+  background: #FFFFFF;
+  border: 1px solid rgba(13, 59, 46, 0.08);
   border-radius: var(--radius-lg);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 4px 16px rgba(13, 59, 46, 0.04);
 }
 
 .achievements-filter-group {
@@ -31,10 +31,10 @@
 
 .filter-group-label {
   font-size: 0.8125rem;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--color-text-muted);
+  color: var(--color-forest);
   min-width: 72px;
 }
 
@@ -45,12 +45,12 @@
 }
 
 .filter-pill-btn {
-  background: rgba(11, 43, 36, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--color-bg);
+  border: 1px solid rgba(13, 59, 46, 0.10);
   border-radius: var(--radius-full);
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
   font-size: 0.8125rem;
-  font-weight: 500;
+  font-weight: 600;
   padding: 6px 14px;
   cursor: pointer;
   transition: all var(--motion-fast);
@@ -58,16 +58,16 @@
 }
 
 .filter-pill-btn:hover {
-  color: var(--color-warm-ivory);
-  background: rgba(25, 199, 154, 0.12);
-  border-color: rgba(25, 199, 154, 0.25);
+  color: var(--color-forest);
+  background: rgba(8, 127, 98, 0.06);
+  border-color: rgba(8, 127, 98, 0.25);
 }
 
 .filter-pill-btn.active {
-  background: rgba(25, 199, 154, 0.2);
-  border-color: var(--color-accent-emerald);
-  color: var(--color-accent-emerald);
-  box-shadow: 0 0 12px rgba(25, 199, 154, 0.15);
+  background: rgba(8, 127, 98, 0.10);
+  border-color: var(--color-emerald);
+  color: var(--color-emerald);
+  box-shadow: 0 2px 8px rgba(8, 127, 98, 0.10);
 }
 
 /* Grid Layout */
@@ -82,12 +82,11 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  background: var(--surface-card);
-  border: 1px solid var(--border-subtle);
+  background: #FFFFFF;
+  border: 1px solid rgba(13, 59, 46, 0.08);
   border-radius: var(--radius-xl);
   padding: var(--space-xl);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 6px 20px rgba(13, 59, 46, 0.04), 0 1px 3px rgba(13, 59, 46, 0.02);
   transition: transform var(--motion-medium), border-color var(--motion-medium), box-shadow var(--motion-medium);
   overflow: hidden;
 }
@@ -98,55 +97,55 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
+  height: 3px;
   background: transparent;
   transition: background var(--motion-medium);
 }
 
 .achievement-card:hover {
-  transform: translateY(-3px) scale(1.005);
-  box-shadow: var(--shadow-xl);
+  transform: translateY(-3px) scale(1.006);
+  box-shadow: 0 14px 32px rgba(13, 59, 46, 0.08);
 }
 
-/* Rank Distinction — Subtle metallic cues */
+/* Rank Distinction — Subtle metallic cues on Light Surface */
 .achievement-card.rank-gold {
-  border-color: rgba(200, 173, 114, 0.32);
+  border-color: rgba(185, 154, 94, 0.35);
 }
 .achievement-card.rank-gold::before {
-  background: linear-gradient(90deg, transparent, rgba(200, 173, 114, 0.8), transparent);
+  background: linear-gradient(90deg, transparent, #B99A5E, transparent);
 }
 .achievement-card.rank-gold:hover {
-  border-color: rgba(200, 173, 114, 0.6);
-  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.5), 0 0 20px rgba(200, 173, 114, 0.12);
+  border-color: rgba(185, 154, 94, 0.6);
+  box-shadow: 0 14px 34px rgba(185, 154, 94, 0.12), 0 4px 12px rgba(13, 59, 46, 0.04);
 }
 
 .achievement-card.rank-silver {
-  border-color: rgba(169, 184, 178, 0.25);
+  border-color: rgba(97, 112, 106, 0.25);
 }
 .achievement-card.rank-silver::before {
-  background: linear-gradient(90deg, transparent, rgba(169, 184, 178, 0.6), transparent);
+  background: linear-gradient(90deg, transparent, #61706A, transparent);
 }
 .achievement-card.rank-silver:hover {
-  border-color: rgba(169, 184, 178, 0.5);
-  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.5), 0 0 20px rgba(169, 184, 178, 0.08);
+  border-color: rgba(97, 112, 106, 0.45);
+  box-shadow: 0 14px 32px rgba(13, 59, 46, 0.08);
 }
 
 .achievement-card.rank-bronze {
-  border-color: rgba(184, 126, 82, 0.25);
+  border-color: rgba(184, 126, 82, 0.28);
 }
 .achievement-card.rank-bronze::before {
-  background: linear-gradient(90deg, transparent, rgba(184, 126, 82, 0.6), transparent);
+  background: linear-gradient(90deg, transparent, #B87E52, transparent);
 }
 .achievement-card.rank-bronze:hover {
   border-color: rgba(184, 126, 82, 0.5);
-  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.5), 0 0 20px rgba(184, 126, 82, 0.08);
+  box-shadow: 0 14px 32px rgba(13, 59, 46, 0.08);
 }
 
 .achievement-card.rank-special {
-  border-color: rgba(25, 199, 154, 0.25);
+  border-color: rgba(8, 127, 98, 0.25);
 }
 .achievement-card.rank-special::before {
-  background: linear-gradient(90deg, transparent, rgba(25, 199, 154, 0.6), transparent);
+  background: linear-gradient(90deg, transparent, #087F62, transparent);
 }
 
 /* Header Inside Card */
@@ -163,8 +162,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 10px;
-  border-radius: var(--radius-full);
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -172,24 +171,24 @@
 }
 
 .rank-gold .achievement-rank-badge {
-  background: rgba(200, 173, 114, 0.12);
-  color: #E5CE93;
-  border: 1px solid rgba(200, 173, 114, 0.35);
+  background: rgba(185, 154, 94, 0.12);
+  color: #8F7239;
+  border: 1px solid rgba(185, 154, 94, 0.35);
 }
 .rank-silver .achievement-rank-badge {
-  background: rgba(169, 184, 178, 0.12);
-  color: #D3DDD8;
-  border: 1px solid rgba(169, 184, 178, 0.3);
+  background: rgba(97, 112, 106, 0.10);
+  color: #4D5C56;
+  border: 1px solid rgba(97, 112, 106, 0.25);
 }
 .rank-bronze .achievement-rank-badge {
-  background: rgba(184, 126, 82, 0.12);
-  color: #D9A77F;
-  border: 1px solid rgba(184, 126, 82, 0.3);
+  background: rgba(184, 126, 82, 0.10);
+  color: #A06538;
+  border: 1px solid rgba(184, 126, 82, 0.28);
 }
 .rank-special .achievement-rank-badge {
-  background: rgba(25, 199, 154, 0.12);
-  color: var(--color-accent-emerald);
-  border: 1px solid rgba(25, 199, 154, 0.3);
+  background: rgba(8, 127, 98, 0.08);
+  color: var(--color-emerald);
+  border: 1px solid rgba(8, 127, 98, 0.25);
 }
 
 .achievement-meta-pills {
@@ -204,20 +203,21 @@
   gap: 4px;
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--color-text-muted);
-  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text-secondary);
+  background: var(--color-bg);
   padding: 3px 8px;
   border-radius: var(--radius-sm);
+  border: 1px solid rgba(13, 59, 46, 0.08);
 }
 
 .achievement-category-tag {
   font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--color-accent-emerald);
-  background: rgba(25, 199, 154, 0.08);
+  font-weight: 600;
+  color: var(--color-emerald);
+  background: rgba(8, 127, 98, 0.08);
   padding: 3px 8px;
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(25, 199, 154, 0.18);
+  border: 1px solid rgba(8, 127, 98, 0.18);
 }
 
 /* Title */
@@ -225,7 +225,7 @@
   font-size: 1.1875rem;
   font-weight: 700;
   line-height: 1.35;
-  color: var(--color-warm-ivory);
+  color: var(--color-forest);
   margin-bottom: var(--space-md);
 }
 
@@ -236,25 +236,25 @@
   gap: 6px;
   margin-bottom: var(--space-md);
   padding-bottom: var(--space-md);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(13, 59, 46, 0.08);
 }
 
 .achievement-info-item {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.8125rem;
-  color: var(--color-text-muted);
+  font-size: 0.84rem;
+  color: var(--color-text-secondary);
 }
 
 .achievement-info-item .info-icon {
   flex-shrink: 0;
-  color: var(--color-accent-emerald);
+  color: var(--color-emerald);
   opacity: 0.85;
 }
 
 .achievement-info-item.recipient-item {
-  color: var(--color-warm-ivory);
+  color: var(--color-forest);
   font-weight: 600;
 }
 
@@ -266,7 +266,7 @@
 .achievement-card-desc {
   font-size: 0.875rem;
   line-height: 1.6;
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
   margin: 0;
 }
 
@@ -282,7 +282,7 @@
     grid-template-columns: 1fr;
     gap: var(--space-lg);
   }
-  
+
   .achievements-filter-wrap {
     padding: var(--space-md);
   }
@@ -292,12 +292,12 @@
   .achievement-card {
     padding: var(--space-lg);
   }
-  
+
   .filter-group-label {
     width: 100%;
     margin-bottom: 4px;
   }
-  
+
   .achievement-card-title {
     font-size: 1.0625rem;
   }

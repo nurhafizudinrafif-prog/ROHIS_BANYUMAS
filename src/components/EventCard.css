@@ -1,6 +1,6 @@
 /* =========================================================
-   EVENT CARD — Timeline Style in Liquid Glass
-   Dark Emerald • High Legibility • Clear Dates & Status
+   EVENT CARD — LIGHT PREMIUM
+   Timeline Style • Pure White Surface • Clear Emerald Date Block
    ========================================================= */
 
 .event-card {
@@ -8,19 +8,17 @@
   align-items: flex-start;
   gap: var(--space-lg);
   padding: var(--space-lg);
-  background: var(--glass-l2-bg);
-  backdrop-filter: var(--glass-l2-blur);
-  -webkit-backdrop-filter: var(--glass-l2-blur);
-  border: 1px solid var(--glass-l2-border);
+  background: #FFFFFF;
+  border: 1px solid rgba(13, 59, 46, 0.08);
   border-radius: var(--radius-md);
-  box-shadow: var(--glass-l2-shadow);
+  box-shadow: 0 6px 20px rgba(13, 59, 46, 0.04), 0 1px 3px rgba(13, 59, 46, 0.02);
   transition: all var(--transition-base);
 }
 
 .event-card:hover {
   transform: translateY(-3px);
-  box-shadow: var(--glass-l3-shadow);
-  border-color: var(--color-border-hover);
+  box-shadow: 0 12px 30px rgba(13, 59, 46, 0.08);
+  border-color: rgba(8, 127, 98, 0.25);
 }
 
 /* Date Box */
@@ -29,12 +27,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 60px;
+  min-width: 62px;
   padding: 10px 8px;
-  background: rgba(25, 199, 154, 0.12);
-  border: 1px solid rgba(25, 199, 154, 0.25);
+  background: rgba(8, 127, 98, 0.08);
+  border: 1px solid rgba(8, 127, 98, 0.18);
   border-radius: var(--radius-sm);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2px 8px rgba(13, 59, 46, 0.04);
   flex-shrink: 0;
 }
 
@@ -42,17 +40,17 @@
   font-family: var(--font-heading);
   font-size: 1.45rem;
   font-weight: 800;
-  color: var(--color-emerald-accent);
+  color: var(--color-emerald);
   line-height: 1;
 }
 
 .event-card-month {
   font-size: 0.74rem;
   font-weight: 700;
-  color: var(--color-cyan);
+  color: var(--color-forest);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-top: 2px;
+  margin-top: 3px;
 }
 
 /* Content */
@@ -64,16 +62,16 @@
 .event-card-type {
   font-size: 0.72rem;
   font-weight: 700;
-  color: var(--color-cyan);
+  color: var(--color-emerald);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   margin-bottom: 4px;
 }
 
 .event-card-title {
-  font-size: 1.05rem;
+  font-size: 1.08rem;
   font-weight: 700;
-  color: var(--color-ivory);
+  color: var(--color-forest);
   line-height: 1.35;
   margin-bottom: 8px;
 }
@@ -85,7 +83,7 @@
 }
 
 .event-card-info span {
-  font-size: 0.84rem;
+  font-size: 0.86rem;
   color: var(--color-text-secondary);
   display: flex;
   align-items: center;
@@ -94,37 +92,52 @@
 
 .event-card-info svg {
   flex-shrink: 0;
-  color: var(--color-emerald-accent);
+  color: var(--color-emerald);
   opacity: 0.85;
 }
 
-/* Status Pill */
+/* Status Badge */
 .event-card-status {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.status-badge {
   display: inline-flex;
-  align-items: center;
-  padding: 3px 10px;
-  font-size: 0.72rem;
-  font-weight: 700;
+  padding: 4px 12px;
   border-radius: var(--radius-pill);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: var(--font-heading);
 }
 
-.event-card-status.upcoming {
-  background: rgba(25, 199, 154, 0.16);
-  color: var(--color-emerald-accent);
-  border: 1px solid rgba(25, 199, 154, 0.3);
+.status-upcoming {
+  background: rgba(8, 127, 98, 0.08);
+  color: var(--color-emerald);
+  border: 1px solid rgba(8, 127, 98, 0.20);
 }
 
-.event-card-status.completed {
-  background: rgba(169, 184, 178, 0.12);
+.status-completed {
+  background: rgba(13, 59, 46, 0.05);
   color: var(--color-text-muted);
-  border: 1px solid rgba(169, 184, 178, 0.2);
+  border: 1px solid rgba(13, 59, 46, 0.10);
 }
 
+/* Responsive */
 @media (max-width: 640px) {
   .event-card {
     flex-direction: column;
-    align-items: flex-start;
+    gap: var(--space-md);
+  }
+
+  .event-card-header-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .event-card-status {
+    margin-left: 0;
   }
 }
