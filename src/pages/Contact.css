@@ -1,5 +1,5 @@
 /* =========================================================
-   CONTACT PAGE
+   CONTACT PAGE — Liquid Glass & Form Styles
    ========================================================= */
 
 .contact-page .page-hero {
@@ -8,16 +8,16 @@
 
 .contact-grid {
   display: grid;
-  grid-template-columns: 1fr 1.2fr;
+  grid-template-columns: 1fr 1.3fr;
   gap: var(--space-2xl);
   align-items: start;
 }
 
-/* Contact Info */
+/* ── Contact Info Cards ── */
 .contact-info {
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg);
+  gap: var(--space-md);
 }
 
 .contact-info-card {
@@ -25,38 +25,50 @@
   align-items: flex-start;
   gap: var(--space-md);
   padding: var(--space-lg);
-  background: var(--color-surface);
-  border: 1px solid rgba(11, 47, 38, 0.06);
+  background: var(--glass-l2-bg);
+  backdrop-filter: var(--glass-l2-blur);
+  -webkit-backdrop-filter: var(--glass-l2-blur);
+  border: 1px solid var(--glass-l2-border);
   border-radius: var(--radius-md);
+  box-shadow: var(--glass-l2-shadow);
+  transition: all var(--transition-base);
+}
+
+.contact-info-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-border-hover);
+  box-shadow: var(--glass-l3-shadow);
 }
 
 .contact-info-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--radius-sm);
-  background: rgba(15, 107, 82, 0.08);
-  color: var(--color-emerald);
+  background: rgba(25, 199, 154, 0.12);
+  color: var(--color-emerald-accent);
+  border: 1px solid rgba(25, 199, 154, 0.25);
   flex-shrink: 0;
 }
 
 .contact-info-title {
   font-family: var(--font-heading);
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--color-forest);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-ivory);
   margin-bottom: 4px;
 }
 
 .contact-info-text {
   font-size: 0.88rem;
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
 }
 
 .contact-info-text a {
-  color: var(--color-emerald);
+  color: var(--color-cyan);
   text-decoration: none;
 }
 
@@ -64,19 +76,21 @@
   text-decoration: underline;
 }
 
-/* Form */
+/* ── Form Wrapper ── */
 .contact-form-wrapper {
-  padding: var(--space-xl);
-  background: var(--color-surface);
-  border: 1px solid rgba(11, 47, 38, 0.06);
+  padding: var(--space-2xl);
+  background: var(--glass-l2-bg);
+  backdrop-filter: var(--glass-l2-blur);
+  -webkit-backdrop-filter: var(--glass-l2-blur);
+  border: 1px solid var(--glass-l2-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--glass-l2-shadow);
 }
 
 .contact-form-title {
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   font-weight: 700;
-  color: var(--color-forest);
+  color: var(--color-ivory);
   margin-bottom: var(--space-xl);
 }
 
@@ -86,10 +100,45 @@
   gap: var(--space-lg);
 }
 
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
+.form-label {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--color-ivory);
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(6, 23, 19, 0.75);
+  border: 1px solid rgba(25, 199, 154, 0.2);
+  border-radius: var(--radius-sm);
+  color: var(--color-ivory);
+  font-family: inherit;
+  font-size: 0.92rem;
+  outline: none;
+  transition: all var(--transition-base);
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+  border-color: var(--color-cyan);
+  box-shadow: 0 0 14px rgba(32, 217, 232, 0.25);
+  background: rgba(6, 23, 19, 0.95);
+}
+
+.form-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
 
 @media (max-width: 768px) {
   .contact-grid {

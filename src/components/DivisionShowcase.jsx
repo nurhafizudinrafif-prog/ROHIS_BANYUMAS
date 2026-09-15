@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { ChevronDown, ChevronUp, Users, Shield, ArrowRight, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, Users, Shield, X } from 'lucide-react';
 import TeamCard from './TeamCard';
 import './DivisionShowcase.css';
 

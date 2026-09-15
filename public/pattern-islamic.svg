@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
+  <defs>
+    <style>
+      .geom-line {
+        stroke: #19C79A;
+        stroke-width: 0.75;
+        fill: none;
+        stroke-opacity: 0.35;
+      }
+      .geom-fill {
+        fill: #20D9E8;
+        fill-opacity: 0.04;
+      }
+    </style>
+  </defs>
+  <!-- Central 8-Point Star and Octagonal Interlocking Web -->
+  <polygon points="40,20 45,30 55,25 50,35 60,40 50,45 55,55 45,50 40,60 35,50 25,55 30,45 20,40 30,35 25,25 35,30" class="geom-line geom-fill" />
+  <circle cx="40" cy="40" r="12" class="geom-line" />
+  <circle cx="40" cy="40" r="28" class="geom-line" stroke-dasharray="2,4" />
+  <!-- Corner Connecting Motifs -->
+  <path d="M 0,0 L 15,15 M 80,0 L 65,15 M 0,80 L 15,65 M 80,80 L 65,65" class="geom-line" />
+  <path d="M 0,40 L 12,40 M 80,40 L 68,40 M 40,0 L 40,12 M 40,80 L 40,68" class="geom-line" />
+</svg>

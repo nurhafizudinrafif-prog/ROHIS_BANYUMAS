@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useScrollAnimation } from '../utils';
 import HeroSection from '../components/HeroSection';
+import StatsCounter from '../components/StatsCounter';
 import SectionHeader from '../components/SectionHeader';
 import ProgramCard from '../components/ProgramCard';
 import ArticleCard from '../components/ArticleCard';
@@ -20,6 +21,7 @@ import EventCard from '../components/EventCard';
 import MemberSchoolCard from '../components/MemberSchoolCard';
 import QuoteSection from '../components/QuoteSection';
 import InstagramSection from '../components/InstagramSection';
+import AchievementsSection from '../components/AchievementsSection';
 import { useData } from '../context/DataContext';
 import {
   normalizeMediaList,
@@ -47,9 +49,7 @@ export default function Home() {
     events,
     memberSchools,
     galleryItems,
-    team,
     structurePeriod,
-    organizationFullName,
   } = useData();
 
   const activeMediaList = selectedItem ? normalizeMediaList(selectedItem) : [];
@@ -113,6 +113,9 @@ export default function Home() {
   return (
     <main>
       <HeroSection />
+
+      {/* Organization Snapshot / Impact */}
+      <StatsCounter />
 
       {/* Programs Section */}
       <section className="section">
@@ -181,6 +184,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Achievements / Rekam Jejak */}
+      <AchievementsSection limit={4} showFilters={true} />
 
       {/* Gallery Section */}
       <section className="section section-alt">

@@ -1,51 +1,121 @@
 /* =========================================================
-   PROGRAMS PAGE
+   PROGRAMS & AGENDA PAGE — Liquid Glass & Clear Hierarchy
    ========================================================= */
 
 .programs-page .page-hero {
   padding-bottom: var(--space-3xl);
 }
 
+/* ── Section Switcher / Filter Capsule ── */
+.programs-page-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  background: var(--glass-l2-bg);
+  backdrop-filter: var(--glass-l2-blur);
+  -webkit-backdrop-filter: var(--glass-l2-blur);
+  border: 1px solid var(--glass-l2-border);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--glass-l2-shadow);
+  margin-top: var(--space-2xl);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.programs-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  font-family: var(--font-heading);
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-pill);
+  transition: all var(--transition-base);
+  border: 1px solid transparent;
+}
+
+.programs-tab-btn:hover {
+  color: var(--color-ivory);
+  background: rgba(25, 199, 154, 0.1);
+}
+
+.programs-tab-btn.active {
+  background: linear-gradient(135deg, #19C79A 0%, #20D9E8 100%);
+  color: #061713;
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(25, 199, 154, 0.35);
+  font-weight: 700;
+}
+
+.programs-tab-counter {
+  font-size: 0.72rem;
+  padding: 1px 7px;
+  border-radius: var(--radius-pill);
+  background: rgba(0, 0, 0, 0.2);
+  color: inherit;
+}
+
+/* ── Programs Grid ── */
 .programs-grid {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  gap: var(--space-lg);
 }
 
+/* ── Filter Pills (Agenda) ── */
 .programs-filter {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   flex-wrap: wrap;
   margin-bottom: var(--space-xl);
+  justify-content: center;
 }
 
 .programs-filter-btn {
-  padding: 6px 16px;
+  padding: 7px 18px;
   font-family: var(--font-heading);
   font-size: 0.82rem;
-  font-weight: 500;
-  color: var(--color-text-muted);
-  background: transparent;
-  border: 1px solid rgba(11, 47, 38, 0.10);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  background: rgba(8, 31, 26, 0.65);
+  border: 1px solid rgba(25, 199, 154, 0.18);
   border-radius: var(--radius-pill);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-base);
 }
 
 .programs-filter-btn:hover {
-  border-color: var(--color-emerald);
-  color: var(--color-emerald);
+  border-color: var(--color-emerald-accent);
+  color: var(--color-ivory);
+  background: rgba(25, 199, 154, 0.12);
 }
 
 .programs-filter-btn.active {
-  background: var(--color-emerald);
-  color: #FFFFFF;
-  border-color: var(--color-emerald);
+  background: rgba(25, 199, 154, 0.2);
+  color: var(--color-emerald-accent);
+  border-color: var(--color-emerald-accent);
+  box-shadow: 0 0 14px rgba(25, 199, 154, 0.18);
 }
 
-/* Events in programs page */
+/* Events Timeline */
 .events-timeline {
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
+}
+
+@media (max-width: 640px) {
+  .programs-page-switcher {
+    border-radius: var(--radius-md);
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .programs-tab-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }

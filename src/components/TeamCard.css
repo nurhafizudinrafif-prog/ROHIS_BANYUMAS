@@ -1,5 +1,5 @@
 /* =========================================================
-   TEAM CARD — Clean Professional
+   TEAM CARD — Liquid Glass on Dark Emerald
    ========================================================= */
 
 .team-card {
@@ -8,16 +8,19 @@
   align-items: center;
   text-align: center;
   padding: var(--space-xl) var(--space-lg);
-  background: var(--color-surface);
-  border: 1px solid rgba(11, 47, 38, 0.08);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  transition: all 0.3s var(--ease-out);
+  background: var(--glass-l2-bg);
+  backdrop-filter: var(--glass-l2-blur);
+  -webkit-backdrop-filter: var(--glass-l2-blur);
+  border: 1px solid var(--glass-l2-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--glass-l2-shadow);
+  transition: all var(--transition-base);
 }
 
 .team-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-3px) scale(1.008);
+  box-shadow: var(--glass-l3-shadow);
+  border-color: var(--color-border-hover);
 }
 
 /* Avatar */
@@ -25,16 +28,18 @@
   width: 72px;
   height: 72px;
   border-radius: 50%;
-  background: rgba(15, 107, 82, 0.08);
+  background: rgba(25, 199, 154, 0.12);
+  border: 2px solid rgba(25, 199, 154, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: var(--space-md);
-  color: var(--color-emerald);
+  color: var(--color-emerald-accent);
   font-family: var(--font-heading);
   font-size: 1.5rem;
   font-weight: 700;
   overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
 }
 
 .team-card-avatar img {
@@ -46,29 +51,31 @@
 /* Info */
 .team-card-name {
   font-family: var(--font-heading);
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 700;
-  color: var(--color-forest);
+  color: var(--color-ivory);
   margin-bottom: 4px;
+  line-height: 1.35;
 }
 
 .team-card-role {
   font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--color-emerald);
+  font-weight: 700;
+  color: var(--color-emerald-accent);
   margin-bottom: 4px;
+  letter-spacing: 0.02em;
 }
 
 .team-card-school {
-  font-size: 0.78rem;
+  font-size: 0.80rem;
   color: var(--color-text-muted);
   margin-bottom: 8px;
 }
 
 .team-card-bio {
-  font-size: 0.82rem;
-  color: var(--color-text-muted);
-  line-height: 1.5;
+  font-size: 0.84rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
 }
 
 /* Instagram link */
@@ -76,40 +83,34 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 12px;
+  padding: 4px 14px;
   margin-top: var(--space-md);
   font-size: 0.78rem;
-  font-weight: 500;
-  color: var(--color-text-muted);
-  background: rgba(11, 47, 38, 0.04);
+  font-weight: 600;
+  color: var(--color-cyan);
+  background: rgba(32, 217, 232, 0.10);
+  border: 1px solid rgba(32, 217, 232, 0.22);
   border-radius: var(--radius-pill);
   text-decoration: none;
   transition: all 0.2s ease;
 }
 
 .team-card-ig:hover {
-  background: rgba(15, 107, 82, 0.08);
-  color: var(--color-emerald);
+  background: rgba(32, 217, 232, 0.22);
+  border-color: var(--color-cyan);
+  color: #FFFFFF;
 }
 
-/* Ornament (simplified) */
+/* Ornament */
 .team-card-ornament {
   display: flex;
   align-items: center;
   gap: 6px;
   margin-top: var(--space-sm);
+  opacity: 0.6;
 }
 
-.team-ornament-line {
-  width: 20px;
-  height: 1px;
-  background: rgba(15, 107, 82, 0.12);
-}
-
-.team-ornament-diamond {
-  width: 5px;
-  height: 5px;
-  background: var(--color-emerald);
-  transform: rotate(45deg);
-  opacity: 0.4;
+.team-card-ornament span {
+  font-size: 6px;
+  color: var(--color-gold);
 }

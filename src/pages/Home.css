@@ -1,5 +1,5 @@
 /* =========================================================
-   HOME PAGE — Section Layouts
+   HOME PAGE — Section Layouts & Dark Emerald Liquid Glass
    ========================================================= */
 
 /* Programs Grid */
@@ -16,61 +16,69 @@
   gap: var(--space-md);
 }
 
-/* CTA Section */
+/* ── Final CTA Section ── */
 .home-cta-section {
-  background: var(--color-forest);
   padding: var(--space-4xl) 0;
+  position: relative;
 }
 
 .home-cta {
-  max-width: 640px;
+  max-width: 780px;
   margin: 0 auto;
-  padding: var(--space-2xl);
+  padding: var(--space-3xl) var(--space-2xl);
   text-align: center;
-  background: transparent;
-  border: none;
-  box-shadow: none;
+  background: var(--glass-l3-bg);
+  backdrop-filter: var(--glass-l3-blur);
+  -webkit-backdrop-filter: var(--glass-l3-blur);
+  border: 1px solid var(--glass-l3-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--glass-l3-shadow), 0 0 32px rgba(25, 199, 154, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+.home-cta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #20D9E8, #19C79A, transparent);
 }
 
 .home-cta h2 {
-  color: #FFFFFF;
-  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  color: var(--color-ivory);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
   margin-bottom: var(--space-md);
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 .home-cta p {
-  color: rgba(255, 255, 255, 0.60);
-  font-size: 1rem;
+  color: var(--color-text-secondary);
+  font-size: 1.05rem;
   margin-bottom: var(--space-2xl);
-  line-height: 1.7;
+  line-height: 1.75;
+  max-width: 580px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .home-cta-actions {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 14px;
+  gap: 16px;
   flex-wrap: wrap;
 }
 
-/* On dark bg, outline button needs light colors */
-.home-cta-section .btn-outline {
-  color: rgba(255, 255, 255, 0.85) !important;
-  border-color: rgba(255, 255, 255, 0.25) !important;
-}
-
-.home-cta-section .btn-outline:hover {
-  background: rgba(255, 255, 255, 0.10) !important;
-  border-color: rgba(255, 255, 255, 0.40) !important;
-  color: #FFFFFF !important;
-}
-
-
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
-
+/* ── Responsive ── */
 @media (max-width: 768px) {
+  .home-cta {
+    padding: var(--space-2xl) var(--space-lg);
+  }
+
   .home-cta-actions {
     flex-direction: column;
     gap: 12px;

@@ -1,5 +1,5 @@
 /* =========================================================
-   REGISTRATION PAGE
+   REGISTRATION PAGE — Liquid Glass Form
    ========================================================= */
 
 .reg-page .page-hero {
@@ -7,19 +7,21 @@
 }
 
 .reg-form {
-  max-width: 640px;
+  max-width: 680px;
   margin: 0 auto;
-  padding: var(--space-xl);
-  background: var(--color-surface);
-  border: 1px solid rgba(11, 47, 38, 0.06);
+  padding: var(--space-2xl);
+  background: var(--glass-l2-bg);
+  backdrop-filter: var(--glass-l2-blur);
+  -webkit-backdrop-filter: var(--glass-l2-blur);
+  border: 1px solid var(--glass-l2-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--glass-l2-shadow);
 }
 
 .reg-form-title {
-  font-size: 1.15rem;
+  font-size: 1.3rem;
   font-weight: 700;
-  color: var(--color-forest);
+  color: var(--color-ivory);
   margin-bottom: var(--space-xl);
 }
 
@@ -38,5 +40,8 @@
 @media (max-width: 640px) {
   .reg-form-row {
     grid-template-columns: 1fr;
+  }
+  .reg-form {
+    padding: var(--space-xl) var(--space-lg);
   }
 }

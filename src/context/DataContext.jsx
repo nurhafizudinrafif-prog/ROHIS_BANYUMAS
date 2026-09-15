@@ -5,7 +5,7 @@ import { galleryItems as initialGalleryItems, galleryCategories as initialGaller
 import { memberSchools as initialMemberSchools } from '../data/memberSchools';
 import { team as initialTeam, structurePeriod, organizationFullName } from '../data/team';
 import { instagramReels as initialInstagramReels, instagramProfile as initialInstagramProfile } from '../data/instagram';
-import { fetchCloudCMSData, saveCloudCMSData } from '../services/cloudSync';
+import { fetchCloudCMSData } from '../services/cloudSync';
 
 const STORAGE_KEY = 'rohis_banyumas_cms_data_v2';
 

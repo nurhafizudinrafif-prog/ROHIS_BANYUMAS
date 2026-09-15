@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useScrollAnimation } from '../utils';
-import { Send, CheckCircle, User, School, Phone, Mail, FileText, ChevronRight } from 'lucide-react';
+import { Send, CheckCircle, User, School, FileText, ChevronRight } from 'lucide-react';
 import './Registration.css';
 import './About.css';
 

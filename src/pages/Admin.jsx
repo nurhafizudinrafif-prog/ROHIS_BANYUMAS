@@ -25,11 +25,8 @@ import {
   Lock,
   ShieldCheck,
   Film,
-  Play,
-  Check,
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
-import { InstagramIcon, YoutubeIcon } from '../components/InstagramSection';
 import {
   isVideoMedia,
   getMediaThumbnail,
@@ -37,7 +34,6 @@ import {
   getCoverMedia,
   getMediaSummary,
   getDirectImageUrl,
-  isGoogleDriveUrl,
   extractGoogleDriveId,
 } from '../utils/media';
 import logoImg from '../assets/logo.png';

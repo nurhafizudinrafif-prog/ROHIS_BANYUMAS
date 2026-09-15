@@ -1,5 +1,6 @@
 /* =========================================================
-   PROGRAM CARD — Clean Expandable Card
+   PROGRAM CARD — Liquid Glass & Refined Interactive Card
+   Dark Emerald • Smooth Expansion • High Contrast
    ========================================================= */
 
 .program-glass-card {
@@ -7,29 +8,30 @@
   align-items: flex-start;
   gap: var(--space-lg);
   padding: var(--space-xl);
-  background: var(--color-surface);
-  border: 1px solid rgba(11, 47, 38, 0.08);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  background: var(--glass-l2-bg);
+  backdrop-filter: var(--glass-l2-blur);
+  -webkit-backdrop-filter: var(--glass-l2-blur);
+  border: 1px solid var(--glass-l2-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--glass-l2-shadow);
   cursor: pointer;
-  transition: all 0.3s var(--ease-out);
+  transition: all var(--transition-base);
   user-select: none;
 }
 
 .program-glass-card:hover {
-  box-shadow: var(--shadow-md);
-  border-color: rgba(15, 107, 82, 0.15);
-  transform: translateY(-2px);
+  box-shadow: var(--glass-l3-shadow);
+  border-color: var(--color-border-hover);
+  transform: translateY(-3px);
 }
 
 .program-glass-card.is-expanded {
-  border-color: var(--accent-color, var(--color-emerald));
-  box-shadow: 0 4px 20px rgba(15, 107, 82, 0.10);
+  border-color: var(--accent-color, var(--color-emerald-accent));
+  background: var(--glass-l3-bg);
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.6), 0 0 18px rgba(25, 199, 154, 0.15);
 }
 
-
-/* ── Icon ── */
-
+/* ── Icon Box ── */
 .program-glass-icon-wrapper {
   flex-shrink: 0;
 }
@@ -38,33 +40,37 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-md);
-  background: rgba(15, 107, 82, 0.08);
-  color: var(--accent-color, var(--color-emerald));
-  transition: all 0.3s ease;
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-sm);
+  background: rgba(25, 199, 154, 0.12);
+  color: var(--accent-color, var(--color-emerald-accent));
+  border: 1px solid rgba(25, 199, 154, 0.25);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  transition: all 0.25s ease;
 }
 
 .program-glass-icon.has-custom-logo {
-  background: transparent;
+  background: #ffffff;
+  padding: 3px;
+  border-radius: 50%;
   overflow: hidden;
 }
 
 .program-custom-logo-img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .program-glass-card.is-expanded .program-glass-icon {
-  background: var(--accent-color, var(--color-emerald));
-  color: #FFFFFF;
+  background: var(--accent-color, var(--color-emerald-accent));
+  color: #061713;
+  box-shadow: 0 0 20px rgba(25, 199, 154, 0.35);
 }
 
-
 /* ── Content ── */
-
 .program-card-content {
   flex: 1;
   min-width: 0;
@@ -78,127 +84,97 @@
   display: inline-flex;
   font-family: var(--font-heading);
   font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--accent-color, var(--color-emerald));
-  letter-spacing: 0.06em;
+  font-weight: 700;
+  color: var(--accent-color, var(--color-emerald-accent));
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .program-card-title {
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   font-weight: 700;
-  color: var(--color-forest);
+  color: var(--color-ivory);
   line-height: 1.35;
-  margin-bottom: 4px;
-}
-
-
-/* ── Expand Toggle ── */
-
-.program-card-action {
-  margin-top: 8px;
-}
-
-.program-expand-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.82rem;
-  font-weight: 500;
-  color: var(--color-text-muted);
-  transition: color 0.2s ease;
-}
-
-.program-glass-card:hover .program-expand-btn {
-  color: var(--accent-color, var(--color-emerald));
-}
-
-.program-chevron {
-  transition: transform 0.3s var(--ease-out);
-}
-
-.program-chevron.rotated {
-  transform: rotate(180deg);
-}
-
-
-/* ── Expandable Body ── */
-
-.program-card-expandable {
-  max-height: 0;
-  overflow: hidden;
-  opacity: 0;
-  transition:
-    max-height 0.4s var(--ease-out),
-    opacity 0.3s ease;
-}
-
-.program-card-expandable.open {
-  max-height: 500px;
-  opacity: 1;
-  margin-top: var(--space-md);
-}
-
-.program-card-expandable-inner {
-  padding-top: var(--space-md);
-  border-top: 1px solid rgba(11, 47, 38, 0.06);
+  margin-bottom: 6px;
 }
 
 .program-card-desc {
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   color: var(--color-text-secondary);
-  line-height: 1.7;
-  margin-bottom: var(--space-md);
+  line-height: 1.65;
+  margin-bottom: var(--space-sm);
 }
 
+/* ── Expanded Content (Activity Items) ── */
+.program-expanded-content {
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid rgba(25, 199, 154, 0.12);
+  animation: fadeIn 0.3s ease forwards;
+}
 
-/* ── Checklist ── */
+.program-details-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-ivory);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: var(--space-xs);
+}
 
-.program-card-checklist {
+.program-details-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
-.program-check-item {
+.program-detail-item {
   display: flex;
-  align-items: flex-start;
-  gap: 10px;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  color: var(--color-text-secondary);
 }
 
-.check-icon-box {
+.program-detail-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent-color, var(--color-emerald-accent));
+  flex-shrink: 0;
+}
+
+/* ── Expand Toggle Indicator ── */
+.program-card-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-emerald-accent);
+}
+
+.program-toggle-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 6px;
-  background: rgba(15, 107, 82, 0.08);
-  color: var(--color-emerald);
-  flex-shrink: 0;
-  margin-top: 2px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(25, 199, 154, 0.12);
+  color: var(--color-emerald-accent);
+  transition: transform 0.25s ease;
 }
 
-.check-text {
-  font-size: 0.88rem;
-  color: var(--color-text-secondary);
-  line-height: 1.5;
+.program-glass-card.is-expanded .program-toggle-icon {
+  transform: rotate(180deg);
 }
-
-
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
 
 @media (max-width: 640px) {
   .program-glass-card {
     flex-direction: column;
-    gap: var(--space-md);
+    align-items: flex-start;
     padding: var(--space-lg);
-  }
-
-  .program-glass-icon {
-    width: 42px;
-    height: 42px;
   }
 }

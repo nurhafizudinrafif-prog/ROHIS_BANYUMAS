@@ -1,5 +1,5 @@
 /* =========================================================
-   ABOUT PAGE — Clean & Professional
+   ABOUT PAGE — Dark Emerald Official Platform
    ========================================================= */
 
 .page-about .page-hero {
@@ -7,7 +7,6 @@
 }
 
 /* ── Story Section ── */
-
 .about-story {
   display: grid;
   grid-template-columns: 1.5fr 1fr;
@@ -16,16 +15,16 @@
 }
 
 .about-story-content h2 {
-  font-size: clamp(1.3rem, 3vw, 1.75rem);
+  font-size: clamp(1.4rem, 3.5vw, 2rem);
   margin-bottom: var(--space-lg);
-  color: var(--color-forest);
+  color: var(--color-ivory);
 }
 
 .about-story-content p {
   color: var(--color-text-secondary);
   margin-bottom: var(--space-md);
-  line-height: 1.75;
-  font-size: 0.95rem;
+  line-height: 1.8;
+  font-size: 0.98rem;
 }
 
 .about-story-visual {
@@ -38,32 +37,39 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: var(--space-lg);
+  padding: var(--space-xl);
   text-align: center;
-  background: var(--color-surface);
-  border: 1px solid rgba(11, 47, 38, 0.06);
+  background: var(--glass-l2-bg);
+  backdrop-filter: var(--glass-l2-blur);
+  -webkit-backdrop-filter: var(--glass-l2-blur);
+  border: 1px solid var(--glass-l2-border);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-xs);
+  box-shadow: var(--glass-l2-shadow);
+  transition: all var(--transition-base);
+}
+
+.about-story-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-border-hover);
+  box-shadow: var(--glass-l3-shadow);
 }
 
 .about-story-year {
   font-family: var(--font-heading);
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 800;
-  color: var(--color-emerald);
+  color: var(--color-emerald-accent);
   line-height: 1;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .about-story-label {
-  font-size: 0.82rem;
-  color: var(--color-text-muted);
+  font-size: 0.84rem;
+  color: var(--color-text-secondary);
   font-weight: 500;
 }
 
-
 /* ── Vision & Mission Grid ── */
-
 .about-vm-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -71,35 +77,52 @@
 }
 
 .about-vm-card {
-  padding: var(--space-xl);
-  background: var(--color-surface);
-  border: 1px solid rgba(11, 47, 38, 0.06);
+  padding: var(--space-2xl);
+  background: var(--glass-l2-bg);
+  backdrop-filter: var(--glass-l2-blur);
+  -webkit-backdrop-filter: var(--glass-l2-blur);
+  border: 1px solid var(--glass-l2-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--glass-l2-shadow);
+  transition: all var(--transition-base);
+}
+
+.about-vm-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--glass-l3-shadow);
+  border-color: var(--color-border-hover);
 }
 
 .about-vm-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-md);
-  background: rgba(15, 107, 82, 0.08);
-  color: var(--color-emerald);
-  margin-bottom: var(--space-md);
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-sm);
+  background: rgba(25, 199, 154, 0.12);
+  color: var(--color-emerald-accent);
+  border: 1px solid rgba(25, 199, 154, 0.25);
+  margin-bottom: var(--space-lg);
+}
+
+.about-vm-icon-gold {
+  background: rgba(200, 173, 114, 0.14);
+  color: var(--color-gold);
+  border-color: rgba(200, 173, 114, 0.3);
 }
 
 .about-vm-card h3 {
-  font-size: 1.15rem;
-  color: var(--color-forest);
+  font-size: 1.3rem;
+  color: var(--color-ivory);
   margin-bottom: var(--space-sm);
+  font-weight: 700;
 }
 
 .about-vm-card p {
   color: var(--color-text-secondary);
-  font-size: 0.9rem;
-  line-height: 1.7;
+  font-size: 0.95rem;
+  line-height: 1.75;
 }
 
 .about-vm-card ul {
@@ -110,9 +133,9 @@
   position: relative;
   padding-left: var(--space-lg);
   color: var(--color-text-secondary);
-  font-size: 0.9rem;
-  line-height: 1.7;
-  margin-bottom: 6px;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  margin-bottom: 8px;
 }
 
 .about-vm-card li::before {
@@ -123,13 +146,10 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--color-emerald);
-  opacity: 0.5;
+  background: var(--color-emerald-accent);
 }
 
-
 /* ── Values Grid ── */
-
 .about-values-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -139,20 +159,32 @@
 .about-value-card {
   padding: var(--space-xl);
   text-align: center;
-  background: var(--color-surface);
-  border: 1px solid rgba(11, 47, 38, 0.06);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  background: var(--glass-l2-bg);
+  backdrop-filter: var(--glass-l2-blur);
+  -webkit-backdrop-filter: var(--glass-l2-blur);
+  border: 1px solid var(--glass-l2-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--glass-l2-shadow);
+  transition: all var(--transition-base);
+}
+
+.about-value-card:hover {
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: var(--glass-l3-shadow);
+  border-color: var(--color-border-hover);
 }
 
 .about-value-card h4 {
-  color: var(--color-forest);
-  margin-bottom: 6px;
+  color: var(--color-ivory);
+  margin-bottom: 8px;
+  font-size: 1.15rem;
+  font-weight: 700;
 }
 
 .about-value-card p {
-  font-size: 0.88rem;
-  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
 }
 
 .about-value-icon {
@@ -161,16 +193,25 @@
   justify-content: center;
   width: 48px;
   height: 48px;
-  border-radius: var(--radius-md);
-  background: rgba(15, 107, 82, 0.06);
-  color: var(--color-emerald);
+  border-radius: var(--radius-sm);
+  background: rgba(25, 199, 154, 0.12);
+  color: var(--color-emerald-accent);
+  border: 1px solid rgba(25, 199, 154, 0.22);
   margin: 0 auto var(--space-md);
 }
 
+/* ── Team Grid BPH ── */
+.team-grid-bph {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xl);
+}
 
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
+@media (max-width: 1024px) {
+  .team-grid-bph {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 
 @media (max-width: 768px) {
   .about-story {
@@ -186,7 +227,7 @@
 
   .about-story-card {
     flex: 1;
-    min-width: 120px;
+    min-width: 140px;
   }
 
   .about-vm-grid {
@@ -194,6 +235,10 @@
   }
 
   .about-values-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .team-grid-bph {
     grid-template-columns: 1fr;
   }
 }

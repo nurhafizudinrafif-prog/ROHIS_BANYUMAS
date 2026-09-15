@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useScrollAnimation } from '../utils';
 import SectionHeader from '../components/SectionHeader';
 import MemberSchoolCard from '../components/MemberSchoolCard';

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { DataProvider } from './context/DataContext';
 import ScrollToTop from './utils';
 import Navbar from './components/Navbar';
@@ -35,7 +35,7 @@ function AppContent() {
         <Route path="/artikel" element={<Articles />} />
         <Route path="/artikel/:slug" element={<ArticleDetail />} />
         <Route path="/galeri" element={<Gallery />} />
-        <Route path="/agenda" element={<Navigate to="/program" replace />} />
+        <Route path="/agenda" element={<Agenda />} />
         <Route path="/rohis-anggota" element={<MemberSchools />} />
         <Route path="/pendaftaran" element={<Registration />} />
         <Route path="/kontak" element={<Contact />} />

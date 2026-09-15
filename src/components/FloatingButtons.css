@@ -1,5 +1,5 @@
 /* =========================================================
-   FLOATING BUTTONS — Clean
+   FLOATING BUTTONS — Level 3 Liquid Glass
    ========================================================= */
 
 .floating-buttons {
@@ -9,7 +9,7 @@
   z-index: 900;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .floating-btn {
@@ -19,37 +19,41 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: var(--color-emerald);
-  color: #FFFFFF;
-  box-shadow: 0 4px 16px rgba(15, 107, 82, 0.25);
-  transition: all 0.3s var(--ease-out);
+  background: var(--glass-l3-bg);
+  backdrop-filter: var(--glass-l3-blur);
+  -webkit-backdrop-filter: var(--glass-l3-blur);
+  border: 1px solid var(--glass-l3-border);
+  color: var(--color-ivory);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  transition: all var(--transition-base);
   text-decoration: none;
 }
 
 .floating-btn:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 6px 20px rgba(15, 107, 82, 0.35);
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65), 0 0 16px rgba(25, 199, 154, 0.25);
   color: #FFFFFF;
 }
 
 .floating-btn-whatsapp {
-  background: #25D366;
-  box-shadow: 0 4px 16px rgba(37, 211, 102, 0.25);
-}
-
-.floating-btn-whatsapp:hover {
+  background: linear-gradient(135deg, #128C7E 0%, #25D366 100%);
+  border-color: rgba(37, 211, 102, 0.4);
   box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35);
 }
 
+.floating-btn-whatsapp:hover {
+  box-shadow: 0 8px 26px rgba(37, 211, 102, 0.5);
+}
+
 .floating-btn-top {
-  background: var(--color-forest);
-  box-shadow: 0 4px 16px rgba(11, 47, 38, 0.20);
+  background: rgba(8, 31, 26, 0.88);
+  border-color: rgba(25, 199, 154, 0.3);
 }
 
 @media (max-width: 768px) {
   .floating-buttons {
-    bottom: 16px;
-    right: 16px;
+    bottom: 20px;
+    right: 18px;
   }
 
   .floating-btn {

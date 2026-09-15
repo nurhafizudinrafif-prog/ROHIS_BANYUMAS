@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, ChevronRight } from 'lucide-react';
+import { ArrowRight, Calendar } from 'lucide-react';
 import './HeroSection.css';
 
 export default function HeroSection() {
@@ -7,40 +7,55 @@ export default function HeroSection() {
     <section className="hero">
       <div className="container hero-container">
         <div className="hero-content">
-          {/* Badge */}
+          {/* Official Category Pill */}
           <div className="hero-badge animate-hero delay-0">
             <span className="hero-badge-dot" />
-            <span>Organisasi Pelajar Muslim Kabupaten Banyumas</span>
+            <span>ROHIS KABUPATEN BANYUMAS • PLATFORM RESMI</span>
           </div>
 
-          {/* Main Title */}
+          {/* Large Editorial Headline */}
           <h1 className="hero-title animate-hero delay-1">
-            Bersatu dalam <span className="hero-title-accent">Dakwah</span>,{' '}
-            <br className="hero-br" />
-            Bergerak untuk <span className="hero-title-accent">Umat</span>
+            Tumbuh dalam Nilai,{' '}
+            <span className="hero-title-editorial">Bergerak dalam Karya.</span>
           </h1>
 
-          {/* Subtitle */}
+          {/* Concrete, Informative Subtitle */}
           <p className="hero-subtitle animate-hero delay-2">
-            Wadah koordinasi antar ROHIS sekolah dan pusat dakwah pemuda Islam
-            se-Kabupaten Banyumas. Menginspirasi, membina, dan membangun generasi muda
-            yang berilmu, berakhlak, dan berdampak.
+            Pusat koordinasi, kaderisasi, dan kolaborasi dakwah pelajar Islam lintas SMA, SMK, dan MA 
+            se-Kabupaten Banyumas. Bersinergi mencetak generasi muda yang teguh dalam prinsip, unggul dalam karya.
           </p>
 
-          {/* CTA */}
+          {/* Clear Primary & Secondary CTAs */}
           <div className="hero-actions animate-hero delay-3">
             <Link to="/program" className="btn-primary btn-lg">
-              Jelajahi Program <ArrowRight size={18} />
+              <span>Jelajahi 5 Pilar Gerakan</span>
+              <ArrowRight size={18} />
             </Link>
-            <Link to="/tentang" className="btn-outline btn-lg hero-btn-secondary">
-              Tentang Kami <ChevronRight size={16} />
+            <Link to="/program#agenda" className="btn-outline btn-lg hero-btn-secondary">
+              <Calendar size={17} />
+              <span>Agenda & Kajian</span>
             </Link>
+          </div>
+
+          {/* Trust Metadata Line */}
+          <div className="hero-meta-bar animate-hero delay-4">
+            <div className="hero-meta-item">
+              <span className="hero-meta-val">15+</span>
+              <span className="hero-meta-lbl">Sekolah Anggota</span>
+            </div>
+            <span className="hero-meta-divider">•</span>
+            <div className="hero-meta-item">
+              <span className="hero-meta-val">53+</span>
+              <span className="hero-meta-lbl">Pengurus Aktif</span>
+            </div>
+            <span className="hero-meta-divider">•</span>
+            <div className="hero-meta-item">
+              <span className="hero-meta-val">5 Divisi</span>
+              <span className="hero-meta-lbl">Fokus Gerakan</span>
+            </div>
           </div>
         </div>
       </div>
-
-      {/* Decorative bottom edge */}
-      <div className="hero-edge" aria-hidden="true" />
     </section>
   );
 }

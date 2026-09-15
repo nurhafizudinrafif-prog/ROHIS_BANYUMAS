@@ -1,271 +1,187 @@
 /* =========================================================
-   HERO SECTION — Professional & Warm
+   HERO SECTION — Official Digital Platform
+   Dark Emerald • Editorial Serif Accent • Quiet Prestige
    ========================================================= */
 
 .hero {
   position: relative;
   display: flex;
   align-items: center;
-  min-height: 92vh;
-  padding-top: var(--navbar-height);
-  background: var(--color-forest);
+  justify-content: center;
+  min-height: 94vh;
+  padding-top: calc(var(--navbar-height) + 20px);
+  padding-bottom: var(--space-4xl);
   overflow: hidden;
-}
-
-/* Subtle gradient overlay */
-.hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 80% 60% at 50% 20%, rgba(15, 107, 82, 0.15), transparent 70%),
-    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(196, 163, 90, 0.06), transparent 60%);
-  pointer-events: none;
 }
 
 .hero-container {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-4xl) 0;
 }
 
 .hero-content {
-  max-width: 720px;
+  max-width: 820px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-
-/* ── Badge ── */
-
+/* ── Badge Pill ── */
 .hero-badge {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 18px 6px 12px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 6px 18px;
+  background: rgba(25, 199, 154, 0.10);
+  border: 1px solid rgba(25, 199, 154, 0.24);
   border-radius: var(--radius-pill);
-  color: rgba(255, 255, 255, 0.75);
-  font-size: 0.82rem;
-  font-weight: 500;
+  color: var(--color-emerald-accent);
+  font-size: 0.80rem;
+  font-weight: 700;
   font-family: var(--font-heading);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.06em;
   margin-bottom: var(--space-xl);
+  box-shadow: 0 0 16px rgba(25, 199, 154, 0.10);
 }
 
 .hero-badge-dot {
   width: 6px;
   height: 6px;
-  background: var(--color-mint);
+  background: var(--color-cyan);
   border-radius: 50%;
-  animation: pulse 2s ease-in-out infinite;
+  box-shadow: 0 0 8px var(--color-cyan);
+  animation: pulseDot 2.2s ease-in-out infinite;
 }
 
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.3); opacity: 1; }
+}
 
-/* ── Title ── */
-
+/* ── Hero Headline ── */
 .hero-title {
-  font-size: clamp(2rem, 5.5vw, 3.5rem);
+  font-size: clamp(2.4rem, 6vw, 4.25rem);
   font-weight: 800;
-  color: #FFFFFF;
+  color: var(--color-ivory);
   line-height: 1.15;
   margin-bottom: var(--space-lg);
   letter-spacing: -0.03em;
 }
 
-.hero-title-accent {
-  color: var(--color-mint);
+.hero-title-editorial {
+  display: inline;
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-weight: 400;
+  background: linear-gradient(135deg, #20D9E8 0%, #19C79A 50%, #F4F1E8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding-right: 4px;
 }
-
-.hero-br {
-  display: block;
-}
-
 
 /* ── Subtitle ── */
-
 .hero-subtitle {
-  font-size: clamp(0.95rem, 1.8vw, 1.15rem);
-  color: rgba(255, 255, 255, 0.62);
-  line-height: 1.75;
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  color: var(--color-text-secondary);
+  line-height: 1.8;
   margin-bottom: var(--space-2xl);
-  max-width: 580px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 660px;
 }
 
-
-/* ── Actions ── */
-
+/* ── Action Buttons ── */
 .hero-actions {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 14px;
+  gap: var(--space-md);
   flex-wrap: wrap;
+  margin-bottom: var(--space-3xl);
 }
 
-/* Override outline button for dark bg */
-.hero-btn-secondary {
-  color: rgba(255, 255, 255, 0.85) !important;
-  border-color: rgba(255, 255, 255, 0.25) !important;
-}
-
-.hero-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.10) !important;
-  border-color: rgba(255, 255, 255, 0.40) !important;
-  color: #FFFFFF !important;
-}
-
-
-/* ── Decorative Edge ── */
-
-.hero-edge {
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 48px;
-  background: var(--color-ivory);
-  clip-path: ellipse(55% 100% at 50% 100%);
-}
-
-
-/* ── Legacy classes (prevent breakage) ── */
-
-.hero-cinematic {
-  position: relative;
-  display: flex;
-  align-items: center;
-  min-height: 92vh;
-  padding-top: var(--navbar-height);
-  background: var(--color-forest);
-  overflow: hidden;
-}
-
-.hero-cinematic::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 80% 60% at 50% 20%, rgba(15, 107, 82, 0.15), transparent 70%);
-  pointer-events: none;
-}
-
-.hero-cinematic-container {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-4xl) 0;
-}
-
-.hero-cinematic-content {
-  max-width: 720px;
-  text-align: center;
-}
-
-.hero-cinematic-title {
-  font-size: clamp(2rem, 5.5vw, 3.5rem);
-  font-weight: 800;
-  color: #FFFFFF;
-  line-height: 1.15;
-  margin-bottom: var(--space-lg);
-}
-
-.hero-cinematic-subtitle {
-  color: rgba(255, 255, 255, 0.62);
-  font-size: clamp(0.95rem, 1.8vw, 1.15rem);
-  margin-bottom: var(--space-2xl);
-}
-
-.hero-cinematic-actions {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-
-.hero-cta-pill {
+/* ── Meta Bar / Trust Highlights ── */
+.hero-meta-bar {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px 28px;
-  background: var(--color-emerald);
-  color: #FFFFFF !important;
-  font-family: var(--font-heading);
-  font-weight: 600;
-  font-size: 0.95rem;
+  gap: var(--space-lg);
+  padding: 10px 24px;
+  background: rgba(8, 31, 26, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(25, 199, 154, 0.15);
   border-radius: var(--radius-pill);
-  text-decoration: none;
-  transition: all 0.3s var(--ease-out);
-  box-shadow: 0 4px 14px rgba(15, 107, 82, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
-.hero-cta-pill:hover {
-  background: var(--color-forest-mid);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(15, 107, 82, 0.30);
-  color: #FFFFFF !important;
-}
-
-.hero-cta-arrow {
+.hero-meta-item {
   display: flex;
-  align-items: center;
+  align-items: baseline;
+  gap: 6px;
 }
 
-/* Legacy bismillah/ornament (hidden, not removed for safety) */
-.hero-bismillah-bar { display: none; }
-.bismillah-line { display: none; }
-.bismillah-ornament { display: none; }
-.bismillah-arabic { display: none; }
-.title-serif { color: #FFFFFF; }
-.title-gold { color: var(--color-mint); }
+.hero-meta-val {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--color-ivory);
+  font-family: var(--font-heading);
+}
 
+.hero-meta-lbl {
+  font-size: 0.80rem;
+  color: var(--color-text-muted);
+}
 
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
+.hero-meta-divider {
+  color: rgba(25, 199, 154, 0.3);
+  font-size: 0.8rem;
+}
 
-@media (max-width: 768px) {
-  .hero,
-  .hero-cinematic {
-    min-height: 80vh;
-    padding-top: calc(var(--navbar-height) + var(--space-xl));
+/* ── Keyframe Animations ── */
+.animate-hero {
+  opacity: 0;
+  transform: translateY(22px);
+  animation: heroFadeUp 0.6s var(--ease-out) forwards;
+}
+
+.animate-hero.delay-0 { animation-delay: 0.05s; }
+.animate-hero.delay-1 { animation-delay: 0.15s; }
+.animate-hero.delay-2 { animation-delay: 0.25s; }
+.animate-hero.delay-3 { animation-delay: 0.35s; }
+.animate-hero.delay-4 { animation-delay: 0.45s; }
+
+@keyframes heroFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(22px);
   }
-
-  .hero-container,
-  .hero-cinematic-container {
-    padding: var(--space-2xl) 0;
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
+}
 
-  .hero-actions,
-  .hero-cinematic-actions {
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .hero-actions {
     flex-direction: column;
-    gap: 12px;
-  }
-
-  .hero-actions .btn-lg,
-  .hero-cinematic-actions .btn-lg {
     width: 100%;
-    justify-content: center;
   }
 
-  .hero-cta-pill {
+  .hero-actions a {
     width: 100%;
-    justify-content: center;
   }
 
-  .hero-edge {
-    height: 32px;
+  .hero-meta-bar {
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px 20px;
+    border-radius: var(--radius-md);
   }
 
-  .hero-br {
+  .hero-meta-divider {
     display: none;
   }
 }

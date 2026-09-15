@@ -1,7 +1,131 @@
 /* =========================================================
-   DynamicBackground.css — Lightweight Atmospheric
-   All visual effects are now in index.css (.atmospheric-bg)
-   This file is kept for import compatibility only.
+   6-LAYER ATMOSPHERIC BACKGROUND SYSTEM
+   Dark Emerald • Organic Light • Islamic Geometry (2-4%)
    ========================================================= */
 
-/* No additional styles needed — see index.css */
+.atmospheric-container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  background-color: var(--color-bg, #061713);
+}
+
+/* Layer 1 & 2: Base & Radial Gradient Field */
+.atmospheric-base {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 90% 70% at 50% 0%, #0B2B24 0%, transparent 75%),
+    radial-gradient(circle 800px at 85% 30%, rgba(13, 111, 86, 0.18) 0%, transparent 60%),
+    radial-gradient(circle 700px at 15% 75%, rgba(32, 217, 232, 0.08) 0%, transparent 65%),
+    #061713;
+}
+
+/* Layer 3: Large Blurred Organic Light Blobs */
+.atmospheric-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.35;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+.blob-emerald-top {
+  top: -10vw;
+  left: 20vw;
+  width: 50vw;
+  height: 40vw;
+  background: radial-gradient(circle, #0D6F56 0%, rgba(25, 199, 154, 0.3) 60%, transparent 100%);
+  animation: floatDrift1 28s ease-in-out infinite alternate;
+}
+
+.blob-cyan-mid {
+  top: 45vh;
+  right: -8vw;
+  width: 45vw;
+  height: 38vw;
+  background: radial-gradient(circle, rgba(32, 217, 232, 0.22) 0%, rgba(13, 111, 86, 0.15) 55%, transparent 100%);
+  animation: floatDrift2 34s ease-in-out infinite alternate;
+}
+
+.blob-gold-bottom {
+  bottom: -15vh;
+  left: -5vw;
+  width: 42vw;
+  height: 35vw;
+  background: radial-gradient(circle, rgba(200, 173, 114, 0.12) 0%, rgba(11, 43, 36, 0.2) 60%, transparent 100%);
+  animation: floatDrift3 38s ease-in-out infinite alternate;
+}
+
+/* Layer 4: Ambient Atmosphere Glow Field */
+.atmospheric-glow-field {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 100% 100% at 50% 50%, transparent 40%, rgba(6, 23, 19, 0.6) 100%);
+}
+
+/* Layer 5: Micro-Noise Texture Simulation */
+.atmospheric-noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.025;
+  background-image: radial-gradient(#FFFFFF 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Layer 6: Subtle Islamic Geometric Pattern Tile (Target: 2–4% Opacity) */
+.atmospheric-islamic-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: url('/pattern-islamic.svg');
+  background-repeat: repeat;
+  background-size: 80px 80px;
+  opacity: 0.035; /* Exactly ~3.5% opacity: subtle, sophisticated, nearly subconscious */
+  mix-blend-mode: screen;
+}
+
+/* ── GPU Keyframe Animations ── */
+@keyframes floatDrift1 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(4vw, 5vh, 0) scale(1.08);
+  }
+  100% {
+    transform: translate3d(-3vw, 2vh, 0) scale(0.96);
+  }
+}
+
+@keyframes floatDrift2 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-5vw, -4vh, 0) scale(1.05);
+  }
+  100% {
+    transform: translate3d(2vw, 3vh, 0) scale(0.95);
+  }
+}
+
+@keyframes floatDrift3 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(4vw, -5vh, 0) scale(1.06);
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .atmospheric-blob {
+    animation: none !important;
+  }
+}

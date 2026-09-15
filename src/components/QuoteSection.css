@@ -1,5 +1,5 @@
 /* =========================================================
-   QUOTE SECTION — Clean & Elegant
+   QUOTE SECTION — Liquid Glass & Subtle Gold Arabic Calligraphy
    ========================================================= */
 
 .quote-section {
@@ -7,21 +7,23 @@
 }
 
 .quote-card {
-  max-width: 680px;
+  max-width: 720px;
   margin: 0 auto;
   padding: var(--space-2xl) var(--space-xl);
   text-align: center;
-  background: var(--color-surface);
-  border: 1px solid rgba(11, 47, 38, 0.06);
+  background: var(--glass-l2-bg);
+  backdrop-filter: var(--glass-l2-blur);
+  -webkit-backdrop-filter: var(--glass-l2-blur);
+  border: 1px solid var(--glass-l2-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--glass-l2-shadow);
   position: relative;
 }
 
 .quote-arabic {
-  font-size: clamp(1.3rem, 3vw, 1.8rem);
-  color: var(--color-forest);
-  line-height: 1.7;
+  font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+  color: #DFC993; /* Subtle soft gold for Arabic quotation */
+  line-height: 1.8;
   margin-bottom: var(--space-md);
   font-weight: 500;
   font-style: normal;
@@ -29,17 +31,20 @@
 }
 
 .quote-translation {
-  font-size: 0.95rem;
+  font-size: 0.98rem;
   color: var(--color-text-secondary);
   font-style: italic;
-  line-height: 1.7;
+  font-family: var(--font-editorial);
+  line-height: 1.75;
   margin-bottom: var(--space-md);
 }
 
 .quote-source {
   font-size: 0.82rem;
-  color: var(--color-text-muted);
-  font-weight: 600;
+  color: var(--color-emerald-accent);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 @media (max-width: 768px) {

@@ -16,6 +16,7 @@ export function useScrollAnimation() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('visible');
+            entry.target.classList.add('is-visible');
           }
         });
       },
@@ -28,6 +29,7 @@ export function useScrollAnimation() {
         const rect = el.getBoundingClientRect();
         if (rect.top < window.innerHeight + 100 && rect.bottom > -100) {
           el.classList.add('visible');
+          el.classList.add('is-visible');
         } else {
           observer.observe(el);
         }

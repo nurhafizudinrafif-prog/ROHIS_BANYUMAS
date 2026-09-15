@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useScrollAnimation } from '../utils';
-import SectionHeader from '../components/SectionHeader';
 import ArticleCard from '../components/ArticleCard';
 import { useData } from '../context/DataContext';
 import { articleCategories } from '../data/articles';

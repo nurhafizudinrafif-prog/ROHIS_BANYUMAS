@@ -1,4 +1,4 @@
-import { Mail, GraduationCap } from 'lucide-react';
+import { GraduationCap } from 'lucide-react';
 import './TeamCard.css';
 
 function InstagramIcon({ size = 13 }) {

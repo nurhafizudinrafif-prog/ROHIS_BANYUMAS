@@ -6,7 +6,7 @@ import './Footer.css';
 const footerLinks = [
   { label: 'Beranda', path: '/' },
   { label: 'Tentang', path: '/tentang' },
-  { label: 'Program', path: '/program' },
+  { label: 'Agenda', path: '/program' },
   { label: 'Artikel', path: '/artikel' },
   { label: 'Galeri', path: '/galeri' },
   { label: 'ROHIS Anggota', path: '/rohis-anggota' },

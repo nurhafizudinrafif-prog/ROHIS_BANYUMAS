@@ -8,7 +8,6 @@ import {
   ChevronRight,
   Play,
   Film,
-  Maximize2,
   ExternalLink,
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
