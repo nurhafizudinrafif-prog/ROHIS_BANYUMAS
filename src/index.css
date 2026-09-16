@@ -207,11 +207,11 @@ html {
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
-  background-color: var(--color-bg);
+  background-color: #010405;
 }
 
 body {
-  background-color: var(--color-bg);
+  background-color: transparent !important;
   color: var(--color-text);
   min-height: 100vh;
   margin: 0;
@@ -226,12 +226,21 @@ body {
   position: relative;
 }
 
-#root,
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  position: relative;
+  background-color: transparent !important;
+}
+
 main {
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
   position: relative;
+  z-index: 1;
+  background-color: transparent !important;
 }
 
 a {

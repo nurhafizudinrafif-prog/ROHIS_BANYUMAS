@@ -229,9 +229,9 @@ export default function DynamicBackground() {
         if (!layerEl) return;
         const w = weights[sec] || 0;
 
-        if (w > 0.0005) {
-          layerEl.style.display = 'block';
+        if (w > 0.001) {
           layerEl.style.opacity = w.toFixed(4);
+          layerEl.style.visibility = 'visible';
 
           // -------------------------------------------------------------
           // Layer 05: Geometric Motif Morphing
@@ -240,8 +240,8 @@ export default function DynamicBackground() {
           const patternEl = patternRefs.current[sec];
           if (patternEl) {
             const baseOp = SECTION_CONFIG[sec].patternOpacity;
-            const finalOp = isMobile ? baseOp * 0.75 : baseOp;
-            patternEl.style.opacity = (w * finalOp).toFixed(4);
+            const finalOp = isMobile ? baseOp * 0.85 : baseOp;
+            patternEl.style.opacity = finalOp.toFixed(3);
 
             if (!prefersReducedMotion) {
               const scale = (1.04 - w * 0.04).toFixed(3);
@@ -281,8 +281,8 @@ export default function DynamicBackground() {
             }
           }
         } else {
-          layerEl.style.display = 'none';
           layerEl.style.opacity = '0';
+          layerEl.style.visibility = 'hidden';
         }
       });
 
