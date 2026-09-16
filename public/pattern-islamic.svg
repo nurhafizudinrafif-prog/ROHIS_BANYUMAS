@@ -1,23 +1,51 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
   <defs>
     <style>
-      .geom-line {
-        stroke: #0D3B2E;
-        stroke-width: 0.75;
+      .geom-glow {
+        stroke: #00ffd2;
+        stroke-width: 1.2;
         fill: none;
-        stroke-opacity: 0.30;
+        stroke-opacity: 0.24;
+      }
+      .geom-accent {
+        stroke: #f5d076;
+        stroke-width: 0.9;
+        fill: none;
+        stroke-opacity: 0.18;
       }
       .geom-fill {
-        fill: #087F62;
-        fill-opacity: 0.04;
+        fill: #00ffd2;
+        fill-opacity: 0.018;
       }
     </style>
   </defs>
-  <!-- Central 8-Point Star and Octagonal Interlocking Web -->
-  <polygon points="40,20 45,30 55,25 50,35 60,40 50,45 55,55 45,50 40,60 35,50 25,55 30,45 20,40 30,35 25,25 35,30" class="geom-line geom-fill" />
-  <circle cx="40" cy="40" r="12" class="geom-line" />
-  <circle cx="40" cy="40" r="28" class="geom-line" stroke-dasharray="2,4" />
-  <!-- Corner Connecting Motifs -->
-  <path d="M 0,0 L 15,15 M 80,0 L 65,15 M 0,80 L 15,65 M 80,80 L 65,65" class="geom-line" />
-  <path d="M 0,40 L 12,40 M 80,40 L 68,40 M 40,0 L 40,12 M 40,80 L 40,68" class="geom-line" />
+
+  <!-- Central 8-Point Star (Khatam Sulayman) -->
+  <polygon points="60,24 69,45 90,36 81,57 102,66 81,75 90,96 69,87 60,108 51,87 30,96 39,75 18,66 39,57 30,36 51,45" class="geom-glow geom-fill" />
+  <circle cx="60" cy="60" r="18" class="geom-accent" stroke-dasharray="3,3" />
+  <circle cx="60" cy="60" r="38" class="geom-glow" />
+
+  <!-- 4 Diamond Rosette Nodes -->
+  <polygon points="60,14 63,20 60,26 57,20" class="geom-accent" />
+  <polygon points="60,94 63,100 60,106 57,100" class="geom-accent" />
+  <polygon points="14,60 20,63 26,60 20,57" class="geom-accent" />
+  <polygon points="94,60 100,63 106,60 100,57" class="geom-accent" />
+
+  <!-- Corner Interlocking Stars (seamless 120x120 repeat) -->
+  <path d="M 0,0 L 20,10 L 10,20 Z" class="geom-accent" />
+  <path d="M 120,0 L 100,10 L 110,20 Z" class="geom-accent" />
+  <path d="M 0,120 L 20,110 L 10,100 Z" class="geom-accent" />
+  <path d="M 120,120 L 100,110 L 110,100 Z" class="geom-accent" />
+
+  <!-- Diagonal interlacing web -->
+  <line x1="0" y1="0" x2="38" y2="38" class="geom-glow" />
+  <line x1="120" y1="0" x2="82" y2="38" class="geom-glow" />
+  <line x1="0" y1="120" x2="38" y2="82" class="geom-glow" />
+  <line x1="120" y1="120" x2="82" y2="82" class="geom-glow" />
+
+  <!-- Axis interconnectors -->
+  <line x1="60" y1="0" x2="60" y2="24" class="geom-glow" />
+  <line x1="60" y1="96" x2="60" y2="120" class="geom-glow" />
+  <line x1="0" y1="60" x2="18" y2="60" class="geom-glow" />
+  <line x1="102" y1="60" x2="120" y2="60" class="geom-glow" />
 </svg>

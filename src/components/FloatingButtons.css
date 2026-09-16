@@ -1,64 +1,109 @@
 /* =========================================================
-   FLOATING BUTTONS — LIGHT PREMIUM
-   Translucent White Crystal Glass • Forest Green / Emerald Icons
+   FLOATING BUTTONS — 3D LIQUID GLASS
+   Vibrant 3D Orbs • Specular Highlight • Neon Rim Glow
    ========================================================= */
 
 .floating-buttons {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 900;
+  bottom: 28px;
+  right: 28px;
+  z-index: 999;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .floating-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  background: rgba(11, 33, 26, 0.82);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(57, 185, 154, 0.25);
-  color: var(--color-forest);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.12), 0 8px 24px rgba(0, 0, 0, 0.45);
-  transition: all var(--transition-base);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 
+    0 10px 25px -4px rgba(0, 0, 0, 0.7),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.5),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.35);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   text-decoration: none;
 }
 
+.floating-btn::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 15%;
+  right: 15%;
+  height: 40%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 100%);
+  border-radius: 50% 50% 40% 40%;
+  pointer-events: none;
+}
+
 .floating-btn:hover {
-  transform: translateY(-3px) scale(1.06);
-  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.2), 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 16px rgba(57, 185, 154, 0.3);
-  color: var(--color-emerald-light);
-  border-color: rgba(57, 185, 154, 0.50);
+  transform: translateY(-4px) scale(1.08);
 }
 
-.floating-btn-whatsapp {
-  background: linear-gradient(135deg, #0F6848 0%, #25D366 100%);
+/* Instagram Orb */
+.floating-instagram {
+  background: radial-gradient(circle at 30% 30%, #f58529 0%, #dd2a7b 50%, #8134af 85%, #515bd4 100%);
   color: #FFFFFF !important;
-  border-color: rgba(37, 211, 102, 0.4);
-  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35);
+  box-shadow: 
+    0 12px 28px -4px rgba(221, 42, 123, 0.55),
+    0 0 20px rgba(221, 42, 123, 0.35),
+    inset 0 2px 2px rgba(255, 255, 255, 0.6);
 }
 
-.floating-btn-whatsapp:hover {
-  box-shadow: 0 8px 26px rgba(37, 211, 102, 0.50), 0 0 20px rgba(37, 211, 102, 0.4);
+.floating-instagram:hover {
+  box-shadow: 
+    0 16px 36px -4px rgba(221, 42, 123, 0.7),
+    0 0 28px rgba(221, 42, 123, 0.5),
+    inset 0 2px 3px rgba(255, 255, 255, 0.75);
+}
+
+/* WhatsApp Orb */
+.floating-whatsapp {
+  background: radial-gradient(circle at 30% 30%, #29e377 0%, #25D366 50%, #128C7E 100%);
   color: #FFFFFF !important;
+  box-shadow: 
+    0 12px 28px -4px rgba(37, 211, 102, 0.5),
+    0 0 20px rgba(37, 211, 102, 0.35),
+    inset 0 2px 2px rgba(255, 255, 255, 0.6);
 }
 
-.floating-btn-top {
-  background: rgba(14, 42, 33, 0.85);
-  color: var(--color-emerald-light);
-  border-color: rgba(57, 185, 154, 0.35);
+.floating-whatsapp:hover {
+  box-shadow: 
+    0 16px 36px -4px rgba(37, 211, 102, 0.65),
+    0 0 28px rgba(37, 211, 102, 0.5),
+    inset 0 2px 3px rgba(255, 255, 255, 0.75);
+}
+
+/* Back-to-Top Orb */
+.floating-back-top {
+  background: radial-gradient(circle at 30% 30%, #5FE3C2 0%, #00DDB8 50%, #087F62 100%);
+  color: #021410 !important;
+  box-shadow: 
+    0 12px 28px -4px rgba(0, 221, 184, 0.5),
+    0 0 20px rgba(0, 221, 184, 0.35),
+    inset 0 2px 2px rgba(255, 255, 255, 0.7);
+}
+
+.floating-back-top:hover {
+  box-shadow: 
+    0 16px 36px -4px rgba(0, 221, 184, 0.65),
+    0 0 28px rgba(0, 221, 184, 0.5),
+    inset 0 2px 3px rgba(255, 255, 255, 0.85);
 }
 
 @media (max-width: 768px) {
   .floating-buttons {
     bottom: 20px;
     right: 18px;
+    gap: 10px;
   }
 
   .floating-btn {
@@ -66,3 +111,4 @@
     height: 44px;
   }
 }
+

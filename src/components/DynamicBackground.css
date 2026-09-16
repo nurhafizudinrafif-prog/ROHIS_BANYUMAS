@@ -11,7 +11,7 @@
   z-index: -1;
   pointer-events: none;
   overflow: hidden;
-  background-color: var(--color-bg, #061510);
+  background-color: var(--color-bg, #020708);
 }
 
 /* Layer 1 & 2: Deep Obsidian Forest Base & Subtle Celestial Gradient */
@@ -19,37 +19,37 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 90% 70% at 50% 0%, rgba(13, 59, 46, 0.45) 0%, transparent 80%),
-    radial-gradient(circle 800px at 85% 20%, rgba(57, 185, 154, 0.12) 0%, transparent 60%),
-    radial-gradient(circle 700px at 15% 75%, rgba(84, 201, 207, 0.08) 0%, transparent 65%),
-    #061510;
+    radial-gradient(ellipse 110% 70% at 50% 0%, rgba(0, 221, 184, 0.16) 0%, rgba(0, 100, 80, 0.06) 40%, transparent 75%),
+    radial-gradient(ellipse 90% 65% at 85% 65%, rgba(0, 180, 255, 0.10) 0%, transparent 65%),
+    radial-gradient(ellipse 80% 60% at 15% 75%, rgba(0, 200, 160, 0.09) 0%, rgba(215, 184, 102, 0.04) 40%, transparent 60%),
+    linear-gradient(180deg, #020708 0%, #030d0f 45%, #010506 100%);
 }
 
 /* Layer 3: Large Blurred Organic Light Blobs (GPU-accelerated Auroral Waves) */
 .atmospheric-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(120px);
-  opacity: 0.55;
+  filter: blur(100px);
+  opacity: 0.65;
   will-change: transform;
   transform: translate3d(0, 0, 0);
 }
 
 .blob-emerald-top {
-  top: -10vw;
-  left: 15vw;
+  top: -12vw;
+  left: 20vw;
   width: 60vw;
   height: 50vw;
-  background: radial-gradient(circle, rgba(57, 185, 154, 0.22) 0%, rgba(8, 127, 98, 0.10) 60%, transparent 100%);
+  background: radial-gradient(circle, rgba(0, 255, 210, 0.22) 0%, rgba(0, 160, 130, 0.10) 60%, transparent 100%);
   animation: floatDrift1 28s ease-in-out infinite alternate;
 }
 
 .blob-cyan-mid {
-  top: 35vh;
+  top: 30vh;
   right: -10vw;
   width: 55vw;
   height: 48vw;
-  background: radial-gradient(circle, rgba(84, 201, 207, 0.18) 0%, rgba(13, 59, 46, 0.15) 60%, transparent 100%);
+  background: radial-gradient(circle, rgba(0, 229, 255, 0.16) 0%, rgba(4, 20, 25, 0.15) 60%, transparent 100%);
   animation: floatDrift2 34s ease-in-out infinite alternate;
 }
 
@@ -58,7 +58,7 @@
   left: -5vw;
   width: 50vw;
   height: 42vw;
-  background: radial-gradient(circle, rgba(229, 195, 120, 0.12) 0%, rgba(13, 59, 46, 0.2) 60%, transparent 100%);
+  background: radial-gradient(circle, rgba(232, 184, 77, 0.14) 0%, rgba(4, 20, 25, 0.2) 60%, transparent 100%);
   animation: floatDrift3 38s ease-in-out infinite alternate;
 }
 
@@ -66,27 +66,28 @@
 .atmospheric-glow-field {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 100% 100% at 50% 50%, transparent 40%, rgba(3, 10, 7, 0.65) 100%);
+  background: radial-gradient(ellipse 100% 100% at 50% 50%, transparent 40%, rgba(1, 6, 8, 0.65) 100%);
 }
 
 /* Layer 6: Micro-Noise Texture Simulation for Organic Tactile Depth */
 .atmospheric-noise {
   position: absolute;
   inset: 0;
-  opacity: 0.035;
-  background-image: radial-gradient(#39B99A 1px, transparent 1px);
+  opacity: 0.025;
+  background-image: radial-gradient(#00ffd2 1px, transparent 1px);
   background-size: 28px 28px;
 }
 
-/* Layer 7: Subtle Islamic Geometric Pattern (Target: 2% Opacity) */
+/* Layer 7: Clearly Visible Islamic Geometric Pattern matching reference screenshot */
 .atmospheric-islamic-pattern {
   position: absolute;
   inset: 0;
   background-image: url('/pattern-islamic.svg');
   background-repeat: repeat;
-  background-size: 80px 80px;
-  opacity: 0.03;
-  mix-blend-mode: overlay;
+  background-size: 120px 120px;
+  opacity: 0.22;
+  pointer-events: none;
+  z-index: 2;
 }
 
 /* ── GPU Keyframe Animations ── */

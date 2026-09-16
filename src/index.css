@@ -1,89 +1,140 @@
 /* =========================================================
    ROHIS KABUPATEN BANYUMAS — Official Digital Platform
-   DARK LIQUID GLASS • CELESTIAL CONSTELLATION ("RASI BINTANG")
-   Editorial Typography • Deep Obsidian • Emerald & Cyan Glow
+   AUTHENTIC 3D LIQUID GLASS • CELESTIAL CONSTELLATIONS
+   Glossy Refraction • Vivid Emerald & Cyan Rims • Deep Space
    ========================================================= */
 
 :root {
-  /* ---------- PRIMARY COLOR SYSTEM (Dark Liquid Glass) ---------- */
-  --color-bg:                     #061510; /* Deep Obsidian Forest background */
-  --color-bg-secondary:           #0B2019; /* Secondary Dark Emerald */
-  --color-surface-pure:           #0E2A21; /* Solid dark card surface */
-  --color-forest:                 #F5FAF7; /* Primary Heading / Title on dark: crisp luminous ivory */
-  --color-forest-dark:            #030C09; /* Deepest footer grounding */
-  --color-emerald:                #39B99A; /* Vibrant Light Emerald primary accent */
-  --color-emerald-light:          #5FE3C2; /* Luminous emerald neon accent */
-  --color-cyan:                   #54C9CF; /* Ethereal celestial cyan */
-  --color-gold:                   #E5C378; /* Subtle celestial gold */
-  --color-gold-light:             #F3D89A;
+  /* ---------- PRIMARY COLOR SYSTEM (3D Liquid Glass) ---------- */
+  --color-bg:                     #020708; /* Deep Obsidian Space Canvas */
+  --color-bg-secondary:           #030d0f; /* Secondary Deep Emerald Space */
+  --color-surface-pure:           #04161a; /* Dark solid surface */
+  --color-forest:                 #FFFFFF; /* Pure luminous white for headings */
+  --color-forest-dark:            #010506; /* Grounded dark base */
+  --color-emerald:                #00F0CF; /* Vibrant Neon Emerald primary accent */
+  --color-emerald-light:          #5FE3C2; /* Luminous mint neon accent */
+  --color-cyan:                   #00E5FF; /* Ethereal celestial cyan */
+  --color-gold:                   #D7B866; /* Elegant celestial gold */
+  --color-gold-light:             #F5D076;
   
-  --color-text:                   #E8F2EE; /* Primary Text: luminous light sage-ivory */
-  --color-text-secondary:         #9EB3AB; /* Secondary Text: soft mint-slate editorial readability */
-  --color-text-muted:             #6E857C; /* Muted text */
-  --color-border:                 rgba(57, 185, 154, 0.16); /* Translucent emerald border */
-  --color-border-hover:           rgba(57, 185, 154, 0.38); /* Hover neon border */
+  --color-text:                   rgba(255, 255, 255, 0.94); /* Primary Text: luminous high-contrast white */
+  --color-text-secondary:         rgba(255, 255, 255, 0.76); /* Secondary Text: soft clear white */
+  --color-text-muted:             rgba(255, 255, 255, 0.52); /* Muted text */
+  --color-border:                 rgba(0, 255, 200, 0.24);   /* Luminous emerald neon border */
+  --color-border-hover:           rgba(0, 255, 200, 0.68);   /* Glowing active border */
 
   /* Legacy & Semantic Component Aliases */
-  --color-emerald-deep:           #061510;
-  --color-emerald-mid:            #087F62;
-  --color-emerald-accent:         #39B99A;
-  --color-ivory:                  #F5FAF7;
-  --color-warm-ivory:             #E8F2EE;
+  --color-emerald-deep:           #020708;
+  --color-emerald-mid:            #00A88F;
+  --color-emerald-accent:         #00F0CF;
+  --color-ivory:                  #FFFFFF;
+  --color-warm-ivory:             rgba(255, 255, 255, 0.94);
 
-  --color-surface:                rgba(11, 33, 26, 0.65);
-  --color-surface-card:           rgba(11, 33, 26, 0.65);
-  --color-surface-hover:          rgba(16, 48, 38, 0.75);
-  --color-surface-solid:          #0E2A21;
+  --color-surface:                rgba(4, 20, 24, 0.72);
+  --color-surface-card:           rgba(4, 20, 24, 0.72);
+  --color-surface-hover:          rgba(6, 28, 32, 0.82);
+  --color-surface-solid:          #04161a;
 
-  --color-primary:                var(--color-emerald);
-  --color-primary-light:          var(--color-emerald-light);
-  --color-primary-dark:           #087F62;
-  --color-primary-glow:           rgba(57, 185, 154, 0.25);
-  --color-cyan-glow:              rgba(84, 201, 207, 0.25);
-  --color-gold-glow:              rgba(229, 195, 120, 0.20);
+  --color-primary:                #00DDB8;
+  --color-primary-light:          #00F0CF;
+  --color-primary-dark:           #00A88F;
+  --color-primary-glow:           rgba(0, 255, 210, 0.38);
+  --color-cyan-glow:              rgba(0, 229, 255, 0.35);
+  --color-gold-glow:              rgba(215, 184, 102, 0.30);
 
-  --color-text-on-dark:           #F5FAF7;
-  --color-text-on-dark-secondary: #9EB3AB;
+  --color-text-on-dark:           #FFFFFF;
+  --color-text-on-dark-secondary: rgba(255, 255, 255, 0.76);
 
-  /* ---------- 4-TIER DARK LIQUID GLASS SYSTEM ---------- */
-  /* Level 1: Very subtle dark glass (pills, metadata chips) */
-  --glass-l1-bg:                  rgba(13, 38, 30, 0.45);
-  --glass-l1-border:              rgba(57, 185, 154, 0.14);
+  /* ---------- TRUE 3D LIQUID GLASS SYSTEM ---------- */
+  --liquid-glass:
+    linear-gradient(
+      135deg,
+      rgba(0, 255, 200, 0.06) 0%,
+      rgba(4, 20, 24, 0.74) 45%,
+      rgba(2, 10, 13, 0.90) 100%
+    );
 
-  /* Level 2: Frosted dark liquid crystal + blur (cards, events, articles) */
-  --glass-l2-bg:                  rgba(11, 33, 26, 0.68);
-  --glass-l2-blur:                blur(20px) saturate(180%);
-  --glass-l2-border:              rgba(57, 185, 154, 0.20);
-  --glass-l2-shadow:              inset 0 1px 1px rgba(255, 255, 255, 0.10), 0 16px 36px rgba(0, 0, 0, 0.45);
+  --liquid-glass-hover:
+    linear-gradient(
+      135deg,
+      rgba(0, 255, 200, 0.10) 0%,
+      rgba(6, 26, 30, 0.80) 45%,
+      rgba(3, 13, 16, 0.94) 100%
+    );
 
-  /* Level 3: Elevated glass + reflection + depth (navbar, sticky elements) */
-  --glass-l3-bg:                  rgba(8, 26, 20, 0.85);
+  --liquid-border:
+    rgba(0, 255, 200, 0.28);
+
+  --liquid-border-hover:
+    rgba(0, 255, 200, 0.68);
+
+  --liquid-blur:
+    blur(20px) saturate(180%);
+
+  --liquid-shadow:
+    0 25px 60px -10px rgba(0, 0, 0, 0.85),
+    0 10px 24px -4px rgba(0, 0, 0, 0.60),
+    0 0 32px rgba(0, 255, 200, 0.18);
+
+  --liquid-shadow-hover:
+    0 35px 80px -10px rgba(0, 0, 0, 0.92),
+    0 14px 32px -4px rgba(0, 0, 0, 0.65),
+    0 0 45px rgba(0, 255, 200, 0.35);
+
+  --liquid-inset:
+    inset 0 1.5px 0 0 rgba(0, 255, 200, 0.38),
+    inset 0 -1px 0 0 rgba(0, 255, 180, 0.14),
+    inset 0 0 24px 0 rgba(0, 0, 0, 0.45);
+
+  /* Level 1: Subtle dark glass chip */
+  --glass-l1-bg:                  rgba(0, 255, 200, 0.08);
+  --glass-l1-border:              rgba(0, 255, 200, 0.30);
+
+  /* Level 2: Main 3D Card Glass */
+  --glass-l2-bg:                  var(--liquid-glass);
+  --glass-l2-blur:                var(--liquid-blur);
+  --glass-l2-border:              var(--liquid-border);
+  --glass-l2-shadow:              var(--liquid-shadow);
+
+  /* Level 3: Elevated Floating Elements & Navbar */
+  --glass-l3-bg:
+    linear-gradient(
+      135deg,
+      rgba(0, 255, 200, 0.08) 0%,
+      rgba(4, 20, 24, 0.82) 45%,
+      rgba(2, 10, 12, 0.94) 100%
+    );
   --glass-l3-blur:                blur(24px) saturate(190%);
-  --glass-l3-border:              rgba(57, 185, 154, 0.28);
-  --glass-l3-shadow:              inset 0 1px 1px rgba(255, 255, 255, 0.16), 0 20px 48px rgba(0, 0, 0, 0.55);
+  --glass-l3-border:              rgba(0, 255, 200, 0.32);
+  --glass-l3-shadow:
+    0 20px 50px -10px rgba(0, 0, 0, 0.85),
+    0 8px 20px -4px rgba(0, 0, 0, 0.60),
+    0 0 32px rgba(0, 255, 200, 0.20),
+    inset 0 1.5px 0 0 rgba(0, 255, 200, 0.42);
 
-  /* Level 4: Interactive highlighted glass with neon glow */
-  --glass-l4-bg:                  rgba(13, 42, 33, 0.90);
-  --glass-l4-blur:                blur(28px);
-  --glass-l4-border:              rgba(84, 201, 207, 0.42);
-  --glass-l4-shadow:              inset 0 1px 2px rgba(255, 255, 255, 0.22), 0 20px 50px rgba(0, 0, 0, 0.65), 0 0 24px rgba(57, 185, 154, 0.25);
+  /* Level 4: Active Highlighted Card */
+  --glass-l4-bg:                  var(--liquid-glass-hover);
+  --glass-l4-blur:                blur(24px);
+  --glass-l4-border:              #00F0CF;
+  --glass-l4-shadow:              var(--liquid-shadow-hover);
 
   /* Standard aliases */
-  --glass-bg:                     var(--glass-l2-bg);
-  --glass-blur:                   var(--glass-l2-blur);
-  --glass-border:                 var(--glass-l2-border);
-  --glass-border-hover:           var(--color-border-hover);
-  --glass-shadow:                 var(--glass-l2-shadow);
-  --glass-shadow-hover:           var(--glass-l3-shadow);
+  --glass-bg:                     var(--liquid-glass);
+  --glass-blur:                   var(--liquid-blur);
+  --glass-border:                 var(--liquid-border);
+  --glass-border-hover:           var(--liquid-border-hover);
+  --glass-shadow:                 var(--liquid-shadow);
+  --glass-shadow-hover:           var(--liquid-shadow-hover);
+  --glass-inset:                  var(--liquid-inset);
 
-  /* ---------- RESTRAINED BORDER RADIUS ---------- */
-  --radius-sm:                    10px;
-  --radius-md:                    16px;
+  /* ---------- BORDER RADIUS ---------- */
+  --radius-sm:                    12px;
+  --radius-md:                    18px;
   --radius-lg:                    24px;
   --radius-xl:                    32px;
   --radius-pill:                  999px;
   --radius-full:                  999px;
-  --radius-glass:                 16px;
+  --radius-glass:                 24px;
 
   /* ---------- TRANSITIONS & MOTION (Quiet & Restrained) ---------- */
   --ease-out:                     cubic-bezier(0.16, 1, 0.3, 1);
@@ -410,7 +461,7 @@ p {
 }
 
 /* =========================================================
-   CARD SYSTEM — Light Frosted Crystal & Pure Surface
+   CARD SYSTEM — 3D Liquid Glass & Refractive Surfaces
    ========================================================= */
 
 .liquid-glass,
@@ -433,20 +484,45 @@ p {
 .glass-modal,
 .gallery-item {
   position: relative;
-  background: var(--glass-l2-bg);
-  backdrop-filter: var(--glass-l2-blur);
-  -webkit-backdrop-filter: var(--glass-l2-blur);
-  border: 1px solid var(--glass-l2-border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--glass-l2-shadow);
-  transition:
-    transform var(--transition-base),
-    box-shadow var(--transition-base),
-    border-color var(--transition-base);
+  background: var(--liquid-glass);
+  backdrop-filter: var(--liquid-blur);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  border: 1.5px solid var(--liquid-border);
+  border-top: 2px solid rgba(0, 255, 200, 0.50);
+  border-bottom: 1px solid rgba(0, 255, 180, 0.14);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--liquid-shadow), var(--liquid-inset);
+  transition: all var(--transition-base);
   overflow: hidden;
 }
 
-/* Clean hover behavior — subtle lift (-3px) and slight scale (1.008) */
+/* 3D Specular Liquid Glass Highlight */
+.liquid-glass::before,
+.glass-card::before,
+.card::before,
+.stat-glass-card::before,
+.quote-card::before,
+.program-glass-card::before,
+.team-card::before,
+.about-story-card::before,
+.home-cta::before {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 14px;
+  right: 14px;
+  height: 38%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(255, 255, 255, 0.03) 60%,
+    transparent 100%
+  );
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
 .liquid-glass:hover,
 .glass-card:hover,
 .card:hover,
@@ -461,18 +537,14 @@ p {
 .school-card:hover,
 .article-card:hover,
 .event-card:hover {
-  transform: translateY(-3px) scale(1.008);
-  box-shadow: var(--glass-l3-shadow);
-  border-color: var(--color-border-hover);
-}
-
-.liquid-glass::before, .glass-card::before, .card::before,
-.liquid-glass::after, .glass-card::after, .card::after {
-  display: none;
+  transform: translateY(-4px) scale(1.01);
+  background: var(--liquid-glass-hover);
+  box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
+  border-color: var(--liquid-border-hover);
 }
 
 /* =========================================================
-   BUTTONS — Quietly Premium, Confident & Accessible
+   BUTTONS — 3D Liquid Glass & Neon Emerald
    ========================================================= */
 
 .glass-button,
@@ -484,12 +556,12 @@ p {
   gap: 10px;
   min-height: 48px;
   padding: 0 28px;
-  color: #FFFFFF !important;
-  background: linear-gradient(135deg, #0D3B2E 0%, #087F62 100%);
-  border: 1px solid rgba(13, 59, 46, 0.15);
+  color: #020A0B !important;
+  background: linear-gradient(135deg, #00DDB8 0%, #00F0CF 100%);
+  border: 1px solid rgba(0, 255, 200, 0.45);
   border-radius: var(--radius-pill);
-  box-shadow: 0 4px 18px rgba(13, 59, 46, 0.20);
-  font-weight: 700;
+  box-shadow: 0 4px 20px rgba(0, 255, 210, 0.35), inset 0 1.2px 1px rgba(255, 255, 255, 0.45);
+  font-weight: 800;
   font-size: 0.95rem;
   font-family: var(--font-heading);
   cursor: pointer;
@@ -500,16 +572,16 @@ p {
 
 .glass-button:hover,
 .btn-primary:hover {
-  background: linear-gradient(135deg, #087F62 0%, #0D3B2E 100%);
+  background: linear-gradient(135deg, #00F0CF 0%, #5FE3C2 100%);
   transform: translateY(-2px);
-  box-shadow: 0 8px 26px rgba(13, 59, 46, 0.28);
-  color: #FFFFFF !important;
+  box-shadow: 0 8px 28px rgba(0, 255, 210, 0.55), inset 0 1.5px 2px rgba(255, 255, 255, 0.60);
+  color: #020A0B !important;
 }
 
 .glass-button:active,
 .btn-primary:active {
   transform: translateY(0);
-  box-shadow: 0 2px 10px rgba(13, 59, 46, 0.20);
+  box-shadow: 0 2px 10px rgba(0, 255, 210, 0.25);
 }
 
 /* Secondary / Outline Button */
@@ -523,13 +595,19 @@ p {
   gap: 10px;
   min-height: 48px;
   padding: 0 26px;
-  color: var(--color-forest) !important;
-  background: rgba(14, 41, 32, 0.55);
+  color: #FFFFFF !important;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 255, 200, 0.05) 0%,
+    rgba(4, 20, 24, 0.70) 50%,
+    rgba(2, 10, 13, 0.88) 100%
+  );
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(57, 185, 154, 0.25);
+  border: 1.5px solid rgba(0, 255, 200, 0.30);
+  border-top: 1.8px solid rgba(0, 255, 200, 0.50);
   border-radius: var(--radius-pill);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.60), inset 0 1px 1px rgba(255, 255, 255, 0.20);
   font-weight: 600;
   font-size: 0.95rem;
   font-family: var(--font-heading);
@@ -542,11 +620,16 @@ p {
 .glass-button-secondary:hover,
 .btn-outline:hover,
 .btn-secondary:hover {
-  background: rgba(20, 58, 46, 0.80);
-  border-color: var(--color-emerald);
-  color: #5FE3C2 !important;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 255, 200, 0.12) 0%,
+    rgba(6, 28, 32, 0.80) 50%,
+    rgba(3, 14, 18, 0.92) 100%
+  );
+  border-color: #00F0CF;
+  color: #00F0CF !important;
   transform: translateY(-2px);
-  box-shadow: 0 6px 22px rgba(57, 185, 154, 0.25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75), 0 0 24px rgba(0, 255, 200, 0.30), inset 0 1px 2px rgba(255, 255, 255, 0.35);
 }
 
 /* Gold Button Accent (<2% use) */

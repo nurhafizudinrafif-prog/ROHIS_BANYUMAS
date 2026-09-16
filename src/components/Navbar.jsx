@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Search } from 'lucide-react';
 import logoImg from '../assets/logo.png';
 import './Navbar.css';
 
 const navLinks = [
   { path: '/', label: 'Beranda' },
   { path: '/tentang', label: 'Tentang' },
-  { path: '/program', label: 'Agenda' },
+  { path: '/program', label: 'Program & Agenda' },
   { path: '/artikel', label: 'Artikel' },
   { path: '/galeri', label: 'Galeri' },
   { path: '/rohis-anggota', label: 'ROHIS Anggota' },
@@ -69,7 +69,7 @@ export default function Navbar() {
             <img src={logoImg} alt="Logo ROHIS Kabupaten Banyumas" className="navbar-logo-img" />
             <div className="navbar-brand-text">
               <span className="navbar-brand-name">ROHIS</span>
-              <span className="navbar-brand-sub">Kab. Banyumas</span>
+              <span className="navbar-brand-sub">Kabupaten Banyumas</span>
             </div>
           </Link>
 
@@ -84,6 +84,11 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
+
+            {/* Search Icon Button */}
+            <Link to="/artikel" className="navbar-search-btn" aria-label="Cari artikel dan informasi" title="Cari artikel">
+              <Search size={17} />
+            </Link>
           </div>
 
           {/* Mobile Hamburger */}
