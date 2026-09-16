@@ -1,5 +1,21 @@
 import { useEffect, useRef } from 'react';
 
+/**
+ * =========================================================================
+ * ATMOSPHERIC LIGHT PARTICLES (Dust Motes in Sanctuary Lighting)
+ *
+ * Replaces high-density constellation/spiderweb lines with ultra-sparse,
+ * gentle micro-particles drifting in ambient architectural light.
+ *
+ * Characteristics:
+ * - Extremely sparse (22 desktop / 12 mobile)
+ * - Microscopic radius (0.8px – 1.6px)
+ * - Low opacity (0.12 – 0.32)
+ * - Ultra-slow organic Brownian drift
+ * - Warm-gold, emerald, and white ambient light tints
+ * - Zero cyberpunk lines, zero outer-space star fields
+ * =========================================================================
+ */
 export default function ConstellationBackground() {
   const canvasRef = useRef(null);
 
@@ -15,38 +31,29 @@ export default function ConstellationBackground() {
     let height = 0;
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    // Star configuration
     const isMobile = window.innerWidth < 768;
-    const STAR_COUNT = isMobile ? 45 : 85;
-    const CONNECTION_DIST = isMobile ? 90 : 130;
-    const stars = [];
+    const PARTICLE_COUNT = isMobile ? 12 : 24;
+    const particles = [];
 
-    const mouse = {
-      x: -1000,
-      y: -1000,
-      radius: 140,
-    };
+    function initParticles() {
+      particles.length = 0;
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const isGold = i % 7 === 0;
+        const isEmerald = i % 3 === 0 && !isGold;
 
-    function initStars() {
-      stars.length = 0;
-      for (let i = 0; i < STAR_COUNT; i++) {
-        // A few special brighter anchor stars (Rasi Bintang vertices)
-        const isAnchor = i % 7 === 0;
-        const isGold = i % 13 === 0;
-
-        stars.push({
+        particles.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          vx: (Math.random() - 0.5) * (isMobile ? 0.2 : 0.35),
-          vy: (Math.random() - 0.5) * (isMobile ? 0.2 : 0.35),
-          radius: isAnchor ? (isGold ? 2.6 : 2.2) : Math.random() * 1.4 + 0.6,
-          baseAlpha: isAnchor ? 0.75 : Math.random() * 0.45 + 0.2,
-          alpha: isAnchor ? 0.75 : Math.random() * 0.45 + 0.2,
-          twinkleSpeed: Math.random() * 0.02 + 0.008,
-          twinklePhase: Math.random() * Math.PI * 2,
+          // Extremely slow organic drifting
+          vx: (Math.random() - 0.5) * 0.12,
+          vy: (Math.random() - 0.5) * 0.14 - 0.04, // slight upward buoyancy
+          radius: Math.random() * 0.8 + 0.8,
+          baseAlpha: Math.random() * 0.20 + 0.12,
+          alpha: Math.random() * 0.20 + 0.12,
+          driftSpeed: Math.random() * 0.008 + 0.003,
+          driftPhase: Math.random() * Math.PI * 2,
           isGold,
-          isAnchor,
+          isEmerald,
         });
       }
     }
@@ -55,122 +62,65 @@ export default function ConstellationBackground() {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       width = window.innerWidth;
       height = window.innerHeight;
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       ctx.scale(dpr, dpr);
-      initStars();
+      initParticles();
     }
 
     handleResize();
     window.addEventListener('resize', handleResize);
 
-    const handleMouseMove = (e) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-    };
-
-    const handleMouseLeave = () => {
-      mouse.x = -1000;
-      mouse.y = -1000;
-    };
-
-    if (!isMobile) {
-      window.addEventListener('mousemove', handleMouseMove);
-      window.addEventListener('mouseleave', handleMouseLeave);
-    }
-
-    let time = 0;
-
     function render() {
       ctx.clearRect(0, 0, width, height);
 
-      time += 0.015;
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
 
-      // 1. Draw connection lines (Constellation Geometric Web)
-      for (let i = 0; i < stars.length; i++) {
-        const s1 = stars[i];
-
-        for (let j = i + 1; j < stars.length; j++) {
-          const s2 = stars[j];
-          const dx = s1.x - s2.x;
-          const dy = s1.y - s2.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < CONNECTION_DIST) {
-            const lineAlpha = (1 - dist / CONNECTION_DIST) * 0.14 * (s1.alpha + s2.alpha);
-            ctx.beginPath();
-            ctx.moveTo(s1.x, s1.y);
-            ctx.lineTo(s2.x, s2.y);
-
-            if (s1.isGold || s2.isGold) {
-              ctx.strokeStyle = `rgba(212, 175, 55, ${lineAlpha * 1.1})`;
-            } else {
-              ctx.strokeStyle = `rgba(57, 185, 154, ${lineAlpha})`;
-            }
-            ctx.lineWidth = s1.isAnchor && s2.isAnchor ? 0.9 : 0.55;
-            ctx.stroke();
-          }
-        }
-
-        // Mouse interactive connection (desktop only)
-        if (!isMobile && mouse.x > 0) {
-          const mdx = s1.x - mouse.x;
-          const mdy = s1.y - mouse.y;
-          const mDist = Math.sqrt(mdx * mdx + mdy * mdy);
-          if (mDist < mouse.radius) {
-            const mAlpha = (1 - mDist / mouse.radius) * 0.28;
-            ctx.beginPath();
-            ctx.moveTo(s1.x, s1.y);
-            ctx.lineTo(mouse.x, mouse.y);
-            ctx.strokeStyle = `rgba(84, 201, 207, ${mAlpha})`;
-            ctx.lineWidth = 0.75;
-            ctx.stroke();
-          }
-        }
-      }
-
-      // 2. Draw Stars & Anchor Nodes
-      for (let i = 0; i < stars.length; i++) {
-        const star = stars[i];
-
-        // Move stars softly
         if (!prefersReducedMotion) {
-          star.x += star.vx;
-          star.y += star.vy;
+          p.x += p.vx + Math.sin(p.driftPhase) * 0.06;
+          p.y += p.vy;
+          p.driftPhase += p.driftSpeed;
 
-          if (star.x < 0) star.x = width;
-          else if (star.x > width) star.x = 0;
+          // Wrap around seamlessly
+          if (p.x < -10) p.x = width + 10;
+          else if (p.x > width + 10) p.x = -10;
 
-          if (star.y < 0) star.y = height;
-          else if (star.y > height) star.y = 0;
+          if (p.y < -10) p.y = height + 10;
+          else if (p.y > height + 10) p.y = -10;
 
-          // Twinkle effect
-          star.twinklePhase += star.twinkleSpeed;
-          star.alpha = star.baseAlpha + Math.sin(star.twinklePhase) * 0.25;
+          // Gentle breathing pulsation
+          p.alpha = p.baseAlpha + Math.sin(p.driftPhase * 1.5) * 0.08;
         }
 
-        // Draw star point
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        const effectiveAlpha = Math.max(0.05, Math.min(0.35, p.alpha));
 
-        if (star.isGold) {
-          ctx.fillStyle = `rgba(224, 192, 107, ${Math.max(0.1, star.alpha)})`;
-        } else if (star.isAnchor) {
-          ctx.fillStyle = `rgba(180, 245, 230, ${Math.max(0.2, star.alpha)})`;
+        // Soft dust mote core
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+
+        if (p.isGold) {
+          ctx.fillStyle = `rgba(215, 184, 102, ${effectiveAlpha * 0.85})`;
+        } else if (p.isEmerald) {
+          ctx.fillStyle = `rgba(0, 221, 184, ${effectiveAlpha * 0.9})`;
         } else {
-          ctx.fillStyle = `rgba(255, 255, 255, ${Math.max(0.08, star.alpha)})`;
+          ctx.fillStyle = `rgba(235, 248, 244, ${effectiveAlpha * 0.75})`;
         }
         ctx.fill();
 
-        // Subtle glow halo around anchor stars
-        if (star.isAnchor) {
+        // Soft ambient optical halo for a few primary motes
+        if (p.radius > 1.2) {
           ctx.beginPath();
-          ctx.arc(star.x, star.y, star.radius * 3.2, 0, Math.PI * 2);
-          ctx.fillStyle = star.isGold
-            ? `rgba(212, 175, 55, ${star.alpha * 0.12})`
-            : `rgba(57, 185, 154, ${star.alpha * 0.15})`;
+          ctx.arc(p.x, p.y, p.radius * 2.8, 0, Math.PI * 2);
+          if (p.isGold) {
+            ctx.fillStyle = `rgba(215, 184, 102, ${effectiveAlpha * 0.15})`;
+          } else if (p.isEmerald) {
+            ctx.fillStyle = `rgba(0, 221, 184, ${effectiveAlpha * 0.18})`;
+          } else {
+            ctx.fillStyle = `rgba(255, 255, 255, ${effectiveAlpha * 0.10})`;
+          }
           ctx.fill();
         }
       }
@@ -185,24 +135,20 @@ export default function ConstellationBackground() {
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', handleResize);
-      if (!isMobile) {
-        window.removeEventListener('mousemove', handleMouseMove);
-        window.removeEventListener('mouseleave', handleMouseLeave);
-      }
     };
   }, []);
 
   return (
     <canvas
       ref={canvasRef}
+      className="env-layer-particles"
       style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
+        position: 'absolute',
+        inset: 0,
         width: '100%',
         height: '100%',
         pointerEvents: 'none',
-        zIndex: 0,
+        zIndex: 1,
         opacity: 0.85,
       }}
       aria-hidden="true"
