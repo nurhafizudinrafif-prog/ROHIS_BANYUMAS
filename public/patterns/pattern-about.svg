@@ -8,7 +8,7 @@
   </defs>
 
   <!-- Architectural Islamic Geometric Grid & Diagonal Lattice -->
-  <g stroke="url(#aboutArch)" stroke-width="0.7" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <g stroke="url(#aboutArch)" stroke-width="1.15" fill="none" stroke-linecap="round" stroke-linejoin="round">
     <!-- Center Grand Architectural Medallion -->
     <circle cx="80" cy="80" r="32" stroke-dasharray="3 3" stroke-opacity="0.5" />
     <polygon points="80,48 88,72 112,80 88,88 80,112 72,88 48,80 72,72" />

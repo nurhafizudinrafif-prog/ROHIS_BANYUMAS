@@ -34,43 +34,43 @@ const SECTION_CONFIG = {
   hero: {
     id: 'hero',
     name: 'Hero / Beranda',
-    patternOpacity: 0.026, // 1.5% - 3.0%
+    patternOpacity: 0.22, // Clearly visible & elegant Islamic geometry
     baseColor: '#010405',
   },
   about: {
     id: 'about',
     name: 'Tentang',
-    patternOpacity: 0.024,
+    patternOpacity: 0.18,
     baseColor: '#020605',
   },
   program: {
     id: 'program',
     name: 'Program & Agenda',
-    patternOpacity: 0.025,
+    patternOpacity: 0.20,
     baseColor: '#010709',
   },
   article: {
     id: 'article',
     name: 'Artikel',
-    patternOpacity: 0.016, // High negative space, editorial minimalism
+    patternOpacity: 0.14, // Clean editorial lines
     baseColor: '#010405',
   },
   gallery: {
     id: 'gallery',
     name: 'Galeri',
-    patternOpacity: 0.018, // Reduced density to support photography
+    patternOpacity: 0.16,
     baseColor: '#010405',
   },
   members: {
     id: 'members',
     name: 'ROHIS Anggota',
-    patternOpacity: 0.024,
+    patternOpacity: 0.19,
     baseColor: '#010604',
   },
   contact: {
     id: 'contact',
     name: 'Kontak / Siap Bergabung',
-    patternOpacity: 0.015, // Most minimal, peaceful closing
+    patternOpacity: 0.16,
     baseColor: '#010405',
   },
 };

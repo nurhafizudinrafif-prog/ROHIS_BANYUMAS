@@ -54,8 +54,8 @@
    ========================================================================= */
 .section-hero .layer-base {
   background:
-    radial-gradient(ellipse 95% 65% at 50% 12%, rgba(0, 221, 184, 0.10) 0%, rgba(0, 60, 50, 0.03) 45%, transparent 75%),
-    radial-gradient(circle at 85% 60%, rgba(0, 229, 255, 0.035) 0%, transparent 50%),
+    radial-gradient(ellipse 95% 65% at 50% 12%, rgba(0, 221, 184, 0.16) 0%, rgba(0, 60, 50, 0.05) 45%, transparent 75%),
+    radial-gradient(circle at 85% 60%, rgba(0, 229, 255, 0.08) 0%, transparent 50%),
     linear-gradient(180deg, #010405 0%, #020708 50%, #010404 100%);
 }
 
@@ -66,8 +66,8 @@
   width: 66vw;
   height: 50vh;
   border-radius: 50%;
-  filter: blur(110px);
-  background: radial-gradient(circle, rgba(0, 240, 207, 0.12) 0%, rgba(0, 110, 90, 0.025) 60%, transparent 80%);
+  filter: blur(100px);
+  background: radial-gradient(circle, rgba(0, 240, 207, 0.22) 0%, rgba(0, 110, 90, 0.06) 60%, transparent 80%);
 }
 
 .section-hero .glow-2 {
@@ -77,8 +77,8 @@
   width: 46vw;
   height: 40vh;
   border-radius: 50%;
-  filter: blur(115px);
-  background: radial-gradient(circle, rgba(0, 229, 255, 0.045) 0%, transparent 65%);
+  filter: blur(110px);
+  background: radial-gradient(circle, rgba(0, 229, 255, 0.12) 0%, transparent 65%);
 }
 
 .section-hero .blob-a {
@@ -88,9 +88,9 @@
   width: 48vw;
   height: 42vw;
   border-radius: 46% 54% 50% 50% / 48% 46% 54% 52%;
-  filter: blur(105px);
-  opacity: 0.28;
-  background: radial-gradient(circle, rgba(0, 221, 184, 0.14) 0%, rgba(0, 70, 60, 0.03) 60%, transparent 100%);
+  filter: blur(95px);
+  opacity: 0.45;
+  background: radial-gradient(circle, rgba(0, 221, 184, 0.22) 0%, rgba(0, 70, 60, 0.06) 60%, transparent 100%);
   animation: driftHeroA 34s ease-in-out infinite alternate;
 }
 
@@ -101,14 +101,14 @@
   width: 40vw;
   height: 36vw;
   border-radius: 50% 50% 45% 55% / 55% 45% 55% 45%;
-  filter: blur(115px);
-  opacity: 0.20;
-  background: radial-gradient(circle, rgba(0, 240, 207, 0.09) 0%, transparent 70%);
+  filter: blur(105px);
+  opacity: 0.35;
+  background: radial-gradient(circle, rgba(0, 240, 207, 0.16) 0%, transparent 70%);
   animation: driftHeroB 40s ease-in-out infinite alternate;
 }
 
 .section-hero .layer-glow {
-  background: radial-gradient(ellipse 85% 60% at 50% 25%, rgba(0, 221, 184, 0.038) 0%, transparent 65%);
+  background: radial-gradient(ellipse 85% 60% at 50% 25%, rgba(0, 221, 184, 0.08) 0%, transparent 65%);
 }
 
 /* =========================================================================

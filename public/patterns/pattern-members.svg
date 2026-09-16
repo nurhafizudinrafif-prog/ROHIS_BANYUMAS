@@ -8,7 +8,7 @@
   </defs>
 
   <!-- Symmetrical Interlocking Islamic Structural Network -->
-  <g stroke="url(#memberNet)" stroke-width="0.7" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <g stroke="url(#memberNet)" stroke-width="1.15" fill="none" stroke-linecap="round" stroke-linejoin="round">
     <!-- Center Symmetrical Octagonal Hub -->
     <polygon points="70,38 92,48 102,70 92,92 70,102 48,92 38,70 48,48" stroke-opacity="0.7" />
     
