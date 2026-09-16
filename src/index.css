@@ -358,15 +358,15 @@ p {
 }
 
 .section-alt {
-  background: var(--color-bg-secondary);
+  background: transparent;
   position: relative;
 }
 
-/* Subtle section divider */
+/* Seamless section blending — continuous digital environment canvas without hard boundary dividers */
 .section + .section,
 .section + .section-alt,
 .section-alt + .section {
-  border-top: 1px solid rgba(13, 59, 46, 0.06);
+  border-top: none;
 }
 
 /* =========================================================
@@ -378,7 +378,7 @@ p {
   padding-top: calc(var(--navbar-height) + var(--space-3xl));
   padding-bottom: var(--space-3xl);
   text-align: center;
-  background: var(--color-bg);
+  background: transparent;
   overflow: hidden;
 }
 

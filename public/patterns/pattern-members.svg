@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="140" height="140" viewBox="0 0 140 140">
+  <defs>
+    <linearGradient id="memberNet" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ddb8" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#5fe3c2" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#087f62" stop-opacity="0.75"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Symmetrical Interlocking Islamic Structural Network -->
+  <g stroke="url(#memberNet)" stroke-width="0.7" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Center Symmetrical Octagonal Hub -->
+    <polygon points="70,38 92,48 102,70 92,92 70,102 48,92 38,70 48,48" stroke-opacity="0.7" />
+    
+    <!-- Central Interlocking Star of Brotherhood/Unity -->
+    <polygon points="70,48 84,70 70,92 56,70" stroke-opacity="0.5" />
+    <polygon points="48,70 70,56 92,70 70,84" stroke-opacity="0.5" />
+
+    <!-- Outer Structural Member Bridges -->
+    <line x1="70" y1="38" x2="70" y2="0" />
+    <line x1="70" y1="102" x2="70" y2="140" />
+    <line x1="38" y1="70" x2="0" y2="70" />
+    <line x1="102" y1="70" x2="140" y2="70" />
+
+    <!-- Corner Symmetrical Connectors (seamless) -->
+    <path d="M 0,20 L 20,0" stroke-opacity="0.4" />
+    <path d="M 120,0 L 140,20" stroke-opacity="0.4" />
+    <path d="M 0,120 L 20,140" stroke-opacity="0.4" />
+    <path d="M 120,140 L 140,120" stroke-opacity="0.4" />
+  </g>
+
+  <!-- Luminous Network Points -->
+  <circle cx="70" cy="70" r="2.2" fill="#5fe3c2" />
+  <circle cx="70" cy="38" r="1.4" fill="#00ddb8" />
+  <circle cx="102" cy="70" r="1.4" fill="#00ddb8" />
+  <circle cx="70" cy="102" r="1.4" fill="#00ddb8" />
+  <circle cx="38" cy="70" r="1.4" fill="#00ddb8" />
+</svg>

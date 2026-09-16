@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150">
+  <defs>
+    <linearGradient id="galFacet" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f0cf" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#087f62" stop-opacity="0.3"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Cinematic Facet Geometry & Subtle Reflective Surfaces -->
+  <g stroke="url(#galFacet)" stroke-width="0.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Center Expanded Diamond -->
+    <polygon points="75,25 125,75 75,125 25,75" stroke-opacity="0.45" />
+    
+    <!-- Inner Delicate Diamond -->
+    <polygon points="75,45 105,75 75,105 45,75" stroke-opacity="0.6" />
+
+    <!-- Corner Ambient Reflections -->
+    <line x1="0" y1="25" x2="25" y2="0" stroke-opacity="0.35" />
+    <line x1="125" y1="0" x2="150" y2="25" stroke-opacity="0.35" />
+    <line x1="0" y1="125" x2="25" y2="150" stroke-opacity="0.35" />
+    <line x1="125" y1="150" x2="150" y2="125" stroke-opacity="0.35" />
+
+    <!-- Cinematic Horizontal Horizon Guide Lines -->
+    <line x1="0" y1="75" x2="25" y2="75" stroke-opacity="0.3" stroke-dasharray="3 3" />
+    <line x1="125" y1="75" x2="150" y2="75" stroke-opacity="0.3" stroke-dasharray="3 3" />
+  </g>
+
+  <!-- Soft Lens Glint Points -->
+  <circle cx="75" cy="75" r="1.4" fill="#00f0cf" fill-opacity="0.6" />
+</svg>

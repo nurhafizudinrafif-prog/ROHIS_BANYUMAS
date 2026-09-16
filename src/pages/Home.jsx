@@ -144,7 +144,7 @@ export default function Home() {
       <StatsCounter />
 
       {/* 04: Editorial About ROHIS Banyumas */}
-      <section className="section">
+      <section className="section" data-section="about">
         <div className="container">
           <div className="home-about-grid">
             <div className="home-about-content">
@@ -195,7 +195,7 @@ export default function Home() {
       </section>
 
       {/* 05: Five Pillars / Program (1 Featured + 4 Supporting) */}
-      <section className="section section-alt" id="program">
+      <section className="section section-alt" id="program" data-section="program">
         <div className="container">
           <SectionHeader
             badge="Program Kerja"
@@ -398,7 +398,7 @@ export default function Home() {
       </section>
 
       {/* 08: Latest Stories (Editorial Magazine) */}
-      <section className="section">
+      <section className="section" data-section="article">
         <div className="container">
           <SectionHeader
             badge="Artikel Dakwah"
@@ -480,7 +480,7 @@ export default function Home() {
       <AchievementsSection limit={4} showFilters={true} />
 
       {/* 10: Gallery Section */}
-      <section className="section section-alt">
+      <section className="section section-alt" data-section="gallery">
         <div className="container">
           <SectionHeader
             badge="Dokumentasi"
@@ -553,7 +553,7 @@ export default function Home() {
       <InstagramSection />
 
       {/* 11: Network ("Bergerak Bersama") */}
-      <section className="section">
+      <section className="section" data-section="members">
         <div className="container">
           <SectionHeader
             badge="Sinergi Lintas Lembaga"
@@ -584,7 +584,7 @@ export default function Home() {
       </section>
 
       {/* 12: Final CTA Section */}
-      <section className="section home-cta-section pattern-bg">
+      <section className="section home-cta-section pattern-bg" data-section="contact">
         <div className="container text-center">
           <div className="home-cta animate-on-scroll">
             <h2>Siap Bergabung Bersama Kami?</h2>

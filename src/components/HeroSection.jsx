@@ -4,7 +4,7 @@ import './HeroSection.css';
 
 export default function HeroSection() {
   return (
-    <section className="hero">
+    <section className="hero" data-section="hero">
       <div className="container hero-container">
         <div className="hero-editorial-grid">
           {/* Left Column: Editorial Content */}

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="heroGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ffd2" stop-opacity="0.85"/>
+      <stop offset="50%" stop-color="#00ddb8" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.8"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Outer Frame & Grid Symmetry -->
+  <g stroke="url(#heroGlow)" stroke-width="0.75" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Center 8-pointed star rosette -->
+    <polygon points="60,36 67,53 84,60 67,67 60,84 53,67 36,60 53,53" />
+    <!-- Secondary rotated star overlay -->
+    <polygon points="60,43 72,48 77,60 72,72 60,77 48,72 43,60 48,48" stroke-dasharray="2 2" stroke-opacity="0.6" />
+    
+    <!-- Diagonal intersecting arabesque tessellations -->
+    <line x1="0" y1="0" x2="36" y2="36" />
+    <line x1="120" y1="0" x2="84" y2="36" />
+    <line x1="0" y1="120" x2="36" y2="84" />
+    <line x1="120" y1="120" x2="84" y2="84" />
+
+    <!-- Corner partial 8-pointed stars (for seamless tiling) -->
+    <!-- Top-Left corner (0,0) -->
+    <polyline points="24,0 13,13 0,24" />
+    <polygon points="0,0 7,17 24,0 17,7" stroke-opacity="0.5" />
+    <!-- Top-Right corner (120,0) -->
+    <polyline points="96,0 107,13 120,24" />
+    <!-- Bottom-Left corner (0,120) -->
+    <polyline points="0,96 13,107 24,120" />
+    <!-- Bottom-Right corner (120,120) -->
+    <polyline points="96,120 107,107 120,96" />
+
+    <!-- Connecting octagonal boundaries -->
+    <line x1="36" y1="36" x2="60" y2="24" />
+    <line x1="60" y1="24" x2="84" y2="36" />
+    <line x1="84" y1="36" x2="96" y2="60" />
+    <line x1="96" y1="60" x2="84" y2="84" />
+    <line x1="84" y1="84" x2="60" y2="96" />
+    <line x1="60" y1="96" x2="36" y2="84" />
+    <line x1="36" y1="84" x2="24" y2="60" />
+    <line x1="24" y1="60" x2="36" y2="36" />
+
+    <!-- Midpoint edge stars for seamlessness -->
+    <polyline points="60,0 60,24" />
+    <polyline points="60,96 60,120" />
+    <polyline points="0,60 24,60" />
+    <polyline points="96,60 120,60" />
+  </g>
+
+  <!-- Luminous geometric micro-nodes -->
+  <circle cx="60" cy="60" r="1.5" fill="#00ffd2" />
+  <circle cx="60" cy="24" r="1.2" fill="#38bdf8" />
+  <circle cx="60" cy="96" r="1.2" fill="#38bdf8" />
+  <circle cx="24" cy="60" r="1.2" fill="#38bdf8" />
+  <circle cx="96" cy="60" r="1.2" fill="#38bdf8" />
+  <circle cx="0" cy="0" r="1.5" fill="#00ffd2" />
+  <circle cx="120" cy="0" r="1.5" fill="#00ffd2" />
+  <circle cx="0" cy="120" r="1.5" fill="#00ffd2" />
+  <circle cx="120" cy="120" r="1.5" fill="#00ffd2" />
+</svg>
