@@ -797,9 +797,18 @@
     gap: var(--space-2xl);
   }
 
+  .home-about-visual {
+    position: relative;
+  }
+
   .home-about-badge-card {
-    position: static;
-    margin-top: var(--space-md);
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    margin-top: 0;
+    justify-content: space-around;
+    padding: 12px 18px;
   }
 
   .event-featured-card {
@@ -813,6 +822,7 @@
 
   .network-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
 }
 
@@ -836,7 +846,16 @@
   }
 
   .network-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .network-school-card {
+    padding: 12px 10px;
+  }
+
+  .network-school-name {
+    font-size: 0.82rem;
   }
 
   .home-cta {
@@ -851,5 +870,15 @@
   .home-cta-actions .btn-lg {
     width: 100%;
     justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-about-stat-num {
+    font-size: 1.25rem;
+  }
+
+  .home-about-stat-label {
+    font-size: 0.68rem;
   }
 }
