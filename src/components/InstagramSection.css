@@ -255,6 +255,9 @@
   border: 1px solid rgba(0, 255, 200, 0.20);
   transition: all 0.2s ease;
   display: inline-block;
+  max-width: 100%;
+  word-break: break-all;
+  overflow-wrap: break-word;
 }
 
 .ig-mention-tag:hover,

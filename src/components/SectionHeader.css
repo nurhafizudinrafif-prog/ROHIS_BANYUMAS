@@ -64,3 +64,24 @@
   color: #00F0CF;
   text-shadow: 0 0 18px rgba(0, 255, 207, 0.40);
 }
+
+@media (max-width: 768px) {
+  .section-header {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .section-header-title {
+    font-size: clamp(1.6rem, 6.5vw, 2.15rem);
+    line-height: 1.22;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .section-header-subtitle {
+    font-size: 0.90rem;
+    line-height: 1.58;
+    padding: 0 4px;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+}
