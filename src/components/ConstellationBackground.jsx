@@ -1,21 +1,5 @@
 import { useEffect, useRef } from 'react';
 
-/**
- * =========================================================================
- * ATMOSPHERIC LIGHT PARTICLES (Dust Motes in Sanctuary Lighting)
- *
- * Replaces high-density constellation/spiderweb lines with ultra-sparse,
- * gentle micro-particles drifting in ambient architectural light.
- *
- * Characteristics:
- * - Extremely sparse (22 desktop / 12 mobile)
- * - Microscopic radius (0.8px – 1.6px)
- * - Low opacity (0.12 – 0.32)
- * - Ultra-slow organic Brownian drift
- * - Warm-gold, emerald, and white ambient light tints
- * - Zero cyberpunk lines, zero outer-space star fields
- * =========================================================================
- */
 export default function ConstellationBackground() {
   const canvasRef = useRef(null);
 
@@ -31,9 +15,11 @@ export default function ConstellationBackground() {
     let height = 0;
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Star configuration
     const isMobile = window.innerWidth < 768;
-    const STAR_COUNT = isMobile ? 38 : 75;
-    const CONNECTION_DIST = isMobile ? 95 : 130;
+    const STAR_COUNT = isMobile ? 55 : 110;
+    const CONNECTION_DIST = isMobile ? 100 : 145;
     const stars = [];
 
     const mouse = {
@@ -45,17 +31,18 @@ export default function ConstellationBackground() {
     function initStars() {
       stars.length = 0;
       for (let i = 0; i < STAR_COUNT; i++) {
+        // A few special brighter anchor stars (Rasi Bintang vertices)
         const isAnchor = i % 6 === 0;
-        const isGold = i % 11 === 0;
+        const isGold = i % 14 === 0;
 
         stars.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          vx: (Math.random() - 0.5) * (isMobile ? 0.22 : 0.35),
-          vy: (Math.random() - 0.5) * (isMobile ? 0.22 : 0.35),
-          radius: isAnchor ? (isGold ? 2.5 : 2.2) : Math.random() * 1.3 + 0.6,
-          baseAlpha: isAnchor ? 0.70 : Math.random() * 0.40 + 0.20,
-          alpha: isAnchor ? 0.70 : Math.random() * 0.40 + 0.20,
+          vx: (Math.random() - 0.5) * (isMobile ? 0.2 : 0.35),
+          vy: (Math.random() - 0.5) * (isMobile ? 0.2 : 0.35),
+          radius: isAnchor ? (isGold ? 2.8 : 2.5) : Math.random() * 1.6 + 0.8,
+          baseAlpha: isAnchor ? 0.90 : Math.random() * 0.55 + 0.35,
+          alpha: isAnchor ? 0.90 : Math.random() * 0.55 + 0.35,
           twinkleSpeed: Math.random() * 0.02 + 0.008,
           twinklePhase: Math.random() * Math.PI * 2,
           isGold,
@@ -68,8 +55,8 @@ export default function ConstellationBackground() {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       width = window.innerWidth;
       height = window.innerHeight;
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       ctx.scale(dpr, dpr);
@@ -94,10 +81,14 @@ export default function ConstellationBackground() {
       window.addEventListener('mouseleave', handleMouseLeave);
     }
 
+    let time = 0;
+
     function render() {
       ctx.clearRect(0, 0, width, height);
 
-      // 1. Constellation Connection Web ("Rasi Bintang")
+      time += 0.015;
+
+      // 1. Draw connection lines (Constellation Geometric Web)
       for (let i = 0; i < stars.length; i++) {
         const s1 = stars[i];
 
@@ -108,17 +99,17 @@ export default function ConstellationBackground() {
           const dist = Math.sqrt(dx * dx + dy * dy);
 
           if (dist < CONNECTION_DIST) {
-            const lineAlpha = (1 - dist / CONNECTION_DIST) * 0.16 * (s1.alpha + s2.alpha);
+            const lineAlpha = (1 - dist / CONNECTION_DIST) * 0.14 * (s1.alpha + s2.alpha);
             ctx.beginPath();
             ctx.moveTo(s1.x, s1.y);
             ctx.lineTo(s2.x, s2.y);
 
             if (s1.isGold || s2.isGold) {
-              ctx.strokeStyle = `rgba(215, 184, 102, ${lineAlpha * 1.1})`;
+              ctx.strokeStyle = `rgba(212, 175, 55, ${lineAlpha * 1.1})`;
             } else {
-              ctx.strokeStyle = `rgba(0, 221, 184, ${lineAlpha})`;
+              ctx.strokeStyle = `rgba(0, 240, 207, ${lineAlpha * 1.45})`;
             }
-            ctx.lineWidth = s1.isAnchor && s2.isAnchor ? 0.9 : 0.55;
+            ctx.lineWidth = s1.isAnchor && s2.isAnchor ? 0.95 : 0.55;
             ctx.stroke();
           }
         }
@@ -134,52 +125,60 @@ export default function ConstellationBackground() {
             ctx.moveTo(s1.x, s1.y);
             ctx.lineTo(mouse.x, mouse.y);
             ctx.strokeStyle = `rgba(0, 240, 207, ${mAlpha})`;
-            ctx.lineWidth = 0.8;
+            ctx.lineWidth = 0.85;
             ctx.stroke();
           }
         }
       }
 
-      // 2. Stars & Anchor Vertices
+      // 2. Draw Stars & Anchor Nodes
       for (let i = 0; i < stars.length; i++) {
-        const s = stars[i];
+        const star = stars[i];
 
+        // Move stars softly
         if (!prefersReducedMotion) {
-          s.x += s.vx;
-          s.y += s.vy;
+          star.x += star.vx;
+          star.y += star.vy;
 
-          if (s.x < 0) s.x = width;
-          else if (s.x > width) s.x = 0;
+          if (star.x < 0) star.x = width;
+          else if (star.x > width) star.x = 0;
 
-          if (s.y < 0) s.y = height;
-          else if (s.y > height) s.y = 0;
+          if (star.y < 0) star.y = height;
+          else if (star.y > height) star.y = 0;
 
-          s.twinklePhase += s.twinkleSpeed;
-          s.alpha = s.baseAlpha + Math.sin(s.twinklePhase) * 0.28;
+          // Twinkle effect
+          star.twinklePhase += star.twinkleSpeed;
+          star.alpha = star.baseAlpha + Math.sin(star.twinklePhase) * 0.25;
         }
 
-        const effectiveAlpha = Math.max(0.12, Math.min(0.95, s.alpha));
-
+        // Draw star point
         ctx.beginPath();
-        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
 
-        if (s.isGold) {
-          ctx.fillStyle = `rgba(245, 208, 118, ${effectiveAlpha})`;
-        } else if (s.isAnchor) {
-          ctx.fillStyle = `rgba(0, 255, 210, ${effectiveAlpha})`;
+        if (star.isGold) {
+          ctx.fillStyle = `rgba(224, 192, 107, ${Math.max(0.1, star.alpha)})`;
+        } else if (star.isAnchor) {
+          ctx.fillStyle = `rgba(0, 240, 207, ${Math.max(0.35, star.alpha)})`;
         } else {
-          ctx.fillStyle = `rgba(255, 255, 255, ${effectiveAlpha * 0.85})`;
+          ctx.fillStyle = `rgba(255, 255, 255, ${Math.max(0.08, star.alpha)})`;
         }
         ctx.fill();
 
-        // Luminous Halo around Anchor Stars
-        if (s.isAnchor) {
+        // Soft cinematic green neon glow halo around anchor stars
+        if (star.isAnchor) {
           ctx.beginPath();
-          ctx.arc(s.x, s.y, s.radius * 3.5, 0, Math.PI * 2);
-          ctx.fillStyle = s.isGold
-            ? `rgba(215, 184, 102, ${effectiveAlpha * 0.18})`
-            : `rgba(0, 221, 184, ${effectiveAlpha * 0.22})`;
+          ctx.arc(star.x, star.y, star.radius * 3.8, 0, Math.PI * 2);
+          ctx.fillStyle = star.isGold
+            ? `rgba(212, 175, 55, ${star.alpha * 0.16})`
+            : `rgba(0, 240, 207, ${star.alpha * 0.28})`;
           ctx.fill();
+
+          if (!star.isGold) {
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.radius * 6.5, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(0, 240, 207, ${star.alpha * 0.10})`;
+            ctx.fill();
+          }
         }
       }
 
@@ -203,15 +202,15 @@ export default function ConstellationBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="env-layer-particles"
       style={{
         position: 'absolute',
-        inset: 0,
+        top: 0,
+        left: 0,
         width: '100%',
         height: '100%',
         pointerEvents: 'none',
-        zIndex: 1,
-        opacity: 0.85,
+        zIndex: 3,
+        opacity: 1,
       }}
       aria-hidden="true"
     />

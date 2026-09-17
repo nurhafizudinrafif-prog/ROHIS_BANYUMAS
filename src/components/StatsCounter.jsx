@@ -54,6 +54,26 @@ export default function StatsCounter() {
   return (
     <section className="stats-section">
       <div className="container">
+        {/* Top Centered Meta Pill as in Reference 2 */}
+        <div className="stats-meta-pill-wrap animate-on-scroll">
+          <div className="stats-meta-pill">
+            <div className="stats-meta-item">
+              <span className="stats-meta-val">15+</span>
+              <span className="stats-meta-lbl">Sekolah Anggota</span>
+            </div>
+            <span className="stats-meta-dot">•</span>
+            <div className="stats-meta-item">
+              <span className="stats-meta-val">53+</span>
+              <span className="stats-meta-lbl">Pengurus Aktif</span>
+            </div>
+            <span className="stats-meta-dot">•</span>
+            <div className="stats-meta-item">
+              <span className="stats-meta-val">5 Divisi</span>
+              <span className="stats-meta-lbl">Fokus Gerakan</span>
+            </div>
+          </div>
+        </div>
+
         <div className="stats-grid">
           {stats.map((stat, i) => {
             const Icon = stat.icon;

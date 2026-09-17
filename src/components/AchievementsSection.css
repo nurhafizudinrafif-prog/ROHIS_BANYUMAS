@@ -16,12 +16,13 @@
   gap: var(--space-md);
   margin-bottom: var(--space-3xl);
   padding: var(--space-lg) var(--space-xl);
-  background: rgba(11, 33, 26, 0.72);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(57, 185, 154, 0.20);
-  border-radius: var(--radius-lg);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08), 0 8px 32px rgba(2, 10, 7, 0.45);
+  background: var(--liquid-glass);
+  backdrop-filter: var(--liquid-blur);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  border: 1.2px solid var(--liquid-border);
+  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--liquid-shadow), var(--liquid-inset);
 }
 
 .achievements-filter-group {
@@ -84,32 +85,24 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  background: rgba(11, 33, 26, 0.72);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(57, 185, 154, 0.20);
+  background: var(--liquid-glass);
+  backdrop-filter: var(--liquid-blur);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  border: 1.2px solid var(--liquid-border);
+  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
   border-radius: var(--radius-xl);
   padding: var(--space-xl);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08), 0 12px 32px rgba(2, 10, 7, 0.45);
+  box-shadow: var(--liquid-shadow), var(--liquid-inset);
   transition: transform var(--motion-medium), border-color var(--motion-medium), box-shadow var(--motion-medium), background var(--motion-medium);
   overflow: hidden;
 }
 
-.achievement-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: transparent;
-  transition: background var(--motion-medium);
-}
-
 .achievement-card:hover {
-  transform: translateY(-3px) scale(1.006);
-  background: rgba(14, 42, 33, 0.85);
-  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.16), 0 18px 40px rgba(0, 0, 0, 0.55), 0 0 20px rgba(57, 185, 154, 0.20);
+  transform: translateY(-3px) scale(1.008);
+  background: var(--liquid-glass-hover);
+  box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
+  border-color: var(--liquid-border-hover);
+  border-top-color: rgba(255, 255, 255, 0.85);
 }
 
 /* Rank Distinction — Subtle metallic cues on Light Surface */
@@ -231,7 +224,7 @@
   font-size: 1.1875rem;
   font-weight: 700;
   line-height: 1.35;
-  color: var(--color-forest);
+  color: #FFFFFF;
   margin-bottom: var(--space-md);
 }
 
@@ -250,7 +243,7 @@
   align-items: center;
   gap: 8px;
   font-size: 0.84rem;
-  color: var(--color-text-secondary);
+  color: rgba(220, 240, 235, 0.85);
 }
 
 .achievement-info-item .info-icon {
@@ -260,7 +253,7 @@
 }
 
 .achievement-info-item.recipient-item {
-  color: var(--color-forest);
+  color: #FFFFFF;
   font-weight: 600;
 }
 
@@ -272,7 +265,7 @@
 .achievement-card-desc {
   font-size: 0.875rem;
   line-height: 1.6;
-  color: var(--color-text-secondary);
+  color: rgba(220, 240, 235, 0.80);
   margin: 0;
 }
 

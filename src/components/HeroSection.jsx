@@ -38,24 +38,6 @@ export default function HeroSection() {
                 <span>Agenda & Kajian</span>
               </Link>
             </div>
-
-            {/* Trust Metadata Line */}
-            <div className="hero-meta-bar animate-hero delay-4">
-              <div className="hero-meta-item">
-                <span className="hero-meta-val">15+</span>
-                <span className="hero-meta-lbl">Sekolah Anggota</span>
-              </div>
-              <span className="hero-meta-divider">•</span>
-              <div className="hero-meta-item">
-                <span className="hero-meta-val">53+</span>
-                <span className="hero-meta-lbl">Pengurus Aktif</span>
-              </div>
-              <span className="hero-meta-divider">•</span>
-              <div className="hero-meta-item">
-                <span className="hero-meta-val">5 Divisi</span>
-                <span className="hero-meta-lbl">Fokus Gerakan</span>
-              </div>
-            </div>
           </div>
 
           {/* Right Column: Documentary Photography Anchor */}

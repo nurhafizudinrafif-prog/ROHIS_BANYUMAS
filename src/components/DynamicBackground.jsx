@@ -5,75 +5,21 @@ import './DynamicBackground.css';
 
 /**
  * =========================================================================
- * ROHIS KABUPATEN BANYUMAS — DYNAMIC SECTION ATMOSPHERE SYSTEM
+ * DYNAMIC MULTI-LAYER BACKGROUND & SCROLL MORPHING SYSTEM
+ * Concept: "PREMIUM DARK ISLAMIC DIGITAL ENVIRONMENT"
  *
- * Art Direction:
- * Premium Dark + Modern Islamic Geometry + Liquid Glass Atmosphere +
- * Cinematic Ambient Light + Digital Architecture + Spatial Depth
- *
- * Color Architecture Target:
- * 70%: Near-black / deep obsidian charcoal (#010405, #020708, #030807)
- * 20%: Very dark forest green / dark teal (#041c18, #072b24, #031a20)
- *  8%: Deep emerald (diffused ambient reflected light)
- *  2%: Subtle cyan / muted gold accent (#00cdb8, #d7b866)
- *
- * Section System (7 Distinct Living Atmospheres):
- * 1. HERO / BERANDA: Deepest obsidian, emerald radial glow, soft cyan highlight, modern Islamic Khatam 8-point tessellation.
- * 2. TENTANG: Warmer forest-black, architectural interlocking grid/arches, diagonal ambient light beam, subtle warm gold.
- * 3. PROGRAM & AGENDA: Deep charcoal + dark teal, connected geometric nodes & starburst lines, focused circular lighting.
- * 4. ARTIKEL: Editorial charcoal, minimal architectural grid & editorial lines, high negative space, maximum text readability.
- * 5. GALERI: Cinematic dark atmosphere, large blurred shapes, diffused reflections, minimal geometry supporting photography.
- * 6. ROHIS ANGGOTA: Deep forest-black, symmetrical structural network, faint luminous nodes, organized institutional calmness.
- * 7. KONTAK / SIAP BERGABUNG: Charcoal + teal + soft emerald, minimal rosette, soft ambient bloom, peaceful conclusive closing.
+ * Section System:
+ * 1. HERO / BERANDA: Deepest black, subtle emerald radial light, thin cyan highlight, modern Islamic 8-point tessellation.
+ * 2. TENTANG: Architectural geometric pattern, larger grid, subtle diagonal light, translucent abstract curves, soft green haze.
+ * 3. PROGRAM & AGENDA: Dark charcoal + dark teal, connected geometric nodes & glowing points, thin connecting lines.
+ * 4. ARTIKEL: Editorial dark charcoal, minimal grid + geometric architectural lines, high negative space.
+ * 5. GALERI: Cinematic dark atmosphere, large blurred gradients, subtle reflective surfaces, soft emerald lighting.
+ * 6. ROHIS ANGGOTA: Deep forest-black, symmetrical geometric structure, subtle luminous network.
+ * 7. KONTAK: Deep charcoal, soft teal, subtle emerald, softest minimal star geometry, calm peaceful closing.
  * =========================================================================
  */
 
 const SECTIONS = ['hero', 'about', 'program', 'article', 'gallery', 'members', 'contact'];
-
-const SECTION_CONFIG = {
-  hero: {
-    id: 'hero',
-    name: 'Hero / Beranda',
-    patternOpacity: 0.22, // Clearly visible & elegant Islamic geometry
-    baseColor: '#010405',
-  },
-  about: {
-    id: 'about',
-    name: 'Tentang',
-    patternOpacity: 0.18,
-    baseColor: '#020605',
-  },
-  program: {
-    id: 'program',
-    name: 'Program & Agenda',
-    patternOpacity: 0.20,
-    baseColor: '#010709',
-  },
-  article: {
-    id: 'article',
-    name: 'Artikel',
-    patternOpacity: 0.14, // Clean editorial lines
-    baseColor: '#010405',
-  },
-  gallery: {
-    id: 'gallery',
-    name: 'Galeri',
-    patternOpacity: 0.16,
-    baseColor: '#010405',
-  },
-  members: {
-    id: 'members',
-    name: 'ROHIS Anggota',
-    patternOpacity: 0.19,
-    baseColor: '#010604',
-  },
-  contact: {
-    id: 'contact',
-    name: 'Kontak / Siap Bergabung',
-    patternOpacity: 0.16,
-    baseColor: '#010405',
-  },
-};
 
 const ROUTE_SECTION_MAP = {
   '/': 'hero',
@@ -90,11 +36,10 @@ const ROUTE_SECTION_MAP = {
 export default function DynamicBackground() {
   const location = useLocation();
   const containerRef = useRef(null);
-  const layerRefs = useRef({});
   const patternRefs = useRef({});
-  const radialRefs = useRef({});
-  const organicRefs = useRef({});
-  const glowRefs = useRef({});
+  const blobRefs = useRef([]);
+  const gradientRef = useRef(null);
+  const glowRef = useRef(null);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -104,112 +49,77 @@ export default function DynamicBackground() {
     let isTicking = false;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    // Detect if we are on a dedicated sub-page or on the home page with multi-section scrolling
     const isHomePage = location.pathname === '/';
-    const subpageSection =
-      ROUTE_SECTION_MAP[location.pathname] ||
-      (location.pathname.startsWith('/artikel/') ? 'article' : 'hero');
-
-    // Section anchor selectors on the Home page
-    const sectionSelectors = [
-      '[data-section="hero"], .hero',
-      '[data-section="about"]',
-      '[data-section="program"], #program',
-      '[data-section="article"]',
-      '[data-section="gallery"]',
-      '[data-section="members"]',
-      '[data-section="contact"], .home-cta-section',
-    ];
-
-    // Cached anchor offsets to eliminate layout thrashing during scroll
-    let cachedTriggers = [];
-
-    function calculateTriggerPositions() {
-      if (!isHomePage) return;
-
-      const windowHeight = window.innerHeight || 800;
-      const scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
-
-      cachedTriggers = sectionSelectors.map((sel, idx) => {
-        if (idx === 0) return 0;
-        const el = document.querySelector(sel);
-        if (!el) {
-          // Fallback estimated spacing if section is temporarily not in DOM
-          return idx * 850;
-        }
-        const rect = el.getBoundingClientRect();
-        // Transition starts as incoming section approaches top 42% of viewport
-        return Math.max(0, rect.top + scrollY - windowHeight * 0.42);
-      });
-
-      // Guarantee strict monotonic progression
-      for (let i = 1; i < cachedTriggers.length; i++) {
-        if (cachedTriggers[i] <= cachedTriggers[i - 1] + 60) {
-          cachedTriggers[i] = cachedTriggers[i - 1] + 120;
-        }
-      }
-    }
-
-    // Measure positions on mount and window resize
-    calculateTriggerPositions();
+    const subpageSection = ROUTE_SECTION_MAP[location.pathname] || (location.pathname.startsWith('/artikel/') ? 'article' : 'hero');
 
     function updateAtmosphere() {
       isTicking = false;
       const scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
       const windowHeight = window.innerHeight || 800;
-      const isMobile = window.innerWidth < 768;
 
       let activeIndex = 0;
-      let nextIndex = 0;
+      let nextIndex = 1;
       let ratio = 0;
 
       if (isHomePage) {
-        if (!cachedTriggers.length) {
-          calculateTriggerPositions();
-        }
+        // Collect section anchor elements
+        const sectionSelectors = [
+          '[data-section="hero"], .hero',
+          '[data-section="about"], .home-about-grid',
+          '[data-section="program"], #program',
+          '[data-section="article"], .home-articles-magazine',
+          '[data-section="gallery"], .gallery-grid',
+          '[data-section="members"], .network-grid',
+          '[data-section="contact"], .home-cta-section',
+        ];
 
-        const len = cachedTriggers.length;
-        if (scrollY <= cachedTriggers[0]) {
-          activeIndex = 0;
-          nextIndex = 0;
-          ratio = 0;
-        } else if (scrollY >= cachedTriggers[len - 1]) {
-          activeIndex = len - 1;
-          nextIndex = len - 1;
-          ratio = 1;
-        } else {
-          for (let i = 0; i < len - 1; i++) {
-            const start = cachedTriggers[i];
-            const end = cachedTriggers[i + 1];
-            if (scrollY >= start && scrollY < end) {
-              activeIndex = i;
-              nextIndex = i + 1;
-              const span = Math.max(1, end - start);
-              ratio = Math.min(1, Math.max(0, (scrollY - start) / span));
-              break;
-            }
+        // Measure anchors
+        const positions = sectionSelectors.map((sel, idx) => {
+          if (idx === 0) return 0;
+          const el = document.querySelector(sel);
+          if (!el) return idx * 800;
+          const rect = el.getBoundingClientRect();
+          return rect.top + scrollY - windowHeight * 0.35;
+        });
+
+        // Find which pair of sections the user is currently between
+        const currentTrigger = scrollY;
+        for (let i = 0; i < positions.length - 1; i++) {
+          const start = positions[i];
+          const end = positions[i + 1];
+          if (currentTrigger >= start && currentTrigger < end) {
+            activeIndex = i;
+            nextIndex = i + 1;
+            const span = Math.max(1, end - start);
+            ratio = Math.min(1, Math.max(0, (currentTrigger - start) / span));
+            break;
+          } else if (i === positions.length - 2 && currentTrigger >= end) {
+            activeIndex = positions.length - 1;
+            nextIndex = positions.length - 1;
+            ratio = 1;
           }
         }
 
-        // Bottom-of-page safeguard: smoothly lock to final contact section
+        // Check if user is near the bottom of the page -> snap smoothly to contact section
         const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight || 1;
         if (scrollY + windowHeight >= scrollHeight - 60) {
-          activeIndex = len - 1;
-          nextIndex = len - 1;
+          activeIndex = positions.length - 1;
+          nextIndex = positions.length - 1;
           ratio = 1;
         }
       } else {
-        // Dedicated subpage: active atmosphere mapped to page route
+        // Fixed subpage section mapping with smooth static presentation
         const targetIdx = SECTIONS.indexOf(subpageSection);
         activeIndex = targetIdx >= 0 ? targetIdx : 0;
         nextIndex = activeIndex;
         ratio = 0;
       }
 
-      // Smooth cosine interpolation curve:
-      // A (100%) -> A (90%) B (10%) -> A (50%) B (50%) -> A (10%) B (90%) -> B (100%)
+      // Smooth cosine interpolation curve for seamless continuous evolution (no hard cut, no jumping)
       const smoothRatio = 0.5 - 0.5 * Math.cos(ratio * Math.PI);
 
-      // Section weights calculation
+      // Section weights
       const weights = {};
       SECTIONS.forEach((sec, idx) => {
         if (idx === activeIndex && idx === nextIndex) {
@@ -223,73 +133,64 @@ export default function DynamicBackground() {
         }
       });
 
-      // Apply GPU-accelerated weights & morphing transforms to each section layer
+      // Layer 4: Geometric Motif Morphing (Smooth crossfade, scale 1.00 -> 1.04, rotation 0 -> 1.8deg)
+      // Calibrated to 1.5% - 3.5% opacity as explicitly instructed for modern architectural subtlety
+      const isMobile = window.innerWidth < 768;
       SECTIONS.forEach((sec, idx) => {
-        const layerEl = layerRefs.current[sec];
-        if (!layerEl) return;
-        const w = weights[sec] || 0;
+        const pEl = patternRefs.current[sec];
+        if (!pEl) return;
+        const w = weights[sec];
 
         if (w > 0.001) {
-          layerEl.style.opacity = w.toFixed(4);
-          layerEl.style.visibility = 'visible';
+          pEl.style.display = 'block';
+          const baseMaxOp = sec === 'hero' ? 0.16
+            : sec === 'about' ? 0.14
+            : sec === 'program' ? 0.15
+            : sec === 'article' ? 0.10
+            : sec === 'gallery' ? 0.12
+            : sec === 'members' ? 0.14
+            : 0.12;
+          const maxOp = isMobile ? baseMaxOp * 0.85 : baseMaxOp;
+          pEl.style.opacity = (w * maxOp).toFixed(4);
 
-          // -------------------------------------------------------------
-          // Layer 05: Geometric Motif Morphing
-          // Smooth scale (1.00 <-> 1.04), rotation (0 <-> 1.5deg), 3% Parallax
-          // -------------------------------------------------------------
-          const patternEl = patternRefs.current[sec];
-          if (patternEl) {
-            const baseOp = SECTION_CONFIG[sec].patternOpacity;
-            const finalOp = isMobile ? baseOp * 0.85 : baseOp;
-            patternEl.style.opacity = finalOp.toFixed(3);
-
-            if (!prefersReducedMotion) {
-              const scale = (1.04 - w * 0.04).toFixed(3);
-              const rot = ((1 - w) * (idx % 2 === 0 ? 1.5 : -1.5)).toFixed(2);
-              const patternParallax = (scrollY * -0.03).toFixed(1); // 3% Parallax
-              patternEl.style.transform = `translate3d(0, ${patternParallax}px, 0) scale(${scale}) rotate(${rot}deg)`;
-            } else {
-              patternEl.style.transform = 'none';
-            }
-          }
-
-          // -------------------------------------------------------------
-          // Multi-Tiered Parallax & Subtle Transitional Displacement:
-          // Layer 02: Radial Gradients (4% Parallax)
-          // Layer 04: Organic Liquid Shapes (8% Parallax)
-          // Layer 07: Ambient Bloom / Glow (6% Parallax)
-          // -------------------------------------------------------------
           if (!prefersReducedMotion) {
-            const radialEl = radialRefs.current[sec];
-            if (radialEl) {
-              const pY = (scrollY * -0.04).toFixed(1);
-              const shiftX = ((1 - w) * (idx % 2 === 0 ? 15 : -15)).toFixed(1);
-              radialEl.style.transform = `translate3d(${shiftX}px, ${pY}px, 0)`;
-            }
-
-            const organicEl = organicRefs.current[sec];
-            if (organicEl) {
-              const pY = (scrollY * -0.08).toFixed(1);
-              const shiftX = ((1 - w) * (idx % 2 === 0 ? 25 : -25)).toFixed(1);
-              organicEl.style.transform = `translate3d(${shiftX}px, ${pY}px, 0)`;
-            }
-
-            const glowEl = glowRefs.current[sec];
-            if (glowEl) {
-              const pY = (scrollY * -0.06).toFixed(1);
-              glowEl.style.transform = `translate3d(0, ${pY}px, 0)`;
-            }
+            const scale = (1.04 - w * 0.04).toFixed(3);
+            const rotate = ((1 - w) * (idx % 2 === 0 ? 1.8 : -1.8)).toFixed(2);
+            const parallaxY = (scrollY * -0.03).toFixed(1); // 3% Parallax on geometric pattern
+            pEl.style.transform = `translate3d(0, ${parallaxY}px, 0) scale(${scale}) rotate(${rotate}deg)`;
+          } else {
+            pEl.style.transform = 'none';
           }
         } else {
-          layerEl.style.opacity = '0';
-          layerEl.style.visibility = 'hidden';
+          pEl.style.display = 'none';
+          pEl.style.opacity = '0';
         }
       });
 
-      // Update semantic attributes on container
+      // Parallax offsets for other layers
+      if (!prefersReducedMotion) {
+        const gradientParallax = (scrollY * -0.05).toFixed(1); // 5% Parallax
+        const glowParallax = (scrollY * -0.08).toFixed(1);     // 8% Parallax
+        const blobParallax = (scrollY * -0.10).toFixed(1);     // 10% Parallax
+
+        if (gradientRef.current) {
+          gradientRef.current.style.transform = `translate3d(0, ${gradientParallax}px, 0)`;
+        }
+        if (glowRef.current) {
+          glowRef.current.style.transform = `translate3d(0, ${glowParallax}px, 0)`;
+        }
+        blobRefs.current.forEach((blob) => {
+          if (blob) {
+            blob.style.setProperty('--scroll-parallax', `${blobParallax}px`);
+          }
+        });
+      }
+
+      // Continuous section variable blending on container
+      container.style.setProperty('--active-section-idx', activeIndex.toString());
+      container.style.setProperty('--morph-progress', smoothRatio.toFixed(3));
       container.setAttribute('data-active-section', SECTIONS[activeIndex]);
       container.setAttribute('data-next-section', SECTIONS[nextIndex]);
-      container.style.setProperty('--morph-progress', smoothRatio.toFixed(3));
     }
 
     function onScroll() {
@@ -299,26 +200,13 @@ export default function DynamicBackground() {
       }
     }
 
-    function onResize() {
-      calculateTriggerPositions();
-      onScroll();
-    }
-
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onResize, { passive: true });
-
-    // Re-check positions after fonts & dynamic images settle
-    const loadTimeout = setTimeout(() => {
-      calculateTriggerPositions();
-      updateAtmosphere();
-    }, 450);
-
+    window.addEventListener('resize', onScroll, { passive: true });
     updateAtmosphere();
 
     return () => {
-      clearTimeout(loadTimeout);
       window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onResize);
+      window.removeEventListener('resize', onScroll);
       if (rafId) cancelAnimationFrame(rafId);
     };
   }, [location.pathname]);
@@ -326,73 +214,119 @@ export default function DynamicBackground() {
   return (
     <div className="dynamic-environment-container" ref={containerRef} aria-hidden="true">
       {/* =========================================================
-          MULTI-LAYER SECTION BACKGROUNDS (7 Dedicated Section Atmospheres)
-          Each section container encapsulates Layers 1-7 tailored to its visual role.
-          Continuously interpolated via the GPU scroll morphing engine.
+          LAYER 1: Base Dark Atmosphere Foundation
+          Multi-stop interpolated gradient: Near black, charcoal, dark forest
           ========================================================= */}
-      {SECTIONS.map((sec) => (
-        <div
-          key={sec}
-          className={`background-layer section-${sec}`}
-          ref={(el) => (layerRefs.current[sec] = el)}
-        >
-          {/* Layer 01: Base Dark Color Foundation */}
-          <div className="layer-base" />
-
-          {/* Layer 02: Primary Atmospheric Gradient (4% Parallax) */}
-          <div className="layer-radial" ref={(el) => (radialRefs.current[sec] = el)}>
-            <div className="radial-glow glow-1" />
-            <div className="radial-glow glow-2" />
-            <div className="radial-glow glow-3" />
-          </div>
-
-          {/* Layer 04: Blurred Organic Liquid Forms (8% Parallax & Drifting) */}
-          <div className="layer-organic" ref={(el) => (organicRefs.current[sec] = el)}>
-            <div className="organic-blob blob-a" />
-            <div className="organic-blob blob-b" />
-          </div>
-
-          {/* Layer 05: Modern Islamic Geometric Pattern Plane (3% Parallax & Morphing) */}
-          <div
-            className={`layer-pattern pattern-${sec}`}
-            ref={(el) => (patternRefs.current[sec] = el)}
-          />
-
-          {/* Layer 06: Thin Architectural Spatial Lines & Digital Guides */}
-          <div className="layer-architecture">
-            <div className="arch-guide arch-v1" />
-            <div className="arch-guide arch-v2" />
-            <div className="arch-guide arch-diag" />
-          </div>
-
-          {/* Layer 07: Ambient Bloom & Reflected Light (6% Parallax) */}
-          <div className="layer-glow" ref={(el) => (glowRefs.current[sec] = el)} />
-        </div>
-      ))}
+      <div className="env-layer env-layer-base" />
 
       {/* =========================================================
-          LAYER 08: Atmospheric Dust Motes
-          Microscopic floating light particles in ambient sanctuary light
+          LAYER 2: Large Radial Gradients & Evolving Light Horizons
+          ========================================================= */}
+      <div className="env-layer env-layer-radial" ref={gradientRef}>
+        <div className="radial-horizon horizon-primary" />
+        <div className="radial-horizon horizon-secondary" />
+        <div className="radial-horizon horizon-accent" />
+      </div>
+
+      {/* =========================================================
+          LAYER 3: Blurred Organic Liquid Shapes (Atmospheric Blobs)
+          Soft, rounded, translucent, GPU-accelerated slow ambient drift
+          ========================================================= */}
+      <div className="env-layer env-layer-organic">
+        <div
+          className="organic-shape organic-shape-1"
+          ref={(el) => (blobRefs.current[0] = el)}
+        />
+        <div
+          className="organic-shape organic-shape-2"
+          ref={(el) => (blobRefs.current[1] = el)}
+        />
+        <div
+          className="organic-shape organic-shape-3"
+          ref={(el) => (blobRefs.current[2] = el)}
+        />
+        <div
+          className="organic-shape organic-shape-4"
+          ref={(el) => (blobRefs.current[3] = el)}
+        />
+      </div>
+
+      {/* =========================================================
+          LAYER 4: Multi-Section Islamic Geometric Motif Morphing Plane
+          7 Bespoke SVG Vector Tessellations with subtle scale & rotation
+          ========================================================= */}
+      <div className="env-layer env-layer-patterns">
+        <div
+          className="pattern-plane pattern-hero"
+          ref={(el) => (patternRefs.current['hero'] = el)}
+        />
+        <div
+          className="pattern-plane pattern-about"
+          ref={(el) => (patternRefs.current['about'] = el)}
+        />
+        <div
+          className="pattern-plane pattern-program"
+          ref={(el) => (patternRefs.current['program'] = el)}
+        />
+        <div
+          className="pattern-plane pattern-article"
+          ref={(el) => (patternRefs.current['article'] = el)}
+        />
+        <div
+          className="pattern-plane pattern-gallery"
+          ref={(el) => (patternRefs.current['gallery'] = el)}
+        />
+        <div
+          className="pattern-plane pattern-members"
+          ref={(el) => (patternRefs.current['members'] = el)}
+        />
+        <div
+          className="pattern-plane pattern-contact"
+          ref={(el) => (patternRefs.current['contact'] = el)}
+        />
+      </div>
+
+      {/* =========================================================
+          LAYER 5: Thin Architectural Spatial Lines & Digital Grid
+          ========================================================= */}
+      <div className="env-layer env-layer-architecture">
+        <div className="arch-guide-line arch-line-v1" />
+        <div className="arch-guide-line arch-line-v2" />
+        <div className="arch-guide-line arch-line-diag" />
+      </div>
+
+      {/* =========================================================
+          CELESTIAL HARMONY: Interactive Constellation Web ("Rasi Bintang")
+          Gently connecting digital nodes with the Islamic geometry
           ========================================================= */}
       <ConstellationBackground />
 
       {/* =========================================================
-          LAYER 09: Procedural Analog Film Grain (Eliminates OLED Banding)
-          True SVG noise texture replacing coarse polka-dots
+          LAYER 6: Soft Ambient Bloom / Glow
           ========================================================= */}
-      <div className="env-layer-noise" />
+      <div className="env-layer env-layer-bloom" ref={glowRef} />
 
       {/* =========================================================
-          LAYER 10: Cinematic Spatial Vignette
-          Soft perimeter darkening focusing gaze on sharp liquid glass cards
+          LAYER 6.5: Soft Cinematic Green Neon Horizon Flare Beam
           ========================================================= */}
-      <div className="env-layer-vignette" />
+      <div className="env-layer env-layer-neon-anamorphic" />
 
       {/* =========================================================
-          LAYER 11: Tactile Glass Specular Refraction Sheen
-          Subtle 130-degree ambient light line for realistic optical depth
+          LAYER 7: Very Subtle Micro-Noise Texture
+          Organic tactile depth to eliminate any color banding
           ========================================================= */}
-      <div className="env-layer-specular" />
+      <div className="env-layer env-layer-noise" />
+
+      {/* =========================================================
+          LAYER 8: Cinematic Spatial Vignette
+          Darkens viewport perimeter, focusing gaze on glass cards
+          ========================================================= */}
+      <div className="env-layer env-layer-vignette" />
+
+      {/* =========================================================
+          LAYER 9: Subtle Spatial Glass Reflection Sheen
+          ========================================================= */}
+      <div className="env-layer env-layer-specular" />
     </div>
   );
 }

@@ -30,9 +30,9 @@
   --color-ivory:                  #FFFFFF;
   --color-warm-ivory:             rgba(255, 255, 255, 0.94);
 
-  --color-surface:                rgba(4, 20, 24, 0.72);
-  --color-surface-card:           rgba(4, 20, 24, 0.72);
-  --color-surface-hover:          rgba(6, 28, 32, 0.82);
+  --color-surface:                rgba(4, 20, 24, 0.45);
+  --color-surface-card:           rgba(4, 20, 24, 0.45);
+  --color-surface-hover:          rgba(6, 28, 32, 0.58);
   --color-surface-solid:          #04161a;
 
   --color-primary:                #00DDB8;
@@ -42,6 +42,14 @@
   --color-cyan-glow:              rgba(0, 229, 255, 0.35);
   --color-gold-glow:              rgba(215, 184, 102, 0.30);
 
+  /* ---------- SOFT CINEMATIC GREEN NEON ACCENTS ---------- */
+  --neon-green:                   #00F0CF; /* Vibrant Neon Emerald */
+  --neon-green-mint:              #5FE3C2; /* Soft Mint Neon */
+  --neon-green-glow:              rgba(0, 240, 207, 0.35); /* Standard soft neon bloom */
+  --neon-green-subtle:            rgba(0, 240, 207, 0.16); /* Gentle ambient neon aura */
+  --neon-green-cinematic:         0 0 25px rgba(0, 240, 207, 0.30), 0 0 50px rgba(0, 240, 207, 0.12);
+  --neon-border-glow:             0 0 15px rgba(0, 240, 207, 0.32);
+
   --color-text-on-dark:           #FFFFFF;
   --color-text-on-dark-secondary: rgba(255, 255, 255, 0.76);
 
@@ -49,42 +57,43 @@
   --liquid-glass:
     linear-gradient(
       135deg,
-      rgba(0, 255, 200, 0.06) 0%,
-      rgba(4, 20, 24, 0.74) 45%,
-      rgba(2, 10, 13, 0.90) 100%
+      rgba(0, 255, 200, 0.07) 0%,
+      rgba(4, 22, 28, 0.32) 40%,
+      rgba(2, 10, 13, 0.52) 100%
     );
 
   --liquid-glass-hover:
     linear-gradient(
       135deg,
-      rgba(0, 255, 200, 0.10) 0%,
-      rgba(6, 26, 30, 0.80) 45%,
-      rgba(3, 13, 16, 0.94) 100%
+      rgba(0, 255, 200, 0.14) 0%,
+      rgba(6, 28, 34, 0.42) 40%,
+      rgba(3, 14, 18, 0.62) 100%
     );
 
   --liquid-border:
-    rgba(0, 255, 200, 0.28);
+    rgba(0, 255, 200, 0.22);
 
   --liquid-border-hover:
-    rgba(0, 255, 200, 0.68);
+    rgba(0, 255, 200, 0.58);
 
   --liquid-blur:
-    blur(20px) saturate(180%);
+    blur(20px) saturate(190%);
 
   --liquid-shadow:
-    0 25px 60px -10px rgba(0, 0, 0, 0.85),
-    0 10px 24px -4px rgba(0, 0, 0, 0.60),
-    0 0 32px rgba(0, 255, 200, 0.18);
+    0 20px 48px -10px rgba(0, 0, 0, 0.82),
+    0 8px 24px -4px rgba(0, 0, 0, 0.55),
+    0 0 24px rgba(0, 240, 207, 0.12);
 
   --liquid-shadow-hover:
-    0 35px 80px -10px rgba(0, 0, 0, 0.92),
-    0 14px 32px -4px rgba(0, 0, 0, 0.65),
-    0 0 45px rgba(0, 255, 200, 0.35);
+    0 28px 65px -8px rgba(0, 0, 0, 0.90),
+    0 12px 28px -4px rgba(0, 0, 0, 0.62),
+    0 0 34px rgba(0, 240, 207, 0.28);
 
   --liquid-inset:
-    inset 0 1.5px 0 0 rgba(0, 255, 200, 0.38),
-    inset 0 -1px 0 0 rgba(0, 255, 180, 0.14),
-    inset 0 0 24px 0 rgba(0, 0, 0, 0.45);
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.42),
+    inset 0 2px 10px rgba(0, 255, 200, 0.10),
+    inset 0 -1px 2px rgba(0, 255, 180, 0.16),
+    inset 0 0 24px rgba(0, 0, 0, 0.25);
 
   /* Level 1: Subtle dark glass chip */
   --glass-l1-bg:                  rgba(0, 255, 200, 0.08);
@@ -101,8 +110,8 @@
     linear-gradient(
       135deg,
       rgba(0, 255, 200, 0.08) 0%,
-      rgba(4, 20, 24, 0.82) 45%,
-      rgba(2, 10, 12, 0.94) 100%
+      rgba(4, 20, 24, 0.60) 45%,
+      rgba(2, 10, 12, 0.80) 100%
     );
   --glass-l3-blur:                blur(24px) saturate(190%);
   --glass-l3-border:              rgba(0, 255, 200, 0.32);
@@ -241,6 +250,11 @@ main {
   position: relative;
   z-index: 1;
   background-color: transparent !important;
+}
+
+footer {
+  position: relative;
+  z-index: 1;
 }
 
 a {
@@ -485,27 +499,75 @@ p {
 .about-vm-card,
 .about-value-card,
 .contact-form-wrapper,
+.contact-info-card,
 .reg-form,
 .admin-login-card,
 .admin-stat-card,
 .settings-card,
 .admin-gallery-card,
 .glass-modal,
-.gallery-item {
+.gallery-item,
+.pillar-featured-card,
+.pillar-supporting-item,
+.activity-story-card,
+.event-featured-card,
+.event-list-item,
+.event-secondary-card,
+.article-featured-card,
+.article-supporting-item,
+.network-school-card,
+.division-card,
+.division-detail-stage,
+.achievement-card,
+.achievements-filter-wrap,
+.hero-floating-glass-card,
+.member-school-card,
+.article-card,
+.event-card,
+.school-card,
+.ig-profile-card,
+.home-about-badge-card {
   position: relative;
   background: var(--liquid-glass);
   backdrop-filter: var(--liquid-blur);
   -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.5px solid var(--liquid-border);
-  border-top: 2px solid rgba(0, 255, 200, 0.50);
+  border: 1.2px solid var(--liquid-border);
+  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
   border-bottom: 1px solid rgba(0, 255, 180, 0.14);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   box-shadow: var(--liquid-shadow), var(--liquid-inset);
-  transition: all var(--transition-base);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
 }
 
-/* 3D Specular Liquid Glass Highlight */
+/* Elevate card children cleanly above 3D specular highlight dome */
+.liquid-glass > *,
+.glass-card > *,
+.card > *,
+.stat-glass-card > *,
+.quote-card > *,
+.program-glass-card > *,
+.team-card > *,
+.about-story-card > *,
+.home-cta > *,
+.pillar-featured-card > *,
+.pillar-supporting-item > *,
+.activity-story-card > *,
+.event-featured-card > *,
+.article-featured-card > *,
+.network-school-card > *,
+.division-card > *,
+.article-card > *,
+.event-card > *,
+.school-card > *,
+.achievement-card > *,
+.ig-profile-card > *,
+.contact-info-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* 3D Specular Liquid Glass Highlight Dome — Convex Droplet Reflection */
 .liquid-glass::before,
 .glass-card::before,
 .card::before,
@@ -514,20 +576,48 @@ p {
 .program-glass-card::before,
 .team-card::before,
 .about-story-card::before,
-.home-cta::before {
+.home-cta::before,
+.pillar-featured-card::before,
+.pillar-supporting-item::before,
+.activity-story-card::before,
+.event-featured-card::before,
+.event-list-item::before,
+.event-secondary-card::before,
+.article-featured-card::before,
+.article-supporting-item::before,
+.network-school-card::before,
+.division-card::before,
+.division-detail-stage::before,
+.achievement-card::before,
+.hero-floating-glass-card::before,
+.member-school-card::before,
+.article-card::before,
+.event-card::before,
+.school-card::before,
+.ig-profile-card::before,
+.contact-form-wrapper::before,
+.contact-info-card::before,
+.reg-form::before,
+.about-vm-card::before,
+.about-value-card::before,
+.gallery-item::before,
+.home-about-badge-card::before {
   content: "";
   position: absolute;
   top: 1px;
-  left: 14px;
-  right: 14px;
-  height: 38%;
+  left: 6px;
+  right: 6px;
+  height: clamp(42px, 38%, 100px);
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.18) 0%,
-    rgba(255, 255, 255, 0.03) 60%,
+    rgba(255, 255, 255, 0.38) 0%,
+    rgba(255, 255, 255, 0.11) 32%,
+    rgba(0, 255, 200, 0.03) 65%,
     transparent 100%
   );
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  border-radius: inherit;
+  border-bottom-left-radius: 50% 16px;
+  border-bottom-right-radius: 50% 16px;
   pointer-events: none;
   z-index: 1;
 }
@@ -545,11 +635,28 @@ p {
 .gallery-item:hover,
 .school-card:hover,
 .article-card:hover,
-.event-card:hover {
+.event-card:hover,
+.pillar-featured-card:hover,
+.pillar-supporting-item:hover,
+.activity-story-card:hover,
+.event-featured-card:hover,
+.event-list-item:hover,
+.article-featured-card:hover,
+.article-supporting-item:hover,
+.network-school-card:hover,
+.division-card:hover,
+.member-school-card:hover,
+.home-about-badge-card:hover {
   transform: translateY(-4px) scale(1.01);
   background: var(--liquid-glass-hover);
-  box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
+  box-shadow:
+    0 28px 70px -10px rgba(0, 0, 0, 0.92),
+    0 12px 28px -4px rgba(0, 0, 0, 0.65),
+    0 0 35px rgba(0, 240, 207, 0.32),
+    0 0 70px rgba(0, 240, 207, 0.12),
+    var(--liquid-inset);
   border-color: var(--liquid-border-hover);
+  border-top-color: rgba(255, 255, 255, 0.85);
 }
 
 /* =========================================================
@@ -567,9 +674,12 @@ p {
   padding: 0 28px;
   color: #020A0B !important;
   background: linear-gradient(135deg, #00DDB8 0%, #00F0CF 100%);
-  border: 1px solid rgba(0, 255, 200, 0.45);
+  border: 1px solid rgba(0, 255, 200, 0.50);
   border-radius: var(--radius-pill);
-  box-shadow: 0 4px 20px rgba(0, 255, 210, 0.35), inset 0 1.2px 1px rgba(255, 255, 255, 0.45);
+  box-shadow:
+    0 4px 20px rgba(0, 255, 210, 0.40),
+    0 0 35px rgba(0, 240, 207, 0.25),
+    inset 0 1.2px 1px rgba(255, 255, 255, 0.50);
   font-weight: 800;
   font-size: 0.95rem;
   font-family: var(--font-heading);
@@ -583,7 +693,10 @@ p {
 .btn-primary:hover {
   background: linear-gradient(135deg, #00F0CF 0%, #5FE3C2 100%);
   transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(0, 255, 210, 0.55), inset 0 1.5px 2px rgba(255, 255, 255, 0.60);
+  box-shadow:
+    0 8px 30px rgba(0, 255, 210, 0.60),
+    0 0 50px rgba(0, 240, 207, 0.45),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.65);
   color: #020A0B !important;
 }
 
