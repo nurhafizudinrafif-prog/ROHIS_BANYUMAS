@@ -4,13 +4,47 @@
 const DEFAULT_REPO = 'nurhafizudinrafif-prog/ROHIS_BANYUMAS';
 const DEFAULT_BRANCH = 'main';
 
-// Resilient Gemini Caller with Automatic Model Fallback
-async function requestGemini(apiKey, parts, generationConfig = {}) {
-  const models = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-2.0-flash-lite'];
+// Helper to extract response text while cleanly separating thought parts from thinking models
+function extractCandidateText(candidate) {
+  if (!candidate || !candidate.content || !candidate.content.parts) return '';
+  const nonThoughtParts = candidate.content.parts.filter((p) => !p.thought);
+  if (nonThoughtParts.length > 0) {
+    return nonThoughtParts.map((p) => p.text || '').join('');
+  }
+  const lastPart = candidate.content.parts[candidate.content.parts.length - 1];
+  return lastPart?.text || '';
+}
+
+// Resilient Gemini Caller with Gemini 3.8 Flash High-Thinking & Automatic Fallback
+async function requestGemini(apiKey, parts, { isJson = false, thinkingLevel = 'high' } = {}) {
+  // Prioritize Gemini 3.8 Flash with High Thinking Level as requested by user
+  const models = [
+    'gemini-3.8-flash',
+    'gemini-3.6-flash',
+    'gemini-3.0-flash',
+    'gemini-2.0-flash',
+    'gemini-1.5-flash',
+  ];
+
   let lastError = null;
 
   for (const model of models) {
     try {
+      const is3x = model.startsWith('gemini-3');
+      const genConfig = {};
+
+      if (isJson) {
+        genConfig.responseMimeType = 'application/json';
+      }
+
+      if (is3x && thinkingLevel) {
+        genConfig.thinkingConfig = {
+          thinkingLevel: thinkingLevel, // "high", "medium", "low"
+        };
+      } else if (!is3x) {
+        genConfig.temperature = 0.2;
+      }
+
       const res = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
         {
@@ -18,13 +52,14 @@ async function requestGemini(apiKey, parts, generationConfig = {}) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             contents: [{ parts }],
-            generationConfig,
+            generationConfig: genConfig,
           }),
         }
       );
 
       if (res.ok) {
-        return await res.json();
+        const json = await res.json();
+        return { data: json, modelUsed: model };
       }
 
       const errText = await res.text();
@@ -249,8 +284,14 @@ Balas HANYA dengan JSON array berisi path file string, contoh: ["src/pages/Home.
         });
       }
 
-      const selectionData = await requestGemini(geminiApiKey, selectionParts, { temperature: 0.1 });
-      const selectionText = selectionData.candidates?.[0]?.content?.parts?.[0]?.text || '[]';
+      const { data: selectionData, modelUsed: modelUsedSel } = await requestGemini(
+        geminiApiKey,
+        selectionParts,
+        { isJson: false, thinkingLevel: 'high' }
+      );
+      addLog(`Model AI aktif: ${modelUsedSel} (Reasoning Thinking: High)`);
+      const candidateSel = selectionData.candidates?.[0];
+      const selectionText = extractCandidateText(candidateSel) || '[]';
       let relevantFiles = [];
       try {
         const cleanJson = selectionText.replace(/```json/gi, '').replace(/```/g, '').trim();
@@ -343,11 +384,14 @@ ATURAN PENTING:
         });
       }
 
-      const genData = await requestGemini(geminiApiKey, codeGenParts, {
-        temperature: 0.2,
-        responseMimeType: 'application/json',
-      });
-      const rawResult = genData.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+      const { data: genData, modelUsed } = await requestGemini(
+        geminiApiKey,
+        codeGenParts,
+        { isJson: true, thinkingLevel: 'high' }
+      );
+      addLog(`AI menulis kode dengan model: ${modelUsed}`);
+      const candidateGen = genData.candidates?.[0];
+      const rawResult = extractCandidateText(candidateGen) || '{}';
       let agentResult = {};
       try {
         agentResult = JSON.parse(rawResult);
