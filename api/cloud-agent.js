@@ -23,7 +23,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ success: false, error: 'Method Not Allowed. Use POST.' });
   }
 
-  const { pin, action = 'execute', prompt, targetBranch = DEFAULT_BRANCH } = req.body || {};
+  const { pin, action = 'execute', prompt, photo, targetBranch = DEFAULT_BRANCH } = req.body || {};
 
   // 1. PIN Security Authentication
   const configuredPin = process.env.AGENT_PIN || process.env.ADMIN_PIN || '123456';
@@ -188,6 +188,10 @@ export default async function handler(req, res) {
 
       // Step B: Ask Gemini which files are relevant to read
       addLog('Menganalisis berkas yang relevan menggunakan Gemini AI...');
+      if (photo && photo.data) {
+        addLog('Foto / screenshot revisi terlampir terdeteksi, mengaktifkan Gemini Vision...');
+      }
+
       const fileSelectionPrompt = `
 Anda adalah Antigravity AI Cloud Agent untuk proyek website ROHIS Banyumas (Vite + React).
 Daftar seluruh file dalam proyek adalah sebagai berikut:
@@ -195,10 +199,22 @@ ${JSON.stringify(allFiles, null, 2)}
 
 Instruksi pengguna:
 "${prompt}"
+${photo && photo.data ? '(Catatan: Pengguna juga melampirkan foto / gambar screenshot referensi revisi)' : ''}
 
-Tugas Anda: Pilih maksimal 5 file yang paling relevan untuk DIBACA dan DIEDIT agar instruksi pengguna dapat diselesaikan dengan sempurna.
+Tugas Anda: Pilih maksimal 5 file yang paling relevan untuk DIBACA dan DIEDIT agar instruksi pengguna dan foto revisi dapat diselesaikan dengan sempurna.
 Balas HANYA dengan JSON array berisi path file string, contoh: ["src/pages/Home.jsx", "src/pages/Home.css"]. Jangan beri penjelasan apapun selain format JSON array.
 `;
+
+      const selectionParts = [{ text: fileSelectionPrompt }];
+      if (photo && photo.data) {
+        const cleanBase64 = photo.data.includes(',') ? photo.data.split(',')[1] : photo.data;
+        selectionParts.push({
+          inline_data: {
+            mime_type: photo.mimeType || 'image/jpeg',
+            data: cleanBase64,
+          },
+        });
+      }
 
       const selectionRes = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`,
@@ -206,7 +222,7 @@ Balas HANYA dengan JSON array berisi path file string, contoh: ["src/pages/Home.
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: fileSelectionPrompt }] }],
+            contents: [{ parts: selectionParts }],
             generationConfig: { temperature: 0.1 },
           }),
         }
@@ -258,13 +274,24 @@ Balas HANYA dengan JSON array berisi path file string, contoh: ["src/pages/Home.
       }
 
       // Step D: Prompt Gemini to write the updated file contents
-      addLog('Gemini AI sedang menulis kode baru & mengedit berkas...');
+      addLog('Gemini AI sedang menganalisis foto & menulis kode baru...');
+
+      const photoNotice = photo && photo.data
+        ? `\n\nCATATAN PENTING FOTO / SCREENSHOT REVISI:
+Pengguna telah melampirkan foto / gambar screenshot revisi berikut.
+Perhatikan baik-baik tampilan visual pada gambar:
+1. Periksa bagian mana yang ditunjuk, dilingkari, atau ditandai oleh pengguna.
+2. Cocokkan warna, ukuran font, padding, posisi tombol, atau layout agar persis seperti gambar yang diinginkan pengguna.
+3. Terapkan perubahan kode tersebut pada file CSS / JSX yang relevan.`
+        : '';
+
       const codeGenPrompt = `
 Anda adalah Antigravity Autonomous Coding Agent untuk website resmi ROHIS Kabupaten Banyumas.
 Teknologi proyek: Vite, React 19, Vanilla CSS dengan desain 3D Liquid Glass (Emerald #00F0CF, Deep Obsidian #010405, Refractive Glass).
 
 Instruksi pengguna:
 "${prompt}"
+${photoNotice}
 
 Berikut adalah isi berkas saat ini yang relevan:
 ${Object.entries(fileContents)
@@ -276,16 +303,28 @@ ATURAN PENTING:
 2. Pertahankan gaya desain visual mewah, responsif mobile, dan tidak merusak fitur yang sudah ada.
 3. Balas HANYA dalam format JSON valid tanpa teks pengantar, dengan struktur persis seperti ini:
 {
-  "summary": "Ringkasan penjelasan ramah bahasa Indonesia mengenai apa saja yang telah diubah",
-  "commitMessage": "Pesan commit singkat untuk git (contoh: feat: update hero title and contact details)",
+  "summary": "Ringkasan penjelasan ramah bahasa Indonesia mengenai apa saja yang telah diubah sesuai instruksi dan foto revisi",
+  "commitMessage": "Pesan commit singkat untuk git (contoh: feat: update hero title and layout based on revision screenshot)",
   "files": [
     {
       "path": "path/ke/file.jsx",
-      "content": "ISI LENGKAP FILE SETELAH DIEDIT"
+      "content": "ISI LENGKAP FILE SETELAH DIEDIT",
+      "encoding": "utf-8"
     }
   ]
 }
 `;
+
+      const codeGenParts = [{ text: codeGenPrompt }];
+      if (photo && photo.data) {
+        const cleanBase64 = photo.data.includes(',') ? photo.data.split(',')[1] : photo.data;
+        codeGenParts.push({
+          inline_data: {
+            mime_type: photo.mimeType || 'image/jpeg',
+            data: cleanBase64,
+          },
+        });
+      }
 
       const genRes = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`,
@@ -293,7 +332,7 @@ ATURAN PENTING:
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: codeGenPrompt }] }],
+            contents: [{ parts: codeGenParts }],
             generationConfig: {
               temperature: 0.2,
               responseMimeType: 'application/json',
@@ -355,6 +394,7 @@ ATURAN PENTING:
       // 2. Create blobs for each modified file
       const treeEntries = [];
       for (const file of filesToUpdate) {
+        const isBase64 = file.encoding === 'base64';
         const blobRes = await fetch(`https://api.github.com/repos/${repoFullName}/git/blobs`, {
           method: 'POST',
           headers: {
@@ -365,7 +405,7 @@ ATURAN PENTING:
           },
           body: JSON.stringify({
             content: file.content,
-            encoding: 'utf-8',
+            encoding: isBase64 ? 'base64' : 'utf-8',
           }),
         });
         const blobData = await blobRes.json();

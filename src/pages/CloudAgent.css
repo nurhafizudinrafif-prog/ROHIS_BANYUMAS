@@ -403,6 +403,109 @@
   box-shadow: 0 0 0 3px rgba(0, 240, 207, 0.2), 0 0 20px rgba(0, 240, 207, 0.25);
 }
 
+/* ── Photo Attachment Zone ── */
+.photo-attachment-zone {
+  width: 100%;
+}
+
+.btn-attach-photo {
+  width: 100%;
+  padding: 10px 14px;
+  background: rgba(0, 240, 207, 0.05);
+  border: 1.2px dashed rgba(0, 240, 207, 0.35);
+  border-radius: 14px;
+  color: rgba(220, 245, 240, 0.9);
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-attach-photo:hover {
+  background: rgba(0, 240, 207, 0.12);
+  border-color: #00F0CF;
+  color: #00F0CF;
+}
+
+.attached-photo-preview-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(2, 14, 18, 0.92);
+  border: 1.2px solid rgba(0, 240, 207, 0.4);
+  border-radius: 16px;
+  padding: 8px 12px;
+  box-sizing: border-box;
+}
+
+.photo-thumb-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 240, 207, 0.5);
+  flex-shrink: 0;
+  background: #010405;
+}
+
+.photo-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.photo-meta-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+.photo-meta-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #00F0CF;
+}
+
+.photo-file-name {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-remove-photo {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 107, 107, 0.15);
+  border: 1px solid rgba(255, 107, 107, 0.4);
+  color: #FF6B6B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.btn-remove-photo:hover {
+  background: rgba(255, 107, 107, 0.3);
+  border-color: #FF6B6B;
+  transform: scale(1.08);
+}
+
 .btn-execute {
   width: 100%;
   min-height: 50px;

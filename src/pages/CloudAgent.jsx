@@ -17,6 +17,10 @@ import {
   Code2,
   Layers,
   Check,
+  Camera,
+  X,
+  Image as ImageIcon,
+  Paperclip,
 } from 'lucide-react';
 import logoImg from '../assets/logo.png';
 import './CloudAgent.css';
@@ -59,6 +63,11 @@ export default function CloudAgent() {
   const [resultSummary, setResultSummary] = useState(null);
   const [showHelp, setShowHelp] = useState(false);
   const [copiedKey, setCopiedKey] = useState(false);
+
+  // Photo / Screenshot Revision Attachment
+  const [attachedPhoto, setAttachedPhoto] = useState(null); // { data, mimeType, name, sizeFormatted }
+  const [isCompressingPhoto, setIsCompressingPhoto] = useState(false);
+  const fileInputRef = useRef(null);
 
   const logsEndRef = useRef(null);
 
@@ -135,6 +144,64 @@ export default function CloudAgent() {
     } catch {}
   }
 
+  function handlePhotoSelect(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Harap pilih berkas gambar (JPG, PNG, WEBP).');
+      return;
+    }
+
+    setIsCompressingPhoto(true);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        // Compress image to max 1280px to keep payload snappy and under 250KB
+        const maxDim = 1280;
+        let width = img.width;
+        let height = img.height;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+        const approxKb = Math.round((compressedDataUrl.length * 0.75) / 1024);
+
+        setAttachedPhoto({
+          data: compressedDataUrl,
+          mimeType: 'image/jpeg',
+          name: file.name,
+          sizeFormatted: `${approxKb} KB`,
+        });
+        setIsCompressingPhoto(false);
+      };
+      img.onerror = () => {
+        setIsCompressingPhoto(false);
+        alert('Gagal membaca gambar.');
+      };
+      img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  }
+
+  function removeAttachedPhoto() {
+    setAttachedPhoto(null);
+  }
+
   async function handleExecute(e) {
     e?.preventDefault();
     if (!prompt.trim() || isLoading) return;
@@ -142,12 +209,21 @@ export default function CloudAgent() {
     setIsLoading(true);
     setResultSummary(null);
     const userPrompt = prompt.trim();
+    const photoPayload = attachedPhoto
+      ? {
+          data: attachedPhoto.data,
+          mimeType: attachedPhoto.mimeType,
+          name: attachedPhoto.name,
+        }
+      : null;
+
     setPrompt('');
 
     const newLogs = [
       ...logs,
       `--- INTRUKSI BARU ---`,
       `[User]: "${userPrompt}"`,
+      ...(attachedPhoto ? [`[User]: Melampirkan foto revisi (${attachedPhoto.name} - ${attachedPhoto.sizeFormatted})`] : []),
       `[Cloud]: Mengirim instruksi ke Antigravity Cloud Engine...`,
     ];
     setLogs(newLogs);
@@ -160,6 +236,7 @@ export default function CloudAgent() {
           pin,
           action: 'execute',
           prompt: userPrompt,
+          photo: photoPayload,
         }),
       });
 
@@ -400,6 +477,63 @@ export default function CloudAgent() {
             rows={3}
             disabled={isLoading}
           />
+
+          {/* Photo Attachment Zone */}
+          <div className="photo-attachment-zone">
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept="image/*"
+              onChange={handlePhotoSelect}
+              style={{ display: 'none' }}
+              id="cloud-agent-photo-input"
+            />
+
+            {!attachedPhoto ? (
+              <button
+                type="button"
+                className="btn-attach-photo"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isLoading || isCompressingPhoto}
+              >
+                {isCompressingPhoto ? (
+                  <>
+                    <RefreshCw size={15} className="animate-spin" />
+                    <span>Mengompres foto di HP...</span>
+                  </>
+                ) : (
+                  <>
+                    <Camera size={16} color="#00F0CF" />
+                    <span>+ Lampirkan Foto / Screenshot Revisi</span>
+                  </>
+                )}
+              </button>
+            ) : (
+              <div className="attached-photo-preview-card">
+                <div className="photo-thumb-wrap">
+                  <img src={attachedPhoto.data} alt="Foto Revisi" className="photo-thumb-img" />
+                </div>
+                <div className="photo-meta-info">
+                  <div className="photo-meta-badge">
+                    <CheckCircle2 size={12} color="#00F0CF" />
+                    <span>Foto Revisi Terlampir</span>
+                  </div>
+                  <span className="photo-file-name">
+                    {attachedPhoto.name} ({attachedPhoto.sizeFormatted})
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  className="btn-remove-photo"
+                  onClick={removeAttachedPhoto}
+                  disabled={isLoading}
+                  title="Hapus foto"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            )}
+          </div>
 
           <button
             onClick={handleExecute}
