@@ -4,6 +4,39 @@
 const DEFAULT_REPO = 'nurhafizudinrafif-prog/ROHIS_BANYUMAS';
 const DEFAULT_BRANCH = 'main';
 
+// Resilient Gemini Caller with Automatic Model Fallback
+async function requestGemini(apiKey, parts, generationConfig = {}) {
+  const models = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-2.0-flash-lite'];
+  let lastError = null;
+
+  for (const model of models) {
+    try {
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts }],
+            generationConfig,
+          }),
+        }
+      );
+
+      if (res.ok) {
+        return await res.json();
+      }
+
+      const errText = await res.text();
+      lastError = new Error(`Gemini ${model} Error (${res.status}): ${errText}`);
+    } catch (e) {
+      lastError = e;
+    }
+  }
+
+  throw lastError || new Error('Gagal menghubungi semua model Gemini.');
+}
+
 export default async function handler(req, res) {
   // CORS Headers
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -216,23 +249,7 @@ Balas HANYA dengan JSON array berisi path file string, contoh: ["src/pages/Home.
         });
       }
 
-      const selectionRes = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: selectionParts }],
-            generationConfig: { temperature: 0.1 },
-          }),
-        }
-      );
-
-      if (!selectionRes.ok) {
-        throw new Error(`Gemini API Error (${selectionRes.status}): ${await selectionRes.text()}`);
-      }
-
-      const selectionData = await selectionRes.json();
+      const selectionData = await requestGemini(geminiApiKey, selectionParts, { temperature: 0.1 });
       const selectionText = selectionData.candidates?.[0]?.content?.parts?.[0]?.text || '[]';
       let relevantFiles = [];
       try {
@@ -326,26 +343,10 @@ ATURAN PENTING:
         });
       }
 
-      const genRes = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: codeGenParts }],
-            generationConfig: {
-              temperature: 0.2,
-              responseMimeType: 'application/json',
-            },
-          }),
-        }
-      );
-
-      if (!genRes.ok) {
-        throw new Error(`Gemini API CodeGen Error (${genRes.status}): ${await genRes.text()}`);
-      }
-
-      const genData = await genRes.json();
+      const genData = await requestGemini(geminiApiKey, codeGenParts, {
+        temperature: 0.2,
+        responseMimeType: 'application/json',
+      });
       const rawResult = genData.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
       let agentResult = {};
       try {
