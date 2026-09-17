@@ -16,10 +16,11 @@ import MemberSchools from './pages/MemberSchools';
 import Registration from './pages/Registration';
 import Contact from './pages/Contact';
 import Admin from './pages/Admin';
+import CloudAgent from './pages/CloudAgent';
 
 function AppContent() {
   const location = useLocation();
-  const isAdmin = location.pathname.startsWith('/admin');
+  const isStandalone = location.pathname.startsWith('/admin') || location.pathname.startsWith('/cloud-agent');
 
   return (
     <>
@@ -27,7 +28,7 @@ function AppContent() {
       {/* Elegant & Living Dynamic Islamic Background */}
       <DynamicBackground />
 
-      {!isAdmin && <Navbar />}
+      {!isStandalone && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/tentang" element={<About />} />
@@ -40,9 +41,10 @@ function AppContent() {
         <Route path="/pendaftaran" element={<Registration />} />
         <Route path="/kontak" element={<Contact />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/cloud-agent" element={<CloudAgent />} />
       </Routes>
-      {!isAdmin && <Footer />}
-      {!isAdmin && <FloatingButtons />}
+      {!isStandalone && <Footer />}
+      {!isStandalone && <FloatingButtons />}
     </>
   );
 }

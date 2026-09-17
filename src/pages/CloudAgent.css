@@ -1,0 +1,549 @@
+/* =========================================================
+   ANTIGRAVITY CLOUD AGENT — MOBILE-FIRST WEB CONTROLLER
+   3D Liquid Glass • Emerald Neon Highlights • Deep Space Obsidian
+   ========================================================= */
+
+.cloud-agent-page {
+  min-height: 100vh;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: #010405;
+  color: #FFFFFF;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  padding: 16px 14px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.cloud-agent-container {
+  width: 100%;
+  max-width: 620px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
+}
+
+/* ── PIN Lock Screen ── */
+.pin-lock-wrapper {
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.pin-lock-card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--liquid-glass);
+  backdrop-filter: var(--liquid-blur);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  border: 1.2px solid var(--liquid-border);
+  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
+  border-radius: 28px;
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: var(--liquid-shadow), var(--liquid-inset);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.pin-lock-icon-box {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(0, 255, 200, 0.25) 0%, rgba(2, 9, 11, 0.6) 100%);
+  border: 1.5px solid rgba(0, 255, 200, 0.4);
+  color: #00F0CF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  box-shadow: 0 0 24px rgba(0, 240, 207, 0.35);
+}
+
+.pin-lock-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+
+.pin-lock-subtitle {
+  font-size: 0.85rem;
+  color: rgba(220, 240, 235, 0.75);
+  margin-bottom: 24px;
+  line-height: 1.4;
+}
+
+.pin-input-group {
+  width: 100%;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.pin-input {
+  width: 100%;
+  padding: 14px 16px;
+  background: rgba(4, 20, 24, 0.85);
+  border: 1.5px solid rgba(0, 255, 200, 0.3);
+  border-radius: 16px;
+  color: #FFFFFF;
+  font-size: 1.25rem;
+  text-align: center;
+  letter-spacing: 0.25em;
+  font-weight: 800;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.25s ease;
+}
+
+.pin-input:focus {
+  border-color: #00F0CF;
+  box-shadow: 0 0 0 3px rgba(0, 240, 207, 0.25), 0 0 20px rgba(0, 240, 207, 0.3);
+}
+
+.btn-unlock {
+  width: 100%;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #00DDB8 0%, #00F0CF 100%);
+  color: #020A0B !important;
+  font-weight: 800;
+  font-size: 1rem;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0, 255, 210, 0.4), inset 0 1px 1px #FFFFFF;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-unlock:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0, 255, 210, 0.6);
+}
+
+/* ── Main Dashboard Topbar ── */
+.agent-topbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--liquid-glass);
+  backdrop-filter: var(--liquid-blur);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  border: 1.2px solid var(--liquid-border);
+  border-top: 1.6px solid rgba(255, 255, 255, 0.45);
+  border-radius: 20px;
+  box-shadow: var(--liquid-shadow);
+  box-sizing: border-box;
+  gap: 10px;
+}
+
+.agent-topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.agent-topbar-logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid #00F0CF;
+  box-shadow: 0 0 10px rgba(0, 240, 207, 0.4);
+}
+
+.agent-topbar-text h1 {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.agent-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.68rem;
+  color: #00F0CF;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.status-dot-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00F0CF;
+  box-shadow: 0 0 8px #00F0CF;
+  animation: pulseNeon 1.8s infinite;
+}
+
+@keyframes pulseNeon {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.3); }
+}
+
+.agent-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-icon-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0, 255, 200, 0.08);
+  border: 1px solid rgba(0, 255, 200, 0.25);
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-icon-topbar:hover {
+  background: rgba(0, 255, 200, 0.22);
+  color: #00F0CF;
+}
+
+/* ── Repo Status Banner Card ── */
+.repo-info-card {
+  width: 100%;
+  background: var(--liquid-glass);
+  backdrop-filter: var(--liquid-blur);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  border: 1.2px solid var(--liquid-border);
+  border-top: 1.6px solid rgba(255, 255, 255, 0.4);
+  border-radius: 20px;
+  padding: 14px 16px;
+  box-shadow: var(--liquid-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-sizing: border-box;
+}
+
+.repo-info-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: rgba(220, 240, 235, 0.75);
+}
+
+.repo-badge-branch {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  background: rgba(0, 255, 200, 0.1);
+  border: 1px solid rgba(0, 255, 200, 0.3);
+  border-radius: 999px;
+  color: #00F0CF;
+  font-weight: 700;
+  font-size: 0.72rem;
+}
+
+.repo-commit-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.84rem;
+  color: #FFFFFF;
+  word-break: break-word;
+}
+
+.commit-sha-badge {
+  background: rgba(0, 240, 207, 0.18);
+  border: 1px solid rgba(0, 240, 207, 0.4);
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 0.76rem;
+  color: #00F0CF;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ── Preset Quick Action Chips ── */
+.presets-wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.presets-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #00F0CF;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.presets-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+
+.presets-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.preset-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: rgba(0, 255, 200, 0.06);
+  border: 1px solid rgba(0, 255, 200, 0.22);
+  border-radius: 999px;
+  color: rgba(240, 250, 247, 0.9);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.preset-chip:hover {
+  background: rgba(0, 255, 200, 0.16);
+  border-color: #00F0CF;
+  color: #00F0CF;
+}
+
+/* ── Command Input Card ── */
+.command-card {
+  width: 100%;
+  background: var(--liquid-glass);
+  backdrop-filter: var(--liquid-blur);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  border: 1.2px solid var(--liquid-border);
+  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow: var(--liquid-shadow), var(--liquid-inset);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+.command-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.command-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #00F0CF;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mode-tag-auto {
+  background: rgba(0, 240, 207, 0.14);
+  border: 1px solid rgba(0, 240, 207, 0.35);
+  padding: 2px 8px;
+  border-radius: 999px;
+  color: #00F0CF;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.command-textarea {
+  width: 100%;
+  min-height: 110px;
+  padding: 14px 16px;
+  background: rgba(3, 14, 18, 0.88);
+  border: 1.2px solid rgba(0, 255, 200, 0.25);
+  border-radius: 16px;
+  color: #FFFFFF;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.25s ease;
+}
+
+.command-textarea:focus {
+  border-color: #00F0CF;
+  box-shadow: 0 0 0 3px rgba(0, 240, 207, 0.2), 0 0 20px rgba(0, 240, 207, 0.25);
+}
+
+.btn-execute {
+  width: 100%;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #00DDB8 0%, #00F0CF 100%);
+  color: #020A0B !important;
+  font-size: 1rem;
+  font-weight: 800;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(0, 255, 210, 0.45), inset 0 1px 1.5px rgba(255, 255, 255, 0.6);
+  transition: all 0.25s ease;
+}
+
+.btn-execute:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.btn-execute:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(0, 255, 210, 0.65);
+}
+
+/* ── Live Terminal Console ── */
+.terminal-card {
+  width: 100%;
+  background: rgba(2, 9, 12, 0.95);
+  border: 1.2px solid rgba(0, 255, 200, 0.25);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.8);
+  box-sizing: border-box;
+}
+
+.terminal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: rgba(4, 20, 24, 0.75);
+  border-bottom: 1px solid rgba(0, 255, 200, 0.15);
+  font-size: 0.76rem;
+  color: rgba(220, 240, 235, 0.8);
+  font-family: monospace;
+}
+
+.terminal-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.terminal-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+.dot-red { background: #FF5F56; }
+.dot-yellow { background: #FFBD2E; }
+.dot-green { background: #27C93F; }
+
+.terminal-body {
+  padding: 14px 16px;
+  max-height: 240px;
+  overflow-y: auto;
+  font-family: 'SF Mono', Monaco, Consolas, monospace;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: #A0D0C5;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.terminal-line {
+  word-break: break-all;
+}
+
+.terminal-line-success {
+  color: #00F0CF;
+  font-weight: 700;
+}
+
+.terminal-line-error {
+  color: #FF6B6B;
+  font-weight: 700;
+}
+
+/* ── Config Warning Banner ── */
+.config-warning-banner {
+  width: 100%;
+  background: rgba(215, 184, 102, 0.12);
+  border: 1.2px solid rgba(215, 184, 102, 0.35);
+  border-radius: 18px;
+  padding: 16px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.config-warning-title {
+  color: #F5D076;
+  font-size: 0.92rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.config-warning-desc {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.5;
+}
+
+.config-warning-code {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 0.78rem;
+  color: #00F0CF;
+}
+
+@media (max-width: 480px) {
+  .cloud-agent-page {
+    padding: 10px 8px 36px;
+  }
+
+  .agent-topbar {
+    padding: 8px 12px;
+  }
+
+  .command-card {
+    padding: 14px 12px;
+  }
+}
