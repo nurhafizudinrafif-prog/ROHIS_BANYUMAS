@@ -5,6 +5,8 @@ import { galleryItems as initialGalleryItems, galleryCategories as initialGaller
 import { memberSchools as initialMemberSchools } from '../data/memberSchools';
 import { team as initialTeam, structurePeriod, organizationFullName } from '../data/team';
 import { instagramReels as initialInstagramReels, instagramProfile as initialInstagramProfile } from '../data/instagram';
+import { programs as initialPrograms } from '../data/programs';
+import { initialHomeContent } from '../data/homeContent';
 import { fetchCloudCMSData } from '../services/cloudSync';
 
 const STORAGE_KEY = 'rohis_banyumas_cms_data_v2';
@@ -46,6 +48,8 @@ export function DataProvider({ children }) {
   const [team, setTeam] = useState(stored?.team || initialTeam);
   const [instagramReels, setInstagramReels] = useState(stored?.instagramReels || initialInstagramReels);
   const [instagramProfile, setInstagramProfile] = useState(stored?.instagramProfile || initialInstagramProfile);
+  const [homeContent, setHomeContent] = useState(stored?.homeContent || initialHomeContent);
+  const [programs, setPrograms] = useState(stored?.programs || initialPrograms);
   const [siteSettings, setSiteSettings] = useState(() => {
     const raw = stored?.siteSettings;
     const settings = { ...defaultSettings, ...(raw || {}) };
@@ -64,6 +68,8 @@ export function DataProvider({ children }) {
         if (cloudData.events) setEvents(cloudData.events);
         if (cloudData.galleryItems) setGalleryItems(cloudData.galleryItems);
         if (cloudData.memberSchools) setMemberSchools(cloudData.memberSchools);
+        if (cloudData.homeContent) setHomeContent(cloudData.homeContent);
+        if (cloudData.programs) setPrograms(cloudData.programs);
         if (cloudData.instagramLivePosts && cloudData.instagramLivePosts.length > 0) {
           setInstagramReels(cloudData.instagramLivePosts);
         } else if (cloudData.instagramReels) {
@@ -103,13 +109,15 @@ export function DataProvider({ children }) {
         instagramReels,
         instagramProfile,
         siteSettings,
+        homeContent,
+        programs,
         savedAt: new Date().toISOString(),
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     } catch (err) {
       console.error('Failed to save to localStorage:', err);
     }
-  }, [articles, events, galleryItems, memberSchools, team, instagramReels, instagramProfile, siteSettings]);
+  }, [articles, events, galleryItems, memberSchools, team, instagramReels, instagramProfile, siteSettings, homeContent, programs]);
 
   // Synchronize across open browser tabs
   useEffect(() => {
@@ -125,6 +133,8 @@ export function DataProvider({ children }) {
           if (remote.instagramReels) setInstagramReels(remote.instagramReels);
           if (remote.instagramProfile) setInstagramProfile(remote.instagramProfile);
           if (remote.siteSettings) setSiteSettings(remote.siteSettings);
+          if (remote.homeContent) setHomeContent(remote.homeContent);
+          if (remote.programs) setPrograms(remote.programs);
         } catch (err) {
           console.error('Cross-tab sync error:', err);
         }
@@ -358,6 +368,23 @@ export function DataProvider({ children }) {
     });
   }, []);
 
+  // --- Home Content & Programs ---
+  const updateHomeContent = useCallback((newContent) => {
+    setHomeContent((prev) => {
+      const merged = { ...prev };
+      if (newContent.hero) merged.hero = { ...prev.hero, ...newContent.hero };
+      if (newContent.about) merged.about = { ...prev.about, ...newContent.about };
+      if (newContent.closing) merged.closing = { ...prev.closing, ...newContent.closing };
+      if (newContent.stats) merged.stats = newContent.stats;
+      if (newContent.timeline) merged.timeline = newContent.timeline;
+      return merged;
+    });
+  }, []);
+
+  const updateProgram = useCallback((id, updatedFields) => {
+    setPrograms((prev) => prev.map((p) => (p.id === id ? { ...p, ...updatedFields } : p)));
+  }, []);
+
   // --- Settings ---
   const updateSettings = useCallback((newSettings) => {
     setSiteSettings((prev) => ({ ...prev, ...newSettings }));
@@ -371,6 +398,8 @@ export function DataProvider({ children }) {
     setMemberSchools(initialMemberSchools);
     setTeam(initialTeam);
     setSiteSettings(defaultSettings);
+    setHomeContent(initialHomeContent);
+    setPrograms(initialPrograms);
     localStorage.removeItem(STORAGE_KEY);
   }, []);
 
@@ -383,6 +412,8 @@ export function DataProvider({ children }) {
       memberSchools,
       team,
       siteSettings,
+      homeContent,
+      programs,
       exportedAt: new Date().toISOString(),
       version: '1.0',
     };
@@ -396,7 +427,7 @@ export function DataProvider({ children }) {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-  }, [articles, events, galleryItems, memberSchools, team, siteSettings]);
+  }, [articles, events, galleryItems, memberSchools, team, siteSettings, homeContent, programs]);
 
   const importBackup = useCallback((jsonString) => {
     try {
@@ -407,6 +438,8 @@ export function DataProvider({ children }) {
       if (data.memberSchools) setMemberSchools(data.memberSchools);
       if (data.team) setTeam(data.team);
       if (data.instagramReels) setInstagramReels(data.instagramReels);
+      if (data.homeContent) setHomeContent(data.homeContent);
+      if (data.programs) setPrograms(data.programs);
       if (data.siteSettings) setSiteSettings((prev) => ({ ...prev, ...data.siteSettings }));
       return { success: true, message: 'Data backup berhasil dipulihkan!' };
     } catch (err) {
@@ -453,6 +486,8 @@ export function DataProvider({ children }) {
     instagramReels,
     instagramProfile,
     siteSettings,
+    homeContent,
+    programs,
     structurePeriod: siteSettings.period || structurePeriod,
     organizationFullName: siteSettings.orgName || organizationFullName,
 
@@ -483,6 +518,8 @@ export function DataProvider({ children }) {
     setInstagramReels,
     setInstagramProfile,
 
+    updateHomeContent,
+    updateProgram,
     updateSettings,
     resetToDefault,
     exportBackup,

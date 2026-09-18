@@ -8,7 +8,7 @@ import './About.css';
 
 export default function About() {
   useScrollAnimation();
-  const { team, structurePeriod, organizationFullName } = useData();
+  const { team, structurePeriod, organizationFullName, homeContent } = useData();
 
   return (
     <main className="page-about">
@@ -16,7 +16,7 @@ export default function About() {
       <section className="page-hero pattern-bg">
         <div className="container text-center">
           <span className="badge badge-primary animate-hero delay-0">Tentang Kami</span>
-          <h1 className="page-hero-title animate-hero delay-1">Organisasi ROHIS Kabupaten Banyumas</h1>
+          <h1 className="page-hero-title animate-hero delay-1">{organizationFullName || 'Organisasi ROHIS Kabupaten Banyumas'}</h1>
           <p className="page-hero-subtitle animate-hero delay-2">
             Bersatu dalam dakwah, bergerak untuk umat — menginspirasi generasi muda Islam Banyumas.
           </p>
@@ -52,12 +52,12 @@ export default function About() {
                 <span className="about-story-label">Tahun Berdiri</span>
               </div>
               <div className="about-story-card">
-                <span className="about-story-year">15+</span>
-                <span className="about-story-label">Dari Sekolah Kab. Banyumas</span>
+                <span className="about-story-year">{(homeContent?.stats?.[0]?.value || '15') + (homeContent?.stats?.[0]?.suffix || '+')}</span>
+                <span className="about-story-label">{homeContent?.stats?.[0]?.label || 'Sekolah Tergabung'}</span>
               </div>
               <div className="about-story-card">
-                <span className="about-story-year">53+</span>
-                <span className="about-story-label">Anggota Aktif</span>
+                <span className="about-story-year">{(homeContent?.stats?.[1]?.value || '500') + (homeContent?.stats?.[1]?.suffix || '+')}</span>
+                <span className="about-story-label">{homeContent?.stats?.[1]?.label || 'Kader Terdidik'}</span>
               </div>
             </div>
           </div>

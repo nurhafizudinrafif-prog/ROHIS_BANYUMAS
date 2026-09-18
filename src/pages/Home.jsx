@@ -42,7 +42,8 @@ import {
   getCoverMedia,
   getMediaSummary,
 } from '../utils/media';
-import { programs } from '../data/programs';
+import { initialHomeContent } from '../data/homeContent';
+import { programs as defaultPrograms } from '../data/programs';
 import './Home.css';
 import './Gallery.css';
 
@@ -53,44 +54,6 @@ const divisionLogos = {
   HUMAS: '/divisi-humas.svg',
   DANUS: '/divisi-danus.svg',
 };
-
-const timelineMilestones = [
-  {
-    year: '2017',
-    tag: 'AWAL JEJAK',
-    title: 'Inisiasi & Silaturahmi Perdana',
-    location: 'Purwokerto',
-    desc: 'Pertemuan perdana perwakilan pengurus rohis sekolah se-Purwokerto yang melahirkan kesepakatan membentuk wadah silaturahmi terpadu.',
-  },
-  {
-    year: '2020',
-    tag: 'KETAHANAN',
-    title: 'Ruang Temu di Masa Pandemi',
-    location: 'Banyumas',
-    desc: 'Menghadapi masa karantina dengan menggelar kajian virtual berkala, mentoring daring, dan aksi kepedulian sosial bagi pelajar terdampak.',
-  },
-  {
-    year: '2022',
-    tag: 'REKONSILIASI',
-    title: 'Konsolidasi Akbar Pasca-Pandemi',
-    location: 'Masjid Agung Baitussalam',
-    desc: 'Kebangkitan tatap muka akbar, memperluas jejaring dakwah hingga ke SMA, SMK, dan MA di berbagai kecamatan Kabupaten Banyumas.',
-  },
-  {
-    year: '2024',
-    tag: 'KURIKULUM',
-    title: 'Standarisasi Modul Kaderisasi',
-    location: 'Banyumas',
-    desc: 'Penyusunan kurikulum Latihan Kepemimpinan ROHIS (LKRO) terstandar dan mentoring berkala demi mencetak kader yang berkarakter dan kritis.',
-  },
-  {
-    year: '2026',
-    tag: 'TRANSFORMASI',
-    title: 'Era Kolaborasi & Platform Terpadu',
-    location: 'Kabupaten Banyumas',
-    desc: 'Peluncuran platform digital terpadu, penguatan jurnalisme literasi, kemandirian kas dakwah, dan jejaring lebih dari 15 sekolah.',
-  },
-];
 
 export default function Home() {
   useScrollAnimation();
@@ -104,7 +67,14 @@ export default function Home() {
     events,
     memberSchools,
     galleryItems,
+    homeContent,
+    programs: dynamicPrograms,
   } = useData();
+
+  const about = homeContent?.about || initialHomeContent.about;
+  const timelineList = homeContent?.timeline || initialHomeContent.timeline;
+  const closing = homeContent?.closing || initialHomeContent.closing;
+  const programsList = dynamicPrograms && dynamicPrograms.length > 0 ? dynamicPrograms : defaultPrograms;
 
   const activeMediaList = selectedItem ? normalizeMediaList(selectedItem) : [];
   const currentMedia = activeMediaList[activeMediaIndex] || activeMediaList[0];
@@ -113,7 +83,19 @@ export default function Home() {
   const driveEmbedUrl = isVideo && currentMedia ? getGoogleDriveEmbedUrl(currentMedia.url) : null;
   const directImageUrl = currentMedia ? getDirectImageUrl(currentMedia.url) : '';
 
-  const activeProgram = programs[activeProgramIndex] || programs[0];
+
+  // Lock body scroll when modal open
+  useEffect(() => {
+    if (selectedItem) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow || '';
+      };
+    }
+  }, [selectedItem]);
+
+  const activeProgram = programsList[activeProgramIndex] || programsList[0];
 
   const upcomingEvents = events.filter((e) => e.status === 'upcoming');
   const featuredEvent = upcomingEvents[0];
@@ -192,45 +174,34 @@ export default function Home() {
           <div className="editorial-about-spread">
             {/* Left: Narrative Column */}
             <div className="about-spread-narrative">
-              <span className="badge badge-primary">TENTANG KAMI</span>
+              <span className="badge badge-primary">{about.tag || 'TENTANG KAMI'}</span>
               
               <h2 className="about-spread-title">
-                Bukan sekadar sebuah organisasi.
+                {about.title || 'Bukan sekadar sebuah organisasi.'}
               </h2>
 
               <p className="about-spread-lead">
-                Didirikan pada tahun 2017 di Purwokerto, ROHIS Kabupaten Banyumas tumbuh 
-                dari tekad bersama para pelajar SMA, SMK, dan MA untuk merajut ukhuwah 
-                dan memperkuat dakwah sekolah.
+                {about.lead}
               </p>
 
               <div className="about-spread-body">
-                <p>
-                  Kami hadir bukan sekadar menyusun struktur jabatan formal, melainkan 
-                  membangun ruang perjumpaan yang hangat—tempat setiap pelajar Muslim 
-                  dapat belajar memahami nilai-nilai Islam yang rahmatan lil 'alamin, 
-                  mengasah kepemimpinan, dan menyalurkan kepedulian nyata bagi masyarakat.
-                </p>
-                <p>
-                  Dari kajian akbar di masjid-masjid agung hingga pelatihan literasi digital 
-                  dan aksi kepedulian sosial di pelosok Banyumas, seluruh langkah kami 
-                  digerakkan secara gotong-royong oleh kader pelajar bersama para pembina.
-                </p>
+                <p>{about.paragraph1}</p>
+                <p>{about.paragraph2}</p>
               </div>
 
               <div className="about-spread-points">
                 <div className="about-point-item">
                   <span className="point-number">01</span>
                   <div className="point-text">
-                    <strong>Sinergi Lintas Sekolah</strong>
-                    <span>Mengikis sekat sekolah, menghubungkan puluhan rohis di Kabupaten Banyumas.</span>
+                    <strong>{about.point1Title || 'Sinergi Lintas Sekolah'}</strong>
+                    <span>{about.point1Desc || 'Mengikis sekat sekolah, menghubungkan puluhan rohis di Kabupaten Banyumas.'}</span>
                   </div>
                 </div>
                 <div className="about-point-item">
                   <span className="point-number">02</span>
                   <div className="point-text">
-                    <strong>Kaderisasi Berjenjang</strong>
-                    <span>Mencetak generasi muda yang kritis, berakhlak mulia, dan siap memimpin.</span>
+                    <strong>{about.point2Title || 'Kaderisasi Berjenjang'}</strong>
+                    <span>{about.point2Desc || 'Mencetak generasi muda yang kritis, berakhlak mulia, dan siap memimpin.'}</span>
                   </div>
                 </div>
               </div>
@@ -247,12 +218,12 @@ export default function Home() {
             <div className="about-spread-visual">
               <div className="about-photo-card">
                 <div className="about-photo-header">
-                  <span>DOKUMENTASI KADERISASI • PURWOKERTO</span>
-                  <span>EST. 2017</span>
+                  <span>{about.photoTag || 'DOKUMENTASI KADERISASI • PURWOKERTO'}</span>
+                  <span>{about.photoEst || 'EST. 2017'}</span>
                 </div>
                 <div className="about-photo-wrapper">
                   <img
-                    src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=80"
+                    src={about.photoUrl || 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=80'}
                     alt="Kaderisasi Pelajar ROHIS Banyumas"
                     className="about-photo-img"
                     loading="lazy"
@@ -261,11 +232,10 @@ export default function Home() {
                 <div className="about-quote-box">
                   <Quote size={24} className="about-quote-icon" />
                   <p className="about-quote-text">
-                    "Di sini kami belajar bahwa dakwah terbaik tidak diukur dari megahnya panggung, 
-                    melainkan dari keteladanan akhlak dan keikhlasan melayani sesama pelajar."
+                    {about.quoteText}
                   </p>
                   <span className="about-quote-author">
-                    — Catatan Lapangan Kader Pelajar, Banyumas
+                    {about.quoteAuthor}
                   </span>
                 </div>
               </div>
@@ -288,7 +258,7 @@ export default function Home() {
           <div className="editorial-program-layout">
             {/* Left: Interactive Numbered Index List */}
             <div className="program-numbered-index">
-              {programs.map((prog, idx) => {
+              {programsList.map((prog, idx) => {
                 const isSelected = idx === activeProgramIndex;
                 const numStr = String(idx + 1).padStart(2, '0');
                 return (
@@ -522,8 +492,8 @@ export default function Home() {
           />
 
           <div className="quiet-timeline-track">
-            {timelineMilestones.map((m, idx) => (
-              <div key={idx} className="timeline-node">
+            {timelineList.map((m, idx) => (
+              <div key={m.id || idx} className="timeline-node">
                 <div className="timeline-node-header">
                   <span className="timeline-year">{m.year}</span>
                   <span className="timeline-tag">{m.tag}</span>
@@ -652,19 +622,18 @@ export default function Home() {
       <section className="section" data-section="contact">
         <div className="container">
           <div className="editorial-closing-card">
-            <span className="badge badge-primary">MARI BERGABUNG</span>
-            <h2 className="closing-headline">Mari Tumbuh Bersama.</h2>
+            <span className="badge badge-primary">{closing.tag || 'MARI BERGABUNG'}</span>
+            <h2 className="closing-headline">{closing.headline || 'Mari Tumbuh Bersama.'}</h2>
             <p className="closing-lead">
-              Pintu selalu terbuka bagi pelajar yang ingin belajar, mengasah kepemimpinan, 
-              dan bersama-sama menghidupkan dakwah Islam rahmatan lil 'alamin di Kabupaten Banyumas.
+              {closing.lead}
             </p>
             <div className="closing-actions">
-              <Link to="/pendaftaran" className="btn btn-primary btn-lg">
-                <span>Daftar Menjadi Bagian ROKABA</span>
+              <Link to={closing.btnPrimaryLink || '/pendaftaran'} className="btn btn-primary btn-lg">
+                <span>{closing.btnPrimaryText || 'Daftar Menjadi Bagian ROKABA'}</span>
                 <ArrowRight size={17} />
               </Link>
-              <Link to="/kontak" className="btn btn-outline btn-lg">
-                <span>Hubungi Pengurus</span>
+              <Link to={closing.btnSecondaryLink || '/kontak'} className="btn btn-outline btn-lg">
+                <span>{closing.btnSecondaryText || 'Hubungi Pengurus'}</span>
               </Link>
             </div>
           </div>

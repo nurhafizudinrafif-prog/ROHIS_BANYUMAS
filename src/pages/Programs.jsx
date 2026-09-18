@@ -4,7 +4,7 @@ import { useScrollAnimation } from '../utils';
 import SectionHeader from '../components/SectionHeader';
 import ProgramCard from '../components/ProgramCard';
 import EventCard from '../components/EventCard';
-import { programs } from '../data/programs';
+import { programs as defaultPrograms } from '../data/programs';
 import { eventTypes } from '../data/events';
 import { useData } from '../context/DataContext';
 import { Sparkles, Calendar, Layers, CheckCircle2 } from 'lucide-react';
@@ -16,7 +16,8 @@ import './Programs.css';
 export default function Programs() {
   useScrollAnimation();
   const location = useLocation();
-  const { events } = useData();
+  const { events, programs: contextPrograms } = useData();
+  const programs = (contextPrograms && contextPrograms.length > 0) ? contextPrograms : defaultPrograms;
 
   // Active section view: 'all' | 'programs' | 'agenda'
   const [activeSection, setActiveSection] = useState('all');

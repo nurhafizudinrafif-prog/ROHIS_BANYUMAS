@@ -25,6 +25,8 @@ import {
   Lock,
   ShieldCheck,
   Film,
+  Layout,
+  Sparkles,
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import {
@@ -38,6 +40,8 @@ import {
 } from '../utils/media';
 import logoImg from '../assets/logo.png';
 import RohisLogo from '../components/RohisLogo';
+import ImageUploadField from '../components/ImageUploadField';
+import AdminHomeCMS from '../components/AdminHomeCMS';
 import './Admin.css';
 
 export default function Admin() {
@@ -49,6 +53,8 @@ export default function Admin() {
     memberSchools,
     team,
     siteSettings,
+    homeContent,
+    programs,
     addArticle,
     updateArticle,
     deleteArticle,
@@ -64,6 +70,8 @@ export default function Admin() {
     addTeamMember,
     updateTeamMember,
     deleteTeamMember,
+    updateHomeContent,
+    updateProgram,
     updateSettings,
     resetToDefault,
     exportBackup,
@@ -121,6 +129,8 @@ export default function Admin() {
   const [settingsForm, setSettingsForm] = useState({
     adminUsername: siteSettings.adminUsername || 'rohis banyumas',
     adminPassword: siteSettings.adminPassword || 'rbk banyumas',
+    orgName: siteSettings.orgName || 'Organisasi ROHIS Kabupaten Banyumas',
+    period: siteSettings.period || '2024–2025',
     email: siteSettings.email || '',
     phone: siteSettings.phone || '',
     whatsapp: siteSettings.whatsapp || '',
@@ -136,6 +146,8 @@ export default function Admin() {
         ...prev,
         adminUsername: siteSettings.adminUsername || 'rohis banyumas',
         adminPassword: siteSettings.adminPassword || 'rbk banyumas',
+        orgName: siteSettings.orgName || prev.orgName || 'Organisasi ROHIS Kabupaten Banyumas',
+        period: siteSettings.period || prev.period || '2024–2025',
         email: siteSettings.email || prev.email || '',
         phone: siteSettings.phone || prev.phone || '',
         whatsapp: siteSettings.whatsapp || prev.whatsapp || '',
@@ -252,6 +264,40 @@ export default function Admin() {
     });
     setNewMediaInput({ type: newMediaInput.type, url: '', caption: '' });
     showToast(isVid ? 'Video berhasil ditambahkan ke album' : 'Foto berhasil ditambahkan ke album', 'info');
+  };
+
+  // Helper untuk upload foto langsung dari file komputer/HP ke dalam album
+  const handleDirectFileUploadToAlbum = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      showToast('Mohon pilih berkas gambar yang valid (JPG, PNG, WebP).', 'warning');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const dataUrl = event.target?.result;
+      if (dataUrl) {
+        const newMedia = {
+          id: `m-${Date.now()}`,
+          type: 'image',
+          url: dataUrl,
+          caption: newMediaInput.caption ? newMediaInput.caption.trim() : file.name.replace(/\.[^/.]+$/, ''),
+        };
+        const currentMedia = Array.isArray(formData.media) ? formData.media : [];
+        const updatedMedia = [...currentMedia, newMedia];
+        const updatedCover = formData.coverImage || dataUrl;
+        setFormData({
+          ...formData,
+          media: updatedMedia,
+          coverImage: updatedCover,
+          image: updatedCover,
+        });
+        showToast('Foto dari komputer berhasil ditambahkan ke album!', 'success');
+      }
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
   };
 
   // Helper menghapus media tertentu dari album kegiatan
@@ -618,6 +664,19 @@ export default function Admin() {
             </button>
 
             <button
+              className={`admin-nav-item ${activeTab === 'homepage' ? 'active' : ''}`}
+              onClick={() => {
+                setActiveTab('homepage');
+                setSearchQuery('');
+                setFilterCategory('Semua');
+              }}
+            >
+              <Layout size={18} />
+              <span>Kelola Beranda</span>
+              <span className="badge badge-gold" style={{ fontSize: '0.62rem', padding: '1px 6px', marginLeft: 'auto' }}>CMS</span>
+            </button>
+
+            <button
               className={`admin-nav-item ${activeTab === 'articles' ? 'active' : ''}`}
               onClick={() => {
                 setActiveTab('articles');
@@ -719,6 +778,12 @@ export default function Admin() {
                 </div>
                 <div className="quick-actions">
                   <button
+                    onClick={() => setActiveTab('homepage')}
+                    className="btn btn-gold btn-sm"
+                  >
+                    <Sparkles size={16} /> Edit Teks & Foto Beranda
+                  </button>
+                  <button
                     onClick={() => openAddModal('article')}
                     className="btn btn-primary btn-sm"
                   >
@@ -726,7 +791,7 @@ export default function Admin() {
                   </button>
                   <button
                     onClick={() => openAddModal('event')}
-                    className="btn btn-gold btn-sm"
+                    className="btn btn-outline btn-sm"
                   >
                     <Plus size={16} /> Buat Agenda
                   </button>
@@ -735,6 +800,22 @@ export default function Admin() {
 
               {/* Stats Cards */}
               <div className="admin-stats-grid">
+                <div className="admin-stat-card">
+                  <div className="stat-card-icon stat-icon-gold">
+                    <Layout size={24} />
+                  </div>
+                  <div className="stat-card-info">
+                    <span className="stat-count">6 Bagian</span>
+                    <span className="stat-name">Visual & Editorial Beranda</span>
+                  </div>
+                  <button
+                    onClick={() => setActiveTab('homepage')}
+                    className="stat-card-link"
+                  >
+                    Kelola Beranda &rarr;
+                  </button>
+                </div>
+
                 <div className="admin-stat-card">
                   <div className="stat-card-icon stat-icon-emerald">
                     <FileText size={24} />
@@ -1629,6 +1710,33 @@ export default function Admin() {
 
                     <div className="form-grid-2">
                       <div className="form-group">
+                        <label className="form-label">Nama Resmi Organisasi</label>
+                        <input
+                          type="text"
+                          className="form-input"
+                          value={settingsForm.orgName}
+                          onChange={(e) =>
+                            setSettingsForm({ ...settingsForm, orgName: e.target.value })
+                          }
+                          placeholder="Organisasi ROHIS Kabupaten Banyumas"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label">Periode Kepengurusan</label>
+                        <input
+                          type="text"
+                          className="form-input"
+                          value={settingsForm.period}
+                          onChange={(e) =>
+                            setSettingsForm({ ...settingsForm, period: e.target.value })
+                          }
+                          placeholder="Contoh: 2024–2025"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-grid-2">
+                      <div className="form-group">
                         <label className="form-label">Email Resmi</label>
                         <input
                           type="email"
@@ -1743,6 +1851,19 @@ export default function Admin() {
               </div>
             </div>
           )}
+
+          {/* ==================================== */}
+          {/* TAB: KELOLA BERANDA & KONTEN (CMS)   */}
+          {/* ==================================== */}
+          {activeTab === 'homepage' && (
+            <AdminHomeCMS
+              homeContent={homeContent}
+              programs={programs}
+              onSaveHomeContent={updateHomeContent}
+              onSaveProgram={updateProgram}
+              showToast={showToast}
+            />
+          )}
         </div>
       </div>
 
@@ -1843,48 +1964,13 @@ export default function Admin() {
                   </div>
 
                   {/* FOTO SAMPUL / COVER ARTIKEL */}
-                  <div className="form-group">
-                    <label className="form-label">Foto Sampul / Cover Artikel (Opsional)</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      placeholder="Masukkan link Google Drive Foto (https://drive.google.com/file/d/...) atau URL Gambar (https://...)"
-                      value={formData.image || formData.coverImage || ''}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        setFormData({ ...formData, image: val, coverImage: val });
-                      }}
-                    />
-                  </div>
-
-                  {(formData.image || formData.coverImage) && (
-                    <div className="admin-cover-preview">
-                      <span className="admin-cover-preview-label">Pratinjau Foto Sampul:</span>
-                      <div className="admin-cover-preview-box">
-                        <img
-                          src={getDirectImageUrl(formData.image || formData.coverImage)}
-                          alt="Pratinjau Cover"
-                          onError={(e) => {
-                            const driveId = extractGoogleDriveId(formData.image || formData.coverImage);
-                            if (driveId) {
-                              e.currentTarget.src = `https://drive.google.com/thumbnail?id=${driveId}&sz=w1200`;
-                            }
-                          }}
-                        />
-                        <button
-                          type="button"
-                          className="btn btn-sm btn-outline"
-                          onClick={() => setFormData({ ...formData, image: '', coverImage: '' })}
-                        >
-                          Hapus Sampul
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="admin-drive-tip" style={{ marginTop: '0.4rem', marginBottom: '1rem' }}>
-                    💡 <strong>Tips Foto Sampul:</strong> Mendukung URL gambar langsung dan link Google Drive Foto. Jika menggunakan Google Drive, pastikan izin file diatur ke <u>"Siapa saja yang memiliki link"</u>.
-                  </div>
+                  <ImageUploadField
+                    label="Foto Sampul / Cover Artikel (Opsional)"
+                    value={formData.image || formData.coverImage || ''}
+                    onChange={(val) => setFormData({ ...formData, image: val, coverImage: val })}
+                    placeholder="Upload berkas dari komputer/HP atau tempel tautan gambar/Google Drive..."
+                    tip="Mendukung upload berkas gambar langsung, link Google Drive Foto, atau URL gambar publik."
+                  />
                 </>
               )}
 
@@ -1987,6 +2073,15 @@ export default function Admin() {
                       placeholder="Keterangan agenda..."
                     />
                   </div>
+
+                  <ImageUploadField
+                    label="Poster / Pamflet Agenda (Opsional)"
+                    value={formData.image || formData.coverImage || ''}
+                    onChange={(val) => setFormData({ ...formData, image: val, coverImage: val })}
+                    placeholder="Pilih berkas pamflet dari komputer atau tempel URL gambar..."
+                    tip="Poster akan ditampilkan pada kartu agenda dan detail informasi kajian."
+                    aspectRatioHint="Potret / Bebas"
+                  />
                 </>
               )}
 
@@ -2045,13 +2140,21 @@ export default function Admin() {
                     />
                   </div>
 
+                  <ImageUploadField
+                    label="Foto Sampul Utama Album (Cover)"
+                    value={formData.coverImage || formData.image || ''}
+                    onChange={(val) => setFormData({ ...formData, coverImage: val, image: val })}
+                    placeholder="Pilih foto sampul utama album dari komputer atau tempel URL..."
+                    tip="Foto ini akan menjadi thumbnail depan kartu album di halaman Galeri."
+                  />
+
                   {/* MULTI-MEDIA MANAGER SECTION */}
                   <div className="admin-media-manager-box">
                     <div className="media-manager-header">
                       <div>
                         <h4 className="media-manager-title">📸 Koleksi Foto & Video Kegiatan</h4>
                         <p className="media-manager-sub">
-                          Tambahkan beberapa foto atau video untuk kegiatan ini. Mendukung foto (URL/Unsplash) dan video (Link YouTube atau direct MP4).
+                          Tambahkan beberapa foto atau video untuk kegiatan ini. Anda dapat mengupload langsung berkas foto dari komputer, atau memasukkan link foto/video YouTube.
                         </p>
                       </div>
                       <span className="badge badge-primary">
@@ -2067,7 +2170,7 @@ export default function Admin() {
                           className={`media-type-btn ${newMediaInput.type === 'image' ? 'active' : ''}`}
                           onClick={() => setNewMediaInput({ ...newMediaInput, type: 'image' })}
                         >
-                          <ImageIcon size={14} /> Foto (Drive / Gambar)
+                          <ImageIcon size={14} /> Foto (Drive / Gambar / Upload)
                         </button>
                         <button
                           type="button"
@@ -2117,8 +2220,19 @@ export default function Admin() {
                           onClick={handleAddMediaToAlbum}
                           className="btn btn-primary btn-add-media"
                         >
-                          <Plus size={16} /> Tambah Media
+                          <Plus size={16} /> Tambah via URL
                         </button>
+
+                        <label className="btn btn-gold btn-add-media" style={{ cursor: 'pointer' }}>
+                          <Upload size={15} />
+                          <span>Pilih Berkas Foto</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleDirectFileUploadToAlbum}
+                            style={{ display: 'none' }}
+                          />
+                        </label>
                       </div>
 
                       <div className="admin-drive-tip">
@@ -2256,6 +2370,14 @@ export default function Admin() {
                       />
                     </div>
                   </div>
+
+                  <ImageUploadField
+                    label="Logo atau Foto ROHIS Sekolah (Opsional)"
+                    value={formData.image || formData.logo || ''}
+                    onChange={(val) => setFormData({ ...formData, image: val, logo: val })}
+                    placeholder="Pilih berkas logo sekolah atau tempel tautan gambar..."
+                    tip="Logo atau foto sekolah akan tampil pada kartu sekolah anggota di website."
+                  />
                 </>
               )}
 
@@ -2315,28 +2437,25 @@ export default function Admin() {
                     </div>
                   </div>
 
-                  <div className="form-grid-2">
-                    <div className="form-group">
-                      <label className="form-label">Username Instagram (opsional)</label>
-                      <input
-                        type="text"
-                        className="form-input"
-                        value={formData.instagram || ''}
-                        onChange={(e) => setFormData({ ...formData, instagram: e.target.value.replace(/^@/, '') })}
-                        placeholder="username_ig"
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label className="form-label">URL Foto Profil (opsional)</label>
-                      <input
-                        type="text"
-                        className="form-input"
-                        value={formData.photo || formData.image || ''}
-                        onChange={(e) => setFormData({ ...formData, photo: e.target.value, image: e.target.value })}
-                        placeholder="/foto.jpg atau https://..."
-                      />
-                    </div>
+                  <div className="form-group">
+                    <label className="form-label">Username Instagram (opsional)</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      value={formData.instagram || ''}
+                      onChange={(e) => setFormData({ ...formData, instagram: e.target.value.replace(/^@/, '') })}
+                      placeholder="username_ig (tanpa tanda @)"
+                    />
                   </div>
+
+                  <ImageUploadField
+                    label="Foto Profil Pengurus (Opsional)"
+                    value={formData.photo || formData.image || ''}
+                    onChange={(val) => setFormData({ ...formData, photo: val, image: val })}
+                    placeholder="Upload foto close-up pengurus dari komputer atau tempel URL..."
+                    aspectRatioHint="Pas Foto / Rasio 1:1 atau 3:4"
+                    tip="Foto profil pengurus akan ditampilkan pada bagan struktur organisasi."
+                  />
                 </>
               )}
 
