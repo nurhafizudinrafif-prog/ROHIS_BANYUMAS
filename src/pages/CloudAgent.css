@@ -44,8 +44,8 @@
   background: var(--liquid-glass);
   backdrop-filter: var(--liquid-blur);
   -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.2px solid var(--liquid-border);
-  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
   border-radius: 28px;
   padding: 32px 24px;
   text-align: center;
@@ -233,11 +233,11 @@
   background: var(--liquid-glass);
   backdrop-filter: var(--liquid-blur);
   -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.2px solid var(--liquid-border);
-  border-top: 1.6px solid rgba(255, 255, 255, 0.4);
-  border-radius: 20px;
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  border-radius: 24px;
   padding: 14px 16px;
-  box-shadow: var(--liquid-shadow);
+  box-shadow: var(--liquid-shadow), var(--liquid-inset);
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -343,9 +343,9 @@
   background: var(--liquid-glass);
   backdrop-filter: var(--liquid-blur);
   -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.2px solid var(--liquid-border);
-  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
-  border-radius: 24px;
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  border-radius: 28px;
   padding: 16px;
   box-shadow: var(--liquid-shadow), var(--liquid-inset);
   display: flex;
@@ -539,11 +539,14 @@
 /* ── Live Terminal Console ── */
 .terminal-card {
   width: 100%;
-  background: rgba(2, 9, 12, 0.95);
-  border: 1.2px solid rgba(0, 255, 200, 0.25);
-  border-radius: 20px;
+  background: var(--liquid-glass);
+  backdrop-filter: var(--liquid-blur);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  border-radius: 28px;
   overflow: hidden;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.8);
+  box-shadow: var(--liquid-shadow), var(--liquid-inset);
   box-sizing: border-box;
 }
 

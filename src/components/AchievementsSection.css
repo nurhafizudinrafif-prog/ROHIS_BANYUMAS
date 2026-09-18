@@ -19,9 +19,9 @@
   background: var(--liquid-glass);
   backdrop-filter: var(--liquid-blur);
   -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.2px solid var(--liquid-border);
-  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
-  border-radius: var(--radius-xl);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  border-radius: 28px;
   box-shadow: var(--liquid-shadow), var(--liquid-inset);
 }
 
@@ -88,9 +88,9 @@
   background: var(--liquid-glass);
   backdrop-filter: var(--liquid-blur);
   -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.2px solid var(--liquid-border);
-  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
-  border-radius: var(--radius-xl);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  border-radius: 28px;
   padding: var(--space-xl);
   box-shadow: var(--liquid-shadow), var(--liquid-inset);
   transition: transform var(--motion-medium), border-color var(--motion-medium), box-shadow var(--motion-medium), background var(--motion-medium);
@@ -98,14 +98,14 @@
 }
 
 .achievement-card:hover {
-  transform: translateY(-3px) scale(1.008);
+  transform: translateY(-4px) scale(1.01);
   background: var(--liquid-glass-hover);
   box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
   border-color: var(--liquid-border-hover);
-  border-top-color: rgba(255, 255, 255, 0.85);
+  border-top-color: rgba(255, 255, 255, 0.90);
 }
 
-/* Rank Distinction — Subtle metallic cues on Light Surface */
+/* Rank Distinction — Subtle metallic cues */
 .achievement-card.rank-gold {
   border-color: rgba(185, 154, 94, 0.35);
 }
@@ -114,7 +114,8 @@
 }
 .achievement-card.rank-gold:hover {
   border-color: rgba(185, 154, 94, 0.6);
-  box-shadow: 0 14px 34px rgba(185, 154, 94, 0.12), 0 4px 12px rgba(13, 59, 46, 0.04);
+  border-top-color: rgba(255, 255, 255, 0.90);
+  box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
 }
 
 .achievement-card.rank-silver {
@@ -125,7 +126,8 @@
 }
 .achievement-card.rank-silver:hover {
   border-color: rgba(97, 112, 106, 0.45);
-  box-shadow: 0 14px 32px rgba(13, 59, 46, 0.08);
+  border-top-color: rgba(255, 255, 255, 0.90);
+  box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
 }
 
 .achievement-card.rank-bronze {
@@ -136,7 +138,8 @@
 }
 .achievement-card.rank-bronze:hover {
   border-color: rgba(184, 126, 82, 0.5);
-  box-shadow: 0 14px 32px rgba(13, 59, 46, 0.08);
+  border-top-color: rgba(255, 255, 255, 0.90);
+  box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
 }
 
 .achievement-card.rank-special {

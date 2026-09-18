@@ -14,9 +14,9 @@
   background: var(--liquid-glass);
   backdrop-filter: var(--liquid-blur);
   -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.2px solid var(--liquid-border);
-  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
-  border-radius: var(--radius-2xl);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  border-radius: 28px;
   box-shadow: var(--liquid-shadow), var(--liquid-inset);
 }
 

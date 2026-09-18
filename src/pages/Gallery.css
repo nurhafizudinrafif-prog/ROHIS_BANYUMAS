@@ -15,19 +15,22 @@
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  border-radius: var(--radius-lg);
-  background: var(--glass-l2-bg);
-  backdrop-filter: var(--glass-l2-blur);
-  -webkit-backdrop-filter: var(--glass-l2-blur);
-  border: 1px solid var(--glass-l2-border);
-  box-shadow: var(--glass-l2-shadow);
+  border-radius: 28px;
+  background: var(--liquid-glass);
+  backdrop-filter: var(--liquid-blur);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  box-shadow: var(--liquid-shadow), var(--liquid-inset);
   transition: all 0.35s var(--ease-out);
 }
 
 .gallery-item:hover {
-  transform: translateY(-4px) scale(1.008);
-  box-shadow: var(--glass-l3-shadow);
-  border-color: var(--color-border-hover);
+  transform: translateY(-4px) scale(1.01);
+  background: var(--liquid-glass-hover);
+  box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
+  border-color: var(--liquid-border-hover);
+  border-top-color: rgba(255, 255, 255, 0.90);
 }
 
 
@@ -219,10 +222,13 @@
   position: relative;
   width: min(96vw, 1100px);
   max-height: 94vh;
-  background: rgba(6, 23, 19, 0.98);
-  border: 1px solid rgba(25, 199, 154, 0.25);
-  border-radius: var(--radius-xl);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(25, 199, 154, 0.12);
+  background: var(--liquid-glass);
+  backdrop-filter: var(--liquid-blur);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  border-radius: 28px;
+  box-shadow: var(--liquid-shadow), var(--liquid-inset);
   display: flex;
   flex-direction: column;
   overflow: hidden;

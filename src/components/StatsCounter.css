@@ -90,77 +90,78 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: var(--space-xl) var(--space-lg);
+  padding: 32px 22px 28px;
   background: var(--liquid-glass);
   backdrop-filter: var(--liquid-blur);
   -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.2px solid var(--liquid-border);
-  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
-  border-radius: var(--radius-xl);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  border-radius: 28px;
   box-shadow: var(--liquid-shadow), var(--liquid-inset);
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
 }
 
 .stat-glass-card:hover {
-  transform: translateY(-4px) scale(1.01);
+  transform: translateY(-5px) scale(1.01);
   border-color: var(--liquid-border-hover);
-  border-top-color: rgba(255, 255, 255, 0.85);
+  border-top-color: rgba(255, 255, 255, 0.90);
   background: var(--liquid-glass-hover);
   box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
 }
 
-/* ── Icon Box ── */
+/* ── Icon Box (Volumetric Glowing Squircles matching reference) ── */
 .stat-glass-icon-box {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 52px;
   height: 52px;
-  border-radius: var(--radius-md);
-  margin-bottom: var(--space-md);
-  background: radial-gradient(circle at 35% 25%, rgba(0, 255, 200, 0.25) 0%, rgba(2, 9, 11, 0.6) 100%);
-  color: #00F0CF;
-  border: 1px solid rgba(0, 255, 200, 0.35);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
+  border-radius: 18px;
+  margin-bottom: 20px;
   transition: transform 0.25s ease;
 }
 
 .stat-glass-card:hover .stat-glass-icon-box {
-  transform: scale(1.08);
+  transform: scale(1.10);
 }
 
+/* 1. Green / Emerald (Sekolah) */
 .stat-green .stat-glass-icon-box {
-  background: radial-gradient(circle at 35% 25%, rgba(0, 255, 200, 0.3) 0%, rgba(2, 9, 11, 0.6) 100%);
+  background: radial-gradient(circle at 35% 30%, rgba(0, 240, 207, 0.22) 0%, rgba(2, 20, 18, 0.85) 100%);
   color: #00F0CF;
-  border-color: rgba(0, 255, 200, 0.4);
-  box-shadow: 0 0 16px rgba(0, 255, 200, 0.25);
+  border: 1.2px solid rgba(0, 240, 207, 0.45);
+  box-shadow: 0 0 20px rgba(0, 240, 207, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
 }
 
+/* 2. Cyan (Anggota Aktif) */
 .stat-cyan .stat-glass-icon-box {
-  background: radial-gradient(circle at 35% 25%, rgba(77, 215, 232, 0.3) 0%, rgba(2, 9, 11, 0.6) 100%);
-  color: #4DD7E8;
-  border-color: rgba(77, 215, 232, 0.4);
-  box-shadow: 0 0 16px rgba(77, 215, 232, 0.25);
+  background: radial-gradient(circle at 35% 30%, rgba(56, 225, 255, 0.22) 0%, rgba(2, 20, 24, 0.85) 100%);
+  color: #38E1FF;
+  border: 1.2px solid rgba(56, 225, 255, 0.45);
+  box-shadow: 0 0 20px rgba(56, 225, 255, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
 }
 
+/* 3. Gold / Amber (Event Besar) */
 .stat-gold .stat-glass-icon-box {
-  background: radial-gradient(circle at 35% 25%, rgba(245, 208, 118, 0.3) 0%, rgba(2, 9, 11, 0.6) 100%);
-  color: #F5D076;
-  border-color: rgba(245, 208, 118, 0.4);
-  box-shadow: 0 0 16px rgba(245, 208, 118, 0.25);
+  background: radial-gradient(circle at 35% 30%, rgba(255, 208, 102, 0.22) 0%, rgba(26, 20, 3, 0.85) 100%);
+  color: #FFD066;
+  border: 1.2px solid rgba(255, 208, 102, 0.45);
+  box-shadow: 0 0 20px rgba(255, 208, 102, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
 }
 
+/* 4. Purple / Lavender (Tahun Berdiri) */
 .stat-purple .stat-glass-icon-box {
-  background: radial-gradient(circle at 35% 25%, rgba(167, 139, 250, 0.3) 0%, rgba(2, 9, 11, 0.6) 100%);
-  color: #C4B5FD;
-  border-color: rgba(167, 139, 250, 0.4);
-  box-shadow: 0 0 16px rgba(167, 139, 250, 0.25);
+  background: radial-gradient(circle at 35% 30%, rgba(192, 168, 255, 0.22) 0%, rgba(20, 10, 30, 0.85) 100%);
+  color: #C0A8FF;
+  border: 1.2px solid rgba(192, 168, 255, 0.45);
+  box-shadow: 0 0 20px rgba(192, 168, 255, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
 }
 
 /* ── Value & Label ── */
 .stat-value {
   font-family: var(--font-heading);
-  font-size: 2.25rem;
+  font-size: 2.35rem;
   font-weight: 800;
   color: #FFFFFF;
   line-height: 1.15;
@@ -170,10 +171,33 @@
 }
 
 .stat-label {
-  font-size: 0.86rem;
-  color: rgba(220, 240, 235, 0.75);
+  font-size: 0.88rem;
+  color: rgba(220, 240, 235, 0.78);
   font-weight: 500;
   line-height: 1.4;
+  max-width: 200px;
+}
+
+/* ── Bottom Luminous Diamond Accent (Matching Reference Exactly) ── */
+.stat-diamond-accent {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-diamond-accent .diamond-line {
+  display: none;
+}
+
+.stat-diamond-accent .diamond-dot {
+  width: 6.5px;
+  height: 6.5px;
+  background: rgba(255, 255, 255, 0.9);
+  transform: rotate(45deg);
+  display: inline-block;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 0 0 16px rgba(0, 240, 207, 0.4);
+  border-radius: 1px;
 }
 
 /* ── Responsive ── */

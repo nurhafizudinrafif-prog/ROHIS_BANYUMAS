@@ -73,9 +73,9 @@
   background: var(--liquid-glass);
   backdrop-filter: var(--liquid-blur);
   -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.2px solid var(--liquid-border);
-  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
-  border-radius: var(--radius-xl);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  border-radius: 28px;
   padding: 16px 24px;
   box-shadow: var(--liquid-shadow), var(--liquid-inset);
   display: flex;
@@ -122,7 +122,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-radius: var(--radius-2xl);
+  border-radius: 28px;
   min-width: 0;
   width: 100%;
   max-width: 100%;
@@ -138,15 +138,15 @@
 .pillar-featured-icon {
   width: 58px;
   height: 58px;
-  border-radius: var(--radius-lg);
-  background: radial-gradient(circle at 35% 25%, rgba(0, 255, 200, 0.25) 0%, rgba(0, 221, 184, 0.15) 50%, rgba(2, 9, 11, 0.6) 100%);
-  border: 1px solid rgba(0, 255, 200, 0.38);
+  border-radius: 18px;
+  background: radial-gradient(circle at 35% 30%, rgba(0, 240, 207, 0.22) 0%, rgba(2, 20, 18, 0.85) 100%);
+  border: 1.2px solid rgba(0, 240, 207, 0.45);
   color: #00F0CF;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 4px 18px rgba(0, 255, 210, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 20px rgba(0, 240, 207, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
 }
 
 .pillar-featured-meta {
@@ -236,29 +236,24 @@
   gap: 16px;
   cursor: pointer;
   text-align: left;
-  border-radius: 20px !important;
+  border-radius: 22px !important;
   min-width: 0;
   max-width: 100%;
 }
 
 .pillar-supporting-item:hover {
-  transform: translateY(-3px) scale(1.01);
+  transform: translateY(-4px) scale(1.01);
   background: var(--liquid-glass-hover) !important;
   border-color: var(--liquid-border-hover) !important;
-  border-top-color: rgba(255, 255, 255, 0.85) !important;
+  border-top-color: rgba(255, 255, 255, 0.90) !important;
   box-shadow: var(--liquid-shadow-hover), var(--liquid-inset) !important;
 }
 
 .pillar-supporting-item.active {
   border-color: #00F0CF !important;
   border-top-color: #FFFFFF !important;
-  background: linear-gradient(
-    135deg,
-    rgba(0, 255, 200, 0.16) 0%,
-    rgba(4, 26, 32, 0.40) 45%,
-    rgba(2, 12, 16, 0.62) 100%
-  ) !important;
-  box-shadow: 0 16px 45px -6px rgba(0, 0, 0, 0.85), 0 0 30px rgba(0, 240, 207, 0.28), var(--liquid-inset) !important;
+  background: var(--liquid-glass-hover) !important;
+  box-shadow: var(--liquid-shadow-hover), var(--liquid-inset) !important;
 }
 
 .pillar-supporting-icon {
@@ -325,9 +320,9 @@
   background: var(--liquid-glass);
   backdrop-filter: var(--liquid-blur);
   -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.2px solid var(--liquid-border);
-  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
-  border-radius: var(--radius-2xl);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  border-radius: 28px;
   padding: var(--space-xl);
   box-shadow: var(--liquid-shadow), var(--liquid-inset);
   overflow: hidden;
@@ -419,9 +414,9 @@
   background: var(--liquid-glass);
   backdrop-filter: var(--liquid-blur);
   -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.2px solid var(--liquid-border);
-  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
-  border-radius: var(--radius-2xl);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  border-radius: 28px;
   padding: var(--space-2xl);
   box-shadow: var(--liquid-shadow), var(--liquid-inset);
   display: grid;
@@ -528,9 +523,9 @@
   background: var(--liquid-glass);
   backdrop-filter: var(--liquid-blur);
   -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.2px solid var(--liquid-border);
-  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
-  border-radius: var(--radius-2xl);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  border-radius: 28px;
   overflow: hidden;
   box-shadow: var(--liquid-shadow), var(--liquid-inset);
   display: flex;
@@ -541,7 +536,7 @@
 .article-featured-card:hover {
   transform: translateY(-4px) scale(1.01);
   border-color: var(--liquid-border-hover);
-  border-top-color: rgba(255, 255, 255, 0.85);
+  border-top-color: rgba(255, 255, 255, 0.90);
   background: var(--liquid-glass-hover);
   box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
 }
@@ -623,9 +618,9 @@
   background: var(--liquid-glass);
   backdrop-filter: var(--liquid-blur);
   -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.2px solid var(--liquid-border);
-  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
-  border-radius: var(--radius-xl);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  border-radius: 24px;
   padding: 14px;
   box-shadow: var(--liquid-shadow), var(--liquid-inset);
   display: flex;
@@ -636,9 +631,9 @@
 }
 
 .article-supporting-item:hover {
-  transform: translateY(-3px) scale(1.01);
+  transform: translateY(-4px) scale(1.01);
   border-color: var(--liquid-border-hover);
-  border-top-color: rgba(255, 255, 255, 0.85);
+  border-top-color: rgba(255, 255, 255, 0.90);
   background: var(--liquid-glass-hover);
   box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
 }
@@ -705,9 +700,9 @@
   background: var(--liquid-glass);
   backdrop-filter: var(--liquid-blur);
   -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.2px solid var(--liquid-border);
-  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
-  border-radius: var(--radius-xl);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  border-radius: 24px;
   padding: 18px 16px;
   display: flex;
   align-items: center;
@@ -718,9 +713,9 @@
 }
 
 .network-school-card:hover {
-  transform: translateY(-3px) scale(1.01);
+  transform: translateY(-4px) scale(1.01);
   border-color: var(--liquid-border-hover);
-  border-top-color: rgba(255, 255, 255, 0.85);
+  border-top-color: rgba(255, 255, 255, 0.90);
   background: var(--liquid-glass-hover);
   box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
 }
@@ -761,9 +756,9 @@
   background: var(--liquid-glass);
   backdrop-filter: var(--liquid-blur);
   -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.2px solid var(--liquid-border);
-  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
-  border-radius: var(--radius-2xl);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  border-radius: 28px;
   box-shadow: var(--liquid-shadow), var(--liquid-inset);
   position: relative;
   overflow: hidden;

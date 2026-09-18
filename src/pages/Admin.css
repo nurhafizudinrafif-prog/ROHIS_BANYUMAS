@@ -20,25 +20,13 @@
 
 .admin-login-card {
   padding: var(--space-2xl);
-  background:
-    linear-gradient(
-      135deg,
-      rgba(0, 255, 200, 0.04) 0%,
-      rgba(4, 18, 22, 0.65) 45%,
-      rgba(2, 9, 11, 0.80) 100%
-    );
-  backdrop-filter: blur(14px) saturate(150%);
-  -webkit-backdrop-filter: blur(14px) saturate(150%);
-  border: 1px solid rgba(0, 255, 200, 0.14);
-  border-top: 1.5px solid rgba(0, 255, 200, 0.35);
-  border-bottom: 1px solid rgba(0, 255, 180, 0.10);
-  border-radius: var(--radius-xl);
-  box-shadow:
-    0 35px 80px -10px rgba(0, 0, 0, 0.85),
-    0 16px 36px -4px rgba(0, 0, 0, 0.55),
-    inset 0 1.2px 0 0 rgba(0, 255, 200, 0.25),
-    inset 0 -1px 0 0 rgba(0, 255, 180, 0.10),
-    inset 0 0 24px 0 rgba(0, 0, 0, 0.45);
+  background: var(--liquid-glass);
+  backdrop-filter: var(--liquid-blur);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  border-radius: 28px;
+  box-shadow: var(--liquid-shadow), var(--liquid-inset);
   position: relative;
   overflow: hidden;
 }
@@ -467,30 +455,14 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  border-radius: var(--radius-lg);
-  background:
-    linear-gradient(
-      135deg,
-      rgba(0, 255, 200, 0.04) 0%,
-      rgba(4, 18, 22, 0.65) 45%,
-      rgba(2, 9, 11, 0.80) 100%
-    );
-  backdrop-filter: blur(14px) saturate(150%);
-  -webkit-backdrop-filter: blur(14px) saturate(150%);
-  border: 1px solid rgba(0, 255, 200, 0.14);
-  border-top: 1.5px solid rgba(0, 255, 200, 0.35);
-  border-bottom: 1px solid rgba(0, 255, 180, 0.10);
-  box-shadow:
-    0 24px 60px -8px rgba(0, 0, 0, 0.80),
-    0 8px 24px -4px rgba(0, 0, 0, 0.55),
-    inset 0 1.2px 0 0 rgba(0, 255, 200, 0.25),
-    inset 0 -1px 0 0 rgba(0, 255, 180, 0.10),
-    inset 0 0 20px 0 rgba(0, 0, 0, 0.40);
-  transition:
-    transform 400ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    box-shadow 400ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    border-color 350ms ease;
-  will-change: transform, box-shadow;
+  border-radius: 28px;
+  background: var(--liquid-glass);
+  backdrop-filter: var(--liquid-blur);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  box-shadow: var(--liquid-shadow), var(--liquid-inset);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .admin-stat-card:hover {
@@ -1027,27 +999,14 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background:
-    linear-gradient(
-      135deg,
-      rgba(0, 255, 200, 0.04) 0%,
-      rgba(4, 18, 22, 0.65) 45%,
-      rgba(2, 9, 11, 0.80) 100%
-    );
-  backdrop-filter: blur(12px) saturate(160%);
-  -webkit-backdrop-filter: blur(12px) saturate(160%);
-  border: 1.5px solid rgba(0, 255, 200, 0.18);
-  border-top: 1.5px solid rgba(0, 255, 200, 0.35);
-  border-radius: var(--radius-xl);
-  box-shadow:
-    0 20px 50px -8px rgba(0, 0, 0, 0.75),
-    0 6px 18px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(0, 255, 200, 0.15),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.35);
-  transition:
-    transform 400ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    box-shadow 400ms cubic-bezier(0.2, 0.8, 0.2, 1),
-    border-color 350ms ease;
+  background: var(--liquid-glass);
+  backdrop-filter: var(--liquid-blur);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  border-radius: 28px;
+  box-shadow: var(--liquid-shadow), var(--liquid-inset);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
 }
 
@@ -1172,25 +1131,13 @@
 
 .settings-card {
   padding: var(--space-xl);
-  background:
-    linear-gradient(
-      135deg,
-      rgba(0, 255, 200, 0.04) 0%,
-      rgba(4, 18, 22, 0.65) 45%,
-      rgba(2, 9, 11, 0.80) 100%
-    );
-  backdrop-filter: blur(14px) saturate(150%);
-  -webkit-backdrop-filter: blur(14px) saturate(150%);
-  border: 1px solid rgba(0, 255, 200, 0.14);
-  border-top: 1.5px solid rgba(0, 255, 200, 0.35);
-  border-bottom: 1px solid rgba(0, 255, 180, 0.10);
-  border-radius: var(--radius-xl);
-  box-shadow:
-    0 24px 60px -8px rgba(0, 0, 0, 0.80),
-    0 8px 24px -4px rgba(0, 0, 0, 0.55),
-    inset 0 1.2px 0 0 rgba(0, 255, 200, 0.25),
-    inset 0 -1px 0 0 rgba(0, 255, 180, 0.10),
-    inset 0 0 20px 0 rgba(0, 0, 0, 0.40);
+  background: var(--liquid-glass);
+  backdrop-filter: var(--liquid-blur);
+  -webkit-backdrop-filter: var(--liquid-blur);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  border-radius: 28px;
+  box-shadow: var(--liquid-shadow), var(--liquid-inset);
   position: relative;
   overflow: hidden;
 }

@@ -10,19 +10,19 @@
   background: var(--liquid-glass);
   backdrop-filter: var(--liquid-blur);
   -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.2px solid var(--liquid-border);
-  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
-  border-radius: var(--radius-xl);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  border-radius: 28px;
   box-shadow: var(--liquid-shadow), var(--liquid-inset);
   transition: all var(--transition-base);
 }
 
 .school-card:hover {
-  transform: translateY(-3px) scale(1.008);
+  transform: translateY(-4px) scale(1.01);
   background: var(--liquid-glass-hover);
   box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
   border-color: var(--liquid-border-hover);
-  border-top-color: rgba(255, 255, 255, 0.85);
+  border-top-color: rgba(255, 255, 255, 0.90);
 }
 
 .school-card-name {

@@ -26,9 +26,9 @@
   background: var(--liquid-glass);
   backdrop-filter: var(--liquid-blur);
   -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.2px solid var(--liquid-border);
-  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
-  border-radius: var(--radius-xl);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  border-radius: 28px;
   box-shadow: var(--liquid-shadow), var(--liquid-inset);
   cursor: pointer;
   user-select: none;
@@ -42,7 +42,7 @@
 .division-card:hover {
   transform: translateY(-4px) scale(1.01);
   border-color: var(--div-accent, var(--liquid-border-hover));
-  border-top-color: rgba(255, 255, 255, 0.85);
+  border-top-color: rgba(255, 255, 255, 0.90);
   background: var(--liquid-glass-hover);
   box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
 }
@@ -51,7 +51,7 @@
   border-color: var(--div-accent, #00F0CF);
   border-top-color: #FFFFFF;
   background: var(--liquid-glass-hover);
-  box-shadow: 0 16px 45px -6px rgba(0, 0, 0, 0.85), 0 0 28px rgba(0, 240, 207, 0.3), var(--liquid-inset);
+  box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
   transform: translateY(-2px);
 }
 
@@ -210,9 +210,9 @@
   background: var(--liquid-glass);
   backdrop-filter: var(--liquid-blur);
   -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.2px solid var(--liquid-border);
-  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
-  border-radius: var(--radius-xl);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  border-radius: 28px;
   box-shadow: var(--liquid-shadow), var(--liquid-inset);
   padding: var(--space-2xl);
   margin-bottom: var(--space-3xl);

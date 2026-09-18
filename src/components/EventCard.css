@@ -11,19 +11,19 @@
   background: var(--liquid-glass);
   backdrop-filter: var(--liquid-blur);
   -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.2px solid var(--liquid-border);
-  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
-  border-radius: var(--radius-xl);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  border-radius: 28px;
   box-shadow: var(--liquid-shadow), var(--liquid-inset);
   transition: all var(--transition-base);
 }
 
 .event-card:hover {
-  transform: translateY(-3px) scale(1.008);
+  transform: translateY(-4px) scale(1.01);
   background: var(--liquid-glass-hover);
   box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
   border-color: var(--liquid-border-hover);
-  border-top-color: rgba(255, 255, 255, 0.85);
+  border-top-color: rgba(255, 255, 255, 0.90);
 }
 
 /* Date Box */
@@ -32,12 +32,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 62px;
-  padding: 10px 8px;
-  background: rgba(57, 185, 154, 0.12);
-  border: 1px solid rgba(57, 185, 154, 0.28);
-  border-radius: var(--radius-sm);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.30), inset 0 1px 1px rgba(255, 255, 255, 0.12);
+  min-width: 66px;
+  padding: 12px 10px;
+  background: radial-gradient(circle at 35% 30%, rgba(0, 240, 207, 0.22) 0%, rgba(2, 20, 18, 0.85) 100%);
+  border: 1.2px solid rgba(0, 240, 207, 0.45);
+  border-radius: 18px;
+  box-shadow: 0 0 20px rgba(0, 240, 207, 0.30), inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
   flex-shrink: 0;
 }
 

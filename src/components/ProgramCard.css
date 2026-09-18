@@ -11,9 +11,9 @@
   background: var(--liquid-glass);
   backdrop-filter: var(--liquid-blur);
   -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.2px solid var(--liquid-border);
-  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
-  border-radius: var(--radius-xl);
+  border: 1.3px solid var(--liquid-border);
+  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
+  border-radius: 28px;
   box-shadow: var(--liquid-shadow), var(--liquid-inset);
   cursor: pointer;
   transition: all var(--transition-base);
@@ -23,21 +23,16 @@
 .program-glass-card:hover {
   box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
   border-color: var(--liquid-border-hover);
-  border-top-color: rgba(255, 255, 255, 0.85);
+  border-top-color: rgba(255, 255, 255, 0.90);
   background: var(--liquid-glass-hover);
-  transform: translateY(-3px) scale(1.006);
+  transform: translateY(-4px) scale(1.01);
 }
 
 .program-glass-card.is-expanded {
   border-color: #00F0CF;
   border-top-color: #FFFFFF;
-  background: linear-gradient(
-    135deg,
-    rgba(0, 255, 200, 0.16) 0%,
-    rgba(4, 26, 32, 0.45) 45%,
-    rgba(2, 12, 16, 0.65) 100%
-  );
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.85), 0 0 28px rgba(0, 240, 207, 0.28), var(--liquid-inset);
+  background: var(--liquid-glass-hover);
+  box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
 }
 
 /* ── Icon Box ── */
@@ -49,13 +44,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
-  border-radius: var(--radius-sm);
-  background: rgba(57, 185, 154, 0.12);
-  color: var(--color-emerald-light);
-  border: 1px solid rgba(57, 185, 154, 0.28);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.30), inset 0 1px 1px rgba(255, 255, 255, 0.12);
+  width: 52px;
+  height: 52px;
+  border-radius: 18px;
+  background: radial-gradient(circle at 35% 30%, rgba(0, 240, 207, 0.22) 0%, rgba(2, 20, 18, 0.85) 100%);
+  color: #00F0CF;
+  border: 1.2px solid rgba(0, 240, 207, 0.45);
+  box-shadow: 0 0 20px rgba(0, 240, 207, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
   transition: all 0.25s ease;
 }
 
