@@ -1,0 +1,161 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 560" width="500" height="560">
+  <defs>
+    <!-- Metallic Gold Gradients -->
+    <linearGradient id="goldLinear" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F3E7C4" />
+      <stop offset="25%" stop-color="#DFBF73" />
+      <stop offset="50%" stop-color="#C8A85B" />
+      <stop offset="75%" stop-color="#EAD59A" />
+      <stop offset="100%" stop-color="#9E7F35" />
+    </linearGradient>
+
+    <linearGradient id="goldGleam" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.6"/>
+      <stop offset="30%" stop-color="#DFBF73" />
+      <stop offset="70%" stop-color="#C8A85B" />
+      <stop offset="100%" stop-color="#846826" />
+    </linearGradient>
+
+    <!-- Deep Pine Field Gradient -->
+    <radialGradient id="pineShield" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#123B2A" />
+      <stop offset="45%" stop-color="#0B2419" />
+      <stop offset="85%" stop-color="#06160F" />
+      <stop offset="100%" stop-color="#030C08" />
+    </radialGradient>
+
+    <radialGradient id="innerAura" cx="50%" cy="42%" r="45%">
+      <stop offset="0%" stop-color="#DFBF73" stop-opacity="0.18" />
+      <stop offset="60%" stop-color="#C8A85B" stop-opacity="0.05" />
+      <stop offset="100%" stop-color="#07140E" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Drop Shadow Filters -->
+    <filter id="crestShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.65" />
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#C8A85B" flood-opacity="0.25" />
+    </filter>
+
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#DFBF73" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <!-- Main Pentagon Shield (Segi Lima) -->
+  <g filter="url(#crestShadow)">
+    <!-- Outer Shield Frame -->
+    <polygon points="250,22 476,170 390,500 110,500 24,170" 
+             fill="url(#goldLinear)" 
+             stroke="#FFFFFF" stroke-width="1.2" stroke-opacity="0.4" />
+
+    <!-- Outer Hairline Gap -->
+    <polygon points="250,32 464,174 382,490 118,490 36,174" 
+             fill="#05120B" />
+
+    <!-- Inner Shield Field with Rich Deep Pine Gradient -->
+    <polygon points="250,40 454,178 376,482 124,482 46,178" 
+             fill="url(#pineShield)" 
+             stroke="url(#goldLinear)" stroke-width="2.5" />
+
+    <!-- Subtle Golden Light Aura behind Dome -->
+    <circle cx="250" cy="240" r="160" fill="url(#innerAura)" />
+
+    <!-- Delicate Geometric Watermark -->
+    <g opacity="0.08" stroke="url(#goldLinear)" stroke-width="1" fill="none">
+      <circle cx="250" cy="220" r="140" />
+      <circle cx="250" cy="220" r="100" />
+      <polygon points="250,80 349,151 389,267 312,357 188,357 111,267 151,151" />
+      <polygon points="250,360 151,289 111,173 188,83 312,83 389,173 349,289" />
+    </g>
+
+    <!-- 5 Arched Golden Stars (Pancasila & 5 Rukun Islam) -->
+    <g fill="url(#goldGleam)" filter="url(#goldGlow)">
+      <!-- Star 1 (Far Left) -->
+      <path d="M 105,190 L 111,174 L 118,189 L 102,179 L 121,179 Z" transform="rotate(-28 112 182)" />
+      <!-- Star 2 (Mid Left) -->
+      <path d="M 168,138 L 175,120 L 183,137 L 165,126 L 187,126 Z" transform="rotate(-14 176 130)" />
+      <!-- Star 3 (Top Center Apex - Largest) -->
+      <path d="M 250,72 L 259,100 L 289,100 L 265,118 L 274,146 L 250,128 L 226,146 L 235,118 L 211,100 L 241,100 Z" />
+      <!-- Star 4 (Mid Right) -->
+      <path d="M 332,138 L 339,120 L 347,137 L 329,126 L 351,126 Z" transform="rotate(14 340 130)" />
+      <!-- Star 5 (Far Right) -->
+      <path d="M 395,190 L 401,174 L 408,189 L 392,179 L 411,179 Z" transform="rotate(28 402 182)" />
+    </g>
+
+    <!-- Calligraphic Arabic Arc (Rohani Islam) -->
+    <path d="M 130,225 C 160,200 200,190 250,190 C 300,190 340,200 370,225" 
+          fill="none" stroke="url(#goldLinear)" stroke-width="2.5" stroke-linecap="round" opacity="0.85" />
+    
+    <!-- Stylized Arabic Calligraphy Lettering Symbol: "رُوحَانِي إِسْلَام" -->
+    <g fill="none" stroke="url(#goldGleam)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.95" filter="url(#goldGlow)">
+      <!-- Calligraphic flourishes across top arch -->
+      <path d="M 148,220 Q 165,202 185,214 Q 200,205 220,212" />
+      <path d="M 226,206 Q 235,196 250,198 Q 265,196 274,206" />
+      <path d="M 280,212 Q 300,205 315,214 Q 335,202 352,220" />
+      <!-- Small decorative diacritic diamonds -->
+      <polygon points="172,198 175,194 178,198 175,202" fill="url(#goldLinear)" stroke="none" />
+      <polygon points="250,186 253,182 256,186 253,190" fill="url(#goldLinear)" stroke="none" />
+      <polygon points="328,198 331,194 334,198 331,202" fill="url(#goldLinear)" stroke="none" />
+    </g>
+
+    <!-- Architectural Mosque Dome (Kubah Masjid Agung Banyumas) -->
+    <g>
+      <!-- Crescent & Spire Finial (Kubah Peak) -->
+      <path d="M 250,154 L 250,182" stroke="url(#goldLinear)" stroke-width="3.5" stroke-linecap="round" />
+      <path d="M 250,162 A 9,9 0 1,0 258,150 A 7.5,7.5 0 1,1 250,162 Z" fill="url(#goldLinear)" />
+
+      <!-- Outer Dome Contour -->
+      <path d="M 125,325 C 125,270 175,215 250,182 C 325,215 375,270 375,325" 
+            fill="none" stroke="url(#goldLinear)" stroke-width="4.5" stroke-linecap="round" filter="url(#goldGlow)" />
+      
+      <!-- Inner Dome Hairline Layer -->
+      <path d="M 137,325 C 137,276 182,226 250,196 C 318,226 363,276 363,325" 
+            fill="none" stroke="url(#goldLinear)" stroke-width="1.5" opacity="0.6" stroke-dasharray="6,4" />
+
+      <!-- Dome Base Horizon Line -->
+      <line x1="118" y1="325" x2="382" y2="325" stroke="url(#goldLinear)" stroke-width="3" stroke-linecap="round" />
+    </g>
+
+    <!-- Center Wordmark: "ROHIS" in Authoritative Typography -->
+    <g filter="url(#goldGlow)">
+      <!-- Main ROHIS Text -->
+      <text x="250" y="385" 
+            text-anchor="middle" 
+            font-family="'Plus Jakarta Sans', 'Cinzel', 'Trajan Pro', serif" 
+            font-size="62" 
+            font-weight="900" 
+            letter-spacing="6" 
+            fill="url(#goldLinear)">ROHIS</text>
+      <!-- Under-line Accent -->
+      <line x1="170" y1="398" x2="330" y2="398" stroke="url(#goldLinear)" stroke-width="2" stroke-linecap="round" />
+      <circle cx="250" cy="398" r="4" fill="url(#goldLinear)" />
+    </g>
+
+    <!-- Sculpted Golden Ribbon Banner: "KABUPATEN BANYUMAS" -->
+    <g id="ribbonBanner">
+      <!-- Ribbon Back Ends (Fold shadows) -->
+      <path d="M 85,446 L 125,432 L 125,466 L 85,480 L 102,463 Z" fill="#6B521E" />
+      <path d="M 415,446 L 375,432 L 375,466 L 415,480 L 398,463 Z" fill="#6B521E" />
+
+      <!-- Ribbon Main Curved Plate -->
+      <path d="M 116,432 C 180,420 320,420 384,432 C 394,434 400,442 396,452 L 390,470 C 386,478 376,482 368,480 C 310,470 190,470 132,480 C 124,482 114,478 110,470 L 104,452 C 100,442 106,434 116,432 Z" 
+            fill="url(#goldLinear)" 
+            stroke="#FFFFFF" stroke-width="1" stroke-opacity="0.5" 
+            filter="url(#goldGlow)" />
+
+      <!-- Ribbon Inner Inset Line -->
+      <path d="M 124,439 C 184,428 316,428 376,439 L 370,465 C 316,456 184,456 130,465 Z" 
+            fill="#0A2418" 
+            stroke="url(#goldLinear)" stroke-width="1.2" />
+
+      <!-- Banner Typography: "KABUPATEN BANYUMAS" -->
+      <text x="250" y="456" 
+            text-anchor="middle" 
+            font-family="'Plus Jakarta Sans', 'Inter', sans-serif" 
+            font-size="16.5" 
+            font-weight="800" 
+            letter-spacing="3" 
+            fill="url(#goldLinear)">KABUPATEN BANYUMAS</text>
+    </g>
+  </g>
+</svg>

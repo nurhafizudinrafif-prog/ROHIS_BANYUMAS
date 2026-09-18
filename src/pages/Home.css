@@ -137,13 +137,19 @@
   height: 56px;
   border-radius: var(--radius-md);
   background: linear-gradient(135deg, #18583E 0%, #11422E 100%);
-  border: 1px solid rgba(200, 168, 91, 0.32);
-  color: var(--color-gold-light);
+  border: none;
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+.pillar-svg-logo {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
 }
 
 .pillar-featured-meta {
@@ -242,20 +248,25 @@
   width: 44px;
   height: 44px;
   border-radius: var(--radius-md);
-  background: rgba(200, 168, 91, 0.10);
-  border: 1px solid rgba(200, 168, 91, 0.24);
-  color: var(--color-gold-light);
+  background: transparent;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: all 0.25s ease;
+  transition: transform 0.25s ease;
 }
 
+.pillar-supporting-item:hover .pillar-supporting-icon,
 .pillar-supporting-item.active .pillar-supporting-icon {
-  background: linear-gradient(135deg, #18583E 0%, #11422E 100%);
-  color: var(--color-gold-light);
-  border-color: rgba(200, 168, 91, 0.45);
+  transform: scale(1.08);
+}
+
+.pillar-svg-logo-sm {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45));
 }
 
 .pillar-supporting-info {

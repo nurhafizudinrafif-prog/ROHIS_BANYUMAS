@@ -37,6 +37,7 @@ import {
   extractGoogleDriveId,
 } from '../utils/media';
 import logoImg from '../assets/logo.png';
+import RohisLogo from '../components/RohisLogo';
 import './Admin.css';
 
 export default function Admin() {
@@ -475,7 +476,7 @@ export default function Admin() {
             <div className="admin-login-card card">
               <div className="admin-login-header">
                 <div className="admin-login-logo">
-                  <img src={logoImg} alt="Logo ROHIS Kabupaten Banyumas" />
+                  <RohisLogo size={64} showGlow={true} />
                 </div>
                 <span className="badge badge-gold">
                   <Lock size={13} /> Panel Khusus Pengurus
@@ -580,7 +581,7 @@ export default function Admin() {
       <header className="admin-topbar">
         <div className="admin-topbar-left">
           <div className="admin-brand">
-            <img src={logoImg} alt="Logo ROHIS" className="admin-brand-logo" />
+            <RohisLogo size={34} showGlow={true} className="admin-brand-logo" />
             <div>
               <h3>Admin ROKABA CMS</h3>
               <span className="admin-status-badge">

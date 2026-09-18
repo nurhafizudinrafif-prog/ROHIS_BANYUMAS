@@ -52,6 +52,14 @@ const divisionIcons = {
   DANUS: Wallet,
 };
 
+const divisionLogos = {
+  SDM: '/divisi-sdm.svg',
+  Dakwah: '/divisi-dakwah.svg',
+  Jurnalistik: '/divisi-jurnalistik.svg',
+  HUMAS: '/divisi-humas.svg',
+  DANUS: '/divisi-danus.svg',
+};
+
 export default function Home() {
   useScrollAnimation();
   const [selectedItem, setSelectedItem] = useState(null);
@@ -209,7 +217,12 @@ export default function Home() {
               <div>
                 <div className="pillar-featured-header">
                   <div className="pillar-featured-icon">
-                    <ActivePillarIcon size={28} />
+                    <img
+                      src={divisionLogos[activePillar.division] || '/divisi-sdm.svg'}
+                      alt={`Insignia Divisi ${activePillar.division}`}
+                      className="pillar-svg-logo"
+                      loading="lazy"
+                    />
                   </div>
                   <div className="pillar-featured-meta">
                     <span className="pillar-featured-badge">Pilar Utama • Divisi {activePillar.division}</span>
@@ -241,7 +254,6 @@ export default function Home() {
             {/* Right: 4 Supporting Pillars */}
             <div className="pillar-supporting-list">
               {programs.map((program, idx) => {
-                const ItemIcon = divisionIcons[program.division] || UserCheck;
                 const isSelected = idx === featuredPillarIndex;
                 return (
                   <div
@@ -253,7 +265,12 @@ export default function Home() {
                     title="Klik untuk melihat detail divisi ini"
                   >
                     <div className="pillar-supporting-icon">
-                      <ItemIcon size={20} />
+                      <img
+                        src={divisionLogos[program.division] || '/divisi-sdm.svg'}
+                        alt={`Insignia Divisi ${program.division}`}
+                        className="pillar-svg-logo-sm"
+                        loading="lazy"
+                      />
                     </div>
                     <div className="pillar-supporting-info">
                       <span className="pillar-supporting-division">Divisi {program.division}</span>

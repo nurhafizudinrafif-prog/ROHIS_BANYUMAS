@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Search } from 'lucide-react';
 import logoImg from '../assets/logo.png';
+import RohisLogo from './RohisLogo';
 import './Navbar.css';
 
 const navLinks = [
@@ -66,7 +67,7 @@ export default function Navbar() {
         <div className="navbar-inner container">
           {/* Brand */}
           <Link to="/" className="navbar-brand">
-            <img src={logoImg} alt="Logo ROHIS Kabupaten Banyumas" className="navbar-logo-img" />
+            <RohisLogo size={36} showGlow={true} className="navbar-logo-vector" />
             <div className="navbar-brand-text">
               <span className="navbar-brand-name">ROHIS</span>
               <span className="navbar-brand-sub">Kabupaten Banyumas</span>
@@ -116,10 +117,10 @@ export default function Navbar() {
             {/* Sheet Header */}
             <div className="navbar-sheet-header">
               <Link to="/" className="navbar-brand" onClick={() => setIsMobileOpen(false)}>
-                <img src={logoImg} alt="Logo" className="navbar-logo-img" />
+                <RohisLogo size={36} showGlow={true} className="navbar-logo-vector" />
                 <div className="navbar-brand-text">
                   <span className="navbar-brand-name">ROHIS</span>
-                  <span className="navbar-brand-sub">Kab. Banyumas</span>
+                  <span className="navbar-brand-sub">Kabupaten Banyumas</span>
                 </div>
               </Link>
               <button

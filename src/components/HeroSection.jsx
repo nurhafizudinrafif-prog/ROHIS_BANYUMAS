@@ -40,10 +40,25 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Right Column: Documentary Photography Anchor */}
+          {/* Right Column: Cinematic Documentary Photography Anchor */}
           <div className="hero-visual-col animate-hero delay-2">
             <div className="hero-visual-card">
+              {/* Soft Ambient Spotlight Halo */}
+              <div className="hero-ambient-spotlight" />
+
               <div className="hero-image-frame">
+                {/* Viewfinder Reticles */}
+                <div className="hero-viewfinder-reticle top-left" />
+                <div className="hero-viewfinder-reticle top-right" />
+                <div className="hero-viewfinder-reticle bottom-left" />
+                <div className="hero-viewfinder-reticle bottom-right" />
+
+                {/* Top Location Coordinates Pill */}
+                <div className="hero-cinematic-pill">
+                  <span className="hero-rec-dot" />
+                  <span>7.4243° S, 109.2304° E • ARSIP BANYUMAS</span>
+                </div>
+
                 <img
                   src="https://images.unsplash.com/photo-1542816417-0983c9c9ad53?auto=format&fit=crop&w=1200&q=80"
                   alt="Kajian Akbar ROHIS Pelajar Kabupaten Banyumas"
@@ -54,14 +69,14 @@ export default function HeroSection() {
                 <div className="hero-image-overlay" />
               </div>
 
-              {/* Floating Crystal Glass Info Card */}
+              {/* Floating Architectural Info Card */}
               <div className="hero-floating-glass-card">
                 <div className="hero-glass-badge">
                   <span className="hero-glass-dot" />
-                  <span>Dokumentasi Kegiatan</span>
+                  <span>Dokumentasi Resmi</span>
                 </div>
                 <h4 className="hero-glass-title">Kajian Akbar Pelajar Banyumas</h4>
-                <p className="hero-glass-desc">Masjid Agung Baitussalam Purwokerto • Kolaborasi Lintas Sekolah</p>
+                <p className="hero-glass-desc">Masjid Agung Baitussalam Purwokerto • Sinergi Lintas Sekolah</p>
               </div>
             </div>
           </div>

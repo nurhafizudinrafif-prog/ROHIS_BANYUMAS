@@ -23,48 +23,42 @@
   align-items: center;
   text-align: center;
   padding: var(--space-xl) var(--space-lg);
-  background: var(--liquid-glass);
-  backdrop-filter: var(--liquid-blur);
-  -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.3px solid var(--liquid-border);
-  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
-  border-radius: 28px;
-  box-shadow: var(--liquid-shadow), var(--liquid-inset);
+  background: rgba(14, 38, 29, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(200, 168, 91, 0.22);
+  border-top: 1px solid rgba(200, 168, 91, 0.45);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
   cursor: pointer;
   user-select: none;
   overflow: hidden;
-  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.28s ease,
-              background-color 0.28s ease;
+  transition: transform 0.25s var(--ease-out),
+              box-shadow 0.25s var(--ease-out),
+              border-color 0.25s ease,
+              background-color 0.25s ease;
 }
 
 .division-card:hover {
-  transform: translateY(-4px) scale(1.01);
-  border-color: var(--div-accent, var(--liquid-border-hover));
-  border-top-color: rgba(255, 255, 255, 0.90);
-  background: var(--liquid-glass-hover);
-  box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
+  transform: translateY(-3px);
+  border-color: rgba(200, 168, 91, 0.45);
+  background: rgba(19, 48, 37, 0.90);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55);
 }
 
 .division-card.is-active {
-  border-color: var(--div-accent, #00F0CF);
-  border-top-color: #FFFFFF;
-  background: var(--liquid-glass-hover);
-  box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
+  border-color: var(--color-gold);
+  border-top-color: var(--color-gold-light);
+  background: rgba(19, 51, 39, 0.95);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.65), 0 0 16px rgba(200, 168, 91, 0.15);
   transform: translateY(-2px);
-}
-
-.division-card.is-active::before {
-  opacity: 1;
-  height: 4px;
 }
 
 /* ── Division Logo Container ── */
 .division-card-logo-wrap {
   position: relative;
-  width: 88px;
-  height: 88px;
+  width: 90px;
+  height: 90px;
   margin-bottom: var(--space-md);
   display: flex;
   align-items: center;
@@ -74,23 +68,23 @@
 .division-card-logo-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 50%;
-  border: 2px solid color-mix(in srgb, var(--div-accent) 40%, transparent);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
-  background: rgba(8, 26, 20, 0.85);
-  padding: 3px;
+  border: 1.5px solid rgba(200, 168, 91, 0.35);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  background: transparent;
+  padding: 2px;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
 }
 
 .division-card:hover .division-card-logo-img {
   transform: scale(1.06);
-  border-color: var(--div-accent, var(--color-emerald));
+  border-color: var(--color-gold-light);
 }
 
 .division-card.is-active .division-card-logo-img {
   transform: scale(1.06);
-  border-color: var(--div-accent, var(--color-emerald));
+  border-color: var(--color-gold);
 }
 
 .division-card-logo-halo {

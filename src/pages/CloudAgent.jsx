@@ -23,6 +23,7 @@ import {
   Paperclip,
 } from 'lucide-react';
 import logoImg from '../assets/logo.png';
+import RohisLogo from '../components/RohisLogo';
 import './CloudAgent.css';
 
 const PRESETS = [
@@ -365,7 +366,7 @@ export default function CloudAgent() {
         {/* Topbar */}
         <header className="agent-topbar">
           <div className="agent-topbar-brand">
-            <img src={logoImg} alt="ROHIS" className="agent-topbar-logo" />
+            <RohisLogo size={32} showGlow={true} className="agent-topbar-logo" />
             <div className="agent-topbar-text">
               <h1>ROHIS Banyumas</h1>
               <div className="agent-status-pill">
