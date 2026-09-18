@@ -1,6 +1,6 @@
 /* =========================================================
    FLOATING INSTITUTIONAL NAVBAR — ROHIS BANYUMAS
-   Deep Banyumas Pine • Burnished Brass Hairline • Warm Alabaster
+   Warm Ivory Acrylic • Burnished Brass Hairline • Deep Pine Text
    Dignified Presence • Prestigious Official Capsule
    ========================================================= */
 
@@ -9,31 +9,31 @@
   top: 16px;
   left: 50%;
   transform: translateX(-50%);
-  width: min(1240px, calc(100% - 32px));
+  width: min(1220px, calc(100% - 32px));
   height: 64px;
   z-index: 1000;
   display: flex;
   align-items: center;
   border-radius: var(--radius-pill);
-  background: rgba(14, 38, 29, 0.88);
+  background: rgba(251, 249, 245, 0.90);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(200, 168, 91, 0.22);
-  border-top: 1px solid rgba(200, 168, 91, 0.38);
+  border: 1px solid rgba(184, 146, 72, 0.28);
+  border-top: 1px solid rgba(184, 146, 72, 0.45);
   box-shadow:
-    0 16px 36px -8px rgba(0, 0, 0, 0.65),
-    0 2px 6px rgba(0, 0, 0, 0.40);
+    0 10px 30px -4px rgba(28, 38, 32, 0.08),
+    0 2px 8px rgba(28, 38, 32, 0.04);
   padding: 0 1.25rem;
   box-sizing: border-box;
   transition: all var(--transition-base);
 }
 
 .navbar-scrolled {
-  background: rgba(10, 28, 21, 0.96);
-  border-color: rgba(200, 168, 91, 0.32);
+  background: rgba(251, 249, 245, 0.98);
+  border-color: rgba(184, 146, 72, 0.38);
   box-shadow:
-    0 20px 44px -8px rgba(0, 0, 0, 0.80),
-    0 4px 12px rgba(0, 0, 0, 0.50);
+    0 14px 36px -6px rgba(28, 38, 32, 0.12),
+    0 4px 12px rgba(28, 38, 32, 0.06);
 }
 
 .navbar-inner {
@@ -61,19 +61,8 @@
   transition: transform var(--transition-base), filter var(--transition-base);
 }
 
-.navbar-logo-img {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1.5px solid rgba(200, 168, 91, 0.40);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.40);
-}
-
-.navbar-brand:hover .navbar-logo-img,
 .navbar-brand:hover .navbar-logo-vector {
-  transform: scale(1.06);
-  filter: drop-shadow(0 2px 10px rgba(200, 168, 91, 0.40));
+  transform: scale(1.05);
 }
 
 .navbar-brand-text {
@@ -86,13 +75,13 @@
   font-family: var(--font-heading);
   font-weight: 800;
   font-size: 1.05rem;
-  color: var(--color-forest);
-  letter-spacing: -0.01em;
+  color: #081A12;
+  letter-spacing: -0.015em;
 }
 
 .navbar-brand-sub {
   font-size: 0.68rem;
-  color: var(--color-gold-light);
+  color: #876628;
   font-weight: 600;
   letter-spacing: 0.02em;
 }
@@ -112,7 +101,7 @@
   font-family: var(--font-heading);
   font-size: 0.88rem;
   font-weight: 600;
-  color: var(--color-text-secondary);
+  color: #4A5B51;
   border-radius: var(--radius-pill);
   text-decoration: none;
   transition: all var(--transition-base);
@@ -122,34 +111,33 @@
 .navbar-link::after {
   content: '';
   position: absolute;
-  bottom: -2px;
+  bottom: 0;
   left: 50%;
   width: 0;
   height: 2px;
-  background: var(--color-gold-light);
+  background: #B89248;
   transition: all var(--transition-base);
   transform: translateX(-50%);
   border-radius: 2px;
 }
 
 .navbar-link:hover {
-  color: var(--color-forest);
-  background: rgba(200, 168, 91, 0.08);
+  color: #081A12;
+  background: rgba(184, 146, 72, 0.08);
 }
 
 .navbar-link:hover::after {
-  width: 50%;
+  width: 40%;
 }
 
 .navbar-link.active {
-  color: var(--color-gold-light);
+  color: #081A12;
   font-weight: 700;
   background: transparent;
-  border: none;
 }
 
 .navbar-link.active::after {
-  width: 60%;
+  width: 55%;
 }
 
 /* Search Icon Button */
@@ -160,17 +148,17 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(200, 168, 91, 0.10);
-  border: 1px solid rgba(200, 168, 91, 0.22);
-  color: var(--color-gold-light);
+  background: rgba(184, 146, 72, 0.10);
+  border: 1px solid rgba(184, 146, 72, 0.25);
+  color: #081A12;
   transition: all var(--transition-base);
   margin-left: 4px;
 }
 
 .navbar-search-btn:hover {
-  background: rgba(200, 168, 91, 0.20);
-  border-color: var(--color-gold-light);
-  color: #F7F5F0;
+  background: rgba(184, 146, 72, 0.20);
+  border-color: #B89248;
+  color: #081A12;
   transform: scale(1.05);
 }
 
@@ -182,26 +170,25 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: rgba(200, 168, 91, 0.10);
-  border: 1px solid rgba(200, 168, 91, 0.24);
-  color: var(--color-forest);
+  background: rgba(184, 146, 72, 0.10);
+  border: 1px solid rgba(184, 146, 72, 0.25);
+  color: #081A12;
   cursor: pointer;
   transition: all var(--transition-base);
 }
 
 .navbar-hamburger:hover {
-  background: rgba(200, 168, 91, 0.18);
-  border-color: var(--color-gold-light);
-  color: var(--color-gold-light);
+  background: rgba(184, 146, 72, 0.18);
+  border-color: #B89248;
 }
 
 /* ── Mobile Navigation Sheet ── */
 .navbar-mobile-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(5, 14, 10, 0.82);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(8, 26, 18, 0.50);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: 1001;
   display: flex;
   justify-content: flex-end;
@@ -216,14 +203,12 @@
 .navbar-mobile-sheet {
   width: min(340px, 85vw);
   height: 100%;
-  background: linear-gradient(180deg, #0E261D 0%, #07140E 100%);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-left: 1px solid rgba(200, 168, 91, 0.22);
+  background: #FAF7F0;
+  border-left: 1px solid rgba(184, 146, 72, 0.25);
   padding: 24px;
   display: flex;
   flex-direction: column;
-  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.85);
+  box-shadow: -10px 0 40px rgba(8, 26, 18, 0.15);
   animation: slideLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -237,7 +222,7 @@
   align-items: center;
   justify-content: space-between;
   padding-bottom: 20px;
-  border-bottom: 1px solid rgba(200, 168, 91, 0.15);
+  border-bottom: 1px solid rgba(184, 146, 72, 0.18);
   margin-bottom: 20px;
 }
 
@@ -245,9 +230,9 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(200, 168, 91, 0.10);
-  border: 1px solid rgba(200, 168, 91, 0.20);
-  color: var(--color-forest);
+  background: rgba(184, 146, 72, 0.10);
+  border: 1px solid rgba(184, 146, 72, 0.20);
+  color: #081A12;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -256,38 +241,48 @@
 }
 
 .navbar-sheet-close:hover {
-  background: rgba(200, 168, 91, 0.20);
-  color: var(--color-gold-light);
+  background: rgba(184, 146, 72, 0.22);
+  color: #876628;
 }
 
-.navbar-mobile-menu {
+.navbar-sheet-links {
   display: flex;
   flex-direction: column;
   gap: 8px;
   overflow-y: auto;
 }
 
-.navbar-mobile-item {
+.navbar-sheet-link {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
   border-radius: var(--radius-md);
   font-family: var(--font-heading);
-  font-size: 1rem;
+  font-size: 0.98rem;
   font-weight: 600;
-  color: var(--color-text-secondary);
+  color: #4A5B51;
   text-decoration: none;
-  background: rgba(200, 168, 91, 0.04);
-  border: 1px solid rgba(200, 168, 91, 0.10);
+  background: #FFFFFF;
+  border: 1px solid rgba(184, 146, 72, 0.14);
   transition: all var(--transition-base);
 }
 
-.navbar-mobile-item:hover,
-.navbar-mobile-item.active {
-  background: rgba(200, 168, 91, 0.12);
-  border-color: rgba(200, 168, 91, 0.35);
-  color: var(--color-gold-light);
+.navbar-sheet-link:hover,
+.navbar-sheet-link.active {
+  background: #F4EFE4;
+  border-color: #B89248;
+  color: #081A12;
+}
+
+.navbar-sheet-footer {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid rgba(184, 146, 72, 0.15);
+  font-size: 0.78rem;
+  color: #768B7E;
+  text-align: center;
+  line-height: 1.5;
 }
 
 /* ── Responsive ── */

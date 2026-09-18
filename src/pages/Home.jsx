@@ -19,13 +19,15 @@ import {
   Wallet,
   CheckCircle2,
   School,
+  Sparkles,
+  Quote,
+  History,
 } from 'lucide-react';
 import { useScrollAnimation } from '../utils';
 import HeroSection from '../components/HeroSection';
 import StatsCounter from '../components/StatsCounter';
 import SectionHeader from '../components/SectionHeader';
 import EventCard from '../components/EventCard';
-import QuoteSection from '../components/QuoteSection';
 import InstagramSection from '../components/InstagramSection';
 import AchievementsSection from '../components/AchievementsSection';
 import { useData } from '../context/DataContext';
@@ -44,14 +46,6 @@ import { programs } from '../data/programs';
 import './Home.css';
 import './Gallery.css';
 
-const divisionIcons = {
-  SDM: UserCheck,
-  Dakwah: BookOpen,
-  Jurnalistik: Newspaper,
-  HUMAS: Megaphone,
-  DANUS: Wallet,
-};
-
 const divisionLogos = {
   SDM: '/divisi-sdm.svg',
   Dakwah: '/divisi-dakwah.svg',
@@ -60,11 +54,49 @@ const divisionLogos = {
   DANUS: '/divisi-danus.svg',
 };
 
+const timelineMilestones = [
+  {
+    year: '2017',
+    tag: 'AWAL JEJAK',
+    title: 'Inisiasi & Silaturahmi Perdana',
+    location: 'Purwokerto',
+    desc: 'Pertemuan perdana perwakilan pengurus rohis sekolah se-Purwokerto yang melahirkan kesepakatan membentuk wadah silaturahmi terpadu.',
+  },
+  {
+    year: '2020',
+    tag: 'KETAHANAN',
+    title: 'Ruang Temu di Masa Pandemi',
+    location: 'Banyumas',
+    desc: 'Menghadapi masa karantina dengan menggelar kajian virtual berkala, mentoring daring, dan aksi kepedulian sosial bagi pelajar terdampak.',
+  },
+  {
+    year: '2022',
+    tag: 'REKONSILIASI',
+    title: 'Konsolidasi Akbar Pasca-Pandemi',
+    location: 'Masjid Agung Baitussalam',
+    desc: 'Kebangkitan tatap muka akbar, memperluas jejaring dakwah hingga ke SMA, SMK, dan MA di berbagai kecamatan Kabupaten Banyumas.',
+  },
+  {
+    year: '2024',
+    tag: 'KURIKULUM',
+    title: 'Standarisasi Modul Kaderisasi',
+    location: 'Banyumas',
+    desc: 'Penyusunan kurikulum Latihan Kepemimpinan ROHIS (LKRO) terstandar dan mentoring berkala demi mencetak kader yang berkarakter dan kritis.',
+  },
+  {
+    year: '2026',
+    tag: 'TRANSFORMASI',
+    title: 'Era Kolaborasi & Platform Terpadu',
+    location: 'Kabupaten Banyumas',
+    desc: 'Peluncuran platform digital terpadu, penguatan jurnalisme literasi, kemandirian kas dakwah, dan jejaring lebih dari 15 sekolah.',
+  },
+];
+
 export default function Home() {
   useScrollAnimation();
   const [selectedItem, setSelectedItem] = useState(null);
   const [activeMediaIndex, setActiveMediaIndex] = useState(0);
-  const [featuredPillarIndex, setFeaturedPillarIndex] = useState(0);
+  const [activeProgramIndex, setActiveProgramIndex] = useState(0);
   const filmstripRef = useRef(null);
 
   const {
@@ -81,8 +113,7 @@ export default function Home() {
   const driveEmbedUrl = isVideo && currentMedia ? getGoogleDriveEmbedUrl(currentMedia.url) : null;
   const directImageUrl = currentMedia ? getDirectImageUrl(currentMedia.url) : '';
 
-  const activePillar = programs[featuredPillarIndex] || programs[0];
-  const ActivePillarIcon = divisionIcons[activePillar.division] || UserCheck;
+  const activeProgram = programs[activeProgramIndex] || programs[0];
 
   const upcomingEvents = events.filter((e) => e.status === 'upcoming');
   const featuredEvent = upcomingEvents[0];
@@ -90,7 +121,7 @@ export default function Home() {
 
   const featuredArticle = articles[0];
   const supportingArticles = articles.slice(1, 4);
-  const networkSchools = memberSchools.slice(0, 8);
+  const networkSchools = memberSchools.slice(0, 10);
 
   const handleOpenAlbum = (item) => {
     setSelectedItem(item);
@@ -102,7 +133,7 @@ export default function Home() {
     setActiveMediaIndex(0);
   };
 
-  // Lock background body scroll when lightbox is open
+  // Lock body scroll when modal open
   useEffect(() => {
     if (selectedItem) {
       const originalOverflow = document.body.style.overflow;
@@ -144,57 +175,98 @@ export default function Home() {
   }, [activeMediaIndex]);
 
   return (
-    <main>
-      {/* 02: Hero Section (55/45 Editorial Split) */}
+    <main className="editorial-homepage">
+      {/* =========================================================
+          SECTION 1: THE EDITORIAL COVER (Warm Ivory)
+          ========================================================= */}
       <HeroSection />
 
-      {/* 03: Organization Snapshot / Impact Data Band */}
+      {/* Snapshot Impact Band */}
       <StatsCounter />
 
-      {/* 04: Editorial About ROHIS Banyumas */}
-      <section className="section" data-section="about">
+      {/* =========================================================
+          SECTION 2: ABOUT EDITORIAL SPREAD (Soft Archival Beige)
+          ========================================================= */}
+      <section className="section section-beige" data-section="about">
         <div className="container">
-          <div className="home-about-grid">
-            <div className="home-about-content">
-              <span className="badge badge-primary" style={{ marginBottom: 'var(--space-md)' }}>
-                Tentang ROHIS Banyumas
-              </span>
-              <h2>Wadah Sinergi & Pembinaan Generasi Qur'ani Banyumas</h2>
-              <p>
-                Didirikan pada tahun 2017, ROHIS Kabupaten Banyumas menaungi puluhan kader dakwah sekolah 
-                lintas SMA, SMK, dan MA. Kami hadir untuk menumbuhkan nilai-nilai keislaman yang rahmatan lil 'alamin 
-                dan melahirkan karya nyata bagi pelajar serta masyarakat.
+          <div className="editorial-about-spread">
+            {/* Left: Narrative Column */}
+            <div className="about-spread-narrative">
+              <span className="badge badge-primary">TENTANG KAMI</span>
+              
+              <h2 className="about-spread-title">
+                Bukan sekadar sebuah organisasi.
+              </h2>
+
+              <p className="about-spread-lead">
+                Didirikan pada tahun 2017 di Purwokerto, ROHIS Kabupaten Banyumas tumbuh 
+                dari tekad bersama para pelajar SMA, SMK, dan MA untuk merajut ukhuwah 
+                dan memperkuat dakwah sekolah.
               </p>
-              <p>
-                Melalui 5 pilar divisi utama, kami menyelenggarakan kajian berkala, kaderisasi kepemimpinan, 
-                jurnalisme kreatif, bakti sosial, serta pengembangan kemandirian wirausaha generasi muda Islam.
-              </p>
-              <div style={{ marginTop: 'var(--space-lg)' }}>
-                <Link to="/tentang" className="btn btn-outline">
-                  <span>Kenali Sejarah & Visi Kami</span>
+
+              <div className="about-spread-body">
+                <p>
+                  Kami hadir bukan sekadar menyusun struktur jabatan formal, melainkan 
+                  membangun ruang perjumpaan yang hangat—tempat setiap pelajar Muslim 
+                  dapat belajar memahami nilai-nilai Islam yang rahmatan lil 'alamin, 
+                  mengasah kepemimpinan, dan menyalurkan kepedulian nyata bagi masyarakat.
+                </p>
+                <p>
+                  Dari kajian akbar di masjid-masjid agung hingga pelatihan literasi digital 
+                  dan aksi kepedulian sosial di pelosok Banyumas, seluruh langkah kami 
+                  digerakkan secara gotong-royong oleh kader pelajar bersama para pembina.
+                </p>
+              </div>
+
+              <div className="about-spread-points">
+                <div className="about-point-item">
+                  <span className="point-number">01</span>
+                  <div className="point-text">
+                    <strong>Sinergi Lintas Sekolah</strong>
+                    <span>Mengikis sekat sekolah, menghubungkan puluhan rohis di Kabupaten Banyumas.</span>
+                  </div>
+                </div>
+                <div className="about-point-item">
+                  <span className="point-number">02</span>
+                  <div className="point-text">
+                    <strong>Kaderisasi Berjenjang</strong>
+                    <span>Mencetak generasi muda yang kritis, berakhlak mulia, dan siap memimpin.</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="about-spread-cta">
+                <Link to="/tentang" className="btn btn-primary">
+                  <span>Kenali Sejarah & Pengurus Kami</span>
                   <ArrowRight size={16} />
                 </Link>
               </div>
             </div>
 
-            <div className="home-about-visual">
-              <div className="home-about-frame">
-                <img
-                  src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=80"
-                  alt="Kaderisasi ROHIS Kabupaten Banyumas"
-                  className="home-about-img"
-                  loading="lazy"
-                />
-              </div>
-              <div className="home-about-badge-card">
-                <div className="home-about-stat-item">
-                  <span className="home-about-stat-num">2017</span>
-                  <span className="home-about-stat-label">Tahun Berdiri</span>
+            {/* Right: Archival Visual & Quote */}
+            <div className="about-spread-visual">
+              <div className="about-photo-card">
+                <div className="about-photo-header">
+                  <span>DOKUMENTASI KADERISASI • PURWOKERTO</span>
+                  <span>EST. 2017</span>
                 </div>
-                <div style={{ width: '1px', height: '32px', background: 'rgba(13, 59, 46, 0.12)' }} />
-                <div className="home-about-stat-item">
-                  <span className="home-about-stat-num">15+</span>
-                  <span className="home-about-stat-label">Sekolah Anggota</span>
+                <div className="about-photo-wrapper">
+                  <img
+                    src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=80"
+                    alt="Kaderisasi Pelajar ROHIS Banyumas"
+                    className="about-photo-img"
+                    loading="lazy"
+                  />
+                </div>
+                <div className="about-quote-box">
+                  <Quote size={24} className="about-quote-icon" />
+                  <p className="about-quote-text">
+                    "Di sini kami belajar bahwa dakwah terbaik tidak diukur dari megahnya panggung, 
+                    melainkan dari keteladanan akhlak dan keikhlasan melayani sesama pelajar."
+                  </p>
+                  <span className="about-quote-author">
+                    — Catatan Lapangan Kader Pelajar, Banyumas
+                  </span>
                 </div>
               </div>
             </div>
@@ -202,427 +274,415 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 05: Five Pillars / Program (1 Featured + 4 Supporting) */}
-      <section className="section section-alt" id="program" data-section="program">
+      {/* =========================================================
+          SECTION 3: NUMBERED EDITORIAL INDEX 01-05 (Warm Ivory)
+          ========================================================= */}
+      <section className="section section-ivory" id="program" data-section="program">
         <div className="container">
-          <SectionHeader
-            badge="Program Kerja"
-            title="Lima Pilar Gerakan Kami"
-            subtitle="Digerakkan secara terpadu melalui 5 divisi utama untuk membentuk generasi Islam yang berdaya, berakhlak, dan berdampak."
-          />
+          <div className="editorial-section-header">
+            <span className="badge badge-primary">FOKUS GERAKAN</span>
+            <h2 className="editorial-section-title">Lima Pilar Program Kerja</h2>
+            <p className="editorial-section-subtitle">
+              Dikelola secara terpadu melalui lima divisi resmi untuk membentuk generasi Islam 
+              yang kokoh secara spiritual, cakap berorganisasi, dan berdampak nyata.
+            </p>
+          </div>
 
-          <div className="five-pillars-editorial">
-            {/* Left: Featured Pillar Card */}
-            <div className="pillar-featured-card">
-              <div>
-                <div className="pillar-featured-header">
-                  <div className="pillar-featured-icon">
-                    <img
-                      src={divisionLogos[activePillar.division] || '/divisi-sdm.svg'}
-                      alt={`Insignia Divisi ${activePillar.division}`}
-                      className="pillar-svg-logo"
-                      loading="lazy"
-                    />
-                  </div>
-                  <div className="pillar-featured-meta">
-                    <span className="pillar-featured-badge">Pilar Utama • Divisi {activePillar.division}</span>
-                    <h3 className="pillar-featured-title">{activePillar.title}</h3>
-                  </div>
-                </div>
-
-                <p className="pillar-featured-desc">{activePillar.description}</p>
-
-                <div className="pillar-details-title">Fokus Program Kerja:</div>
-                <div className="pillar-details-list">
-                  {activePillar.details.map((detail, idx) => (
-                    <div key={idx} className="pillar-detail-item">
-                      <CheckCircle2 size={16} className="pillar-detail-icon" />
-                      <span>{detail}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <Link to="/program" className="btn btn-primary">
-                  <span>Lihat Silabus Lengkap Divisi Ini</span>
-                  <ArrowRight size={16} />
-                </Link>
-              </div>
-            </div>
-
-            {/* Right: 4 Supporting Pillars */}
-            <div className="pillar-supporting-list">
-              {programs.map((program, idx) => {
-                const isSelected = idx === featuredPillarIndex;
+          <div className="editorial-program-layout">
+            {/* Left: Interactive Numbered Index List */}
+            <div className="program-numbered-index">
+              {programs.map((prog, idx) => {
+                const isSelected = idx === activeProgramIndex;
+                const numStr = String(idx + 1).padStart(2, '0');
                 return (
                   <div
-                    key={program.id}
-                    className={`pillar-supporting-item ${isSelected ? 'active' : ''}`}
-                    onClick={() => setFeaturedPillarIndex(idx)}
+                    key={prog.id}
+                    className={`program-index-row ${isSelected ? 'active' : ''}`}
+                    onClick={() => setActiveProgramIndex(idx)}
                     role="button"
                     tabIndex={0}
-                    title="Klik untuk melihat detail divisi ini"
                   >
-                    <div className="pillar-supporting-icon">
-                      <img
-                        src={divisionLogos[program.division] || '/divisi-sdm.svg'}
-                        alt={`Insignia Divisi ${program.division}`}
-                        className="pillar-svg-logo-sm"
-                        loading="lazy"
-                      />
+                    <span className="index-row-num">{numStr}</span>
+                    <div className="index-row-info">
+                      <div className="index-row-top">
+                        <span className="index-row-title">{prog.title.toUpperCase()}</span>
+                        <span className="index-row-division">DIVISI {prog.division}</span>
+                      </div>
+                      <p className="index-row-summary">{prog.description}</p>
                     </div>
-                    <div className="pillar-supporting-info">
-                      <span className="pillar-supporting-division">Divisi {program.division}</span>
-                      <h4 className="pillar-supporting-title">{program.title}</h4>
-                      <p className="pillar-supporting-desc">{program.description}</p>
+                    <div className="index-row-arrow">
+                      <ArrowRight size={18} />
                     </div>
                   </div>
                 );
               })}
             </div>
-          </div>
 
-          <div className="text-center" style={{ marginTop: 'var(--space-2xl)' }}>
-            <Link to="/program" className="btn btn-outline">
-              Lihat Agenda & Semua Program <ArrowRight size={16} />
-            </Link>
+            {/* Right: Active Pillar Showcase Card */}
+            <div className="program-detail-showcase">
+              <div className="showcase-card-inner">
+                <div className="showcase-card-header">
+                  <div className="showcase-logo-frame">
+                    <img
+                      src={divisionLogos[activeProgram.division] || '/divisi-sdm.svg'}
+                      alt={`Insignia ${activeProgram.division}`}
+                      className="showcase-logo-svg"
+                    />
+                  </div>
+                  <div>
+                    <span className="showcase-division-tag">DIVISI {activeProgram.division}</span>
+                    <h3 className="showcase-division-title">{activeProgram.title}</h3>
+                  </div>
+                </div>
+
+                <p className="showcase-division-desc">{activeProgram.description}</p>
+
+                <div className="showcase-focus-heading">AGENDA & FOKUS UTAMA:</div>
+                <div className="showcase-focus-list">
+                  {activeProgram.details.map((detail, dIdx) => (
+                    <div key={dIdx} className="showcase-focus-item">
+                      <CheckCircle2 size={16} className="text-accent" />
+                      <span>{detail}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="showcase-action-row">
+                  <Link to="/program" className="btn btn-primary">
+                    <span>Silabus Lengkap Divisi Ini</span>
+                    <ArrowRight size={16} />
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 06: Featured Activity (60/40 Story) */}
-      {galleryItems.length > 0 && (
-        <section className="section">
-          <div className="container">
-            <SectionHeader
-              badge="Dokumentasi Pilihan"
-              title="Sorotan Kegiatan Terbaru"
-              subtitle="Potret nyata antusiasme dan komitmen dakwah pelajar Muslim Kabupaten Banyumas."
-            />
+      {/* =========================================================
+          SECTION 4: CONTRAST SPREAD BREAK: "KARYA KAMI" (Deep Forest Pine)
+          ========================================================= */}
+      <section className="section section-forest" data-section="gallery">
+        <div className="container">
+          <div className="forest-spread-header">
+            <span className="badge badge-primary">DOKUMENTASI UTAMA</span>
+            <h2 className="forest-spread-title">Sorotan Kegiatan Terkini</h2>
+            <p className="forest-spread-subtitle">
+              Potret nyata antusiasme dan khidmat dakwah pelajar Muslim se-Kabupaten Banyumas.
+            </p>
+          </div>
 
-            <div className="activity-story-card">
-              <div className="activity-story-media">
+          {galleryItems.length > 0 && (
+            <div className="forest-feature-stage">
+              <div className="forest-feature-visual">
                 <img
                   src={getCoverMedia(galleryItems[0]) || 'https://images.unsplash.com/photo-1542816417-0983c9c9ad53?auto=format&fit=crop&w=1200&q=80'}
                   alt={galleryItems[0].title}
-                  className="activity-story-img"
+                  className="forest-feature-img"
                   loading="lazy"
-                  onError={(e) => {
-                    e.currentTarget.onerror = null;
-                    e.currentTarget.src = 'https://images.unsplash.com/photo-1542816417-0983c9c9ad53?auto=format&fit=crop&w=1200&q=80';
-                  }}
                 />
-                <span className="activity-story-overlay-tag">Kegiatan Utama</span>
+                <div className="forest-feature-overlay" />
+                <span className="forest-feature-stamp">ARSIP UTAMA BANYUMAS</span>
               </div>
 
-              <div className="activity-story-content">
-                <div className="activity-story-meta">
-                  <span className="activity-story-meta-item">
+              <div className="forest-feature-content">
+                <div className="forest-feature-meta">
+                  <span className="meta-forest-item">
                     <Calendar size={15} />
                     <span>{galleryItems[0].date || 'Februari 2025'}</span>
                   </span>
-                  <span className="activity-story-meta-item">
+                  <span className="meta-forest-item">
                     <MapPin size={15} />
                     <span>Purwokerto</span>
                   </span>
                 </div>
 
-                <h3 className="activity-story-title">{galleryItems[0].title}</h3>
-                <p className="activity-story-desc">{galleryItems[0].description}</p>
+                <h3 className="forest-feature-headline">{galleryItems[0].title}</h3>
+                <p className="forest-feature-desc">{galleryItems[0].description}</p>
 
-                <button
-                  onClick={() => handleOpenAlbum(galleryItems[0])}
-                  className="btn btn-primary"
-                >
-                  <Camera size={17} />
-                  <span>Buka Dokumentasi Foto & Video</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Quote Section */}
-      <QuoteSection />
-
-      {/* 07: Upcoming Events Spotlight */}
-      <section className="section section-alt">
-        <div className="container">
-          <SectionHeader
-            badge="Agenda"
-            title="Kegiatan Mendatang"
-            subtitle="Jadwal kajian akbar, pelatihan kepemimpinan, dan aksi sosial pelajar Banyumas."
-          />
-
-          <div className="events-spotlight-layout">
-            {/* Main Featured Upcoming Event */}
-            {featuredEvent && (
-              <div className="event-featured-card">
-                <div className="event-date-block">
-                  <span className="event-date-day">
-                    {new Date(featuredEvent.date).getDate() || '13'}
-                  </span>
-                  <span className="event-date-month">
-                    {new Date(featuredEvent.date).toLocaleString('id-ID', { month: 'short' }).toUpperCase() || 'SEP'}
-                  </span>
-                </div>
-
-                <div className="event-featured-info">
-                  <div className="event-featured-meta">
-                    <span className="event-badge-type">{featuredEvent.type}</span>
-                    <span className="event-location-text">
-                      <MapPin size={14} />
-                      {featuredEvent.location}
-                    </span>
-                    {featuredEvent.time && (
-                      <span className="event-location-text">
-                        <Clock size={14} />
-                        {featuredEvent.time}
-                      </span>
-                    )}
-                  </div>
-                  <h4 className="event-featured-title">{featuredEvent.title}</h4>
-                  <p className="event-featured-desc">{featuredEvent.description}</p>
-                </div>
-
-                <div>
-                  <Link to="/program#agenda" className="btn btn-primary">
-                    <span>Ikuti Agenda</span>
+                <div className="forest-feature-actions">
+                  <button
+                    onClick={() => handleOpenAlbum(galleryItems[0])}
+                    className="btn btn-primary"
+                  >
+                    <Camera size={17} />
+                    <span>Buka Dokumentasi Foto & Video</span>
+                  </button>
+                  <Link to="/galeri" className="btn btn-outline">
+                    <span>Lihat Seluruh Arsip</span>
                     <ArrowRight size={16} />
                   </Link>
                 </div>
               </div>
-            )}
+            </div>
+          )}
 
-            {/* Secondary Events Grid */}
-            {secondaryEvents.length > 0 && (
-              <div className="events-secondary-grid">
-                {secondaryEvents.map((event, i) => (
-                  <EventCard key={event.id} event={event} index={i} />
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="text-center" style={{ marginTop: 'var(--space-2xl)' }}>
-            <Link to="/program#agenda" className="btn btn-outline">
-              Lihat Kalender Agenda Lengkap <ArrowRight size={16} />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 08: Latest Stories (Editorial Magazine) */}
-      <section className="section" data-section="article">
-        <div className="container">
-          <SectionHeader
-            badge="Artikel Dakwah"
-            title="Bacaan Inspiratif Terkini"
-            subtitle="Kumpulan tulisan, kajian tematik, dan refleksi pemuda Muslim untuk memperluas cakrawala keislaman."
-          />
-
-          <div className="home-articles-magazine">
-            {/* Left: Featured Major Story */}
-            {featuredArticle && (
-              <div className="article-featured-card">
-                <div className="article-featured-media">
-                  <img
-                    src={featuredArticle.image}
-                    alt={featuredArticle.title}
-                    className="article-featured-img"
-                    loading="eager"
-                    onError={(e) => {
-                      e.currentTarget.onerror = null;
-                      e.currentTarget.src = 'https://images.unsplash.com/photo-1542816417-0983c9c9ad53?auto=format&fit=crop&w=1200&q=80';
-                    }}
-                  />
-                </div>
-                <div className="article-featured-body">
-                  <div className="article-meta-row">
-                    <span className="badge badge-primary">{featuredArticle.category}</span>
-                    <span>{featuredArticle.date}</span>
-                    <span>• {featuredArticle.author}</span>
-                  </div>
-                  <h3 className="article-featured-title">{featuredArticle.title}</h3>
-                  <p className="article-featured-desc">{featuredArticle.excerpt}</p>
-                  <Link to={`/artikel/${featuredArticle.slug}`} className="article-read-btn">
-                    <span>Baca Artikel Selengkapnya</span>
-                    <ArrowRight size={16} />
-                  </Link>
-                </div>
-              </div>
-            )}
-
-            {/* Right: 3 Supporting Stories */}
-            <div className="articles-supporting-list">
-              {supportingArticles.map((article) => (
-                <Link
-                  key={article.id}
-                  to={`/artikel/${article.slug}`}
-                  className="article-supporting-item"
-                >
-                  <div className="article-supporting-thumb">
-                    <img
-                      src={article.image}
-                      alt={article.title}
-                      className="article-supporting-img"
-                      loading="lazy"
-                      onError={(e) => {
-                        e.currentTarget.onerror = null;
-                        e.currentTarget.src = 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&w=600&q=80';
-                      }}
-                    />
-                  </div>
-                  <div className="article-supporting-content">
-                    <span className="article-supporting-category">{article.category}</span>
-                    <h4 className="article-supporting-title">{article.title}</h4>
-                    <span className="article-supporting-date">{article.date}</span>
-                  </div>
-                </Link>
-              ))}
+          {/* Prestigious Metric Ribbon */}
+          <div className="forest-metric-ribbon">
+            <div className="metric-cell">
+              <span className="metric-val">15+</span>
+              <span className="metric-lbl">SMA / SMK / MA</span>
+            </div>
+            <div className="metric-sep" />
+            <div className="metric-cell">
+              <span className="metric-val">53+</span>
+              <span className="metric-lbl">Kader Aktif</span>
+            </div>
+            <div className="metric-sep" />
+            <div className="metric-cell">
+              <span className="metric-val">8 Thn</span>
+              <span className="metric-lbl">Khidmat Dakwah</span>
+            </div>
+            <div className="metric-sep" />
+            <div className="metric-cell">
+              <span className="metric-val">5 Divisi</span>
+              <span className="metric-lbl">Pilar Gerakan</span>
             </div>
           </div>
-
-          <div className="text-center" style={{ marginTop: 'var(--space-2xl)' }}>
-            <Link to="/artikel" className="btn btn-outline">
-              Jelajahi Seluruh Artikel <ArrowRight size={16} />
-            </Link>
-          </div>
         </div>
       </section>
 
-      {/* 09: Achievements / Rekam Jejak */}
-      <AchievementsSection limit={4} showFilters={true} />
-
-      {/* 10: Gallery Section */}
-      <section className="section section-alt" data-section="gallery">
+      {/* =========================================================
+          SECTION 5: COMMUNITY ARCHIVE WALL / CONTACT SHEET (Warm Ivory)
+          ========================================================= */}
+      <section className="section section-ivory">
         <div className="container">
-          <SectionHeader
-            badge="Dokumentasi"
-            title="Galeri Kegiatan"
-            subtitle="Potret semangat kebersamaan dan aksi nyata kegiatan dakwah pelajar ROHIS se-Kabupaten Banyumas."
-          />
-          <div className="gallery-grid">
-            {galleryItems.slice(0, 6).map((item, i) => {
+          <div className="editorial-section-header">
+            <span className="badge badge-primary">ARSIP KOMUNITAS</span>
+            <h2 className="editorial-section-title">Lembar Memori & Dokumentasi</h2>
+            <p className="editorial-section-subtitle">
+              Setiap jejak kebersamaan didokumentasikan sebagai bagian dari sejarah dakwah pemuda Islam Banyumas.
+            </p>
+          </div>
+
+          <div className="archive-contact-sheet">
+            {galleryItems.slice(0, 6).map((item, idx) => {
               const coverUrl = getCoverMedia(item);
               const summary = getMediaSummary(item);
               const hasVideo = summary.videos > 0;
+              const refNum = `ARCHIVE #${String(idx + 14).padStart(3, '0')}`;
 
               return (
                 <div
                   key={item.id}
-                  className={`gallery-item card animate-on-scroll delay-${(i % 3) + 1}`}
+                  className="contact-sheet-card"
                   onClick={() => handleOpenAlbum(item)}
-                  title="Klik untuk melihat album dokumentasi kegiatan"
+                  role="button"
+                  tabIndex={0}
                 >
-                  <div className="gallery-item-image">
+                  <div className="contact-sheet-topbar">
+                    <span className="sheet-ref-code">{refNum}</span>
+                    <span className="sheet-cat-badge">{item.category}</span>
+                  </div>
+
+                  <div className="contact-sheet-photo">
                     {coverUrl ? (
                       <img
                         src={coverUrl}
                         alt={item.title}
-                        className="gallery-item-img"
+                        className="contact-sheet-img"
                         loading="lazy"
                       />
                     ) : (
-                      <>
-                        <span className="gallery-item-emoji">{item.emoji || '📸'}</span>
-                        <Camera size={20} className="gallery-item-camera" />
-                      </>
+                      <div className="contact-sheet-placeholder">
+                        <Camera size={24} />
+                      </div>
                     )}
-
-                    <div className="gallery-card-badge">
-                      <span>{summary.label}</span>
-                    </div>
-
                     {hasVideo && (
-                      <div className="gallery-video-indicator" title="Kegiatan ini memiliki video dokumentasi">
-                        <Play size={18} fill="currentColor" />
+                      <div className="sheet-video-pill">
+                        <Play size={14} fill="currentColor" />
+                        <span>VIDEO</span>
                       </div>
                     )}
                   </div>
-                  <div className="gallery-item-overlay">
-                    <div className="gallery-overlay-meta">
-                      <span className="badge badge-primary">{item.category}</span>
-                      {item.date && (
-                        <span className="gallery-overlay-date">{item.date}</span>
-                      )}
+
+                  <div className="contact-sheet-footer">
+                    <h4 className="sheet-photo-title">{item.title}</h4>
+                    <div className="sheet-photo-meta">
+                      <span className="sheet-photo-date">{item.date || 'Purwokerto'}</span>
+                      <span className="sheet-photo-count">{summary.label}</span>
                     </div>
-                    <h4>{item.title}</h4>
-                    {item.description && (
-                      <p className="gallery-overlay-desc">{item.description}</p>
-                    )}
                   </div>
                 </div>
               );
             })}
           </div>
-          <div className="text-center" style={{ marginTop: 'var(--space-2xl)' }}>
-            <Link to="/galeri" className="btn-gallery-cta">
-              <span>Lihat Semua Galeri</span>
-              <ChevronRight size={17} />
+
+          <div className="text-center" style={{ marginTop: 'var(--space-3xl)' }}>
+            <Link to="/galeri" className="btn btn-outline btn-lg">
+              <span>Jelajahi Galeri Dokumentasi Lengkap</span>
+              <ArrowRight size={16} />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Official Instagram Showcase */}
-      <InstagramSection />
-
-      {/* 11: Network ("Bergerak Bersama") */}
-      <section className="section" data-section="members">
+      {/* =========================================================
+          SECTION 6: QUIET TIMELINE: "PERJALANAN KAMI" (Soft Beige)
+          ========================================================= */}
+      <section className="section section-beige">
         <div className="container">
-          <SectionHeader
-            badge="Sinergi Lintas Lembaga"
-            title="Bergerak Bersama Sekolah & Mitra"
-            subtitle={`Membangun jejaring dakwah pelajar yang kokoh bersama lebih dari 15 sekolah tingkat SMA, SMK, dan MA se-Kabupaten Banyumas.`}
-          />
-          <div className="network-grid">
-            {networkSchools.map((school) => (
-              <div key={school.id} className="network-school-card">
-                <div className="network-school-icon">
-                  <School size={20} />
+          <div className="editorial-section-header">
+            <span className="badge badge-primary">HISTORIA GERAKAN</span>
+            <h2 className="editorial-section-title">Perjalanan Kami</h2>
+            <p className="editorial-section-subtitle">
+              Merawat benih dakwah sejak pertemuan pertama di Purwokerto hingga jejaring sekolah se-Kabupaten Banyumas.
+            </p>
+          </div>
+
+          <div className="quiet-timeline-track">
+            {timelineMilestones.map((m, idx) => (
+              <div key={idx} className="timeline-node">
+                <div className="timeline-node-header">
+                  <span className="timeline-year">{m.year}</span>
+                  <span className="timeline-tag">{m.tag}</span>
                 </div>
-                <div>
-                  <h4 className="network-school-name">{school.name}</h4>
-                  <span style={{ fontSize: '0.74rem', color: 'var(--color-text-secondary)' }}>
-                    {school.type || 'Sekolah Anggota'}
-                  </span>
+                <div className="timeline-dot-axis">
+                  <div className="timeline-axis-dot" />
+                  <div className="timeline-axis-line" />
+                </div>
+                <div className="timeline-node-card">
+                  <div className="timeline-node-loc">
+                    <MapPin size={13} />
+                    <span>{m.location}</span>
+                  </div>
+                  <h4 className="timeline-node-title">{m.title}</h4>
+                  <p className="timeline-node-desc">{m.desc}</p>
                 </div>
               </div>
             ))}
           </div>
-          <div className="text-center" style={{ marginTop: 'var(--space-2xl)' }}>
+        </div>
+      </section>
+
+      {/* =========================================================
+          SECTION 7: UPCOMING EVENTS & READINGS (Warm Ivory)
+          ========================================================= */}
+      <section className="section section-ivory">
+        <div className="container">
+          <div className="editorial-section-header">
+            <span className="badge badge-primary">AGENDA & BACAAN</span>
+            <h2 className="editorial-section-title">Agenda & Bacaan Inspiratif</h2>
+            <p className="editorial-section-subtitle">
+              Ikuti jadwal kajian terdekat dan perkaya wawasan keislaman melalui tulisan pemuda Banyumas.
+            </p>
+          </div>
+
+          <div className="agenda-articles-editorial-grid">
+            {/* Left: Featured Event */}
+            <div className="editorial-agenda-col">
+              <h3 className="col-subheading">Agenda Terdekat</h3>
+              {featuredEvent ? (
+                <div className="editorial-event-card">
+                  <div className="event-date-stamp">
+                    <span className="stamp-day">{new Date(featuredEvent.date).getDate() || '13'}</span>
+                    <span className="stamp-month">
+                      {new Date(featuredEvent.date).toLocaleString('id-ID', { month: 'short' }).toUpperCase() || 'SEP'}
+                    </span>
+                  </div>
+                  <div className="event-details-block">
+                    <span className="badge badge-primary">{featuredEvent.type}</span>
+                    <h4 className="event-title-text">{featuredEvent.title}</h4>
+                    <div className="event-loc-time">
+                      <span><MapPin size={14} /> {featuredEvent.location}</span>
+                      {featuredEvent.time && <span><Clock size={14} /> {featuredEvent.time}</span>}
+                    </div>
+                    <p className="event-excerpt-text">{featuredEvent.description}</p>
+                    <Link to="/program#agenda" className="btn btn-primary btn-sm">
+                      <span>Ikuti Agenda</span>
+                      <ArrowRight size={14} />
+                    </Link>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-muted">Tidak ada agenda terdekat saat ini.</p>
+              )}
+            </div>
+
+            {/* Right: Featured Article */}
+            <div className="editorial-articles-col">
+              <h3 className="col-subheading">Bacaan Pilihan</h3>
+              {featuredArticle ? (
+                <div className="editorial-article-card">
+                  <div className="article-photo-box">
+                    <img
+                      src={featuredArticle.image}
+                      alt={featuredArticle.title}
+                      className="article-photo-thumb"
+                    />
+                  </div>
+                  <div className="article-body-box">
+                    <span className="badge badge-emerald">{featuredArticle.category}</span>
+                    <h4 className="article-title-text">{featuredArticle.title}</h4>
+                    <p className="article-excerpt-text">{featuredArticle.excerpt}</p>
+                    <Link to={`/artikel/${featuredArticle.slug}`} className="article-read-link">
+                      <span>Baca Selengkapnya</span>
+                      <ArrowRight size={14} />
+                    </Link>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Instagram Official Feed */}
+      <InstagramSection />
+
+      {/* Network of Schools */}
+      <section className="section section-beige">
+        <div className="container text-center">
+          <span className="badge badge-primary" style={{ marginBottom: 'var(--space-md)' }}>
+            JEJARING RESMI
+          </span>
+          <h2 style={{ marginBottom: 'var(--space-md)' }}>Bergerak Bersama Sekolah Anggota</h2>
+          <p style={{ maxWidth: '640px', margin: '0 auto var(--space-3xl)' }}>
+            Menjalin ukhuwah dan kerja sama dakwah pelajar lintas SMA, SMK, dan MA se-Kabupaten Banyumas.
+          </p>
+          <div className="network-pill-cloud">
+            {networkSchools.map((sch) => (
+              <div key={sch.id} className="network-school-pill">
+                <School size={16} className="text-accent" />
+                <span>{sch.name}</span>
+              </div>
+            ))}
+          </div>
+          <div style={{ marginTop: 'var(--space-2xl)' }}>
             <Link to="/rohis-anggota" className="btn btn-outline">
-              Lihat Struktur BPH, Divisi & ROHIS Anggota <ArrowRight size={16} />
+              <span>Lihat Seluruh Sekolah Anggota & Struktur BPH</span>
+              <ArrowRight size={16} />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* 12: Final CTA Section */}
-      <section className="section home-cta-section pattern-bg" data-section="contact">
-        <div className="container text-center">
-          <div className="home-cta animate-on-scroll">
-            <h2>Siap Bergabung Bersama Kami?</h2>
-            <p>
-              Jadilah bagian dari gerakan dakwah pemuda Islam terbesar di Kabupaten Banyumas.
-              Bersama, kita wujudkan generasi yang berilmu, berakhlak, dan berdampak.
+      {/* =========================================================
+          SECTION 8: CLOSING INVITATION / CTA (Forest Card)
+          ========================================================= */}
+      <section className="section section-ivory" data-section="contact">
+        <div className="container">
+          <div className="editorial-closing-card">
+            <span className="badge badge-primary">MARI BERGABUNG</span>
+            <h2 className="closing-headline">Mari Tumbuh Bersama.</h2>
+            <p className="closing-lead">
+              Pintu selalu terbuka bagi pelajar yang ingin belajar, mengasah kepemimpinan, 
+              dan bersama-sama menghidupkan dakwah Islam rahmatan lil 'alamin di Kabupaten Banyumas.
             </p>
-            <div className="home-cta-actions">
+            <div className="closing-actions">
               <Link to="/pendaftaran" className="btn btn-primary btn-lg">
-                Daftar Sekarang
+                <span>Daftar Menjadi Bagian ROKABA</span>
+                <ArrowRight size={17} />
               </Link>
               <Link to="/kontak" className="btn btn-outline btn-lg">
-                Hubungi Kami
+                <span>Hubungi Pengurus</span>
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Cinema Lightbox Modal */}
+      {/* Cinema Lightbox Modal for Photo and Video Playback */}
       {selectedItem && (
         <div
           className="gallery-cinema-backdrop"
@@ -649,162 +709,128 @@ export default function Home() {
                 )}
                 {currentMedia?.url && !isVideo && (
                   <a
-                    href={currentMedia.url}
+                    href={directImageUrl || currentMedia.url}
                     target="_blank"
-                    rel="noreferrer"
-                    className="cinema-icon-btn"
-                    title="Buka gambar penuh"
+                    rel="noopener noreferrer"
+                    className="cinema-action-btn"
+                    title="Buka foto ukuran asli di tab baru"
                   >
-                    <ExternalLink size={17} />
+                    <ExternalLink size={18} />
                   </a>
                 )}
                 <button
-                  className="cinema-icon-btn cinema-close-btn"
+                  className="cinema-close-btn"
                   onClick={handleCloseModal}
-                  aria-label="Tutup"
-                  title="Tutup (Esc)"
+                  aria-label="Tutup penampil media"
                 >
                   <X size={20} />
                 </button>
               </div>
             </div>
 
-            {/* Media Stage */}
+            {/* Cinema Stage */}
             <div className="cinema-stage">
-              {currentMedia ? (
-                <>
-                  {isVideo ? (
-                    <div className="cinema-video-wrapper">
-                      {ytEmbedUrl ? (
-                        <iframe
-                          src={ytEmbedUrl}
-                          title={currentMedia.caption || selectedItem.title}
-                          className="cinema-iframe"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                          allowFullScreen
-                        />
-                      ) : driveEmbedUrl ? (
-                        <iframe
-                          src={driveEmbedUrl}
-                          title={currentMedia.caption || selectedItem.title}
-                          className="cinema-iframe"
-                          allow="autoplay; encrypted-media"
-                          allowFullScreen
-                        />
-                      ) : (
-                        <video
-                          controls
-                          autoPlay
-                          playsInline
-                          className="cinema-direct-video"
-                          src={currentMedia.url}
-                        >
-                          Browser Anda tidak mendukung video HTML5.
-                        </video>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="cinema-image-wrapper">
-                      <img
-                        src={directImageUrl}
-                        alt={currentMedia.caption || selectedItem.title}
-                        className="cinema-main-img"
-                        onError={(e) => {
-                          const driveId = extractGoogleDriveId(currentMedia.url);
-                          if (driveId && !e.currentTarget.dataset.fallback) {
-                            e.currentTarget.dataset.fallback = 'true';
-                            e.currentTarget.src = `https://drive.google.com/thumbnail?id=${driveId}&sz=w1600`;
-                          }
-                        }}
-                      />
-                    </div>
-                  )}
-
-                  {currentMedia.caption && (
-                    <div className="cinema-caption-overlay">
-                      <p>{currentMedia.caption}</p>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="gallery-modal-placeholder">
-                  <span>{selectedItem.emoji || '📸'}</span>
-                  <p>Belum ada dokumentasi untuk kegiatan ini.</p>
-                </div>
+              {activeMediaList.length > 1 && (
+                <button
+                  className="cinema-nav-arrow left"
+                  onClick={handlePrevMedia}
+                  aria-label="Media sebelumnya"
+                >
+                  <ChevronLeft size={28} />
+                </button>
               )}
 
-              {/* Navigation Arrows */}
+              <div className="cinema-viewport">
+                {isVideo ? (
+                  <div className="cinema-video-container">
+                    {ytEmbedUrl ? (
+                      <iframe
+                        src={ytEmbedUrl}
+                        title={selectedItem.title}
+                        className="cinema-iframe"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    ) : driveEmbedUrl ? (
+                      <iframe
+                        src={driveEmbedUrl}
+                        title={selectedItem.title}
+                        className="cinema-iframe"
+                        allow="autoplay"
+                        allowFullScreen
+                      />
+                    ) : (
+                      <video
+                        src={currentMedia.url}
+                        controls
+                        autoPlay
+                        className="cinema-native-video"
+                      />
+                    )}
+                  </div>
+                ) : (
+                  <div className="cinema-image-container">
+                    <img
+                      src={directImageUrl || currentMedia.url}
+                      alt={currentMedia.caption || selectedItem.title}
+                      className="cinema-main-img"
+                    />
+                  </div>
+                )}
+              </div>
+
               {activeMediaList.length > 1 && (
-                <>
-                  <button
-                    className="cinema-nav-btn cinema-nav-prev"
-                    onClick={handlePrevMedia}
-                    aria-label="Sebelumnya"
-                  >
-                    <ChevronLeft size={28} />
-                  </button>
-                  <button
-                    className="cinema-nav-btn cinema-nav-next"
-                    onClick={handleNextMedia}
-                    aria-label="Selanjutnya"
-                  >
-                    <ChevronRight size={28} />
-                  </button>
-                </>
+                <button
+                  className="cinema-nav-arrow right"
+                  onClick={handleNextMedia}
+                  aria-label="Media selanjutnya"
+                >
+                  <ChevronRight size={28} />
+                </button>
               )}
             </div>
 
-            {/* Filmstrip */}
-            {activeMediaList.length > 1 && (
-              <div className="cinema-filmstrip-container">
+            {/* Footer / Caption & Filmstrip */}
+            <div className="cinema-footer">
+              <div className="cinema-caption-row">
+                <p className="cinema-caption-text">
+                  {currentMedia?.caption || selectedItem.description || selectedItem.title}
+                </p>
+                {selectedItem.date && (
+                  <span className="cinema-date-tag">
+                    <Calendar size={13} />
+                    <span>{selectedItem.date}</span>
+                  </span>
+                )}
+              </div>
+
+              {activeMediaList.length > 1 && (
                 <div className="cinema-filmstrip" ref={filmstripRef}>
                   {activeMediaList.map((media, idx) => {
-                    const thumb = getMediaThumbnail(media);
-                    const isVid = isVideoMedia(media);
-                    const isActive = idx === activeMediaIndex;
-
+                    const thumbUrl = getMediaThumbnail(media);
+                    const isMediaVid = isVideoMedia(media);
                     return (
                       <button
-                        key={media.id || idx}
-                        type="button"
-                        className={`cinema-thumb-btn ${isActive ? 'active' : ''}`}
+                        key={idx}
+                        className={`filmstrip-thumb ${idx === activeMediaIndex ? 'active' : ''}`}
                         onClick={() => setActiveMediaIndex(idx)}
-                        title={media.caption || `Item ${idx + 1}`}
                       >
-                        {thumb ? (
-                          <img src={thumb} alt={media.caption || `Thumb ${idx + 1}`} />
+                        {thumbUrl ? (
+                          <img src={thumbUrl} alt="" className="thumb-img" />
                         ) : (
-                          <div className="cinema-thumb-fallback">
-                            {isVid ? <Film size={18} /> : <Camera size={18} />}
+                          <div className="thumb-placeholder">
+                            {isMediaVid ? <Film size={18} /> : <Camera size={18} />}
                           </div>
                         )}
-                        {isVid && (
-                          <span className="cinema-thumb-play">
-                            <Play size={10} fill="currentColor" />
-                          </span>
+                        {isMediaVid && (
+                          <div className="thumb-vid-icon">
+                            <Play size={12} fill="currentColor" />
+                          </div>
                         )}
                       </button>
                     );
                   })}
                 </div>
-              </div>
-            )}
-
-            {/* Bottom Details */}
-            <div className="cinema-bottom-info">
-              <div className="cinema-meta-row">
-                {selectedItem.date && (
-                  <span className="cinema-date">
-                    <Calendar size={14} style={{ display: 'inline', marginRight: 5, verticalAlign: -2 }} />
-                    {selectedItem.date}
-                  </span>
-                )}
-                <span className="cinema-summary-count">
-                  {getMediaSummary(selectedItem).label}
-                </span>
-              </div>
-              {selectedItem.description && (
-                <p className="cinema-description">{selectedItem.description}</p>
               )}
             </div>
           </div>

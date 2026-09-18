@@ -1,13 +1,12 @@
 /* =========================================================
    STATS COUNTER — Organization Snapshot & Impact
-   MODERN ISLAMIC EDITORIAL • Deep Pine Cards • Warm Brass Accent
+   Warm Ivory Base • White Architectural Cards • Brass Accents
    ========================================================= */
 
 .stats-section {
   position: relative;
   z-index: 5;
   padding: 0 0 var(--space-4xl);
-  margin-top: -24px;
 }
 
 /* ── Top Meta Pill ── */
@@ -21,48 +20,45 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 22px;
-  padding: 8px 26px;
-  background: rgba(14, 38, 29, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(200, 168, 91, 0.24);
+  gap: 20px;
+  padding: 8px 24px;
+  background: #FFFFFF;
+  border: 1px solid rgba(184, 146, 72, 0.25);
   border-radius: var(--radius-pill);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 4px 16px rgba(28, 38, 32, 0.05);
   font-size: 0.86rem;
-  color: var(--color-text-secondary);
+  color: #4A5B51;
   font-family: var(--font-heading);
   transition: all var(--transition-base);
 }
 
 .stats-meta-pill:hover {
-  border-color: rgba(200, 168, 91, 0.45);
-  background: rgba(18, 48, 37, 0.94);
+  border-color: #B89248;
   transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(28, 38, 32, 0.08);
 }
 
 .stats-meta-item {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
 }
 
 .stats-meta-val {
-  color: var(--color-forest);
+  color: #081A12;
   font-weight: 700;
-  font-size: 0.92rem;
+  font-size: 0.90rem;
 }
 
 .stats-meta-lbl {
-  color: var(--color-text-secondary);
+  color: #55685D;
   font-weight: 500;
 }
 
 .stats-meta-dot {
-  color: var(--color-gold);
+  color: #B89248;
   font-size: 1.1rem;
   line-height: 1;
-  opacity: 0.75;
 }
 
 .stats-grid {
@@ -76,15 +72,19 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 30px 20px 26px;
+  padding: 28px 20px 24px;
+  background: #FFFFFF;
+  border: 1px solid rgba(184, 146, 72, 0.20);
   border-radius: var(--radius-xl);
-  transition: transform 0.25s var(--ease-out), border-color 0.25s var(--ease-out);
+  box-shadow: 0 4px 20px -2px rgba(28, 38, 32, 0.05);
+  transition: transform 0.25s var(--ease-out), border-color 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out);
   position: relative;
 }
 
 .stat-glass-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(200, 168, 91, 0.40);
+  border-color: #B89248;
+  box-shadow: 0 10px 28px -4px rgba(28, 38, 32, 0.09);
 }
 
 /* ── Icon Box ── */
@@ -92,196 +92,72 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
   border-radius: var(--radius-md);
-  margin-bottom: 18px;
-  background: rgba(200, 168, 91, 0.10);
-  border: 1px solid rgba(200, 168, 91, 0.25);
-  color: var(--color-gold-light);
-  transition: transform 0.25s ease;
+  margin-bottom: 16px;
+  background: rgba(184, 146, 72, 0.10);
+  border: 1px solid rgba(184, 146, 72, 0.24);
+  color: #7A5F20;
 }
 
-.stat-glass-card:hover .stat-glass-icon-box {
-  transform: scale(1.06);
-}
-
-/* 1. Green / Emerald (Sekolah) */
-.stat-green .stat-glass-icon-box {
-  background: rgba(31, 111, 80, 0.25);
-  color: #82D1AF;
-  border-color: rgba(31, 111, 80, 0.45);
-}
-
-/* 2. Cyan / Sage (Anggota Aktif) */
-.stat-cyan .stat-glass-icon-box {
-  background: rgba(127, 191, 164, 0.20);
-  color: #A0D7C1;
-  border-color: rgba(127, 191, 164, 0.40);
-}
-
-/* 3. Gold / Amber (Event Besar) */
-.stat-gold .stat-glass-icon-box {
-  background: rgba(200, 168, 91, 0.18);
-  color: var(--color-gold-light);
-  border-color: rgba(200, 168, 91, 0.45);
-}
-
-/* 4. Heritage Forest (Tahun Berdiri) */
-.stat-purple .stat-glass-icon-box {
-  background: rgba(46, 125, 90, 0.22);
-  color: #A2E2C5;
-  border-color: rgba(46, 125, 90, 0.45);
-}
-
-/* ── Value & Label ── */
 .stat-value {
   font-family: var(--font-heading);
-  font-size: 2.25rem;
+  font-size: clamp(2rem, 3.2vw, 2.75rem);
   font-weight: 800;
-  color: var(--color-forest);
-  line-height: 1.15;
+  color: #081A12;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
   margin-bottom: 6px;
-  letter-spacing: -0.02em;
 }
 
 .stat-label {
   font-size: 0.86rem;
-  color: var(--color-text-secondary);
+  color: #55685D;
   font-weight: 500;
   line-height: 1.4;
-  max-width: 200px;
+  margin-bottom: 14px;
 }
 
-/* ── Bottom Diamond Accent ── */
+/* Diamond accent */
 .stat-diamond-accent {
-  margin-top: 16px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+  gap: 6px;
+  width: 50px;
+  opacity: 0.45;
 }
 
-.stat-diamond-accent .diamond-line {
-  width: 20px;
+.diamond-line {
+  flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(200, 168, 91, 0.35));
+  background: #B89248;
 }
 
-.stat-diamond-accent .diamond-line:last-child {
-  background: linear-gradient(90deg, rgba(200, 168, 91, 0.35), transparent);
-}
-
-.stat-diamond-accent .diamond-dot {
-  width: 5px;
-  height: 5px;
-  background: var(--color-gold);
+.diamond-dot {
+  width: 4px;
+  height: 4px;
+  background: #B89248;
   transform: rotate(45deg);
-  display: inline-block;
-  opacity: 0.75;
-  border-radius: 1px;
 }
 
-/* ── Responsive ── */
-@media (max-width: 1024px) {
+@media (max-width: 900px) {
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 768px) {
-  .stats-meta-pill-wrap {
-    margin-bottom: var(--space-xl);
-    padding: 0 6px;
+@media (max-width: 540px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
   }
-
+  
   .stats-meta-pill {
-    display: inline-flex;
-    flex-direction: row;
     flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 8px 18px;
-    font-size: 0.80rem;
-    border-radius: var(--radius-pill);
+    gap: 10px;
   }
-
-  .stats-meta-item {
-    gap: 5px;
-  }
-
-  .stats-meta-val {
-    font-size: 0.88rem;
-  }
-
-  .stats-meta-lbl {
-    font-size: 0.76rem;
-  }
-
+  
   .stats-meta-dot {
-    display: inline-block;
-    font-size: 0.85rem;
-  }
-}
-
-@media (max-width: 640px) {
-  .stats-section {
-    margin-top: 0;
-  }
-
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-
-  .stat-glass-card {
-    padding: 16px 12px;
-    border-radius: var(--radius-lg);
-  }
-
-  .stat-glass-icon-box {
-    width: 42px;
-    height: 42px;
-    margin-bottom: 10px;
-  }
-
-  .stat-glass-icon-box svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .stat-value {
-    font-size: 1.7rem;
-    margin-bottom: 4px;
-  }
-
-  .stat-label {
-    font-size: 0.76rem;
-    line-height: 1.35;
-  }
-
-  .stat-diamond-accent {
-    margin-top: 8px;
-  }
-}
-
-@media (max-width: 420px) {
-  .stats-meta-pill {
-    gap: 8px;
-    padding: 7px 12px;
-    font-size: 0.74rem;
-  }
-
-  .stats-meta-val {
-    font-size: 0.80rem;
-  }
-
-  .stats-meta-lbl {
-    font-size: 0.70rem;
-  }
-
-  .stat-value {
-    font-size: 1.5rem;
+    display: none;
   }
 }
