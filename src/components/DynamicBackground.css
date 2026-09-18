@@ -1,10 +1,11 @@
 /* =========================================================================
-   QUIET EDITORIAL CANVAS & ISLAMIC WATERMARK ENVIRONMENT
-   Warm Ivory (#FBF9F5) • Archival Parchment • Antique Brass Watermark (1.5%)
-   Dignified, serene, timeless publication atmosphere
+   PREMIUM DARK ISLAMIC DIGITAL ENVIRONMENT — MULTI-LAYER DYNAMIC SYSTEM
+   Deep Obsidian • Charcoal • Emerald Auroral Horizon • Subtle Sacred Geometry
+   70% Near Black/Charcoal • 20% Dark Forest/Teal • 8% Emerald • 2% Subtle Accent
    ========================================================================= */
 
-.editorial-canvas-container {
+/* Root Environment Viewport Container (Zero Layout Interference, Continuous Digital Canvas) */
+.dynamic-environment-container {
   position: fixed;
   inset: 0;
   width: 100vw;
@@ -14,41 +15,532 @@
   pointer-events: none;
   overflow: hidden !important;
   contain: strict;
-  background-color: var(--color-canvas-ivory, #FBF9F5);
+  background-color: #07140E;
 }
 
-/* Layer 1: Warm Ivory Base */
-.canvas-base-layer {
+/* Base layer positioning utility */
+.env-layer {
   position: absolute;
   inset: 0;
-  background-color: #FBF9F5;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
-/* Layer 2: Subtle Ambient Sunbeam Tone (ultra faint natural warmth) */
-.canvas-warmth-layer {
+/* =========================================================================
+   LAYER 1: BASE DEEP PINE & WARM BRASS ATMOSPHERE
+   Rich, architectural Islamic environment (deep forest pine, warm brass aura)
+   ========================================================================= */
+.env-layer-base {
   position: absolute;
   inset: 0;
+  transition: background 1.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.4s ease;
+  will-change: background;
+}
+
+/* 1. HERO: Deep majestic forest pine with warm antique brass horizon light */
+.dynamic-environment-container[data-active-section="hero"] .env-layer-base,
+.dynamic-environment-container:not([data-active-section]) .env-layer-base {
   background:
-    radial-gradient(ellipse 90% 60% at 75% 10%, rgba(184, 146, 72, 0.035) 0%, transparent 60%),
-    radial-gradient(circle at 15% 40%, rgba(19, 78, 55, 0.02) 0%, transparent 55%),
-    linear-gradient(180deg, #FBF9F5 0%, #F8F4EC 50%, #F5F0E6 100%);
+    radial-gradient(ellipse 110% 70% at 50% -5%, rgba(31, 111, 80, 0.22) 0%, rgba(14, 56, 40, 0.12) 40%, transparent 70%),
+    radial-gradient(circle at 85% 20%, rgba(200, 168, 91, 0.06) 0%, transparent 45%),
+    radial-gradient(circle at 15% 55%, rgba(26, 92, 66, 0.10) 0%, transparent 50%),
+    linear-gradient(180deg, #07140E 0%, #091A13 50%, #06110C 100%);
 }
 
-/* Layer 3: Ultra-Faint 8-Point Islamic Geometric Watermark */
-.canvas-watermark-layer {
+/* 2. TENTANG: Velvet forest depth with subtle warm parchment haze */
+.dynamic-environment-container[data-active-section="about"] .env-layer-base {
+  background:
+    radial-gradient(ellipse 110% 75% at 35% 15%, rgba(31, 111, 80, 0.16) 0%, rgba(200, 168, 91, 0.05) 45%, transparent 70%),
+    radial-gradient(ellipse 80% 60% at 10% 85%, rgba(14, 56, 40, 0.10) 0%, transparent 60%),
+    linear-gradient(180deg, #07140E 0%, #0A1C14 50%, #06100B 100%);
+}
+
+/* 3. PROGRAM & AGENDA: Structured deep pine, scholarly dignity */
+.dynamic-environment-container[data-active-section="program"] .env-layer-base {
+  background:
+    radial-gradient(ellipse 120% 70% at 65% 20%, rgba(31, 111, 80, 0.18) 0%, rgba(10, 40, 30, 0.20) 50%, transparent 75%),
+    radial-gradient(circle at 15% 85%, rgba(200, 168, 91, 0.04) 0%, transparent 50%),
+    linear-gradient(180deg, #06110C 0%, #081710 50%, #06100B 100%);
+}
+
+/* 4. ARTIKEL: Scholarly editorial atmosphere, maximum reading focus */
+.dynamic-environment-container[data-active-section="article"] .env-layer-base {
+  background:
+    radial-gradient(ellipse 95% 50% at 50% 15%, rgba(31, 111, 80, 0.12) 0%, transparent 60%),
+    linear-gradient(180deg, #07130D 0%, #08160F 50%, #06100B 100%);
+}
+
+/* 5. GALERI: Dignified gallery atmosphere with soft natural amber & emerald reflection */
+.dynamic-environment-container[data-active-section="gallery"] .env-layer-base {
+  background:
+    radial-gradient(ellipse 120% 80% at 50% 40%, rgba(31, 111, 80, 0.18) 0%, rgba(200, 168, 91, 0.06) 50%, transparent 75%),
+    linear-gradient(180deg, #06110C 0%, #081710 50%, #06100B 100%);
+}
+
+/* 6. ROHIS ANGGOTA: Deep pine forest, harmonious institutional unity */
+.dynamic-environment-container[data-active-section="members"] .env-layer-base {
+  background:
+    radial-gradient(ellipse 115% 75% at 50% 25%, rgba(31, 111, 80, 0.16) 0%, rgba(200, 168, 91, 0.05) 50%, transparent 75%),
+    linear-gradient(180deg, #07140E 0%, #091A13 50%, #06100B 100%);
+}
+
+/* 7. KONTAK: Warm, peaceful closing sanctuary */
+.dynamic-environment-container[data-active-section="contact"] .env-layer-base {
+  background:
+    radial-gradient(ellipse 120% 80% at 50% 70%, rgba(31, 111, 80, 0.16) 0%, rgba(200, 168, 91, 0.08) 45%, transparent 75%),
+    linear-gradient(180deg, #06110C 0%, #081710 50%, #06100B 100%);
+}
+
+/* =========================================================================
+   LAYER 2: LARGE RADIAL GRADIENTS & EVOLVING LIGHT HORIZONS
+   Subtle 5% scroll parallax, shifting light horizons per section
+   ========================================================================= */
+.env-layer-radial {
+  will-change: transform;
+}
+
+.radial-horizon {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.65;
+  transition: transform 1.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.8s ease, background 1.8s ease;
+  will-change: transform, opacity;
+}
+
+.horizon-primary {
+  top: -15vh;
+  left: 15vw;
+  width: 70vw;
+  height: 55vh;
+  background: radial-gradient(circle, rgba(31, 111, 80, 0.22) 0%, rgba(14, 56, 40, 0.08) 50%, transparent 80%);
+  filter: blur(95px);
+  animation: neonHorizonBreathe 10s ease-in-out infinite alternate;
+}
+
+@keyframes neonHorizonBreathe {
+  0% {
+    opacity: 0.60;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.85;
+    transform: scale(1.05);
+  }
+}
+
+.horizon-secondary {
+  bottom: 0vh;
+  right: -10vw;
+  width: 55vw;
+  height: 48vh;
+  filter: blur(105px);
+  opacity: 0.50;
+  background: radial-gradient(circle, rgba(31, 111, 80, 0.16) 0%, rgba(200, 168, 91, 0.06) 50%, transparent 70%);
+}
+
+.horizon-accent {
+  top: 35vh;
+  left: -8vw;
+  width: 48vw;
+  height: 42vh;
+  filter: blur(115px);
+  opacity: 0.40;
+  background: radial-gradient(circle, rgba(200, 168, 91, 0.08) 0%, transparent 65%);
+}
+
+/* Section-specific horizon shifts */
+.dynamic-environment-container[data-active-section="about"] .horizon-primary {
+  transform: translate3d(-8vw, 15vh, 0);
+  background: radial-gradient(circle, rgba(31, 111, 80, 0.20) 0%, rgba(200, 168, 91, 0.06) 50%, transparent 80%);
+}
+
+.dynamic-environment-container[data-active-section="program"] .horizon-primary {
+  transform: translate3d(15vw, 12vh, 0);
+  background: radial-gradient(circle, rgba(31, 111, 80, 0.22) 0%, rgba(20, 75, 55, 0.12) 55%, transparent 80%);
+}
+
+.dynamic-environment-container[data-active-section="article"] .horizon-primary {
+  transform: translate3d(0vw, 18vh, 0);
+  opacity: 0.35;
+  background: radial-gradient(circle, rgba(31, 111, 80, 0.12) 0%, transparent 75%);
+}
+
+.dynamic-environment-container[data-active-section="gallery"] .horizon-primary {
+  transform: translate3d(5vw, 25vh, 0);
+  opacity: 0.65;
+  background: radial-gradient(circle, rgba(31, 111, 80, 0.22) 0%, rgba(200, 168, 91, 0.05) 60%, transparent 85%);
+}
+
+.dynamic-environment-container[data-active-section="members"] .horizon-primary {
+  transform: translate3d(-3vw, 18vh, 0);
+  background: radial-gradient(circle, rgba(31, 111, 80, 0.18) 0%, rgba(200, 168, 91, 0.04) 60%, transparent 80%);
+}
+
+.dynamic-environment-container[data-active-section="contact"] .horizon-primary {
+  transform: translate3d(0vw, 38vh, 0);
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.22) 0%, rgba(0, 240, 207, 0.10) 50%, transparent 80%);
+}
+
+/* =========================================================================
+   LAYER 3: BLURRED ORGANIC LIQUID SHAPES
+   Translucent, soft, rounded, glass-like, slow floating ambient drift (32s–46s)
+   Combined with 10% scroll parallax
+   ========================================================================= */
+.env-layer-organic {
+  will-change: transform;
+}
+
+.organic-shape {
+  position: absolute;
+  border-radius: 46% 54% 50% 50% / 48% 46% 54% 52%;
+  filter: blur(100px);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.organic-shape-1 {
+  top: -10vh;
+  left: 20vw;
+  width: 58vw;
+  height: 48vw;
+  opacity: 0.45;
+  background: radial-gradient(circle, rgba(31, 111, 80, 0.18) 0%, rgba(14, 56, 40, 0.08) 60%, transparent 100%);
+  animation: organicDrift1 28s ease-in-out infinite alternate;
+}
+
+.organic-shape-2 {
+  top: 32vh;
+  right: -12vw;
+  width: 52vw;
+  height: 46vw;
+  opacity: 0.35;
+  background: radial-gradient(circle, rgba(200, 168, 91, 0.06) 0%, rgba(31, 111, 80, 0.08) 60%, transparent 100%);
+  animation: organicDrift2 32s ease-in-out infinite alternate;
+}
+
+.organic-shape-3 {
+  bottom: -12vh;
+  left: -8vw;
+  width: 48vw;
+  height: 42vw;
+  opacity: 0.25;
+  background: radial-gradient(circle, rgba(31, 111, 80, 0.12) 0%, rgba(200, 168, 91, 0.04) 50%, transparent 100%);
+  animation: organicDrift3 42s ease-in-out infinite alternate;
+}
+
+.organic-shape-4 {
+  top: 60vh;
+  left: 30vw;
+  width: 45vw;
+  height: 40vw;
+  opacity: 0.18;
+  background: radial-gradient(circle, rgba(14, 56, 40, 0.12) 0%, transparent 70%);
+  animation: organicDrift4 46s ease-in-out infinite alternate;
+}
+
+/* =========================================================================
+   LAYER 4: ISLAMIC GEOMETRIC PATTERN PLANES (7 SECTION BESPOKE VECTORS)
+   Modern architectural tessellations, extremely subtle (1.5%–3.5% opacity),
+   smooth motif morphing (scale 1.00 -> 1.04, rotation 0 -> 1.8deg) & 3% parallax
+   ========================================================================= */
+.env-layer-patterns {
+  will-change: transform;
+}
+
+.pattern-plane {
   position: absolute;
   inset: 0;
-  opacity: 0.022; /* 2.2% subtle watermark */
-  background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M60 10 L68 35 L93 27 L85 52 L110 60 L85 68 L93 93 L68 85 L60 110 L52 85 L27 93 L35 68 L10 60 L35 52 L27 27 L52 35 Z' fill='none' stroke='%23081A12' stroke-width='1' stroke-linejoin='round'/%3E%3Cpolygon points='60,25 95,60 60,95 25,60' fill='none' stroke='%23081A12' stroke-width='0.8'/%3E%3Cpolygon points='35,35 85,35 85,85 35,85' fill='none' stroke='%23081A12' stroke-width='0.8'/%3E%3Ccircle cx='60' cy='60' r='12' fill='none' stroke='%23B89248' stroke-width='0.8'/%3E%3C/svg%3E");
+  width: 100%;
+  height: 100%;
   background-repeat: repeat;
+  pointer-events: none;
+  display: none;
+  opacity: 0;
+  will-change: opacity, transform;
+  transform-origin: center center;
+}
+
+.pattern-hero {
+  background-image: url('/patterns/pattern-hero.svg');
   background-size: 120px 120px;
 }
 
-/* Layer 4: Organic Tactile Paper Texture */
-.canvas-grain-layer {
+.pattern-about {
+  background-image: url('/patterns/pattern-about.svg');
+  background-size: 160px 160px;
+}
+
+.pattern-program {
+  background-image: url('/patterns/pattern-program.svg');
+  background-size: 140px 140px;
+}
+
+.pattern-article {
+  background-image: url('/patterns/pattern-article.svg');
+  background-size: 120px 120px;
+}
+
+.pattern-gallery {
+  background-image: url('/patterns/pattern-gallery.svg');
+  background-size: 150px 150px;
+}
+
+.pattern-members {
+  background-image: url('/patterns/pattern-members.svg');
+  background-size: 140px 140px;
+}
+
+.pattern-contact {
+  background-image: url('/patterns/pattern-contact.svg');
+  background-size: 160px 160px;
+}
+
+/* =========================================================================
+   LAYER 5: THIN ARCHITECTURAL SPATIAL LINES
+   Ultra-fine 0.5px subtle structural guide lines giving spatial editorial depth
+   ========================================================================= */
+.arch-guide-line {
+  position: absolute;
+  pointer-events: none;
+}
+
+.arch-line-v1 {
+  left: 16vw;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 255, 210, 0.032) 25%, rgba(0, 255, 210, 0.015) 80%, transparent 100%);
+}
+
+.arch-line-v2 {
+  right: 16vw;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent 0%, rgba(56, 189, 248, 0.028) 30%, rgba(0, 221, 184, 0.012) 85%, transparent 100%);
+}
+
+.arch-line-diag {
+  top: 22vh;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(0, 221, 184, 0.022) 35%, rgba(56, 189, 248, 0.018) 65%, transparent 100%);
+}
+
+/* =========================================================================
+   LAYER 6: SOFT AMBIENT BLOOM / GLOW
+   Soft atmospheric bloom following section focus with 8% parallax
+   ========================================================================= */
+.env-layer-bloom {
   position: absolute;
   inset: 0;
-  opacity: 0.025;
-  background-image: radial-gradient(#1C2620 0.8px, transparent 0.8px);
-  background-size: 24px 24px;
+  background:
+    radial-gradient(ellipse 85% 65% at 50% 25%, rgba(0, 240, 207, 0.09) 0%, rgba(0, 160, 130, 0.03) 45%, transparent 70%),
+    radial-gradient(ellipse 65% 50% at 80% 65%, rgba(0, 240, 207, 0.06) 0%, transparent 60%);
+  will-change: transform;
+}
+
+/* =========================================================================
+   LAYER 6.5: SOFT CINEMATIC GREEN NEON HORIZON FLARE & LIGHT BEAM
+   Anamorphic soft widescreen neon flare with gentle organic breathing
+   ========================================================================= */
+.env-layer-neon-anamorphic {
+  position: absolute;
+  top: 36vh;
+  left: 0;
+  width: 100%;
+  max-width: 100%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 240, 207, 0.04) 10%,
+    rgba(0, 240, 207, 0.32) 40%,
+    rgba(95, 227, 194, 0.50) 50%,
+    rgba(0, 240, 207, 0.32) 60%,
+    rgba(0, 240, 207, 0.04) 90%,
+    transparent 100%
+  );
+  filter: blur(3px) drop-shadow(0 0 20px rgba(0, 240, 207, 0.65)) drop-shadow(0 0 50px rgba(0, 240, 207, 0.28));
+  opacity: 0.65;
+  pointer-events: none;
+  animation: anamorphicBreathe 12s ease-in-out infinite alternate;
+  will-change: opacity, transform;
+}
+
+@keyframes anamorphicBreathe {
+  0% {
+    opacity: 0.45;
+    transform: translateY(0) scaleX(0.96);
+  }
+  50% {
+    opacity: 0.75;
+    transform: translateY(-6px) scaleX(1.02);
+  }
+  100% {
+    opacity: 0.50;
+    transform: translateY(4px) scaleX(0.98);
+  }
+}
+
+/* =========================================================================
+   LAYER 7: SUBTLE ARCHITECTURAL GRAIN
+   Adds dignified tactile depth to prevent color banding
+   ========================================================================= */
+.env-layer-noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.018;
+  background-image: radial-gradient(rgba(200, 168, 91, 0.25) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* =========================================================================
+   LAYER 8: DIGNIFIED SANCTUARY VIGNETTE
+   Subtle edge falloff focusing attention on content
+   ========================================================================= */
+.env-layer-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 110% 110% at 50% 50%, transparent 50%, rgba(5, 14, 10, 0.75) 100%);
+}
+
+/* =========================================================================
+   LAYER 9: SUBTLE WARM AMBIENT REFLECTION
+   Warm gold & sage hairline gradient
+   ========================================================================= */
+.env-layer-specular {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(200, 168, 91, 0.015) 0%, transparent 40%, rgba(31, 111, 80, 0.01) 70%, transparent 100%);
+}
+
+/* =========================================================================
+   GPU KEYFRAME DRIFT ANIMATIONS (Very slow, calm, non-distracting)
+   ========================================================================= */
+@keyframes organicDrift1 {
+  0% {
+    transform: translate3d(0, var(--scroll-parallax, 0px), 0) scale(1);
+  }
+  50% {
+    transform: translate3d(3vw, calc(4vh + var(--scroll-parallax, 0px)), 0) scale(1.05);
+  }
+  100% {
+    transform: translate3d(-2vw, calc(6vh + var(--scroll-parallax, 0px)), 0) scale(0.97);
+  }
+}
+
+@keyframes organicDrift2 {
+  0% {
+    transform: translate3d(0, var(--scroll-parallax, 0px), 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-4vw, calc(-3vh + var(--scroll-parallax, 0px)), 0) scale(1.06);
+  }
+  100% {
+    transform: translate3d(2vw, calc(5vh + var(--scroll-parallax, 0px)), 0) scale(0.95);
+  }
+}
+
+@keyframes organicDrift3 {
+  0% {
+    transform: translate3d(0, var(--scroll-parallax, 0px), 0) scale(1);
+  }
+  50% {
+    transform: translate3d(4vw, calc(-2vh + var(--scroll-parallax, 0px)), 0) scale(1.04);
+  }
+  100% {
+    transform: translate3d(-3vw, calc(-4vh + var(--scroll-parallax, 0px)), 0) scale(0.98);
+  }
+}
+
+@keyframes organicDrift4 {
+  0% {
+    transform: translate3d(0, var(--scroll-parallax, 0px), 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-2vw, calc(3vh + var(--scroll-parallax, 0px)), 0) scale(1.05);
+  }
+  100% {
+    transform: translate3d(3vw, calc(-3vh + var(--scroll-parallax, 0px)), 0) scale(0.96);
+  }
+}
+
+/* =========================================================================
+   MOBILE & TABLET RESPONSIVENESS (Ultra-smooth 60fps performance)
+   ========================================================================= */
+@media (max-width: 1024px) {
+  .radial-horizon {
+    filter: blur(80px);
+  }
+  .organic-shape {
+    filter: blur(85px);
+  }
+  .arch-line-v1 { left: 8vw; }
+  .arch-line-v2 { right: 8vw; }
+}
+
+@media (max-width: 768px) {
+  .radial-horizon {
+    filter: blur(50px);
+    opacity: 0.5;
+    max-width: 90vw;
+  }
+  .horizon-primary {
+    left: 5vw;
+    width: 90vw;
+  }
+  .horizon-secondary {
+    right: 0;
+    width: 80vw;
+  }
+  .horizon-accent {
+    left: 0;
+    width: 75vw;
+  }
+  .organic-shape {
+    filter: blur(50px);
+    opacity: 0.22;
+    max-width: 80vw;
+    right: auto;
+  }
+  .organic-shape-3,
+  .organic-shape-4 {
+    display: none;
+  }
+  .arch-guide-line {
+    display: none;
+  }
+  .env-layer-noise {
+    opacity: 0.015;
+  }
+  .pattern-hero { background-size: 90px 90px; }
+  .pattern-about { background-size: 110px 110px; }
+  .pattern-program { background-size: 100px 100px; }
+  .pattern-article { background-size: 90px 90px; }
+  .pattern-gallery { background-size: 110px 110px; }
+  .pattern-members { background-size: 100px 100px; }
+  .pattern-contact { background-size: 110px 110px; }
+}
+
+/* =========================================================================
+   PREFERS-REDUCED-MOTION (Accessibility Respect)
+   Disables heavy animations and parallax, keeps calm static elegance
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .organic-shape-1,
+  .organic-shape-2,
+  .organic-shape-3,
+  .organic-shape-4 {
+    animation: none !important;
+  }
+  .radial-horizon {
+    transition: opacity 0.6s ease, background 0.6s ease !important;
+  }
+  .pattern-plane {
+    transform: none !important;
+  }
 }
