@@ -1,0 +1,12 @@
+# Robots.txt for ROHIS Kabupaten Banyumas
+# https://www.rohis-banyumas.web.id
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /cloud-agent
+Disallow: /api/
+
+# Sitemaps
+Sitemap: https://www.rohis-banyumas.web.id/sitemap.xml
