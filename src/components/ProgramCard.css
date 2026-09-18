@@ -1,6 +1,6 @@
 /* =========================================================
-   PROGRAM CARD — LIGHT PREMIUM
-   Pure White / Warm Ivory Surface • Forest Green Typography • Emerald Accents
+   PROGRAM CARD — MODERN ISLAMIC EDITORIAL
+   Pine Surface • Burnished Brass Accents • Clear Focus List
    ========================================================= */
 
 .program-glass-card {
@@ -8,31 +8,29 @@
   align-items: flex-start;
   gap: var(--space-lg);
   padding: var(--space-xl);
-  background: var(--liquid-glass);
-  backdrop-filter: var(--liquid-blur);
-  -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.3px solid var(--liquid-border);
-  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
-  border-radius: 28px;
-  box-shadow: var(--liquid-shadow), var(--liquid-inset);
+  background: var(--card-bg);
+  backdrop-filter: var(--card-blur);
+  -webkit-backdrop-filter: var(--card-blur);
+  border: 1px solid var(--card-border);
+  border-top: 1px solid rgba(200, 168, 91, 0.28);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--card-shadow), var(--card-inset);
   cursor: pointer;
   transition: all var(--transition-base);
   user-select: none;
 }
 
 .program-glass-card:hover {
-  box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
-  border-color: var(--liquid-border-hover);
-  border-top-color: rgba(255, 255, 255, 0.90);
-  background: var(--liquid-glass-hover);
-  transform: translateY(-4px) scale(1.01);
+  box-shadow: var(--card-shadow-hover), var(--card-inset);
+  border-color: var(--card-border-hover);
+  background: var(--card-bg-hover);
+  transform: translateY(-3px);
 }
 
 .program-glass-card.is-expanded {
-  border-color: #00F0CF;
-  border-top-color: #FFFFFF;
-  background: var(--liquid-glass-hover);
-  box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
+  border-color: rgba(200, 168, 91, 0.50);
+  background: rgba(20, 54, 41, 0.90);
+  box-shadow: var(--card-shadow-hover), var(--card-inset);
 }
 
 /* ── Icon Box ── */
@@ -44,22 +42,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 18px;
-  background: radial-gradient(circle at 35% 30%, rgba(0, 240, 207, 0.22) 0%, rgba(2, 20, 18, 0.85) 100%);
-  color: #00F0CF;
-  border: 1.2px solid rgba(0, 240, 207, 0.45);
-  box-shadow: 0 0 20px rgba(0, 240, 207, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-md);
+  background: rgba(200, 168, 91, 0.10);
+  color: var(--color-gold-light);
+  border: 1px solid rgba(200, 168, 91, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
   transition: all 0.25s ease;
 }
 
 .program-glass-icon.has-custom-logo {
-  background: rgba(8, 26, 20, 0.90);
+  background: rgba(14, 38, 29, 0.90);
   padding: 3px;
   border-radius: 50%;
   overflow: hidden;
-  border-color: rgba(57, 185, 154, 0.35);
+  border-color: rgba(200, 168, 91, 0.30);
 }
 
 .program-custom-logo-img {
@@ -70,9 +68,9 @@
 }
 
 .program-glass-card.is-expanded .program-glass-icon {
-  background: var(--color-emerald);
-  color: #061510;
-  box-shadow: 0 0 20px rgba(57, 185, 154, 0.40);
+  background: linear-gradient(135deg, #18583E 0%, #11422E 100%);
+  color: var(--color-gold-light);
+  border-color: rgba(200, 168, 91, 0.45);
 }
 
 /* ── Content ── */
@@ -88,17 +86,16 @@
 .program-neon-badge {
   display: inline-flex;
   font-family: var(--font-heading);
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--color-emerald-light);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--color-gold-light);
+  letter-spacing: 0.02em;
 }
 
 .program-card-title {
   font-size: 1.15rem;
   font-weight: 700;
-  color: #FFFFFF;
+  color: var(--color-forest);
   line-height: 1.35;
   margin-bottom: 6px;
 }
@@ -109,13 +106,13 @@
   gap: 4px;
   font-size: 0.82rem;
   font-weight: 600;
-  color: var(--color-emerald-light);
+  color: var(--color-gold-light);
   margin-bottom: 10px;
   transition: color 0.2s ease;
 }
 
 .program-glass-card:hover .program-preview-toggle {
-  color: var(--color-cyan);
+  color: var(--color-gold);
 }
 
 .program-toggle-icon {
@@ -128,7 +125,7 @@
 
 .program-card-desc {
   font-size: 0.90rem;
-  color: rgba(220, 240, 235, 0.85);
+  color: var(--color-text-secondary);
   line-height: 1.65;
   margin-bottom: 0;
 }
@@ -137,7 +134,7 @@
 .program-detail-drawer {
   margin-top: var(--space-lg);
   padding-top: var(--space-md);
-  border-top: 1px solid rgba(57, 185, 154, 0.15);
+  border-top: 1px solid rgba(200, 168, 91, 0.15);
   animation: drawerSlide 0.3s var(--ease-out) forwards;
 }
 
@@ -169,7 +166,7 @@
 }
 
 .program-check-icon {
-  color: var(--color-emerald-light);
+  color: var(--color-gold);
   flex-shrink: 0;
   margin-top: 2px;
 }
@@ -185,23 +182,22 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 7px 16px;
-  font-size: 0.80rem;
+  padding: 6px 16px;
+  font-size: 0.82rem;
   font-weight: 600;
   font-family: var(--font-heading);
   color: var(--color-forest);
-  background: rgba(57, 185, 154, 0.12);
-  border: 1px solid rgba(57, 185, 154, 0.25);
+  background: rgba(200, 168, 91, 0.10);
+  border: 1px solid rgba(200, 168, 91, 0.25);
   border-radius: var(--radius-pill);
   text-decoration: none;
   transition: all 0.2s ease;
 }
 
 .btn-program-detail:hover {
-  background: var(--color-emerald);
-  color: #061510;
-  border-color: var(--color-emerald);
-  box-shadow: 0 0 16px rgba(57, 185, 154, 0.35);
+  background: rgba(200, 168, 91, 0.20);
+  color: var(--color-gold-light);
+  border-color: var(--color-gold-light);
 }
 
 /* ── Responsive ── */
@@ -210,5 +206,6 @@
     flex-direction: column;
     gap: var(--space-md);
     padding: var(--space-lg);
+    border-radius: var(--radius-lg);
   }
 }

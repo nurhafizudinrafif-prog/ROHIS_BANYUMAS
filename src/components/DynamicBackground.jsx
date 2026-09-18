@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import ConstellationBackground from './ConstellationBackground';
 import './DynamicBackground.css';
 
 /**
@@ -296,24 +295,13 @@ export default function DynamicBackground() {
       </div>
 
       {/* =========================================================
-          CELESTIAL HARMONY: Interactive Constellation Web ("Rasi Bintang")
-          Gently connecting digital nodes with the Islamic geometry
-          ========================================================= */}
-      <ConstellationBackground />
-
-      {/* =========================================================
           LAYER 6: Soft Ambient Bloom / Glow
           ========================================================= */}
       <div className="env-layer env-layer-bloom" ref={glowRef} />
 
       {/* =========================================================
-          LAYER 6.5: Soft Cinematic Green Neon Horizon Flare Beam
-          ========================================================= */}
-      <div className="env-layer env-layer-neon-anamorphic" />
-
-      {/* =========================================================
-          LAYER 7: Very Subtle Micro-Noise Texture
-          Organic tactile depth to eliminate any color banding
+          LAYER 7: Very Subtle Micro-Texture
+          Organic tactile depth to eliminate color banding
           ========================================================= */}
       <div className="env-layer env-layer-noise" />
 

@@ -43,8 +43,8 @@
   height: 82px;
   border-radius: 50%;
   padding: 3px;
-  background: linear-gradient(135deg, #00F0CF 0%, #087F62 50%, #4DD7E8 100%);
-  box-shadow: 0 0 20px rgba(0, 240, 207, 0.35);
+  background: linear-gradient(135deg, #DFBF73 0%, #1F6F50 50%, #C8A85B 100%);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -53,16 +53,15 @@
 }
 
 .ig-profile-card:hover .ig-avatar-ring {
-  transform: scale(1.04);
-  box-shadow: 0 0 28px rgba(0, 240, 207, 0.55);
+  transform: scale(1.03);
 }
 
 .ig-avatar-inner {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: #041418;
-  border: 2px solid rgba(0, 255, 200, 0.35);
+  background: #0E261D;
+  border: 2px solid rgba(200, 168, 91, 0.30);
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -111,10 +110,9 @@
   font-family: var(--font-heading);
   font-size: clamp(1.25rem, 2.5vw, 1.55rem);
   font-weight: 800;
-  color: #FFFFFF;
+  color: var(--color-forest);
   margin: 0;
   letter-spacing: -0.01em;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
 }
 
 /* ── Real-Time Sync Badge ── */
@@ -123,23 +121,20 @@
   align-items: center;
   gap: 6px;
   padding: 4px 12px;
-  background: rgba(0, 255, 210, 0.08);
-  border: 1px solid rgba(0, 255, 200, 0.32);
+  background: rgba(200, 168, 91, 0.12);
+  border: 1px solid rgba(200, 168, 91, 0.28);
   border-radius: var(--radius-pill);
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #00F0CF;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--color-gold-light);
+  letter-spacing: 0.02em;
 }
 
 .ig-live-pulse-dot-sm {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #00F0CF;
-  box-shadow: 0 0 8px #00F0CF;
+  background: var(--color-gold);
   animation: igPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
@@ -162,9 +157,9 @@
   gap: 6px;
   padding: 7px 14px;
   border-radius: var(--radius-pill);
-  background: rgba(0, 255, 200, 0.08);
-  border: 1px solid rgba(0, 255, 200, 0.28);
-  color: #00F0CF;
+  background: rgba(200, 168, 91, 0.10);
+  border: 1px solid rgba(200, 168, 91, 0.25);
+  color: var(--color-gold-light);
   font-size: 0.80rem;
   font-weight: 600;
   font-family: var(--font-heading);
@@ -173,9 +168,8 @@
 }
 
 .btn-ig-sync-small:hover {
-  background: rgba(0, 255, 200, 0.18);
-  border-color: #00F0CF;
-  box-shadow: 0 0 14px rgba(0, 240, 207, 0.3);
+  background: rgba(200, 168, 91, 0.20);
+  border-color: var(--color-gold-light);
   transform: translateY(-1px);
 }
 
@@ -194,21 +188,22 @@
   gap: 8px;
   padding: 8px 20px;
   border-radius: var(--radius-pill);
-  background: linear-gradient(135deg, #00DDB8 0%, #00F0CF 100%);
-  color: #020A0B !important;
+  background: linear-gradient(135deg, #18583E 0%, #11422E 100%);
+  color: #F7F5F0 !important;
   font-family: var(--font-heading);
   font-size: 0.88rem;
-  font-weight: 800;
+  font-weight: 600;
   text-decoration: none;
-  box-shadow: 0 4px 18px rgba(0, 255, 210, 0.40), inset 0 1.2px 1px rgba(255, 255, 255, 0.50);
-  border: 1px solid rgba(0, 255, 200, 0.50);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(200, 168, 91, 0.35);
   cursor: pointer;
   transition: all 0.25s ease;
 }
 
 .btn-ig-follow:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(0, 255, 210, 0.60);
+  background: linear-gradient(135deg, #1E6C4C 0%, #154D36 100%);
+  border-color: rgba(200, 168, 91, 0.60);
 }
 
 /* ── Bio Content ── */
@@ -262,9 +257,9 @@
 
 .ig-mention-tag:hover,
 .ig-email-tag:hover {
-  background: rgba(0, 255, 200, 0.18);
-  border-color: #00F0CF;
-  color: #FFFFFF;
+  background: rgba(200, 168, 91, 0.15);
+  border-color: var(--color-gold-light);
+  color: #F7F5F0;
 }
 
 /* ── Bio Links Row ── */
@@ -281,60 +276,59 @@
   gap: 8px;
   padding: 7px 16px;
   border-radius: var(--radius-pill);
-  background: rgba(0, 255, 200, 0.06);
-  border: 1px solid rgba(0, 255, 200, 0.22);
-  color: rgba(240, 250, 247, 0.92);
+  background: rgba(200, 168, 91, 0.08);
+  border: 1px solid rgba(200, 168, 91, 0.20);
+  color: var(--color-text);
   font-size: 0.82rem;
-  font-weight: 600;
+  font-weight: 500;
   text-decoration: none;
-  transition: all 0.25s ease;
+  transition: all 0.2s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
 .ig-link-pill:hover {
-  background: rgba(0, 255, 200, 0.15);
-  border-color: #00F0CF;
-  color: #00F0CF;
+  background: rgba(200, 168, 91, 0.18);
+  border-color: var(--color-gold-light);
+  color: var(--color-gold-light);
   transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 240, 207, 0.25);
 }
 
 .ig-link-yt svg {
-  color: #FF4444;
+  color: #E05252;
 }
 
 .ig-link-email svg {
-  color: #F5D076;
+  color: var(--color-gold-light);
 }
 
 .ig-link-ig svg {
-  color: #00F0CF;
+  color: var(--color-gold-light);
 }
 
 /* ── Footer Banner ── */
 .ig-card-footer {
   margin-top: var(--space-xl);
   padding-top: var(--space-md);
-  border-top: 1px solid rgba(0, 255, 200, 0.14);
+  border-top: 1px solid rgba(200, 168, 91, 0.15);
 }
 
 .ig-card-footer p {
   font-size: 0.90rem;
-  color: rgba(220, 240, 235, 0.80);
+  color: var(--color-text-secondary);
   line-height: 1.65;
   margin: 0;
 }
 
 .ig-footer-link {
-  color: #00F0CF;
-  font-weight: 700;
+  color: var(--color-gold-light);
+  font-weight: 600;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .ig-footer-link:hover {
   text-decoration: underline;
-  color: #5FE3C2;
+  color: #F7F5F0;
 }
 
 /* ── Responsive Mobile & Tablet ── */

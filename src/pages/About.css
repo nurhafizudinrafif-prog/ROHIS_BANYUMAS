@@ -1,6 +1,6 @@
 /* =========================================================
-   ABOUT PAGE — LIGHT PREMIUM
-   Warm Ivory Base • Pure White Cards • Forest Green Typography
+   ABOUT PAGE — MODERN ISLAMIC EDITORIAL
+   Pine Surface • Warm Alabaster Headings • Antique Brass
    ========================================================= */
 
 .page-about .page-hero {
@@ -16,18 +16,18 @@
 }
 
 .about-story-content h2 {
-  font-family: var(--font-editorial);
+  font-family: var(--font-heading);
   font-size: clamp(1.6rem, 3.5vw, 2.4rem);
   margin-bottom: var(--space-lg);
-  color: #FFFFFF;
+  color: var(--color-forest);
   font-weight: 700;
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
+  letter-spacing: -0.015em;
 }
 
 .about-story-content p {
-  color: rgba(220, 240, 235, 0.85);
+  color: var(--color-text-secondary);
   margin-bottom: var(--space-md);
-  line-height: 1.8;
+  line-height: 1.75;
   font-size: 1rem;
 }
 
@@ -43,37 +43,21 @@
   align-items: center;
   padding: var(--space-xl);
   text-align: center;
-  background: var(--liquid-glass);
-  backdrop-filter: var(--liquid-blur);
-  -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.3px solid var(--liquid-border);
-  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
-  border-radius: 28px;
-  box-shadow: var(--liquid-shadow), var(--liquid-inset);
-  transition: all var(--transition-base);
-}
-
-.about-story-card:hover {
-  transform: translateY(-4px) scale(1.01);
-  border-color: var(--liquid-border-hover);
-  border-top-color: rgba(255, 255, 255, 0.90);
-  background: var(--liquid-glass-hover);
-  box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
+  border-radius: var(--radius-xl);
 }
 
 .about-story-year {
   font-family: var(--font-heading);
-  font-size: 2.25rem;
+  font-size: 2.2rem;
   font-weight: 800;
-  color: #00F0CF;
+  color: var(--color-gold-light);
   line-height: 1;
   margin-bottom: 6px;
-  text-shadow: 0 0 16px rgba(0, 240, 207, 0.4);
 }
 
 .about-story-label {
   font-size: 0.86rem;
-  color: rgba(220, 240, 235, 0.75);
+  color: var(--color-text-secondary);
   font-weight: 600;
 }
 
@@ -86,53 +70,37 @@
 
 .about-vm-card {
   padding: var(--space-2xl);
-  background: var(--liquid-glass);
-  backdrop-filter: var(--liquid-blur);
-  -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.3px solid var(--liquid-border);
-  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
-  border-radius: 28px;
-  box-shadow: var(--liquid-shadow), var(--liquid-inset);
-  transition: all var(--transition-base);
-}
-
-.about-vm-card:hover {
-  transform: translateY(-4px) scale(1.01);
-  border-color: var(--liquid-border-hover);
-  border-top-color: rgba(255, 255, 255, 0.90);
-  background: var(--liquid-glass-hover);
-  box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
+  border-radius: var(--radius-xl);
 }
 
 .about-vm-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 18px;
-  background: radial-gradient(circle at 35% 30%, rgba(0, 240, 207, 0.22) 0%, rgba(2, 20, 18, 0.85) 100%);
-  color: #00F0CF;
-  border: 1.2px solid rgba(0, 240, 207, 0.45);
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-md);
+  background: rgba(200, 168, 91, 0.10);
+  color: var(--color-gold-light);
+  border: 1px solid rgba(200, 168, 91, 0.25);
   margin-bottom: var(--space-lg);
-  box-shadow: 0 0 20px rgba(0, 240, 207, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
 }
 
 .about-vm-icon-gold {
-  background: radial-gradient(circle at 30% 30%, rgba(245, 208, 118, 0.25) 0%, rgba(2, 9, 11, 0.6) 100%);
-  color: #F5D076;
-  border-color: rgba(245, 208, 118, 0.35);
+  background: rgba(200, 168, 91, 0.15);
+  color: var(--color-gold-light);
+  border-color: rgba(200, 168, 91, 0.35);
 }
 
 .about-vm-card h3 {
   font-size: 1.35rem;
-  color: #FFFFFF;
+  color: var(--color-forest);
   margin-bottom: var(--space-sm);
   font-weight: 700;
 }
 
 .about-vm-card p {
-  color: rgba(220, 240, 235, 0.85);
+  color: var(--color-text-secondary);
   font-size: 0.96rem;
   line-height: 1.75;
 }
@@ -144,7 +112,7 @@
 .about-vm-card li {
   position: relative;
   padding-left: var(--space-lg);
-  color: rgba(220, 240, 235, 0.85);
+  color: var(--color-text-secondary);
   font-size: 0.95rem;
   line-height: 1.75;
   margin-bottom: 8px;
@@ -155,11 +123,10 @@
   position: absolute;
   left: 0;
   top: 10px;
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
-  background: #00F0CF;
-  box-shadow: 0 0 8px rgba(0, 240, 207, 0.8);
+  background: var(--color-gold);
 }
 
 /* ── Values Grid ── */
@@ -172,26 +139,11 @@
 .about-value-card {
   padding: var(--space-xl);
   text-align: center;
-  background: var(--liquid-glass);
-  backdrop-filter: var(--liquid-blur);
-  -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.3px solid var(--liquid-border);
-  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
-  border-radius: 28px;
-  box-shadow: var(--liquid-shadow), var(--liquid-inset);
-  transition: all var(--transition-base);
-}
-
-.about-value-card:hover {
-  transform: translateY(-4px) scale(1.01);
-  box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
-  border-color: var(--liquid-border-hover);
-  border-top-color: rgba(255, 255, 255, 0.90);
-  background: var(--liquid-glass-hover);
+  border-radius: var(--radius-xl);
 }
 
 .about-value-card h4 {
-  color: #FFFFFF;
+  color: var(--color-forest);
   margin-bottom: 8px;
   font-size: 1.15rem;
   font-weight: 700;
@@ -199,7 +151,7 @@
 
 .about-value-card p {
   font-size: 0.90rem;
-  color: rgba(220, 240, 235, 0.75);
+  color: var(--color-text-secondary);
   line-height: 1.6;
 }
 
@@ -207,13 +159,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 18px;
-  background: radial-gradient(circle at 35% 30%, rgba(0, 240, 207, 0.22) 0%, rgba(2, 20, 18, 0.85) 100%);
-  color: #00F0CF;
-  border: 1.2px solid rgba(0, 240, 207, 0.45);
-  box-shadow: 0 0 20px rgba(0, 240, 207, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-md);
+  background: rgba(200, 168, 91, 0.10);
+  color: var(--color-gold-light);
+  border: 1px solid rgba(200, 168, 91, 0.25);
   margin: 0 auto var(--space-md);
 }
 
@@ -245,6 +196,7 @@
   .about-story-card {
     flex: 1;
     min-width: 140px;
+    border-radius: var(--radius-lg);
   }
 
   .about-vm-grid {

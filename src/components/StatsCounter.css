@@ -1,6 +1,6 @@
 /* =========================================================
    STATS COUNTER — Organization Snapshot & Impact
-   LIGHT PREMIUM • Pure White Cards • Soft Multi-layer Shadows
+   MODERN ISLAMIC EDITORIAL • Deep Pine Cards • Warm Brass Accent
    ========================================================= */
 
 .stats-section {
@@ -10,7 +10,7 @@
   margin-top: -24px;
 }
 
-/* ── Top Meta Pill (Reference 2) ── */
+/* ── Top Meta Pill ── */
 .stats-meta-pill-wrap {
   display: flex;
   justify-content: center;
@@ -22,34 +22,22 @@
   align-items: center;
   justify-content: center;
   gap: 22px;
-  padding: 10px 30px;
-  background: linear-gradient(
-    135deg,
-    rgba(0, 255, 200, 0.08) 0%,
-    rgba(4, 20, 24, 0.82) 50%,
-    rgba(2, 10, 13, 0.94) 100%
-  );
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1.2px solid rgba(0, 255, 200, 0.32);
-  border-top: 1.6px solid rgba(255, 255, 255, 0.45);
+  padding: 8px 26px;
+  background: rgba(14, 38, 29, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(200, 168, 91, 0.24);
   border-radius: var(--radius-pill);
-  box-shadow:
-    0 10px 28px rgba(0, 0, 0, 0.65),
-    0 0 24px rgba(0, 240, 207, 0.16),
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.30);
-  font-size: 0.88rem;
-  color: rgba(220, 240, 235, 0.80);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  font-size: 0.86rem;
+  color: var(--color-text-secondary);
   font-family: var(--font-heading);
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all var(--transition-base);
 }
 
 .stats-meta-pill:hover {
-  border-color: rgba(0, 255, 200, 0.55);
-  box-shadow:
-    0 12px 34px rgba(0, 0, 0, 0.80),
-    0 0 32px rgba(0, 240, 207, 0.28),
-    inset 0 1px 2px rgba(255, 255, 255, 0.45);
+  border-color: rgba(200, 168, 91, 0.45);
+  background: rgba(18, 48, 37, 0.94);
   transform: translateY(-2px);
 }
 
@@ -60,23 +48,21 @@
 }
 
 .stats-meta-val {
-  color: #FFFFFF;
+  color: var(--color-forest);
   font-weight: 700;
-  font-size: 0.94rem;
-  letter-spacing: -0.01em;
+  font-size: 0.92rem;
 }
 
 .stats-meta-lbl {
-  color: rgba(220, 240, 235, 0.80);
+  color: var(--color-text-secondary);
   font-weight: 500;
 }
 
 .stats-meta-dot {
-  color: #00F0CF;
+  color: var(--color-gold);
   font-size: 1.1rem;
   line-height: 1;
-  text-shadow: 0 0 10px rgba(0, 240, 207, 0.8);
-  opacity: 0.85;
+  opacity: 0.75;
 }
 
 .stats-grid {
@@ -90,113 +76,109 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 32px 22px 28px;
-  background: var(--liquid-glass);
-  backdrop-filter: var(--liquid-blur);
-  -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.3px solid var(--liquid-border);
-  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
-  border-radius: 28px;
-  box-shadow: var(--liquid-shadow), var(--liquid-inset);
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 30px 20px 26px;
+  border-radius: var(--radius-xl);
+  transition: transform 0.25s var(--ease-out), border-color 0.25s var(--ease-out);
   position: relative;
 }
 
 .stat-glass-card:hover {
-  transform: translateY(-5px) scale(1.01);
-  border-color: var(--liquid-border-hover);
-  border-top-color: rgba(255, 255, 255, 0.90);
-  background: var(--liquid-glass-hover);
-  box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
+  transform: translateY(-3px);
+  border-color: rgba(200, 168, 91, 0.40);
 }
 
-/* ── Icon Box (Volumetric Glowing Squircles matching reference) ── */
+/* ── Icon Box ── */
 .stat-glass-icon-box {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 18px;
-  margin-bottom: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-md);
+  margin-bottom: 18px;
+  background: rgba(200, 168, 91, 0.10);
+  border: 1px solid rgba(200, 168, 91, 0.25);
+  color: var(--color-gold-light);
   transition: transform 0.25s ease;
 }
 
 .stat-glass-card:hover .stat-glass-icon-box {
-  transform: scale(1.10);
+  transform: scale(1.06);
 }
 
 /* 1. Green / Emerald (Sekolah) */
 .stat-green .stat-glass-icon-box {
-  background: radial-gradient(circle at 35% 30%, rgba(0, 240, 207, 0.22) 0%, rgba(2, 20, 18, 0.85) 100%);
-  color: #00F0CF;
-  border: 1.2px solid rgba(0, 240, 207, 0.45);
-  box-shadow: 0 0 20px rgba(0, 240, 207, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
+  background: rgba(31, 111, 80, 0.25);
+  color: #82D1AF;
+  border-color: rgba(31, 111, 80, 0.45);
 }
 
-/* 2. Cyan (Anggota Aktif) */
+/* 2. Cyan / Sage (Anggota Aktif) */
 .stat-cyan .stat-glass-icon-box {
-  background: radial-gradient(circle at 35% 30%, rgba(56, 225, 255, 0.22) 0%, rgba(2, 20, 24, 0.85) 100%);
-  color: #38E1FF;
-  border: 1.2px solid rgba(56, 225, 255, 0.45);
-  box-shadow: 0 0 20px rgba(56, 225, 255, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
+  background: rgba(127, 191, 164, 0.20);
+  color: #A0D7C1;
+  border-color: rgba(127, 191, 164, 0.40);
 }
 
 /* 3. Gold / Amber (Event Besar) */
 .stat-gold .stat-glass-icon-box {
-  background: radial-gradient(circle at 35% 30%, rgba(255, 208, 102, 0.22) 0%, rgba(26, 20, 3, 0.85) 100%);
-  color: #FFD066;
-  border: 1.2px solid rgba(255, 208, 102, 0.45);
-  box-shadow: 0 0 20px rgba(255, 208, 102, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
+  background: rgba(200, 168, 91, 0.18);
+  color: var(--color-gold-light);
+  border-color: rgba(200, 168, 91, 0.45);
 }
 
-/* 4. Purple / Lavender (Tahun Berdiri) */
+/* 4. Heritage Forest (Tahun Berdiri) */
 .stat-purple .stat-glass-icon-box {
-  background: radial-gradient(circle at 35% 30%, rgba(192, 168, 255, 0.22) 0%, rgba(20, 10, 30, 0.85) 100%);
-  color: #C0A8FF;
-  border: 1.2px solid rgba(192, 168, 255, 0.45);
-  box-shadow: 0 0 20px rgba(192, 168, 255, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
+  background: rgba(46, 125, 90, 0.22);
+  color: #A2E2C5;
+  border-color: rgba(46, 125, 90, 0.45);
 }
 
 /* ── Value & Label ── */
 .stat-value {
   font-family: var(--font-heading);
-  font-size: 2.35rem;
+  font-size: 2.25rem;
   font-weight: 800;
-  color: #FFFFFF;
+  color: var(--color-forest);
   line-height: 1.15;
   margin-bottom: 6px;
   letter-spacing: -0.02em;
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
 }
 
 .stat-label {
-  font-size: 0.88rem;
-  color: rgba(220, 240, 235, 0.78);
+  font-size: 0.86rem;
+  color: var(--color-text-secondary);
   font-weight: 500;
   line-height: 1.4;
   max-width: 200px;
 }
 
-/* ── Bottom Luminous Diamond Accent (Matching Reference Exactly) ── */
+/* ── Bottom Diamond Accent ── */
 .stat-diamond-accent {
-  margin-top: 18px;
+  margin-top: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
 }
 
 .stat-diamond-accent .diamond-line {
-  display: none;
+  width: 20px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200, 168, 91, 0.35));
+}
+
+.stat-diamond-accent .diamond-line:last-child {
+  background: linear-gradient(90deg, rgba(200, 168, 91, 0.35), transparent);
 }
 
 .stat-diamond-accent .diamond-dot {
-  width: 6.5px;
-  height: 6.5px;
-  background: rgba(255, 255, 255, 0.9);
+  width: 5px;
+  height: 5px;
+  background: var(--color-gold);
   transform: rotate(45deg);
   display: inline-block;
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 0 0 16px rgba(0, 240, 207, 0.4);
+  opacity: 0.75;
   border-radius: 1px;
 }
 
@@ -259,18 +241,18 @@
   }
 
   .stat-glass-icon-box {
-    width: 44px;
-    height: 44px;
+    width: 42px;
+    height: 42px;
     margin-bottom: 10px;
   }
 
   .stat-glass-icon-box svg {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
   }
 
   .stat-value {
-    font-size: 1.75rem;
+    font-size: 1.7rem;
     margin-bottom: 4px;
   }
 
@@ -300,6 +282,6 @@
   }
 
   .stat-value {
-    font-size: 1.55rem;
+    font-size: 1.5rem;
   }
 }

@@ -15,7 +15,7 @@
   pointer-events: none;
   overflow: hidden !important;
   contain: strict;
-  background-color: #010405;
+  background-color: #07140E;
 }
 
 /* Base layer positioning utility */
@@ -28,9 +28,8 @@
 }
 
 /* =========================================================================
-   LAYER 1: BASE DARK ATMOSPHERE FOUNDATION
-   Dynamic multi-stop interpolated gradients: deepest black, deep charcoal,
-   black-green, and dark forest-teal across sections.
+   LAYER 1: BASE DEEP PINE & WARM BRASS ATMOSPHERE
+   Rich, architectural Islamic environment (deep forest pine, warm brass aura)
    ========================================================================= */
 .env-layer-base {
   position: absolute;
@@ -39,61 +38,58 @@
   will-change: background;
 }
 
-/* 1. HERO: Deepest obsidian black with vivid yet soft cinematic emerald neon radial lights */
+/* 1. HERO: Deep majestic forest pine with warm antique brass horizon light */
 .dynamic-environment-container[data-active-section="hero"] .env-layer-base,
 .dynamic-environment-container:not([data-active-section]) .env-layer-base {
   background:
-    radial-gradient(ellipse 110% 80% at 50% -10%, rgba(0, 240, 207, 0.28) 0%, rgba(0, 160, 130, 0.10) 45%, transparent 75%),
-    radial-gradient(circle at 85% 65%, rgba(0, 229, 255, 0.12) 0%, transparent 55%),
-    radial-gradient(circle at 15% 45%, rgba(16, 185, 129, 0.14) 0%, transparent 50%),
-    linear-gradient(180deg, #010405 0%, #020708 50%, #010404 100%);
+    radial-gradient(ellipse 110% 70% at 50% -5%, rgba(31, 111, 80, 0.22) 0%, rgba(14, 56, 40, 0.12) 40%, transparent 70%),
+    radial-gradient(circle at 85% 20%, rgba(200, 168, 91, 0.06) 0%, transparent 45%),
+    radial-gradient(circle at 15% 55%, rgba(26, 92, 66, 0.10) 0%, transparent 50%),
+    linear-gradient(180deg, #07140E 0%, #091A13 50%, #06110C 100%);
 }
 
-/* 2. TENTANG: Slightly warmer velvet dark charcoal with soft green atmospheric haze */
+/* 2. TENTANG: Velvet forest depth with subtle warm parchment haze */
 .dynamic-environment-container[data-active-section="about"] .env-layer-base {
   background:
-    radial-gradient(ellipse 110% 80% at 35% 10%, rgba(16, 185, 129, 0.11) 0%, rgba(212, 175, 55, 0.03) 40%, transparent 75%),
-    radial-gradient(ellipse 80% 60% at 10% 85%, rgba(5, 150, 105, 0.07) 0%, transparent 60%),
-    linear-gradient(180deg, #030807 0%, #040a08 50%, #020605 100%);
+    radial-gradient(ellipse 110% 75% at 35% 15%, rgba(31, 111, 80, 0.16) 0%, rgba(200, 168, 91, 0.05) 45%, transparent 70%),
+    radial-gradient(ellipse 80% 60% at 10% 85%, rgba(14, 56, 40, 0.10) 0%, transparent 60%),
+    linear-gradient(180deg, #07140E 0%, #0A1C14 50%, #06100B 100%);
 }
 
-/* 3. PROGRAM & AGENDA: Dark charcoal + dark teal, connected digital aura */
+/* 3. PROGRAM & AGENDA: Structured deep pine, scholarly dignity */
 .dynamic-environment-container[data-active-section="program"] .env-layer-base {
   background:
-    radial-gradient(ellipse 120% 75% at 65% 15%, rgba(13, 148, 136, 0.14) 0%, rgba(4, 30, 35, 0.25) 50%, transparent 80%),
-    radial-gradient(circle at 15% 85%, rgba(56, 189, 248, 0.06) 0%, transparent 55%),
-    linear-gradient(180deg, #02080a 0%, #030d10 50%, #010608 100%);
+    radial-gradient(ellipse 120% 70% at 65% 20%, rgba(31, 111, 80, 0.18) 0%, rgba(10, 40, 30, 0.20) 50%, transparent 75%),
+    radial-gradient(circle at 15% 85%, rgba(200, 168, 91, 0.04) 0%, transparent 50%),
+    linear-gradient(180deg, #06110C 0%, #081710 50%, #06100B 100%);
 }
 
-/* 4. ARTIKEL: Editorial dark charcoal, maximum negative space, minimal reading glow */
+/* 4. ARTIKEL: Scholarly editorial atmosphere, maximum reading focus */
 .dynamic-environment-container[data-active-section="article"] .env-layer-base {
   background:
-    radial-gradient(ellipse 95% 55% at 50% 20%, rgba(0, 221, 184, 0.045) 0%, transparent 65%),
-    linear-gradient(180deg, #020506 0%, #030607 50%, #020405 100%);
+    radial-gradient(ellipse 95% 50% at 50% 15%, rgba(31, 111, 80, 0.12) 0%, transparent 60%),
+    linear-gradient(180deg, #07130D 0%, #08160F 50%, #06100B 100%);
 }
 
-/* 5. GALERI: Cinematic dark atmosphere with soft emerald lighting & reflective depth */
+/* 5. GALERI: Dignified gallery atmosphere with soft natural amber & emerald reflection */
 .dynamic-environment-container[data-active-section="gallery"] .env-layer-base {
   background:
-    radial-gradient(ellipse 120% 85% at 50% 45%, rgba(0, 255, 210, 0.12) 0%, rgba(0, 100, 80, 0.05) 55%, transparent 80%),
-    radial-gradient(ellipse 80% 60% at 85% 20%, rgba(56, 189, 248, 0.05) 0%, transparent 65%),
-    linear-gradient(180deg, #010405 0%, #020708 50%, #010404 100%);
+    radial-gradient(ellipse 120% 80% at 50% 40%, rgba(31, 111, 80, 0.18) 0%, rgba(200, 168, 91, 0.06) 50%, transparent 75%),
+    linear-gradient(180deg, #06110C 0%, #081710 50%, #06100B 100%);
 }
 
-/* 6. ROHIS ANGGOTA: Deep forest-black atmosphere, symmetrical & trustworthy */
+/* 6. ROHIS ANGGOTA: Deep pine forest, harmonious institutional unity */
 .dynamic-environment-container[data-active-section="members"] .env-layer-base {
   background:
-    radial-gradient(ellipse 115% 75% at 50% 25%, rgba(5, 150, 105, 0.11) 0%, rgba(2, 40, 30, 0.12) 50%, transparent 75%),
-    radial-gradient(circle at 80% 85%, rgba(0, 221, 184, 0.05) 0%, transparent 55%),
-    linear-gradient(180deg, #020806 0%, #030a08 50%, #010504 100%);
+    radial-gradient(ellipse 115% 75% at 50% 25%, rgba(31, 111, 80, 0.16) 0%, rgba(200, 168, 91, 0.05) 50%, transparent 75%),
+    linear-gradient(180deg, #07140E 0%, #091A13 50%, #06100B 100%);
 }
 
-/* 7. KONTAK: Deep charcoal, soft teal, subtle emerald, peaceful closing atmosphere */
+/* 7. KONTAK: Warm, peaceful closing sanctuary */
 .dynamic-environment-container[data-active-section="contact"] .env-layer-base {
   background:
-    radial-gradient(ellipse 120% 80% at 50% 75%, rgba(20, 184, 166, 0.11) 0%, rgba(0, 221, 184, 0.05) 45%, transparent 75%),
-    radial-gradient(circle at 20% 25%, rgba(56, 189, 248, 0.035) 0%, transparent 50%),
-    linear-gradient(180deg, #020607 0%, #03090a 50%, #010405 100%);
+    radial-gradient(ellipse 120% 80% at 50% 70%, rgba(31, 111, 80, 0.16) 0%, rgba(200, 168, 91, 0.08) 45%, transparent 75%),
+    linear-gradient(180deg, #06110C 0%, #081710 50%, #06100B 100%);
 }
 
 /* =========================================================================
@@ -118,19 +114,19 @@
   left: 15vw;
   width: 70vw;
   height: 55vh;
-  background: radial-gradient(circle, rgba(0, 240, 207, 0.35) 0%, rgba(0, 160, 130, 0.12) 50%, transparent 80%);
+  background: radial-gradient(circle, rgba(31, 111, 80, 0.22) 0%, rgba(14, 56, 40, 0.08) 50%, transparent 80%);
   filter: blur(95px);
-  animation: neonHorizonBreathe 8s ease-in-out infinite alternate;
+  animation: neonHorizonBreathe 10s ease-in-out infinite alternate;
 }
 
 @keyframes neonHorizonBreathe {
   0% {
-    opacity: 0.70;
+    opacity: 0.60;
     transform: scale(1);
   }
   100% {
-    opacity: 0.95;
-    transform: scale(1.06);
+    opacity: 0.85;
+    transform: scale(1.05);
   }
 }
 
@@ -140,8 +136,8 @@
   width: 55vw;
   height: 48vh;
   filter: blur(105px);
-  opacity: 0.65;
-  background: radial-gradient(circle, rgba(0, 240, 207, 0.22) 0%, rgba(56, 189, 248, 0.12) 50%, transparent 70%);
+  opacity: 0.50;
+  background: radial-gradient(circle, rgba(31, 111, 80, 0.16) 0%, rgba(200, 168, 91, 0.06) 50%, transparent 70%);
 }
 
 .horizon-accent {
@@ -150,36 +146,36 @@
   width: 48vw;
   height: 42vh;
   filter: blur(115px);
-  opacity: 0.55;
-  background: radial-gradient(circle, rgba(0, 240, 207, 0.20) 0%, transparent 65%);
+  opacity: 0.40;
+  background: radial-gradient(circle, rgba(200, 168, 91, 0.08) 0%, transparent 65%);
 }
 
 /* Section-specific horizon shifts */
 .dynamic-environment-container[data-active-section="about"] .horizon-primary {
   transform: translate3d(-8vw, 15vh, 0);
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.22) 0%, rgba(212, 175, 55, 0.05) 50%, transparent 80%);
+  background: radial-gradient(circle, rgba(31, 111, 80, 0.20) 0%, rgba(200, 168, 91, 0.06) 50%, transparent 80%);
 }
 
 .dynamic-environment-container[data-active-section="program"] .horizon-primary {
   transform: translate3d(15vw, 12vh, 0);
-  background: radial-gradient(circle, rgba(13, 148, 136, 0.25) 0%, rgba(0, 240, 207, 0.15) 55%, transparent 80%);
+  background: radial-gradient(circle, rgba(31, 111, 80, 0.22) 0%, rgba(20, 75, 55, 0.12) 55%, transparent 80%);
 }
 
 .dynamic-environment-container[data-active-section="article"] .horizon-primary {
   transform: translate3d(0vw, 18vh, 0);
-  opacity: 0.45;
-  background: radial-gradient(circle, rgba(0, 240, 207, 0.12) 0%, transparent 75%);
+  opacity: 0.35;
+  background: radial-gradient(circle, rgba(31, 111, 80, 0.12) 0%, transparent 75%);
 }
 
 .dynamic-environment-container[data-active-section="gallery"] .horizon-primary {
   transform: translate3d(5vw, 25vh, 0);
-  opacity: 0.85;
-  background: radial-gradient(circle, rgba(0, 255, 210, 0.25) 0%, rgba(0, 140, 110, 0.08) 60%, transparent 85%);
+  opacity: 0.65;
+  background: radial-gradient(circle, rgba(31, 111, 80, 0.22) 0%, rgba(200, 168, 91, 0.05) 60%, transparent 85%);
 }
 
 .dynamic-environment-container[data-active-section="members"] .horizon-primary {
   transform: translate3d(-3vw, 18vh, 0);
-  background: radial-gradient(circle, rgba(5, 150, 105, 0.20) 0%, rgba(0, 240, 207, 0.10) 60%, transparent 80%);
+  background: radial-gradient(circle, rgba(31, 111, 80, 0.18) 0%, rgba(200, 168, 91, 0.04) 60%, transparent 80%);
 }
 
 .dynamic-environment-container[data-active-section="contact"] .horizon-primary {
@@ -209,8 +205,8 @@
   left: 20vw;
   width: 58vw;
   height: 48vw;
-  opacity: 0.55;
-  background: radial-gradient(circle, rgba(0, 240, 207, 0.28) 0%, rgba(0, 160, 130, 0.10) 60%, transparent 100%);
+  opacity: 0.45;
+  background: radial-gradient(circle, rgba(31, 111, 80, 0.18) 0%, rgba(14, 56, 40, 0.08) 60%, transparent 100%);
   animation: organicDrift1 28s ease-in-out infinite alternate;
 }
 
@@ -219,8 +215,8 @@
   right: -12vw;
   width: 52vw;
   height: 46vw;
-  opacity: 0.45;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.20) 0%, rgba(0, 240, 207, 0.12) 60%, transparent 100%);
+  opacity: 0.35;
+  background: radial-gradient(circle, rgba(200, 168, 91, 0.06) 0%, rgba(31, 111, 80, 0.08) 60%, transparent 100%);
   animation: organicDrift2 32s ease-in-out infinite alternate;
 }
 
@@ -229,8 +225,8 @@
   left: -8vw;
   width: 48vw;
   height: 42vw;
-  opacity: 0.26;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, rgba(212, 175, 55, 0.03) 50%, transparent 100%);
+  opacity: 0.25;
+  background: radial-gradient(circle, rgba(31, 111, 80, 0.12) 0%, rgba(200, 168, 91, 0.04) 50%, transparent 100%);
   animation: organicDrift3 42s ease-in-out infinite alternate;
 }
 
@@ -239,8 +235,8 @@
   left: 30vw;
   width: 45vw;
   height: 40vw;
-  opacity: 0.20;
-  background: radial-gradient(circle, rgba(13, 148, 136, 0.12) 0%, transparent 70%);
+  opacity: 0.18;
+  background: radial-gradient(circle, rgba(14, 56, 40, 0.12) 0%, transparent 70%);
   animation: organicDrift4 46s ease-in-out infinite alternate;
 }
 
@@ -391,35 +387,35 @@
 }
 
 /* =========================================================================
-   LAYER 7: MICRO-NOISE TEXTURE SIMULATION
-   Eliminates digital color banding on OLED/IPS, adds physical tactile depth
+   LAYER 7: SUBTLE ARCHITECTURAL GRAIN
+   Adds dignified tactile depth to prevent color banding
    ========================================================================= */
 .env-layer-noise {
   position: absolute;
   inset: 0;
-  opacity: 0.022;
-  background-image: radial-gradient(#00ffd2 1px, transparent 1px);
-  background-size: 32px 32px;
+  opacity: 0.018;
+  background-image: radial-gradient(rgba(200, 168, 91, 0.25) 1px, transparent 1px);
+  background-size: 28px 28px;
 }
 
 /* =========================================================================
-   LAYER 8: CINEMATIC SPATIAL VIGNETTE
-   Darkens perimeter smoothly, focusing gaze onto interactive glass cards
+   LAYER 8: DIGNIFIED SANCTUARY VIGNETTE
+   Subtle edge falloff focusing attention on content
    ========================================================================= */
 .env-layer-vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 105% 105% at 50% 50%, transparent 45%, rgba(1, 4, 5, 0.78) 100%);
+  background: radial-gradient(ellipse 110% 110% at 50% 50%, transparent 50%, rgba(5, 14, 10, 0.75) 100%);
 }
 
 /* =========================================================================
-   LAYER 9: SUBTLE SPATIAL GLASS REFLECTION SHEEN
-   Liquid glass ambient angled sheen for authentic tactile depth
+   LAYER 9: SUBTLE WARM AMBIENT REFLECTION
+   Warm gold & sage hairline gradient
    ========================================================================= */
 .env-layer-specular {
   position: absolute;
   inset: 0;
-  background: linear-gradient(130deg, rgba(255, 255, 255, 0.012) 0%, transparent 35%, rgba(0, 221, 184, 0.007) 50%, transparent 70%);
+  background: linear-gradient(135deg, rgba(200, 168, 91, 0.015) 0%, transparent 40%, rgba(31, 111, 80, 0.01) 70%, transparent 100%);
 }
 
 /* =========================================================================

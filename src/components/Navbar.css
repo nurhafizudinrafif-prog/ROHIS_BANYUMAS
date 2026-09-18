@@ -1,6 +1,7 @@
 /* =========================================================
-   FLOATING 3D LIQUID GLASS NAVBAR — ROHIS BANYUMAS
-   Glossy Refraction Capsule • Luminous Emerald Rim • 3D Depth
+   FLOATING INSTITUTIONAL NAVBAR — ROHIS BANYUMAS
+   Deep Banyumas Pine • Burnished Brass Hairline • Warm Alabaster
+   Dignified Presence • Prestigious Official Capsule
    ========================================================= */
 
 .navbar {
@@ -8,69 +9,31 @@
   top: 16px;
   left: 50%;
   transform: translateX(-50%);
-  width: min(1260px, calc(100% - 32px));
+  width: min(1240px, calc(100% - 32px));
   height: 64px;
   z-index: 1000;
   display: flex;
   align-items: center;
   border-radius: var(--radius-pill);
-  background:
-    linear-gradient(
-      135deg,
-      rgba(0, 255, 200, 0.07) 0%,
-      rgba(4, 20, 24, 0.48) 45%,
-      rgba(2, 10, 12, 0.72) 100%
-    );
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1.2px solid rgba(0, 255, 200, 0.22);
-  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
-  border-bottom: 1px solid rgba(0, 255, 180, 0.16);
+  background: rgba(14, 38, 29, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(200, 168, 91, 0.22);
+  border-top: 1px solid rgba(200, 168, 91, 0.38);
   box-shadow:
-    0 20px 50px -10px rgba(0, 0, 0, 0.85),
-    0 8px 20px -4px rgba(0, 0, 0, 0.60),
-    0 0 30px rgba(0, 255, 200, 0.15),
-    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.35),
-    inset 0 -1px 0 0 rgba(0, 255, 180, 0.14),
-    inset 0 0 24px 0 rgba(0, 0, 0, 0.35);
+    0 16px 36px -8px rgba(0, 0, 0, 0.65),
+    0 2px 6px rgba(0, 0, 0, 0.40);
   padding: 0 1.25rem;
   box-sizing: border-box;
   transition: all var(--transition-base);
 }
 
-/* 3D Specular Top Refraction Highlight */
-.navbar::before {
-  content: "";
-  position: absolute;
-  top: 1px;
-  left: 20px;
-  right: 20px;
-  height: 48%;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.28) 0%,
-    rgba(255, 255, 255, 0.05) 60%,
-    transparent 100%
-  );
-  border-radius: var(--radius-pill);
-  pointer-events: none;
-}
-
 .navbar-scrolled {
-  background:
-    linear-gradient(
-      135deg,
-      rgba(0, 255, 200, 0.09) 0%,
-      rgba(4, 22, 28, 0.88) 45%,
-      rgba(2, 9, 11, 0.96) 100%
-    );
-  border-color: rgba(0, 240, 207, 0.38);
+  background: rgba(10, 28, 21, 0.96);
+  border-color: rgba(200, 168, 91, 0.32);
   box-shadow:
-    0 24px 60px -10px rgba(0, 0, 0, 0.90),
-    0 10px 24px -4px rgba(0, 0, 0, 0.70),
-    0 0 35px rgba(0, 240, 207, 0.25),
-    0 0 70px rgba(0, 240, 207, 0.10),
-    inset 0 1.5px 0 0 rgba(0, 255, 200, 0.50);
+    0 20px 44px -8px rgba(0, 0, 0, 0.80),
+    0 4px 12px rgba(0, 0, 0, 0.50);
 }
 
 .navbar-inner {
@@ -98,15 +61,14 @@
   height: 38px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid rgba(0, 255, 210, 0.45);
-  box-shadow: 0 0 14px rgba(0, 255, 210, 0.30);
-  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+  border: 1.5px solid rgba(200, 168, 91, 0.40);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.40);
+  transition: transform var(--transition-base), border-color var(--transition-base);
 }
 
 .navbar-brand:hover .navbar-logo-img {
-  border-color: #00F0CF;
-  box-shadow: 0 0 22px rgba(0, 255, 210, 0.55);
-  transform: scale(1.05);
+  border-color: var(--color-gold-light);
+  transform: scale(1.04);
 }
 
 .navbar-brand-text {
@@ -119,16 +81,15 @@
   font-family: var(--font-heading);
   font-weight: 800;
   font-size: 1.05rem;
-  color: #FFFFFF;
+  color: var(--color-forest);
   letter-spacing: -0.01em;
 }
 
 .navbar-brand-sub {
-  font-size: 0.65rem;
-  color: #00F0CF;
+  font-size: 0.68rem;
+  color: var(--color-gold-light);
   font-weight: 600;
-  letter-spacing: 0.04em;
-  text-shadow: 0 0 10px rgba(0, 240, 207, 0.35);
+  letter-spacing: 0.02em;
 }
 
 /* ── Desktop Links ── */
@@ -146,7 +107,7 @@
   font-family: var(--font-heading);
   font-size: 0.88rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--color-text-secondary);
   border-radius: var(--radius-pill);
   text-decoration: none;
   transition: all var(--transition-base);
@@ -159,17 +120,16 @@
   bottom: -2px;
   left: 50%;
   width: 0;
-  height: 2.5px;
-  background: linear-gradient(90deg, #00DDB8, #00F0CF);
+  height: 2px;
+  background: var(--color-gold-light);
   transition: all var(--transition-base);
   transform: translateX(-50%);
   border-radius: 2px;
-  box-shadow: 0 0 12px rgba(0, 255, 210, 0.7);
 }
 
 .navbar-link:hover {
-  color: #00F0CF;
-  background: rgba(0, 255, 200, 0.08);
+  color: var(--color-forest);
+  background: rgba(200, 168, 91, 0.08);
 }
 
 .navbar-link:hover::after {
@@ -177,15 +137,14 @@
 }
 
 .navbar-link.active {
-  color: #00F0CF;
+  color: var(--color-gold-light);
   font-weight: 700;
-  text-shadow: 0 0 14px rgba(0, 240, 207, 0.40);
   background: transparent;
   border: none;
 }
 
 .navbar-link.active::after {
-  width: 65%;
+  width: 60%;
 }
 
 /* Search Icon Button */
@@ -196,19 +155,18 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(0, 255, 200, 0.08);
-  border: 1px solid rgba(0, 255, 200, 0.25);
-  color: rgba(255, 255, 255, 0.85);
+  background: rgba(200, 168, 91, 0.10);
+  border: 1px solid rgba(200, 168, 91, 0.22);
+  color: var(--color-gold-light);
   transition: all var(--transition-base);
   margin-left: 4px;
 }
 
 .navbar-search-btn:hover {
-  background: rgba(0, 255, 200, 0.16);
-  border-color: #00F0CF;
-  color: #00F0CF;
-  box-shadow: 0 0 14px rgba(0, 255, 200, 0.35);
-  transform: scale(1.06);
+  background: rgba(200, 168, 91, 0.20);
+  border-color: var(--color-gold-light);
+  color: #F7F5F0;
+  transform: scale(1.05);
 }
 
 /* Mobile Hamburger */
@@ -219,24 +177,24 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: rgba(0, 255, 200, 0.08);
-  border: 1px solid rgba(0, 255, 200, 0.25);
-  color: #FFFFFF;
+  background: rgba(200, 168, 91, 0.10);
+  border: 1px solid rgba(200, 168, 91, 0.24);
+  color: var(--color-forest);
   cursor: pointer;
   transition: all var(--transition-base);
 }
 
 .navbar-hamburger:hover {
-  background: rgba(0, 255, 200, 0.18);
-  border-color: #00F0CF;
-  color: #00F0CF;
+  background: rgba(200, 168, 91, 0.18);
+  border-color: var(--color-gold-light);
+  color: var(--color-gold-light);
 }
 
 /* ── Mobile Navigation Sheet ── */
 .navbar-mobile-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(2, 7, 8, 0.75);
+  background: rgba(5, 14, 10, 0.82);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   z-index: 1001;
@@ -253,10 +211,10 @@
 .navbar-mobile-sheet {
   width: min(340px, 85vw);
   height: 100%;
-  background: linear-gradient(180deg, rgba(4, 22, 28, 0.95) 0%, rgba(2, 10, 13, 0.98) 100%);
+  background: linear-gradient(180deg, #0E261D 0%, #07140E 100%);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border-left: 1px solid rgba(0, 255, 200, 0.30);
+  border-left: 1px solid rgba(200, 168, 91, 0.22);
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -274,7 +232,7 @@
   align-items: center;
   justify-content: space-between;
   padding-bottom: 20px;
-  border-bottom: 1px solid rgba(0, 255, 200, 0.15);
+  border-bottom: 1px solid rgba(200, 168, 91, 0.15);
   margin-bottom: 20px;
 }
 
@@ -282,9 +240,9 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(0, 255, 200, 0.08);
-  border: 1px solid rgba(0, 255, 200, 0.20);
-  color: #FFFFFF;
+  background: rgba(200, 168, 91, 0.10);
+  border: 1px solid rgba(200, 168, 91, 0.20);
+  color: var(--color-forest);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -293,8 +251,8 @@
 }
 
 .navbar-sheet-close:hover {
-  background: rgba(0, 255, 200, 0.20);
-  color: #00F0CF;
+  background: rgba(200, 168, 91, 0.20);
+  color: var(--color-gold-light);
 }
 
 .navbar-mobile-menu {
@@ -313,18 +271,18 @@
   font-family: var(--font-heading);
   font-size: 1rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--color-text-secondary);
   text-decoration: none;
-  background: rgba(0, 255, 200, 0.04);
-  border: 1px solid rgba(0, 255, 200, 0.12);
+  background: rgba(200, 168, 91, 0.04);
+  border: 1px solid rgba(200, 168, 91, 0.10);
   transition: all var(--transition-base);
 }
 
 .navbar-mobile-item:hover,
 .navbar-mobile-item.active {
-  background: rgba(0, 255, 200, 0.14);
-  border-color: #00F0CF;
-  color: #00F0CF;
+  background: rgba(200, 168, 91, 0.12);
+  border-color: rgba(200, 168, 91, 0.35);
+  color: var(--color-gold-light);
 }
 
 /* ── Responsive ── */

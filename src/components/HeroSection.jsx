@@ -12,7 +12,7 @@ export default function HeroSection() {
             {/* Official Category Pill */}
             <div className="hero-badge animate-hero delay-0">
               <span className="hero-badge-dot" />
-              <span>ROHIS KABUPATEN BANYUMAS • PLATFORM RESMI</span>
+              <span>ROHIS Kabupaten Banyumas • Platform Resmi</span>
             </div>
 
             {/* Large Editorial Headline */}

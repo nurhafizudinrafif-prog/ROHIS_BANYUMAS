@@ -1,6 +1,6 @@
 /* =========================================================
-   CONTACT PAGE — LIGHT PREMIUM
-   Pure White Cards • Warm Ivory Inputs • Forest Green Typography
+   CONTACT PAGE — MODERN ISLAMIC EDITORIAL
+   Pine Surface • Warm Alabaster • Antique Brass
    ========================================================= */
 
 .contact-page .page-hero {
@@ -26,35 +26,19 @@
   align-items: flex-start;
   gap: var(--space-md);
   padding: var(--space-lg);
-  background: var(--liquid-glass);
-  backdrop-filter: var(--liquid-blur);
-  -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.3px solid var(--liquid-border);
-  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
-  border-radius: 28px;
-  box-shadow: var(--liquid-shadow), var(--liquid-inset);
-  transition: all var(--transition-base);
-}
-
-.contact-info-card:hover {
-  transform: translateY(-4px) scale(1.01);
-  border-color: var(--liquid-border-hover);
-  border-top-color: rgba(255, 255, 255, 0.90);
-  background: var(--liquid-glass-hover);
-  box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
+  border-radius: var(--radius-xl);
 }
 
 .contact-info-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 18px;
-  background: radial-gradient(circle at 35% 30%, rgba(0, 240, 207, 0.22) 0%, rgba(2, 20, 18, 0.85) 100%);
-  color: #00F0CF;
-  border: 1.2px solid rgba(0, 240, 207, 0.45);
-  box-shadow: 0 0 20px rgba(0, 240, 207, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: rgba(200, 168, 91, 0.10);
+  color: var(--color-gold-light);
+  border: 1px solid rgba(200, 168, 91, 0.25);
   flex-shrink: 0;
 }
 
@@ -62,42 +46,36 @@
   font-family: var(--font-heading);
   font-size: 0.98rem;
   font-weight: 700;
-  color: #FFFFFF;
+  color: var(--color-forest);
   margin-bottom: 4px;
 }
 
 .contact-info-text {
   font-size: 0.88rem;
-  color: rgba(220, 240, 235, 0.75);
+  color: var(--color-text-secondary);
   line-height: 1.5;
 }
 
 .contact-info-text a {
-  color: #00F0CF;
+  color: var(--color-gold-light);
   text-decoration: none;
 }
 
 .contact-info-text a:hover {
-  color: #5FE3C2;
+  color: var(--color-forest);
   text-decoration: underline;
 }
 
 .contact-form-wrapper {
   padding: var(--space-2xl);
-  background: var(--liquid-glass);
-  backdrop-filter: var(--liquid-blur);
-  -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.3px solid var(--liquid-border);
-  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
-  border-radius: 28px;
-  box-shadow: var(--liquid-shadow), var(--liquid-inset);
+  border-radius: var(--radius-xl);
 }
 
 .contact-form-title {
-  font-family: var(--font-editorial);
-  font-size: 1.45rem;
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
   font-weight: 700;
-  color: #FFFFFF;
+  color: var(--color-forest);
   margin-bottom: var(--space-xl);
 }
 
@@ -116,7 +94,7 @@
 .form-label {
   font-size: 0.86rem;
   font-weight: 600;
-  color: #00F0CF;
+  color: var(--color-gold-light);
 }
 
 .form-input,
@@ -124,10 +102,10 @@
 .form-select {
   width: 100%;
   padding: 12px 16px;
-  background: rgba(2, 14, 11, 0.7);
-  border: 1px solid rgba(0, 255, 200, 0.22);
+  background: rgba(9, 25, 18, 0.85);
+  border: 1px solid rgba(200, 168, 91, 0.22);
   border-radius: var(--radius-md);
-  color: #FFFFFF;
+  color: var(--color-text);
   font-family: inherit;
   font-size: 0.92rem;
   outline: none;
@@ -137,9 +115,9 @@
 .form-input:focus,
 .form-textarea:focus,
 .form-select:focus {
-  border-color: #00F0CF;
-  box-shadow: 0 0 0 3px rgba(0, 255, 200, 0.18), 0 0 16px rgba(0, 255, 200, 0.25);
-  background: rgba(4, 20, 16, 0.9);
+  border-color: var(--color-gold-light);
+  box-shadow: 0 0 0 3px rgba(200, 168, 91, 0.15);
+  background: rgba(14, 38, 29, 0.95);
 }
 
 .form-textarea {

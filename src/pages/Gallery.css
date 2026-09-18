@@ -15,14 +15,14 @@
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  border-radius: 28px;
-  background: var(--liquid-glass);
-  backdrop-filter: var(--liquid-blur);
-  -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.3px solid var(--liquid-border);
-  border-top: 1.8px solid rgba(255, 255, 255, 0.48);
-  box-shadow: var(--liquid-shadow), var(--liquid-inset);
-  transition: all 0.35s var(--ease-out);
+  border-radius: var(--radius-xl);
+  background: var(--card-bg);
+  backdrop-filter: var(--card-blur);
+  -webkit-backdrop-filter: var(--card-blur);
+  border: 1px solid var(--card-border);
+  border-top: 1px solid rgba(200, 168, 91, 0.28);
+  box-shadow: var(--card-shadow), var(--card-inset);
+  transition: all 0.25s var(--ease-out);
 }
 
 .gallery-item:hover {
@@ -536,23 +536,25 @@
   font-family: var(--font-heading);
   font-size: 0.82rem;
   font-weight: 500;
-  color: var(--color-text-muted);
-  background: transparent;
-  border: 1px solid rgba(11, 47, 38, 0.10);
+  color: var(--color-text-secondary);
+  background: rgba(14, 38, 29, 0.65);
+  border: 1px solid rgba(200, 168, 91, 0.20);
   border-radius: var(--radius-pill);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .gallery-filter-btn:hover {
-  border-color: var(--color-emerald);
-  color: var(--color-emerald);
+  border-color: rgba(200, 168, 91, 0.45);
+  color: var(--color-forest);
+  background: rgba(200, 168, 91, 0.10);
 }
 
 .gallery-filter-btn.active {
-  background: var(--color-emerald);
-  color: #FFFFFF;
-  border-color: var(--color-emerald);
+  background: rgba(200, 168, 91, 0.18);
+  color: var(--color-gold-light);
+  border-color: var(--color-gold-light);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
 }
 
 

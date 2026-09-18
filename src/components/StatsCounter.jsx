@@ -90,7 +90,7 @@ export default function StatsCounter() {
                 {/* Gold Diamond Accent Line */}
                 <div className="stat-diamond-accent">
                   <span className="diamond-line"></span>
-                  <span className="diamond-dot">◆</span>
+                  <span className="diamond-dot"></span>
                   <span className="diamond-line"></span>
                 </div>
               </div>

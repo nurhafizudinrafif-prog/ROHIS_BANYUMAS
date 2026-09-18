@@ -1,13 +1,13 @@
 /* =========================================================
-   FOOTER — LIGHT-TO-DARK GROUNDING TRANSITION
-   Deep Forest Green (#092A21) • Warm Ivory Typography • Emerald Accents
+   FOOTER — GROUNDING INSTITUTIONAL CLOSING
+   Deep Pine (#05100B) • Warm Alabaster • Antique Brass Accents
    ========================================================= */
 
 .footer {
-  background: #020708;
-  color: #F7F5EE;
+  background: #05100B;
+  color: var(--color-forest);
   padding: var(--space-4xl) 0 var(--space-xl);
-  border-top: 1px solid rgba(0, 255, 200, 0.18);
+  border-top: 1px solid rgba(200, 168, 91, 0.16);
   position: relative;
   overflow: hidden;
 }
@@ -16,11 +16,10 @@
   content: '';
   position: absolute;
   top: 0;
-  left: 15%;
-  right: 15%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #00DDB8, #00F0CF, #4DD7E8, transparent);
-  box-shadow: 0 0 16px rgba(0, 255, 200, 0.6);
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200, 168, 91, 0.45), transparent);
 }
 
 /* ── Top Grid ── */
@@ -36,14 +35,14 @@
   font-family: var(--font-heading);
   font-size: 1.25rem;
   font-weight: 800;
-  color: #FFFFFF;
+  color: var(--color-forest);
   margin-bottom: 8px;
   letter-spacing: -0.01em;
 }
 
 .footer-brand-tagline {
   font-size: 0.90rem;
-  color: rgba(220, 240, 235, 0.75);
+  color: var(--color-text-secondary);
   margin-bottom: var(--space-lg);
   line-height: 1.65;
   max-width: 340px;
@@ -58,22 +57,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  background: rgba(0, 255, 200, 0.08);
-  border: 1px solid rgba(0, 255, 200, 0.28);
-  color: #00F0CF;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  background: rgba(200, 168, 91, 0.10);
+  border: 1px solid rgba(200, 168, 91, 0.22);
+  color: var(--color-gold-light);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
   transition: all var(--transition-base);
 }
 
 .footer-social-link:hover {
-  background: rgba(0, 255, 200, 0.22);
-  border-color: #00F0CF;
-  color: #FFFFFF;
-  transform: translateY(-3px) scale(1.06);
-  box-shadow: 0 6px 18px rgba(0, 255, 200, 0.35);
+  background: rgba(200, 168, 91, 0.20);
+  border-color: var(--color-gold-light);
+  color: #F7F5F0;
+  transform: translateY(-2px);
 }
 
 /* ── Columns ── */
@@ -81,9 +79,9 @@
   font-family: var(--font-heading);
   font-size: 0.82rem;
   font-weight: 700;
-  color: #00F0CF;
+  color: var(--color-gold-light);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
   margin-bottom: var(--space-lg);
 }
 
@@ -95,13 +93,13 @@
 
 .footer-link {
   font-size: 0.90rem;
-  color: #D1DBD6;
+  color: var(--color-text-secondary);
   text-decoration: none;
   transition: all 0.2s ease;
 }
 
 .footer-link:hover {
-  color: #39B99A;
+  color: var(--color-forest);
   padding-left: 4px;
 }
 
@@ -117,12 +115,12 @@
   align-items: flex-start;
   gap: 10px;
   font-size: 0.88rem;
-  color: #D1DBD6;
+  color: var(--color-text-secondary);
   line-height: 1.5;
 }
 
 .footer-contact-item svg {
-  color: #39B99A;
+  color: var(--color-gold);
   flex-shrink: 0;
   margin-top: 3px;
 }
@@ -133,9 +131,9 @@
   align-items: center;
   justify-content: space-between;
   padding-top: var(--space-xl);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(200, 168, 91, 0.12);
   font-size: 0.82rem;
-  color: #A9B8B2;
+  color: var(--color-text-muted);
   flex-wrap: wrap;
   gap: var(--space-md);
 }
@@ -146,13 +144,13 @@
 }
 
 .footer-bottom-link {
-  color: #A9B8B2;
+  color: var(--color-text-muted);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .footer-bottom-link:hover {
-  color: #F7F5EE;
+  color: var(--color-forest);
 }
 
 /* ── Responsive ── */

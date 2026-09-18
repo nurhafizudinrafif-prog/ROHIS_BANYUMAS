@@ -1,6 +1,6 @@
 /* =========================================================
-   QUOTE SECTION — LIGHT PREMIUM
-   Warm Ivory / White Card • Restrained Gold Calligraphy • Forest Typography
+   QUOTE SECTION — MODERN ISLAMIC EDITORIAL
+   Pine Surface • Restrained Antique Gold Calligraphy
    ========================================================= */
 
 .quote-section {
@@ -12,29 +12,27 @@
   margin: 0 auto;
   padding: var(--space-2xl) var(--space-xl);
   text-align: center;
-  background: var(--liquid-glass);
-  backdrop-filter: var(--liquid-blur);
-  -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1.2px solid var(--liquid-border);
-  border-top: 1.6px solid rgba(255, 255, 255, 0.48);
-  border-radius: var(--radius-2xl);
-  box-shadow: var(--liquid-shadow), var(--liquid-inset);
+  background: var(--card-bg);
+  backdrop-filter: var(--card-blur);
+  -webkit-backdrop-filter: var(--card-blur);
+  border: 1px solid var(--card-border);
+  border-top: 1px solid rgba(200, 168, 91, 0.28);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--card-shadow), var(--card-inset);
   position: relative;
   transition: all var(--transition-base);
 }
 
 .quote-card:hover {
-  transform: translateY(-3px) scale(1.008);
-  background: var(--liquid-glass-hover);
-  border-color: var(--liquid-border-hover);
-  border-top-color: rgba(255, 255, 255, 0.85);
-  box-shadow: var(--liquid-shadow-hover), var(--liquid-inset);
+  transform: translateY(-2px);
+  background: var(--card-bg-hover);
+  border-color: var(--card-border-hover);
+  box-shadow: var(--card-shadow-hover), var(--card-inset);
 }
 
 .quote-arabic {
   font-size: clamp(1.4rem, 3.5vw, 1.9rem);
-  color: var(--color-gold);
-  text-shadow: 0 0 20px rgba(229, 195, 120, 0.35);
+  color: var(--color-gold-light);
   line-height: 1.8;
   margin-bottom: var(--space-md);
   font-weight: 500;
@@ -43,8 +41,8 @@
 }
 
 .quote-translation {
-  font-size: 1.02rem;
-  color: rgba(240, 250, 247, 0.95);
+  font-size: 1.05rem;
+  color: var(--color-text);
   font-style: italic;
   font-family: var(--font-editorial);
   line-height: 1.75;
@@ -53,14 +51,14 @@
 
 .quote-source {
   font-size: 0.82rem;
-  color: var(--color-emerald-light);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  color: var(--color-gold-light);
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 @media (max-width: 768px) {
   .quote-card {
     padding: var(--space-xl) var(--space-lg);
+    border-radius: var(--radius-lg);
   }
 }
