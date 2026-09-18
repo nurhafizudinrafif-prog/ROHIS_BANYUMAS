@@ -13,7 +13,11 @@
       "destination": "/sitemap.xml"
     },
     {
-      "source": "/((?!api|robots\\.txt|sitemap\\.xml).*)",
+      "source": "/(google[a-zA-Z0-9_-]+\\.html)",
+      "destination": "/$1"
+    },
+    {
+      "source": "/((?!api|robots\\.txt|sitemap\\.xml|google[a-zA-Z0-9_-]+\\.html).*)",
       "destination": "/index.html"
     }
   ]
