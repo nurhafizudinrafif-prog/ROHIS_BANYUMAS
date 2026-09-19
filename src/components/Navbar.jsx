@@ -67,7 +67,7 @@ export default function Navbar() {
         <div className="navbar-inner container">
           {/* Brand */}
           <Link to="/" className="navbar-brand">
-            <RohisLogo size={36} showGlow={true} className="navbar-logo-vector" />
+            <RohisLogo size={42} showGlow={true} className="navbar-logo-vector" />
             <div className="navbar-brand-text">
               <span className="navbar-brand-name">ROHIS</span>
               <span className="navbar-brand-sub">Kabupaten Banyumas</span>
@@ -117,7 +117,7 @@ export default function Navbar() {
             {/* Sheet Header */}
             <div className="navbar-sheet-header">
               <Link to="/" className="navbar-brand" onClick={() => setIsMobileOpen(false)}>
-                <RohisLogo size={36} showGlow={true} className="navbar-logo-vector" />
+                <RohisLogo size={42} showGlow={true} className="navbar-logo-vector" />
                 <div className="navbar-brand-text">
                   <span className="navbar-brand-name">ROHIS</span>
                   <span className="navbar-brand-sub">Kabupaten Banyumas</span>
