@@ -1,3 +1,4 @@
+import logoImg from '../assets/logo.png';
 import { Link } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import { 
@@ -162,7 +163,7 @@ export default function Home() {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--deep-pine)' }}>
         <div className="animate-float" style={{ textAlign: 'center' }}>
-          <img src="/logo.png" alt="ROKABA" style={{ width: 64, height: 64, objectFit: 'contain', marginBottom: '1rem', filter: 'drop-shadow(0 4px 16px rgba(16,185,129,0.4))' }} />
+          <img src={logoImg} alt="ROKABA" style={{ width: 64, height: 64, objectFit: 'contain', marginBottom: '1rem', filter: 'drop-shadow(0 4px 16px rgba(16,185,129,0.4))' }} />
           <p style={{ color: 'rgba(245,242,237,0.5)', fontFamily: 'var(--font-heading)' }}>Memuat data...</p>
         </div>
       </div>

@@ -1,3 +1,4 @@
+import logoImg from '../../assets/logo.png';
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, BookOpen, Moon, Sun } from 'lucide-react';
@@ -61,7 +62,7 @@ export default function Navbar() {
           textDecoration: 'none',
         }}>
           <img
-            src="/logo.png"
+            src={logoImg}
             alt="Logo ROHIS Banyumas"
             style={{
               width: 48, height: 48,

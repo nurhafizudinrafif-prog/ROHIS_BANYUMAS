@@ -1,3 +1,4 @@
+import logoImg from '../../assets/logo.png';
 import { Link } from 'react-router-dom';
 import { BookOpen, Mail, Phone, MapPin, Camera, Play, MessageCircle } from 'lucide-react';
 
@@ -33,7 +34,7 @@ export default function Footer() {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1rem' }}>
               <img
-                src="/logo.png"
+                src={logoImg}
                 alt="Logo ROHIS Banyumas"
                 style={{
                   width: 48, height: 48,
