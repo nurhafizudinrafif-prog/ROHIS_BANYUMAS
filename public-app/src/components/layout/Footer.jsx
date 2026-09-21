@@ -97,7 +97,7 @@ export default function Footer() {
                   { icon: Camera, label: 'Instagram', url: 'https://www.instagram.com/rohisbanyumas' },
                   { icon: Play, label: 'YouTube', url: 'https://www.youtube.com/@rohisbanyumas' },
                   { icon: MessageCircle, label: 'WhatsApp', url: 'https://wa.me/6281234567890' },
-                ].map(({ icon: Icon, label }) => (
+                ].map(({ icon: Icon, label, url }) => (
                   <a key={label} href={url} target="_blank" rel="noopener noreferrer" aria-label={label} style={{
                     width: 36,
                     height: 36,
