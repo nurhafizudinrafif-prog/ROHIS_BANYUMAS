@@ -64,8 +64,7 @@ export default function Navbar() {
             src="/logo.png"
             alt="Logo ROHIS Banyumas"
             style={{
-              width: 42,
-              height: 42,
+              width: 48, height: 48,
               objectFit: 'contain',
               filter: 'drop-shadow(0 2px 8px rgba(16,185,129,0.35))',
               transition: 'transform 0.2s ease',

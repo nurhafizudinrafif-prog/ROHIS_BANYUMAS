@@ -36,8 +36,7 @@ export default function Footer() {
                 src="/logo.png"
                 alt="Logo ROHIS Banyumas"
                 style={{
-                  width: 44,
-                  height: 44,
+                  width: 48, height: 48,
                   objectFit: 'contain',
                   filter: 'drop-shadow(0 2px 8px rgba(16,185,129,0.35))',
                 }}
