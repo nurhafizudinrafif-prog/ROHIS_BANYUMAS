@@ -6,7 +6,8 @@ import { ArrowLeft, Clock, User, Tag, Share2 } from 'lucide-react';
 export default function ArticleDetail() {
   const { slug } = useParams();
   const { articles } = useData();
-  const article = articles.find(a => a.slug === slug);
+  const safeArticles = Array.isArray(articles) ? articles : [];
+  const article = safeArticles.find(a => a.slug === slug || String(a.id) === String(slug));
 
   if (!article) {
     return (
@@ -17,7 +18,7 @@ export default function ArticleDetail() {
     );
   }
 
-  const relatedArticles = articles.filter(a => a.category === article.category && a.id !== article.id).slice(0, 3);
+  const relatedArticles = safeArticles.filter(a => a.category === article.category && a.id !== article.id).slice(0, 3);
 
   return (
     <div>
@@ -50,7 +51,7 @@ export default function ArticleDetail() {
             <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><User size={15} /> {article.author}</span>
             <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
               <Clock size={15} />
-              {new Date(article.publishedAt).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+              {new Date(article.date || article.publishedAt || Date.now()).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
             </span>
           </div>
         </div>

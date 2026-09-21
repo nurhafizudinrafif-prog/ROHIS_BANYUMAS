@@ -7,10 +7,14 @@ export default function Schools() {
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('Semua');
 
-  const types = ['Semua', ...new Set(schools.map(s => s.type))];
-  const filtered = schools
-    .filter(s => typeFilter === 'Semua' || s.type === typeFilter)
-    .filter(s => s.name.toLowerCase().includes(search.toLowerCase()) || s.pembina.toLowerCase().includes(search.toLowerCase()));
+  const types = ['Semua', ...new Set((schools || []).map(s => s.type || 'SMA/SMK').filter(Boolean))];
+  const filtered = (schools || [])
+    .filter(s => typeFilter === 'Semua' || (s.type || 'SMA/SMK') === typeFilter)
+    .filter(s =>
+      (s.name || s.school || '').toLowerCase().includes((search || '').toLowerCase()) ||
+      (s.pembina || s.leader || '').toLowerCase().includes((search || '').toLowerCase()) ||
+      (s.address || '').toLowerCase().includes((search || '').toLowerCase())
+    );
 
   return (
     <div>
@@ -55,8 +59,8 @@ export default function Schools() {
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                   <div>
-                    <span className="badge badge-pine" style={{ marginBottom: '0.5rem' }}>{school.type}</span>
-                    <h3 style={{ fontSize: '1.05rem' }}>{school.name}</h3>
+                    <span className="badge badge-pine" style={{ marginBottom: '0.5rem' }}>{school.type || 'SMA/SMK'}</span>
+                    <h3 style={{ fontSize: '1.05rem' }}>{school.name || school.school}</h3>
                   </div>
                   <div style={{
                     width: 44, height: 44, borderRadius: '12px', background: 'var(--emerald-glass)',
@@ -66,10 +70,10 @@ export default function Schools() {
                   </div>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', fontSize: '0.85rem', color: 'rgba(13,43,34,0.55)' }}>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><User size={14} style={{ color: 'var(--antique-brass)', flexShrink: 0 }} /> {school.pembina}</span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Users size={14} style={{ color: 'var(--emerald)', flexShrink: 0 }} /> {school.memberCount} anggota</span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><MapPin size={14} style={{ color: 'rgba(13,43,34,0.3)', flexShrink: 0 }} /> {school.address}</span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Phone size={14} style={{ color: 'rgba(13,43,34,0.3)', flexShrink: 0 }} /> {school.contact}</span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><User size={14} style={{ color: 'var(--antique-brass)', flexShrink: 0 }} /> {school.pembina || school.leader || 'Pembina ROHIS'}</span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Users size={14} style={{ color: 'var(--emerald)', flexShrink: 0 }} /> {school.memberCount || school.members || 0} anggota</span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><MapPin size={14} style={{ color: 'rgba(13,43,34,0.3)', flexShrink: 0 }} /> {school.address || 'Kabupaten Banyumas'}</span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Phone size={14} style={{ color: 'rgba(13,43,34,0.3)', flexShrink: 0 }} /> {school.contact || '-'}</span>
                 </div>
               </div>
             ))}

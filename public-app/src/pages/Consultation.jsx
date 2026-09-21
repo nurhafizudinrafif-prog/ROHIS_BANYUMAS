@@ -8,7 +8,8 @@ export default function Consultation() {
   const [submitted, setSubmitted] = useState(false);
   const [expanded, setExpanded] = useState(null);
 
-  const published = questions.filter(q => q.isPublic && q.status === 'answered');
+  const safeQuestions = Array.isArray(questions) ? questions : [];
+  const published = safeQuestions.filter(q => q.isPublic && q.status === 'answered');
   const categories = ['Umum', 'Fiqih', 'Akhlak', 'Motivasi', 'Ibadah'];
 
   const handleSubmit = (e) => {

@@ -3,8 +3,8 @@
 
 import { fallbackData } from '../data/fallback.js';
 
-const UPSTASH_URL = import.meta.env.VITE_UPSTASH_REDIS_REST_URL || 'https://holy-gobbler-70550.upstash.io';
-const UPSTASH_TOKEN = import.meta.env.VITE_UPSTASH_REDIS_REST_TOKEN || 'gQAAAAAAAROWAAIgcDJlOTE0NTNiY2EyYjA0MjU3YmNjNjJkMzc3YmZmYjQ2NA';
+const UPSTASH_URL = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_UPSTASH_REDIS_REST_URL) || 'https://holy-gobbler-70550.upstash.io';
+const UPSTASH_TOKEN = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_UPSTASH_REDIS_REST_TOKEN) || 'gQAAAAAAAROWAAIgcDJlOTE0NTNiY2EyYjA0MjU3YmNjNjJkMzc3YmZmYjQ2NA';
 
 const headers = {
   Authorization: `Bearer ${UPSTASH_TOKEN}`,
@@ -215,9 +215,69 @@ export async function fetchAllData() {
     'rokaba:users',
     'rokaba:audit_logs',
     'rokaba:team',
+    'rokaba:programs',
   ];
 
-  // Try to load all keys from local dev API in a single shot
+  // Try single-shot MGET on Upstash Redis REST
+  if (UPSTASH_URL && UPSTASH_TOKEN) {
+    try {
+      const allQueryKeys = [...keys, 'rohis_cms_data'];
+      const response = await fetch(UPSTASH_URL, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(['MGET', ...allQueryKeys]),
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        if (Array.isArray(json.result)) {
+          const results = {};
+          keys.forEach((key, idx) => {
+            let val = json.result[idx];
+            if (val) {
+              while (typeof val === 'string') {
+                try { val = JSON.parse(val); } catch { break; }
+              }
+              results[key] = val;
+              try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
+            }
+          });
+
+          // Extract rohis_cms_data from the last item
+          let cmsData = json.result[keys.length];
+          if (cmsData) {
+            while (typeof cmsData === 'string') {
+              try { cmsData = JSON.parse(cmsData); } catch { break; }
+            }
+          }
+
+          // If individual rokaba:* key was missing or empty, take from rohis_cms_data
+          if (cmsData && typeof cmsData === 'object') {
+            if (!results['rokaba:home'] && cmsData.homeContent) results['rokaba:home'] = cmsData.homeContent;
+            if ((!results['rokaba:articles'] || results['rokaba:articles'].length === 0) && cmsData.articles) results['rokaba:articles'] = cmsData.articles;
+            if ((!results['rokaba:events'] || results['rokaba:events'].length === 0) && cmsData.events) results['rokaba:events'] = cmsData.events;
+            if ((!results['rokaba:schools'] || results['rokaba:schools'].length === 0) && cmsData.memberSchools) results['rokaba:schools'] = cmsData.memberSchools;
+            if ((!results['rokaba:gallery'] || results['rokaba:gallery'].length === 0) && cmsData.galleryItems) results['rokaba:gallery'] = cmsData.galleryItems;
+            if (!results['rokaba:team'] && cmsData.team) results['rokaba:team'] = cmsData.team;
+            if (!results['rokaba:programs'] && cmsData.programs) results['rokaba:programs'] = cmsData.programs;
+          }
+
+          // Fallback to static data for anything still missing
+          keys.forEach(k => {
+            if (results[k] === undefined || results[k] === null) {
+              results[k] = fallbackData[k] || null;
+            }
+          });
+
+          return results;
+        }
+      }
+    } catch (err) {
+      console.warn('[CloudSync] MGET query failed, falling back to individual fetch:', err.message);
+    }
+  }
+
+  // Level 2: Try Local Dev API (/api/sync)
   try {
     const apiRes = await fetch('/api/sync');
     if (apiRes.ok) {
@@ -237,6 +297,7 @@ export async function fetchAllData() {
     // proceed to individual fetch
   }
 
+  // Level 3 & 4: Individual fetch with local storage and static fallback
   const results = {};
   await Promise.all(
     keys.map(async (key) => {

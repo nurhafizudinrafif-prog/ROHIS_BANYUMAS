@@ -196,14 +196,15 @@ const DIVISIONS = [
  * Normalizes member division to match division id
  */
 function getMemberDivisionId(member) {
-  const div = (member?.division || '').toLowerCase();
-  if (div.includes('bph')) return 'BPH';
+  const div = (member?.division || member?.department || '').toLowerCase();
+  const role = (member?.role || member?.position || '').toLowerCase();
+  if (div.includes('bph') || role.includes('ketua') || role.includes('sekretaris') || role.includes('bendahara') || role.includes('kadep')) return 'BPH';
   if (div.includes('sdm')) return 'SDM';
   if (div.includes('dakwah')) return 'Dakwah';
   if (div.includes('humas')) return 'HUMAS';
-  if (div.includes('jurnalistik')) return 'Jurnalistik';
+  if (div.includes('jurnalistik') || div.includes('media')) return 'Jurnalistik';
   if (div.includes('danus') || div.includes('dana')) return 'DANUS';
-  return 'LAINNYA';
+  return 'BPH';
 }
 
 /**
@@ -231,9 +232,9 @@ function MemberCard({ member, index }) {
     member.role === 'Ketua Ikhwan' ||
     member.role === 'Ketua Akhwat';
   const isKoordinator =
-    (member.position || '').toLowerCase().includes('koordinator') ||
-    (member.position || '').toLowerCase().includes('sekretaris') ||
-    (member.position || '').toLowerCase().includes('bendahara');
+    (member.position || member.role || '').toLowerCase().includes('koordinator') ||
+    (member.position || member.role || '').toLowerCase().includes('sekretaris') ||
+    (member.position || member.role || '').toLowerCase().includes('bendahara');
 
   const igUrl = formatInstagramUrl(member.instagram);
   const igHandle = formatInstagramHandle(member.instagram);
@@ -323,80 +324,68 @@ function MemberCard({ member, index }) {
             gap: '0.35rem',
             fontSize: '0.78rem',
             color: 'rgba(13, 43, 34, 0.65)',
-            marginBottom: '0.5rem',
-            maxWidth: '100%',
+            marginBottom: '0.75rem',
+            lineHeight: 1.3,
           }}
         >
-          <GraduationCap size={14} style={{ color: 'var(--antique-brass)', flexShrink: 0 }} />
-          <span
-            style={{
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              maxWidth: 190,
-            }}
-            title={member.school}
-          >
+          <GraduationCap size={13} style={{ flexShrink: 0, color: 'var(--antique-brass)' }} />
+          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {member.school}
           </span>
         </div>
       ) : (
-        <div style={{ height: '1.2rem', marginBottom: '0.5rem' }} />
+        <div style={{ height: '1.2rem', marginBottom: '0.75rem' }} />
       )}
 
-      {/* Period */}
-      <div
-        style={{
-          fontSize: '0.72rem',
-          color: 'rgba(13, 43, 34, 0.4)',
-          marginBottom: '1.15rem',
-        }}
-      >
-        Periode {member.period || '2025/2026'}
-      </div>
+      {/* Bio Snippet if exists */}
+      {member.bio && (
+        <p
+          style={{
+            fontSize: '0.76rem',
+            color: 'rgba(13, 43, 34, 0.55)',
+            lineHeight: 1.45,
+            marginBottom: '0.85rem',
+            fontStyle: 'italic',
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+          }}
+        >
+          "{member.bio}"
+        </p>
+      )}
 
       {/* Instagram Button */}
-      <div style={{ marginTop: 'auto', width: '100%' }}>
+      <div style={{ marginTop: 'auto', paddingTop: '0.5rem' }}>
         {igUrl ? (
           <a
             href={igUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-instagram"
-            title={`Kunjungi profil Instagram ${member.name} (${igHandle})`}
-            style={{ width: '100%' }}
+            className="btn-ig"
+            aria-label={`Instagram ${member.name}`}
+            title={`Buka Instagram ${igHandle}`}
           >
             <InstagramIcon size={14} />
-            <span
-              style={{
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}
-            >
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {igHandle}
             </span>
-            <ExternalLink size={11} style={{ opacity: 0.7, marginLeft: 'auto', flexShrink: 0 }} />
           </a>
         ) : (
-          <div
+          <span
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              justifyContent: 'center',
               gap: '0.35rem',
-              padding: '0.45rem 0.8rem',
-              fontSize: '0.74rem',
-              borderRadius: 'var(--radius-full)',
-              background: 'rgba(13, 43, 34, 0.04)',
-              color: 'rgba(13, 43, 34, 0.4)',
-              border: '1px dashed rgba(13, 43, 34, 0.12)',
-              width: '100%',
+              fontSize: '0.72rem',
+              color: 'rgba(13, 43, 34, 0.3)',
+              padding: '0.3rem 0.6rem',
             }}
           >
-            <InstagramIcon size={13} style={{ opacity: 0.5 }} />
-            <span>Instagram: -</span>
-          </div>
+            <InstagramIcon size={13} style={{ opacity: 0.4 }} />
+            <span>—</span>
+          </span>
         )}
       </div>
     </div>
@@ -404,7 +393,40 @@ function MemberCard({ member, index }) {
 }
 
 export default function About() {
-  const { team } = useData();
+  const { team: rawTeam } = useData();
+
+  // Safely normalize team to always be an array of members
+  const team = useMemo(() => {
+    if (Array.isArray(rawTeam)) return rawTeam;
+    if (!rawTeam || typeof rawTeam !== 'object') return [];
+    const list = [];
+    if (Array.isArray(rawTeam.bph)) {
+      rawTeam.bph.forEach((m, idx) => list.push({
+        ...m,
+        id: m.id || `bph-${idx}`,
+        position: m.position || m.role || 'Pengurus BPH',
+        role: m.role || m.position || 'Pengurus BPH',
+        division: m.division || 'BPH',
+      }));
+    }
+    const divs = Array.isArray(rawTeam.divisions)
+      ? rawTeam.divisions
+      : (rawTeam.divisions ? Object.values(rawTeam.divisions) : []);
+    divs.forEach(div => {
+      const divName = div.name || div.title || div.id || 'Divisi';
+      const short = div.shortName || divName;
+      if (Array.isArray(div.members)) {
+        div.members.forEach((m, idx) => list.push({
+          ...m,
+          id: m.id || `${short}-${idx}`,
+          position: m.position || m.role || 'Anggota Divisi',
+          role: m.role || m.position || 'Anggota Divisi',
+          division: m.division || short || divName,
+        }));
+      }
+    });
+    return list;
+  }, [rawTeam]);
 
   // Division Filter & View States
   const [selectedDivision, setSelectedDivision] = useState('ALL');
@@ -414,11 +436,12 @@ export default function About() {
   // Showcase Active Division Index (0: SDM, 1: Dakwah, 2: Jurnalistik, 3: HUMAS, 4: DANUS)
   const [activeShowcaseIdx, setActiveShowcaseIdx] = useState(1); // Default to Divisi Dakwah as in screenshot
 
-  // Calculate Member Counts per Division
+  // Calculate Member Counts per Division safely
   const divisionCounts = useMemo(() => {
-    const counts = { ALL: team.length };
+    const safeTeam = Array.isArray(team) ? team : [];
+    const counts = { ALL: safeTeam.length };
     DIVISIONS.slice(1).forEach(div => {
-      counts[div.id] = team.filter(m => getMemberDivisionId(m) === div.id).length;
+      counts[div.id] = safeTeam.filter(m => getMemberDivisionId(m) === div.id).length;
     });
     return counts;
   }, [team]);
@@ -428,9 +451,10 @@ export default function About() {
     return DIVISIONS.find(d => d.id === selectedDivision) || DIVISIONS[0];
   }, [selectedDivision]);
 
-  // Filtered List for Pengurus
+  // Filtered List for Pengurus safely
   const filteredTeam = useMemo(() => {
-    return team.filter(member => {
+    const safeTeam = Array.isArray(team) ? team : [];
+    return safeTeam.filter(member => {
       const matchDivision =
         selectedDivision === 'ALL' || getMemberDivisionId(member) === selectedDivision;
       if (!matchDivision) return false;
@@ -438,7 +462,7 @@ export default function About() {
       if (!searchQuery.trim()) return true;
       const q = searchQuery.toLowerCase().trim();
       const name = (member.name || '').toLowerCase();
-      const pos = (member.position || '').toLowerCase();
+      const pos = (member.position || member.role || '').toLowerCase();
       const school = (member.school || '').toLowerCase();
       const ig = (member.instagram || '').toLowerCase();
       return name.includes(q) || pos.includes(q) || school.includes(q) || ig.includes(q);
@@ -1387,7 +1411,7 @@ export default function About() {
             /* ── GROUPED BY DIVISION VIEW ── */
             <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
               {DIVISIONS.slice(1).map(division => {
-                const divisionMembers = team.filter(m => getMemberDivisionId(m) === division.id);
+                const divisionMembers = (Array.isArray(team) ? team : []).filter(m => getMemberDivisionId(m) === division.id);
                 if (divisionMembers.length === 0) return null;
 
                 const DivIcon = division.icon;

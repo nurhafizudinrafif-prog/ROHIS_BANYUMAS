@@ -3,8 +3,9 @@ import { Calendar, MapPin, Clock, CheckCircle, AlertCircle } from 'lucide-react'
 
 export default function Events() {
   const { events } = useData();
-  const upcoming = events.filter(e => e.status === 'upcoming').sort((a, b) => new Date(a.date) - new Date(b.date));
-  const completed = events.filter(e => e.status === 'completed').sort((a, b) => new Date(b.date) - new Date(a.date));
+  const safeEvents = Array.isArray(events) ? events : [];
+  const upcoming = safeEvents.filter(e => e.status !== 'completed').sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
+  const completed = safeEvents.filter(e => e.status === 'completed').sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
   return (
     <div>

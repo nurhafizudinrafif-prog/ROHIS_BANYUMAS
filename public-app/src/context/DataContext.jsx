@@ -1,27 +1,61 @@
 // DataContext - Centralized State Management with Cloud Sync
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { fetchData, saveData, fetchAllData } from '@shared/services/cloudSync.js';
+import { fallbackData } from '@shared/data/fallback.js';
+
+// Helper to normalize team from either Array or structured Object format ({ bph: [], divisions: [] })
+export function normalizeTeam(raw) {
+  if (Array.isArray(raw)) return raw;
+  if (!raw || typeof raw !== 'object') return [];
+  const list = [];
+  if (Array.isArray(raw.bph)) {
+    raw.bph.forEach((m, idx) => list.push({
+      ...m,
+      id: m.id || `bph-${idx}`,
+      position: m.position || m.role || 'Pengurus BPH',
+      role: m.role || m.position || 'Pengurus BPH',
+      division: m.division || 'BPH',
+    }));
+  }
+  const divs = Array.isArray(raw.divisions)
+    ? raw.divisions
+    : (raw.divisions ? Object.values(raw.divisions) : []);
+  divs.forEach(div => {
+    const divName = div.name || div.title || div.id || 'Divisi';
+    const short = div.shortName || divName;
+    if (Array.isArray(div.members)) {
+      div.members.forEach((m, idx) => list.push({
+        ...m,
+        id: m.id || `${short}-${idx}`,
+        position: m.position || m.role || 'Anggota Divisi',
+        role: m.role || m.position || 'Anggota Divisi',
+        division: m.division || short || divName,
+      }));
+    }
+  });
+  return list;
+}
 
 const DataContext = createContext(null);
 
 export function DataProvider({ children }) {
   const [data, setData] = useState({
-    home: null,
-    articles: [],
-    events: [],
-    schools: [],
-    gallery: [],
-    questions: [],
-    library: [],
-    team: [],
-    users: [],
-    auditLogs: [],
+    home: fallbackData['rokaba:home'] || null,
+    articles: fallbackData['rokaba:articles'] || [],
+    events: fallbackData['rokaba:events'] || [],
+    schools: fallbackData['rokaba:schools'] || [],
+    gallery: fallbackData['rokaba:gallery'] || [],
+    questions: fallbackData['rokaba:questions'] || [],
+    library: fallbackData['rokaba:library'] || [],
+    team: normalizeTeam(fallbackData['rokaba:team']),
+    users: fallbackData['rokaba:users'] || [],
+    auditLogs: fallbackData['rokaba:audit_logs'] || [],
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lastSync, setLastSync] = useState(null);
 
-  // Load all data on mount
+  // Load all data on mount and sync
   const loadAllData = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -29,15 +63,23 @@ export function DataProvider({ children }) {
       const allData = await fetchAllData();
       setData({
         home: allData['rokaba:home'] || fallbackData['rokaba:home'],
-        articles: allData['rokaba:articles'] || [],
-        events: allData['rokaba:events'] || [],
-        schools: allData['rokaba:schools'] || [],
-        gallery: allData['rokaba:gallery'] || [],
-        questions: allData['rokaba:questions'] || [],
-        library: allData['rokaba:library'] || [],
-        team: allData['rokaba:team'] || [],
-        users: allData['rokaba:users'] || [],
-        auditLogs: allData['rokaba:audit_logs'] || [],
+        articles: (Array.isArray(allData['rokaba:articles']) && allData['rokaba:articles'].length > 0)
+          ? allData['rokaba:articles']
+          : (fallbackData['rokaba:articles'] || []),
+        events: (Array.isArray(allData['rokaba:events']) && allData['rokaba:events'].length > 0)
+          ? allData['rokaba:events']
+          : (fallbackData['rokaba:events'] || []),
+        schools: (Array.isArray(allData['rokaba:schools']) && allData['rokaba:schools'].length > 0)
+          ? allData['rokaba:schools']
+          : (fallbackData['rokaba:schools'] || []),
+        gallery: (Array.isArray(allData['rokaba:gallery']) && allData['rokaba:gallery'].length > 0)
+          ? allData['rokaba:gallery']
+          : (fallbackData['rokaba:gallery'] || []),
+        questions: allData['rokaba:questions'] || fallbackData['rokaba:questions'] || [],
+        library: allData['rokaba:library'] || fallbackData['rokaba:library'] || [],
+        team: normalizeTeam(allData['rokaba:team'] || fallbackData['rokaba:team']),
+        users: allData['rokaba:users'] || fallbackData['rokaba:users'] || [],
+        auditLogs: allData['rokaba:audit_logs'] || fallbackData['rokaba:audit_logs'] || [],
       });
       setLastSync(new Date());
     } catch (err) {
@@ -53,13 +95,25 @@ export function DataProvider({ children }) {
     const handleRevalidate = () => {
       loadAllData();
     };
-    const interval = setInterval(loadAllData, 20000);
+    const interval = setInterval(loadAllData, 12000); // Check for fresh updates every 12 seconds
     window.addEventListener('focus', handleRevalidate);
     window.addEventListener('storage', handleRevalidate);
+
+    let bc;
+    try {
+      bc = new BroadcastChannel('rokaba_realtime_sync');
+      bc.onmessage = () => {
+        loadAllData();
+      };
+    } catch (e) {}
+
     return () => {
       clearInterval(interval);
       window.removeEventListener('focus', handleRevalidate);
       window.removeEventListener('storage', handleRevalidate);
+      if (bc) {
+        try { bc.close(); } catch (e) {}
+      }
     };
   }, [loadAllData]);
 

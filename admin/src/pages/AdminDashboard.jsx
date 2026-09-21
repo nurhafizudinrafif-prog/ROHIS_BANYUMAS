@@ -73,6 +73,9 @@ export default function AdminDashboard() {
     updateHomeContent,
     updateProgram,
     updateSettings,
+    syncStatus,
+    lastCloudSync,
+    syncNow,
     resetToDefault,
     exportBackup,
     importBackup,
@@ -705,13 +708,35 @@ export default function AdminDashboard() {
             <div>
               <h3>Admin ROKABA CMS</h3>
               <span className="admin-status-badge">
-                <span className="status-dot"></span> Saling Terhubung Real-Time
+                <span className={`status-dot ${syncStatus === 'syncing' ? 'syncing' : ''}`}></span>
+                {syncStatus === 'syncing'
+                  ? 'Menyinkronkan ke Cloud...'
+                  : syncStatus === 'saved'
+                    ? 'Cloud Upstash Terhubung (Real-Time)'
+                    : 'Terhubung Real-Time'}
               </span>
             </div>
           </div>
         </div>
 
         <div className="admin-topbar-right">
+          <button
+            onClick={async () => {
+              showToast('Menyinkronkan seluruh data ke Cloud Upstash & Web Publik...', 'info');
+              const ok = await syncNow();
+              if (ok) {
+                showToast('Semua data berhasil disinkronkan ke Web Publik & Cloud Upstash!', 'success');
+              } else {
+                showToast('Data tersimpan secara lokal dan diantrekan ke Cloud.', 'info');
+              }
+            }}
+            className="btn btn-outline btn-sm"
+            title="Paksa sinkronisasi data ke Cloud Upstash & Web Publik"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+          >
+            <RefreshCw size={14} className={syncStatus === 'syncing' ? 'spin' : ''} />
+            <span>{syncStatus === 'syncing' ? 'Menyinkronkan...' : 'Sinkronkan Sekarang'}</span>
+          </button>
           <a href="https://www.rohis-banyumas.web.id/" target="_blank" rel="noopener noreferrer" className="btn btn-outline btn-sm">
             <ExternalLink size={14} /> Lihat Web Publik
           </a>

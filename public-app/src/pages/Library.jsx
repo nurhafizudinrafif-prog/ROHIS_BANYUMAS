@@ -10,10 +10,11 @@ export default function Library() {
   const [search, setSearch] = useState('');
   const [catFilter, setCatFilter] = useState('Semua');
 
-  const categories = ['Semua', ...new Set(library.map(l => l.category))];
-  const filtered = library
+  const safeLibrary = Array.isArray(library) ? library : [];
+  const categories = ['Semua', ...new Set(safeLibrary.map(l => l.category).filter(Boolean))];
+  const filtered = safeLibrary
     .filter(l => catFilter === 'Semua' || l.category === catFilter)
-    .filter(l => l.title.toLowerCase().includes(search.toLowerCase()));
+    .filter(l => (l.title || '').toLowerCase().includes((search || '').toLowerCase()));
 
   return (
     <div>

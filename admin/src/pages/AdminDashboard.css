@@ -214,9 +214,24 @@
   animation: pulseDot 2s infinite;
 }
 
+.status-dot.syncing {
+  background-color: #facc15 !important;
+  box-shadow: 0 0 8px #facc15 !important;
+  animation: pulseDot 0.8s infinite;
+}
+
 @keyframes pulseDot {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
 }
 
 .cloud-indicator {

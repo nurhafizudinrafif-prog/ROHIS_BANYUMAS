@@ -9,13 +9,13 @@ export default function Articles() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('Semua');
 
-  const categories = ['Semua', ...new Set(articles.map(a => a.category))];
+  const categories = ['Semua', ...new Set((articles || []).map(a => a.category).filter(Boolean))];
 
-  const filtered = articles
+  const filtered = (articles || [])
     .filter(a => category === 'Semua' || a.category === category)
-    .filter(a => a.title.toLowerCase().includes(search.toLowerCase()) || 
-                 a.author.toLowerCase().includes(search.toLowerCase()))
-    .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+    .filter(a => ((a.title || '').toLowerCase().includes((search || '').toLowerCase()) || 
+                 (a.author || '').toLowerCase().includes((search || '').toLowerCase())))
+    .sort((a, b) => new Date(b.date || b.publishedAt || 0) - new Date(a.date || a.publishedAt || 0));
 
   return (
     <div>
@@ -104,7 +104,7 @@ export default function Articles() {
                       <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><User size={13} /> {article.author}</span>
                       <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
                         <Clock size={13} />
-                        {new Date(article.publishedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        {new Date(article.date || article.publishedAt || Date.now()).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
                       </span>
                     </div>
                   </div>

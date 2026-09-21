@@ -58,30 +58,80 @@ export function DataProvider({ children }) {
     return settings;
   });
 
+  const [syncStatus, setSyncStatus] = useState('idle'); // 'idle' | 'syncing' | 'saved' | 'error'
+  const [lastCloudSync, setLastCloudSync] = useState(null);
+  const [isInitialLoadDone, setIsInitialLoadDone] = useState(false);
+
+  // --- Persist to Upstash Cloud Helper ---
+  const persistToCloud = useCallback(async (overrides = {}) => {
+    try {
+      setSyncStatus('syncing');
+      const payload = {
+        articles,
+        events,
+        galleryItems,
+        memberSchools,
+        team,
+        instagramReels,
+        instagramProfile,
+        siteSettings,
+        homeContent,
+        programs,
+        ...overrides,
+      };
+      const ok = await saveCloudCMSData(payload);
+      if (ok) {
+        setSyncStatus('saved');
+        setLastCloudSync(new Date());
+        return true;
+      } else {
+        setSyncStatus('error');
+        return false;
+      }
+    } catch (e) {
+      console.warn('Persist to cloud error:', e);
+      setSyncStatus('error');
+      return false;
+    }
+  }, [articles, events, galleryItems, memberSchools, team, instagramReels, instagramProfile, siteSettings, homeContent, programs]);
+
   // Sync from Upstash Cloud Database on load, periodically, and on tab focus
   useEffect(() => {
     let isMounted = true;
     async function syncFromCloud() {
-      const cloudData = await fetchCloudCMSData();
-      if (cloudData && isMounted) {
-        if (cloudData.articles) setArticles(cloudData.articles);
-        if (cloudData.events) setEvents(cloudData.events);
-        if (cloudData.galleryItems) setGalleryItems(cloudData.galleryItems);
-        if (cloudData.memberSchools) setMemberSchools(cloudData.memberSchools);
-        if (cloudData.homeContent) setHomeContent(cloudData.homeContent);
-        if (cloudData.programs) setPrograms(cloudData.programs);
-        if (cloudData.instagramLivePosts && cloudData.instagramLivePosts.length > 0) {
-          setInstagramReels(cloudData.instagramLivePosts);
-        } else if (cloudData.instagramReels) {
-          setInstagramReels(cloudData.instagramReels);
+      try {
+        setSyncStatus('syncing');
+        const cloudData = await fetchCloudCMSData();
+        if (cloudData && isMounted) {
+          if (cloudData.articles) setArticles(cloudData.articles);
+          if (cloudData.events) setEvents(cloudData.events);
+          if (cloudData.galleryItems) setGalleryItems(cloudData.galleryItems);
+          if (cloudData.memberSchools) setMemberSchools(cloudData.memberSchools);
+          if (cloudData.team) setTeam(cloudData.team);
+          if (cloudData.homeContent) setHomeContent(cloudData.homeContent);
+          if (cloudData.programs) setPrograms(cloudData.programs);
+          if (cloudData.instagramLivePosts && cloudData.instagramLivePosts.length > 0) {
+            setInstagramReels(cloudData.instagramLivePosts);
+          } else if (cloudData.instagramReels) {
+            setInstagramReels(cloudData.instagramReels);
+          }
+          if (cloudData.instagramProfile) setInstagramProfile(cloudData.instagramProfile);
+          if (cloudData.siteSettings) {
+            const cloudSettings = { ...cloudData.siteSettings };
+            if (cloudSettings.adminUsername === 'admin') cloudSettings.adminUsername = 'rohis banyumas';
+            if (cloudSettings.adminPassword === 'rohisbanyumas2026') cloudSettings.adminPassword = 'rbk banyumas';
+            setSiteSettings((prev) => ({ ...prev, ...cloudSettings }));
+          }
+          setLastCloudSync(new Date());
+          setSyncStatus('saved');
+        } else {
+          setSyncStatus('idle');
         }
-        if (cloudData.instagramProfile) setInstagramProfile(cloudData.instagramProfile);
-        if (cloudData.siteSettings) {
-          const cloudSettings = { ...cloudData.siteSettings };
-          if (cloudSettings.adminUsername === 'admin') cloudSettings.adminUsername = 'rohis banyumas';
-          if (cloudSettings.adminPassword === 'rohisbanyumas2026') cloudSettings.adminPassword = 'rbk banyumas';
-          setSiteSettings((prev) => ({ ...prev, ...cloudSettings }));
-        }
+      } catch (err) {
+        console.warn('Sync from cloud error:', err);
+        setSyncStatus('error');
+      } finally {
+        if (isMounted) setIsInitialLoadDone(true);
       }
     }
 
@@ -97,7 +147,7 @@ export function DataProvider({ children }) {
     };
   }, []);
 
-  // Save to localStorage whenever any state changes
+  // Save to localStorage whenever any state changes & auto-sync to cloud with debouncing
   useEffect(() => {
     try {
       const payload = {
@@ -114,10 +164,25 @@ export function DataProvider({ children }) {
         savedAt: new Date().toISOString(),
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+
+      if (isInitialLoadDone) {
+        const timer = setTimeout(() => {
+          setSyncStatus('syncing');
+          saveCloudCMSData(payload).then((ok) => {
+            if (ok) {
+              setSyncStatus('saved');
+              setLastCloudSync(new Date());
+            } else {
+              setSyncStatus('error');
+            }
+          });
+        }, 800);
+        return () => clearTimeout(timer);
+      }
     } catch (err) {
       console.error('Failed to save to localStorage:', err);
     }
-  }, [articles, events, galleryItems, memberSchools, team, instagramReels, instagramProfile, siteSettings, homeContent, programs]);
+  }, [articles, events, galleryItems, memberSchools, team, instagramReels, instagramProfile, siteSettings, homeContent, programs, isInitialLoadDone]);
 
   // Synchronize across open browser tabs
   useEffect(() => {
@@ -159,31 +224,41 @@ export function DataProvider({ children }) {
       image: article.image || article.coverImage || null,
       coverImage: article.coverImage || article.image || null,
     };
-    setArticles((prev) => [newArticle, ...prev]);
+    setArticles((prev) => {
+      const updated = [newArticle, ...prev];
+      persistToCloud({ articles: updated });
+      return updated;
+    });
     return newArticle;
-  }, []);
+  }, [persistToCloud]);
 
   const updateArticle = useCallback((id, updatedFields) => {
-    setArticles((prev) =>
-      prev.map((a) => {
+    setArticles((prev) => {
+      const updated = prev.map((a) => {
         if (a.id === id) {
-          const updated = { ...a, ...updatedFields };
+          const item = { ...a, ...updatedFields };
           if (updatedFields.title && !updatedFields.slug) {
-            updated.slug = updatedFields.title
+            item.slug = updatedFields.title
               .toLowerCase()
               .replace(/[^a-z0-9]+/g, '-')
               .replace(/(^-|-$)/g, '');
           }
-          return updated;
+          return item;
         }
         return a;
-      })
-    );
-  }, []);
+      });
+      persistToCloud({ articles: updated });
+      return updated;
+    });
+  }, [persistToCloud]);
 
   const deleteArticle = useCallback((id) => {
-    setArticles((prev) => prev.filter((a) => a.id !== id));
-  }, []);
+    setArticles((prev) => {
+      const updated = prev.filter((a) => a.id !== id);
+      persistToCloud({ articles: updated });
+      return updated;
+    });
+  }, [persistToCloud]);
 
   // --- CRUD: Events ---
   const addEvent = useCallback((event) => {
@@ -198,17 +273,29 @@ export function DataProvider({ children }) {
       status: event.status || 'upcoming',
       description: event.description || '',
     };
-    setEvents((prev) => [newEvent, ...prev]);
+    setEvents((prev) => {
+      const updated = [newEvent, ...prev];
+      persistToCloud({ events: updated });
+      return updated;
+    });
     return newEvent;
-  }, []);
+  }, [persistToCloud]);
 
   const updateEvent = useCallback((id, updatedFields) => {
-    setEvents((prev) => prev.map((e) => (e.id === id ? { ...e, ...updatedFields } : e)));
-  }, []);
+    setEvents((prev) => {
+      const updated = prev.map((e) => (e.id === id ? { ...e, ...updatedFields } : e));
+      persistToCloud({ events: updated });
+      return updated;
+    });
+  }, [persistToCloud]);
 
   const deleteEvent = useCallback((id) => {
-    setEvents((prev) => prev.filter((e) => e.id !== id));
-  }, []);
+    setEvents((prev) => {
+      const updated = prev.filter((e) => e.id !== id);
+      persistToCloud({ events: updated });
+      return updated;
+    });
+  }, [persistToCloud]);
 
   // --- CRUD: Gallery Items ---
   const addGalleryItem = useCallback((item) => {
@@ -227,13 +314,17 @@ export function DataProvider({ children }) {
       description: item.description || '',
       media: mediaList,
     };
-    setGalleryItems((prev) => [newItem, ...prev]);
+    setGalleryItems((prev) => {
+      const updated = [newItem, ...prev];
+      persistToCloud({ galleryItems: updated });
+      return updated;
+    });
     return newItem;
-  }, []);
+  }, [persistToCloud]);
 
   const updateGalleryItem = useCallback((id, updatedFields) => {
-    setGalleryItems((prev) =>
-      prev.map((g) => {
+    setGalleryItems((prev) => {
+      const updated = prev.map((g) => {
         if (g.id !== id) return g;
         const merged = { ...g, ...updatedFields };
         if (updatedFields.media && !updatedFields.coverImage) {
@@ -243,13 +334,19 @@ export function DataProvider({ children }) {
           merged.image = merged.coverImage;
         }
         return merged;
-      })
-    );
-  }, []);
+      });
+      persistToCloud({ galleryItems: updated });
+      return updated;
+    });
+  }, [persistToCloud]);
 
   const deleteGalleryItem = useCallback((id) => {
-    setGalleryItems((prev) => prev.filter((g) => g.id !== id));
-  }, []);
+    setGalleryItems((prev) => {
+      const updated = prev.filter((g) => g.id !== id);
+      persistToCloud({ galleryItems: updated });
+      return updated;
+    });
+  }, [persistToCloud]);
 
   // --- CRUD: Member Schools ---
   const addMemberSchool = useCallback((school) => {
@@ -262,19 +359,29 @@ export function DataProvider({ children }) {
       address: school.address || 'Kabupaten Banyumas',
       established: Number(school.established) || new Date().getFullYear(),
     };
-    setMemberSchools((prev) => [newSchool, ...prev]);
+    setMemberSchools((prev) => {
+      const updated = [newSchool, ...prev];
+      persistToCloud({ memberSchools: updated });
+      return updated;
+    });
     return newSchool;
-  }, []);
+  }, [persistToCloud]);
 
   const updateMemberSchool = useCallback((id, updatedFields) => {
-    setMemberSchools((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, ...updatedFields, members: Number(updatedFields.members ?? s.members) } : s))
-    );
-  }, []);
+    setMemberSchools((prev) => {
+      const updated = prev.map((s) => (s.id === id ? { ...s, ...updatedFields, members: Number(updatedFields.members ?? s.members) } : s));
+      persistToCloud({ memberSchools: updated });
+      return updated;
+    });
+  }, [persistToCloud]);
 
   const deleteMemberSchool = useCallback((id) => {
-    setMemberSchools((prev) => prev.filter((s) => s.id !== id));
-  }, []);
+    setMemberSchools((prev) => {
+      const updated = prev.filter((s) => s.id !== id);
+      persistToCloud({ memberSchools: updated });
+      return updated;
+    });
+  }, [persistToCloud]);
 
   // --- CRUD: Team & Pengurus ---
   const addTeamMember = useCallback((targetDivisionKey, member) => {
@@ -289,107 +396,89 @@ export function DataProvider({ children }) {
     };
 
     setTeam((prev) => {
+      let updated;
       if (targetDivisionKey === 'bph') {
-        return {
+        updated = {
           ...prev,
-          bph: [...prev.bph, newMember],
+          bph: [...(prev.bph || []), newMember],
+        };
+      } else {
+        const updatedDivisions = (prev.divisions || []).map((div) => {
+          if (div.shortName?.toLowerCase() === targetDivisionKey.toLowerCase() || div.id === targetDivisionKey) {
+            return {
+              ...div,
+              members: [...(div.members || []), newMember],
+            };
+          }
+          return div;
+        });
+        updated = {
+          ...prev,
+          divisions: updatedDivisions,
         };
       }
-
-      // Add to specific division under divisions array
-      const updatedDivisions = prev.divisions.map((div) => {
-        if (div.shortName?.toLowerCase() === targetDivisionKey.toLowerCase() || div.id === targetDivisionKey) {
-          return {
-            ...div,
-            members: [...div.members, newMember],
-          };
-        }
-        return div;
-      });
-
-      return {
-        ...prev,
-        divisions: updatedDivisions,
-      };
+      persistToCloud({ team: updated });
+      return updated;
     });
 
     return newMember;
-  }, []);
+  }, [persistToCloud]);
 
   const updateTeamMember = useCallback((targetDivisionKey, memberId, updatedFields) => {
     setTeam((prev) => {
+      let updated;
       if (targetDivisionKey === 'bph') {
-        return {
+        updated = {
           ...prev,
-          bph: prev.bph.map((m) => (m.id === memberId ? { ...m, ...updatedFields } : m)),
+          bph: (prev.bph || []).map((m) => (m.id === memberId ? { ...m, ...updatedFields } : m)),
+        };
+      } else {
+        const updatedDivisions = (prev.divisions || []).map((div) => {
+          if (div.shortName?.toLowerCase() === targetDivisionKey.toLowerCase() || div.id === targetDivisionKey) {
+            return {
+              ...div,
+              members: (div.members || []).map((m) => (m.id === memberId ? { ...m, ...updatedFields } : m)),
+            };
+          }
+          return div;
+        });
+        updated = {
+          ...prev,
+          divisions: updatedDivisions,
         };
       }
-
-      const updatedDivisions = prev.divisions.map((div) => {
-        if (div.shortName?.toLowerCase() === targetDivisionKey.toLowerCase() || div.id === targetDivisionKey) {
-          return {
-            ...div,
-            members: div.members.map((m) => (m.id === memberId ? { ...m, ...updatedFields } : m)),
-          };
-        }
-        return div;
-      });
-
-      return {
-        ...prev,
-        divisions: updatedDivisions,
-      };
+      persistToCloud({ team: updated });
+      return updated;
     });
-  }, []);
+  }, [persistToCloud]);
 
   const deleteTeamMember = useCallback((targetDivisionKey, memberId) => {
     setTeam((prev) => {
+      let updated;
       if (targetDivisionKey === 'bph') {
-        return {
+        updated = {
           ...prev,
-          bph: prev.bph.filter((m) => m.id !== memberId),
+          bph: (prev.bph || []).filter((m) => m.id !== memberId),
+        };
+      } else {
+        const updatedDivisions = (prev.divisions || []).map((div) => {
+          if (div.shortName?.toLowerCase() === targetDivisionKey.toLowerCase() || div.id === targetDivisionKey) {
+            return {
+              ...div,
+              members: (div.members || []).filter((m) => m.id !== memberId),
+            };
+          }
+          return div;
+        });
+        updated = {
+          ...prev,
+          divisions: updatedDivisions,
         };
       }
-
-      const updatedDivisions = prev.divisions.map((div) => {
-        if (div.shortName?.toLowerCase() === targetDivisionKey.toLowerCase() || div.id === targetDivisionKey) {
-          return {
-            ...div,
-            members: div.members.filter((m) => m.id !== memberId),
-          };
-        }
-        return div;
-      });
-
-      return {
-        ...prev,
-        divisions: updatedDivisions,
-      };
+      persistToCloud({ team: updated });
+      return updated;
     });
-  }, []);
-
-  // --- Persist to Upstash Cloud Helper ---
-  const persistToCloud = useCallback(async (overrides = {}) => {
-    try {
-      const payload = {
-        articles,
-        events,
-        galleryItems,
-        memberSchools,
-        team,
-        instagramReels,
-        instagramProfile,
-        siteSettings,
-        homeContent,
-        programs,
-        ...overrides,
-      };
-      return await saveCloudCMSData(payload);
-    } catch (e) {
-      console.warn('Persist to cloud error:', e);
-      return false;
-    }
-  }, [articles, events, galleryItems, memberSchools, team, instagramReels, instagramProfile, siteSettings, homeContent, programs]);
+  }, [persistToCloud]);
 
   // --- Home Content & Programs ---
   const updateHomeContent = useCallback(async (newContent) => {
@@ -406,33 +495,30 @@ export function DataProvider({ children }) {
     });
 
     if (finalHome) {
-      try {
-        await saveCloudCMSData({
-          articles,
-          events,
-          galleryItems,
-          memberSchools,
-          team,
-          instagramReels,
-          instagramProfile,
-          siteSettings,
-          homeContent: finalHome,
-          programs,
-        });
-      } catch (e) {
-        console.warn('Cloud sync error on updateHomeContent:', e);
-      }
+      await persistToCloud({ homeContent: finalHome });
     }
-  }, [articles, events, galleryItems, memberSchools, team, instagramReels, instagramProfile, siteSettings, programs]);
+  }, [persistToCloud]);
 
   const updateProgram = useCallback((id, updatedFields) => {
-    setPrograms((prev) => prev.map((p) => (p.id === id ? { ...p, ...updatedFields } : p)));
-  }, []);
+    setPrograms((prev) => {
+      const updated = prev.map((p) => (p.id === id ? { ...p, ...updatedFields } : p));
+      persistToCloud({ programs: updated });
+      return updated;
+    });
+  }, [persistToCloud]);
 
   // --- Settings ---
   const updateSettings = useCallback((newSettings) => {
-    setSiteSettings((prev) => ({ ...prev, ...newSettings }));
-  }, []);
+    setSiteSettings((prev) => {
+      const updated = { ...prev, ...newSettings };
+      persistToCloud({ siteSettings: updated });
+      return updated;
+    });
+  }, [persistToCloud]);
+
+  const syncNow = useCallback(() => {
+    return persistToCloud();
+  }, [persistToCloud]);
 
   // --- Reset to Default Seed Data ---
   const resetToDefault = useCallback(() => {
@@ -567,6 +653,9 @@ export function DataProvider({ children }) {
     updateSettings,
     persistToCloud,
     saveCloudCMSData,
+    syncStatus,
+    lastCloudSync,
+    syncNow,
     resetToDefault,
     exportBackup,
     importBackup,

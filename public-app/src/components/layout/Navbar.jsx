@@ -50,6 +50,7 @@ export default function Navbar() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
+        gap: '1rem',
         maxWidth: 1200,
         margin: '0 auto',
         padding: '0 1.5rem',
@@ -60,6 +61,7 @@ export default function Navbar() {
           alignItems: 'center',
           gap: '0.65rem',
           textDecoration: 'none',
+          flexShrink: 0,
         }}>
           <img
             src={logoImg}
