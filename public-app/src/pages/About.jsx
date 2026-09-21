@@ -363,7 +363,7 @@ function MemberCard({ member, index }) {
             href={igUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-ig"
+            className="btn-instagram"
             aria-label={`Instagram ${member.name}`}
             title={`Buka Instagram ${igHandle}`}
           >
