@@ -60,6 +60,31 @@ export async function saveCloudCMSData(payload) {
       updatedAt: new Date().toISOString(),
     });
     const result = await upstashCommand(['SET', CMS_KEY, jsonString]);
+
+    // Also mirror specific keys to rokaba:* for public site instant sync
+    try {
+      if (payload.homeContent) {
+        await upstashCommand(['SET', 'rokaba:home', JSON.stringify(payload.homeContent)]);
+      }
+      if (payload.articles) {
+        await upstashCommand(['SET', 'rokaba:articles', JSON.stringify(payload.articles)]);
+      }
+      if (payload.events) {
+        await upstashCommand(['SET', 'rokaba:events', JSON.stringify(payload.events)]);
+      }
+      if (payload.memberSchools) {
+        await upstashCommand(['SET', 'rokaba:schools', JSON.stringify(payload.memberSchools)]);
+      }
+      if (payload.galleryItems) {
+        await upstashCommand(['SET', 'rokaba:gallery', JSON.stringify(payload.galleryItems)]);
+      }
+      if (payload.team) {
+        await upstashCommand(['SET', 'rokaba:team', JSON.stringify(payload.team)]);
+      }
+    } catch (e) {
+      console.warn('Mirror to individual rokaba keys warning:', e);
+    }
+
     return result === 'OK';
   } catch (err) {
     console.error('Gagal menyimpan ke Cloud Upstash:', err);

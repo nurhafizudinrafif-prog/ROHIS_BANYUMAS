@@ -81,6 +81,35 @@ export function getYouTubeThumbnail(url) {
 }
 
 // ============================================
+// TIKTOK & INSTAGRAM HELPERS
+// ============================================
+export function extractTikTokId(input = '') {
+  if (!input || typeof input !== 'string') return '';
+  const trimmed = input.trim();
+  const match = trimmed.match(/tiktok\.com\/(?:@[^/]+\/video\/|v\/|embed\/v2\/)(\d+)/i);
+  return match ? match[1] : '';
+}
+
+export function getTikTokEmbedUrl(url) {
+  const id = extractTikTokId(url);
+  if (!id) return null;
+  return `https://www.tiktok.com/embed/v2/${id}`;
+}
+
+export function extractInstagramCode(input = '') {
+  if (!input || typeof input !== 'string') return '';
+  const trimmed = input.trim();
+  const match = trimmed.match(/instagram\.com\/(?:p|reel|tv)\/([a-zA-Z0-9_-]+)/i);
+  return match ? match[1] : '';
+}
+
+export function getInstagramEmbedUrl(url) {
+  const code = extractInstagramCode(url);
+  if (!code) return null;
+  return `https://www.instagram.com/p/${code}/embed/captioned/`;
+}
+
+// ============================================
 // GENERAL MEDIA HELPERS
 // ============================================
 export function isVideoMedia(mediaItem) {
@@ -88,8 +117,20 @@ export function isVideoMedia(mediaItem) {
   if (mediaItem.type === 'video') return true;
   const url = (mediaItem.url || '').toLowerCase();
   if (url.includes('youtube.com') || url.includes('youtu.be')) return true;
+  if (url.includes('tiktok.com')) return true;
+  if (url.includes('instagram.com/reel')) return true;
+  if (isGoogleDriveUrl(url) && (mediaItem.type === 'video' || url.includes('video') || url.includes('mp4'))) return true;
   if (/\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(url)) return true;
   return false;
+}
+
+export function getMediaEmbedUrl(url) {
+  if (!url) return null;
+  if (url.includes('youtube.com') || url.includes('youtu.be')) return getYouTubeEmbedUrl(url);
+  if (url.includes('tiktok.com')) return getTikTokEmbedUrl(url);
+  if (url.includes('instagram.com')) return getInstagramEmbedUrl(url);
+  if (isGoogleDriveUrl(url)) return getGoogleDriveEmbedUrl(url);
+  return null;
 }
 
 export function getMediaThumbnail(mediaItem) {

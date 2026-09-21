@@ -712,9 +712,9 @@ export default function AdminDashboard() {
         </div>
 
         <div className="admin-topbar-right">
-          <Link to="/" target="_blank" rel="noopener noreferrer" className="btn btn-outline btn-sm">
+          <a href="https://www.rohis-banyumas.web.id/" target="_blank" rel="noopener noreferrer" className="btn btn-outline btn-sm">
             <ExternalLink size={14} /> Lihat Web Publik
-          </Link>
+          </a>
           <button onClick={handleLogout} className="btn btn-danger-ghost btn-sm" title="Logout">
             <LogOut size={16} /> Keluar
           </button>

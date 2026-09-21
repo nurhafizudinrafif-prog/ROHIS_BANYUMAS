@@ -28,7 +28,7 @@ export function DataProvider({ children }) {
     try {
       const allData = await fetchAllData();
       setData({
-        home: allData['rokaba:home'],
+        home: allData['rokaba:home'] || fallbackData['rokaba:home'],
         articles: allData['rokaba:articles'] || [],
         events: allData['rokaba:events'] || [],
         schools: allData['rokaba:schools'] || [],
@@ -53,9 +53,11 @@ export function DataProvider({ children }) {
     const handleRevalidate = () => {
       loadAllData();
     };
+    const interval = setInterval(loadAllData, 20000);
     window.addEventListener('focus', handleRevalidate);
     window.addEventListener('storage', handleRevalidate);
     return () => {
+      clearInterval(interval);
       window.removeEventListener('focus', handleRevalidate);
       window.removeEventListener('storage', handleRevalidate);
     };

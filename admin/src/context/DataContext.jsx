@@ -7,7 +7,7 @@ import { team as initialTeam, structurePeriod, organizationFullName } from '../d
 import { instagramReels as initialInstagramReels, instagramProfile as initialInstagramProfile } from '../data/instagram';
 import { programs as initialPrograms } from '../data/programs';
 import { initialHomeContent } from '../data/homeContent';
-import { fetchCloudCMSData } from '../services/cloudSync';
+import { fetchCloudCMSData, saveCloudCMSData } from '../services/cloudSync';
 
 const STORAGE_KEY = 'rohis_banyumas_cms_data_v2';
 
@@ -368,8 +368,32 @@ export function DataProvider({ children }) {
     });
   }, []);
 
+  // --- Persist to Upstash Cloud Helper ---
+  const persistToCloud = useCallback(async (overrides = {}) => {
+    try {
+      const payload = {
+        articles,
+        events,
+        galleryItems,
+        memberSchools,
+        team,
+        instagramReels,
+        instagramProfile,
+        siteSettings,
+        homeContent,
+        programs,
+        ...overrides,
+      };
+      return await saveCloudCMSData(payload);
+    } catch (e) {
+      console.warn('Persist to cloud error:', e);
+      return false;
+    }
+  }, [articles, events, galleryItems, memberSchools, team, instagramReels, instagramProfile, siteSettings, homeContent, programs]);
+
   // --- Home Content & Programs ---
-  const updateHomeContent = useCallback((newContent) => {
+  const updateHomeContent = useCallback(async (newContent) => {
+    let finalHome;
     setHomeContent((prev) => {
       const merged = { ...prev };
       if (newContent.hero) merged.hero = { ...prev.hero, ...newContent.hero };
@@ -377,9 +401,29 @@ export function DataProvider({ children }) {
       if (newContent.closing) merged.closing = { ...prev.closing, ...newContent.closing };
       if (newContent.stats) merged.stats = newContent.stats;
       if (newContent.timeline) merged.timeline = newContent.timeline;
+      finalHome = merged;
       return merged;
     });
-  }, []);
+
+    if (finalHome) {
+      try {
+        await saveCloudCMSData({
+          articles,
+          events,
+          galleryItems,
+          memberSchools,
+          team,
+          instagramReels,
+          instagramProfile,
+          siteSettings,
+          homeContent: finalHome,
+          programs,
+        });
+      } catch (e) {
+        console.warn('Cloud sync error on updateHomeContent:', e);
+      }
+    }
+  }, [articles, events, galleryItems, memberSchools, team, instagramReels, instagramProfile, siteSettings, programs]);
 
   const updateProgram = useCallback((id, updatedFields) => {
     setPrograms((prev) => prev.map((p) => (p.id === id ? { ...p, ...updatedFields } : p)));
@@ -521,6 +565,8 @@ export function DataProvider({ children }) {
     updateHomeContent,
     updateProgram,
     updateSettings,
+    persistToCloud,
+    saveCloudCMSData,
     resetToDefault,
     exportBackup,
     importBackup,

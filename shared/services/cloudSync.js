@@ -3,8 +3,8 @@
 
 import { fallbackData } from '../data/fallback.js';
 
-const UPSTASH_URL = import.meta.env.VITE_UPSTASH_REDIS_REST_URL;
-const UPSTASH_TOKEN = import.meta.env.VITE_UPSTASH_REDIS_REST_TOKEN;
+const UPSTASH_URL = import.meta.env.VITE_UPSTASH_REDIS_REST_URL || 'https://holy-gobbler-70550.upstash.io';
+const UPSTASH_TOKEN = import.meta.env.VITE_UPSTASH_REDIS_REST_TOKEN || 'gQAAAAAAAROWAAIgcDJlOTE0NTNiY2EyYjA0MjU3YmNjNjJkMzc3YmZmYjQ2NA';
 
 const headers = {
   Authorization: `Bearer ${UPSTASH_TOKEN}`,
@@ -26,11 +26,32 @@ export async function fetchData(key) {
       if (response.ok) {
         const data = await response.json();
         if (data.result) {
-          const parsed = JSON.parse(data.result);
+          let parsed = data.result;
+          while (typeof parsed === 'string') {
+            try { parsed = JSON.parse(parsed); } catch { break; }
+          }
           try {
             localStorage.setItem(key, JSON.stringify(parsed));
           } catch { /* localStorage might be full */ }
           return parsed;
+        }
+      }
+
+      // If fetching home and rokaba:home is empty, check rohis_cms_data
+      if (key === 'rokaba:home') {
+        const cmsRes = await fetch(`${UPSTASH_URL}/get/rohis_cms_data`, { headers });
+        if (cmsRes.ok) {
+          const cmsData = await cmsRes.json();
+          if (cmsData.result) {
+            let cmsParsed = cmsData.result;
+            while (typeof cmsParsed === 'string') {
+              try { cmsParsed = JSON.parse(cmsParsed); } catch { break; }
+            }
+            if (cmsParsed && cmsParsed.homeContent) {
+              try { localStorage.setItem(key, JSON.stringify(cmsParsed.homeContent)); } catch {}
+              return cmsParsed.homeContent;
+            }
+          }
         }
       }
     } catch (err) {
@@ -103,13 +124,38 @@ export async function saveData(key, value) {
   }
 
   try {
-    const response = await fetch(`${UPSTASH_URL}/set/${key}`, {
+    const response = await fetch(UPSTASH_URL, {
       method: 'POST',
       headers,
-      body: JSON.stringify([key, jsonValue]),
+      body: JSON.stringify(['SET', key, jsonValue]),
     });
 
     if (response.ok) {
+      if (key === 'rokaba:home') {
+        try {
+          const getRes = await fetch(`${UPSTASH_URL}/get/rohis_cms_data`, { headers });
+          let existing = {};
+          if (getRes.ok) {
+            const getJson = await getRes.json();
+            if (getJson.result) {
+              let p = getJson.result;
+              while (typeof p === 'string') {
+                try { p = JSON.parse(p); } catch { break; }
+              }
+              if (p && typeof p === 'object') existing = p;
+            }
+          }
+          existing.homeContent = value;
+          existing.updatedAt = new Date().toISOString();
+          await fetch(UPSTASH_URL, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(['SET', 'rohis_cms_data', JSON.stringify(existing)]),
+          });
+        } catch (e) {
+          console.warn('[CloudSync] Mirror to rohis_cms_data warning:', e);
+        }
+      }
       return { success: true, source: 'cloud' };
     }
     throw new Error(`HTTP ${response.status}`);
@@ -142,10 +188,10 @@ export async function deleteData(key) {
   }
 
   try {
-    const response = await fetch(`${UPSTASH_URL}/del/${key}`, {
+    const response = await fetch(UPSTASH_URL, {
       method: 'POST',
       headers,
-      body: JSON.stringify([key]),
+      body: JSON.stringify(['DEL', key]),
     });
     return { success: response.ok, source: 'cloud' };
   } catch (err) {

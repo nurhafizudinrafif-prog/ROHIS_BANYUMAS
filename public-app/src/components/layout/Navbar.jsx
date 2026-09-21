@@ -115,6 +115,29 @@ export default function Navbar() {
               </Link>
             );
           })}
+          <a
+            href="https://rohis-banyumasadminid.vercel.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Portal Admin & CMS"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              padding: '0.35rem 0.75rem',
+              fontSize: '0.78rem',
+              fontWeight: 600,
+              color: 'var(--antique-brass)',
+              border: '1px solid rgba(181, 141, 79, 0.4)',
+              borderRadius: 'var(--radius-full)',
+              background: 'rgba(181, 141, 79, 0.08)',
+              textDecoration: 'none',
+              marginLeft: '0.35rem',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <span>CMS Admin</span>
+          </a>
         </div>
 
         {/* Mobile Toggle */}
@@ -164,6 +187,26 @@ export default function Navbar() {
               </Link>
             );
           })}
+          <a
+            href="https://rohis-banyumasadminid.vercel.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'block',
+              padding: '0.75rem 1rem',
+              fontSize: '0.92rem',
+              fontWeight: 600,
+              color: 'var(--antique-brass)',
+              borderRadius: 'var(--radius-md)',
+              background: 'rgba(181, 141, 79, 0.12)',
+              textDecoration: 'none',
+              marginTop: '0.5rem',
+              textAlign: 'center',
+              border: '1px solid rgba(181, 141, 79, 0.3)',
+            }}
+          >
+            🔑 Masuk Panel Admin CMS
+          </a>
         </div>
       )}
     </nav>

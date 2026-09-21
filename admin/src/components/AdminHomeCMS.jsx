@@ -19,6 +19,7 @@ import {
 import ImageUploadField from './ImageUploadField';
 import { initialHomeContent } from '../data/homeContent';
 import { programs as defaultPrograms } from '../data/programs';
+import { saveCloudCMSData } from '../services/cloudSync';
 
 export default function AdminHomeCMS({
   homeContent,
@@ -148,24 +149,31 @@ export default function AdminHomeCMS({
   };
 
   // Save All Changes
-  const handleSaveAll = () => {
+  const handleSaveAll = async () => {
     setIsSaving(true);
     try {
       if (onSaveHomeContent) {
-        onSaveHomeContent(formData);
+        await onSaveHomeContent(formData);
       }
       if (onSaveProgram && localPrograms) {
         localPrograms.forEach((prog) => {
           onSaveProgram(prog.id, prog);
         });
       }
+
+      // Explicit Cloud Save to Upstash Redis
+      await saveCloudCMSData({
+        homeContent: formData,
+        programs: localPrograms,
+      });
+
       if (showToast) {
-        showToast('Seluruh teks dan foto Beranda berhasil disimpan dan langsung tayang!', 'success');
+        showToast('Seluruh teks dan foto Beranda berhasil disimpan ke Cloud & langsung tayang!', 'success');
       }
     } catch (err) {
       console.error('Error saving home content:', err);
       if (showToast) {
-        showToast('Terjadi kesalahan saat menyimpan data.', 'error');
+        showToast('Terjadi kesalahan saat menyimpan data ke cloud.', 'error');
       }
     } finally {
       setIsSaving(false);
@@ -182,6 +190,10 @@ export default function AdminHomeCMS({
       }
       defaultPrograms.forEach((prog) => {
         if (onSaveProgram) onSaveProgram(prog.id, prog);
+      });
+      saveCloudCMSData({
+        homeContent: initialHomeContent,
+        programs: defaultPrograms,
       });
       if (showToast) {
         showToast('Konten beranda berhasil dikembalikan ke standar awal!', 'info');
@@ -207,7 +219,7 @@ export default function AdminHomeCMS({
 
         <div className="home-cms-top-actions">
           <a
-            href="/"
+            href="https://www.rohis-banyumas.web.id/"
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-outline btn-sm"

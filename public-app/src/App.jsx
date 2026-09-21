@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { DataProvider } from './context/DataContext';
 import Navbar from './components/layout/Navbar';
@@ -13,6 +14,23 @@ import Contact from './pages/Contact';
 import Consultation from './pages/Consultation';
 import Library from './pages/Library';
 import Programs from './pages/Programs';
+
+function AdminRedirect() {
+  useEffect(() => {
+    window.location.href = 'https://rohis-banyumasadminid.vercel.app';
+  }, []);
+  return (
+    <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--deep-pine)', color: 'var(--warm-alabaster)', textAlign: 'center', padding: '2rem' }}>
+      <div>
+        <h2 style={{ marginBottom: '0.75rem', fontFamily: 'var(--font-heading)' }}>Membuka Portal Admin ROHIS Banyumas...</h2>
+        <p style={{ opacity: 0.75, marginBottom: '1.5rem', fontSize: '0.95rem' }}>Anda sedang dialihkan ke panel kelola CMS...</p>
+        <a href="https://rohis-banyumasadminid.vercel.app" className="btn btn-primary">
+          Buka Panel Admin Sekarang
+        </a>
+      </div>
+    </div>
+  );
+}
 
 export default function App() {
   return (
@@ -45,6 +63,10 @@ export default function App() {
               <Route path="/galeri" element={<Gallery />} />
               <Route path="/kontak" element={<Contact />} />
               <Route path="/pendaftaran" element={<Contact />} />
+
+              {/* Admin Portal Redirect Routes */}
+              <Route path="/admin" element={<AdminRedirect />} />
+              <Route path="/login" element={<AdminRedirect />} />
             </Routes>
           </main>
           <Footer />
