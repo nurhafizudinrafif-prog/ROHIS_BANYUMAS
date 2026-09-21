@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="hmsGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F3E7C4" />
+      <stop offset="50%" stop-color="#C8A85B" />
+      <stop offset="100%" stop-color="#846826" />
+    </linearGradient>
+    <radialGradient id="hmsBg" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#143D2B" />
+      <stop offset="70%" stop-color="#082015" />
+      <stop offset="100%" stop-color="#04100A" />
+    </radialGradient>
+    <filter id="hmsGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- Outer Base Disc with Gold Rim -->
+  <circle cx="100" cy="100" r="92" fill="url(#hmsBg)" stroke="url(#hmsGold)" stroke-width="2.5" filter="url(#hmsGlow)"/>
+  <circle cx="100" cy="100" r="85" fill="none" stroke="url(#hmsGold)" stroke-width="1" stroke-dasharray="3,3" opacity="0.6"/>
+
+  <!-- Geometric Islamic Watermark -->
+  <g opacity="0.10" stroke="url(#hmsGold)" stroke-width="1" fill="none">
+    <circle cx="100" cy="100" r="68"/>
+    <polygon points="100,32 148,52 168,100 148,148 100,168 52,148 32,100 52,52"/>
+  </g>
+
+  <!-- Central Emblem: Interlocking Rings of Ukhuwah & Radiant Herald Beacon -->
+  <g transform="translate(100, 88)">
+    <!-- Outer Globe / Connection Latitude Circle -->
+    <circle cx="0" cy="0" r="34" fill="none" stroke="url(#hmsGold)" stroke-width="1.8" opacity="0.8"/>
+    <ellipse cx="0" cy="0" rx="18" ry="34" fill="none" stroke="url(#hmsGold)" stroke-width="1.2" opacity="0.6"/>
+    <line x1="-34" y1="0" x2="34" y2="0" stroke="url(#hmsGold)" stroke-width="1.2" opacity="0.6"/>
+
+    <!-- Interlocking Rings of Fellowship (Ukhuwah) -->
+    <circle cx="-12" cy="-4" r="15" fill="none" stroke="url(#hmsGold)" stroke-width="2.5"/>
+    <circle cx="12" cy="-4" r="15" fill="none" stroke="#FAF8F5" stroke-width="2.2"/>
+    <circle cx="0" cy="12" r="15" fill="none" stroke="url(#hmsGold)" stroke-width="2.5"/>
+
+    <!-- Radiant Broadcast Waves / Networking Pulses -->
+    <path d="M -26,-28 A 38,38 0 0,1 26,-28" fill="none" stroke="url(#hmsGold)" stroke-width="2" stroke-linecap="round"/>
+    <path d="M -36,-38 A 52,52 0 0,1 36,-38" fill="none" stroke="url(#hmsGold)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="4,4" opacity="0.8"/>
+
+    <!-- Center Illuminating Star -->
+    <polygon points="0,-4 2,-9 7,-9 3,-12 5,-17 0,-14 -5,-17 -3,-12 -7,-9 -2,-9" fill="#FFFFFF"/>
+
+    <!-- Connection Nodes (Schools Network) -->
+    <circle cx="-34" cy="0" r="3.5" fill="url(#hmsGold)"/>
+    <circle cx="34" cy="0" r="3.5" fill="url(#hmsGold)"/>
+    <circle cx="0" cy="-34" r="3.5" fill="url(#hmsGold)"/>
+    <circle cx="0" cy="34" r="3.5" fill="url(#hmsGold)"/>
+  </g>
+
+  <!-- Official Division Tag Banner -->
+  <rect x="40" y="148" width="120" height="24" rx="12" fill="#0A2217" stroke="url(#hmsGold)" stroke-width="1.5"/>
+  <text x="100" y="164" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="10.5" fill="url(#hmsGold)" letter-spacing="2">DIVISI HUMAS</text>
+</svg>

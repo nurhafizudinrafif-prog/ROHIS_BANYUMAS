@@ -4,10 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "oxlint",
-    "preview": "vite preview"
+    "dev": "npm --prefix public-app run dev",
+    "dev:admin": "npm --prefix admin-app run dev",
+    "build": "npm --prefix public-app install && npm --prefix public-app run build && node -e \"const fs=require('fs'); fs.cpSync('public-app/dist', 'dist', {recursive: true});\"",
+    "build:admin": "npm --prefix admin-app install && npm --prefix admin-app run build",
+    "preview": "npm --prefix public-app run preview"
   },
   "dependencies": {
     "lucide-react": "^1.41.0",

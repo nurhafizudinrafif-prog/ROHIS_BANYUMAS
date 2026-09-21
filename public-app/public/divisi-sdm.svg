@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="sdmGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F3E7C4" />
+      <stop offset="50%" stop-color="#C8A85B" />
+      <stop offset="100%" stop-color="#846826" />
+    </linearGradient>
+    <radialGradient id="sdmBg" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#143D2B" />
+      <stop offset="70%" stop-color="#082015" />
+      <stop offset="100%" stop-color="#04100A" />
+    </radialGradient>
+    <filter id="sdmGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- Outer Base Disc with Gold Rim -->
+  <circle cx="100" cy="100" r="92" fill="url(#sdmBg)" stroke="url(#sdmGold)" stroke-width="2.5" filter="url(#sdmGlow)"/>
+  <circle cx="100" cy="100" r="85" fill="none" stroke="url(#sdmGold)" stroke-width="1" stroke-dasharray="3,3" opacity="0.6"/>
+
+  <!-- Geometric Watermark -->
+  <g opacity="0.10" stroke="url(#sdmGold)" stroke-width="1" fill="none">
+    <polygon points="100,25 153,47 175,100 153,153 100,175 47,153 25,100 47,47"/>
+  </g>
+
+  <!-- Central Emblem: Seed of Character, Flourishing Tree, & Youth Laurel Wreath -->
+  <g transform="translate(100, 88)">
+    <!-- Laurel Wreath of Excellence (Left and Right) -->
+    <path d="M -34,18 C -42,-2 -34,-26 -16,-38 C -22,-24 -24,-8 -18,12 Z" fill="url(#sdmGold)" opacity="0.85"/>
+    <path d="M 34,18 C 42,-2 34,-26 16,-38 C 22,-24 24,-8 18,12 Z" fill="url(#sdmGold)" opacity="0.85"/>
+
+    <!-- Central Trunk & Tree of Character Growth -->
+    <path d="M 0,32 C -4,15 -14,2 -22,-8 C -14,-4 -4,-2 0,-14 C 4,-2 14,-4 22,-8 C 14,2 4,15 0,32 Z" 
+          fill="url(#sdmGold)" stroke="#FFFFFF" stroke-width="0.8"/>
+    
+    <!-- Top Crown Leaves (5 Leaves for 5 Values) -->
+    <circle cx="0" cy="-24" r="7" fill="url(#sdmGold)"/>
+    <circle cx="-14" cy="-18" r="5.5" fill="url(#sdmGold)"/>
+    <circle cx="14" cy="-18" r="5.5" fill="url(#sdmGold)"/>
+    <circle cx="-8" cy="-8" r="5" fill="url(#sdmGold)"/>
+    <circle cx="8" cy="-8" r="5" fill="url(#sdmGold)"/>
+
+    <!-- Guiding Star Atop -->
+    <polygon points="0,-42 3,-35 10,-35 4,-31 6,-24 0,-28 -6,-24 -4,-31 -10,-35 -3,-35" fill="#FAF8F5"/>
+
+    <!-- Base Support Hands / Pedestal -->
+    <path d="M -24,34 C -12,28 12,28 24,34 L 18,40 C 8,36 -8,36 -18,40 Z" fill="url(#sdmGold)" opacity="0.9"/>
+  </g>
+
+  <!-- Official Division Tag Banner -->
+  <rect x="42" y="148" width="116" height="24" rx="12" fill="#0A2217" stroke="url(#sdmGold)" stroke-width="1.5"/>
+  <text x="100" y="164" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="10.5" fill="url(#sdmGold)" letter-spacing="2">DIVISI SDM</text>
+</svg>

@@ -547,7 +547,7 @@
 .gallery-filter-btn:hover {
   border-color: rgba(200, 168, 91, 0.45);
   color: var(--color-forest);
-  background: rgba(200, 168, 91, 0.10);
+  background: rgb(200, 167, 91);
 }
 
 .gallery-filter-btn.active {

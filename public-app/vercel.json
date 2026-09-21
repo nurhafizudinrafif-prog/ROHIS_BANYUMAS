@@ -1,0 +1,20 @@
+{
+  "rewrites": [
+    {
+      "source": "/robots.txt",
+      "destination": "/robots.txt"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/sitemap.xml"
+    },
+    {
+      "source": "/(google[a-zA-Z0-9_-]+\\.html)",
+      "destination": "/$1"
+    },
+    {
+      "source": "/((?!api|robots\\.txt|sitemap\\.xml|google[a-zA-Z0-9_-]+\\.html).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

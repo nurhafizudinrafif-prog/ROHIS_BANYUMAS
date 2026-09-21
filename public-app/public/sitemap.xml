@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Homepage -->
+  <url>
+    <loc>https://www.rohis-banyumas.web.id/</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Profil / Tentang -->
+  <url>
+    <loc>https://www.rohis-banyumas.web.id/tentang</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Program Kerja -->
+  <url>
+    <loc>https://www.rohis-banyumas.web.id/program</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Agenda & Kajian -->
+  <url>
+    <loc>https://www.rohis-banyumas.web.id/agenda</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Artikel & Berita -->
+  <url>
+    <loc>https://www.rohis-banyumas.web.id/artikel</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- ROHIS Sekolah Anggota -->
+  <url>
+    <loc>https://www.rohis-banyumas.web.id/rohis-anggota</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Galeri Dokumentasi -->
+  <url>
+    <loc>https://www.rohis-banyumas.web.id/galeri</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Pendaftaran Pelajar / Anggota -->
+  <url>
+    <loc>https://www.rohis-banyumas.web.id/pendaftaran</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Kontak & Sekretariat -->
+  <url>
+    <loc>https://www.rohis-banyumas.web.id/kontak</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>
