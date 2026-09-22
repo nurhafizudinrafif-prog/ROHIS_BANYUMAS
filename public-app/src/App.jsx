@@ -51,37 +51,18 @@ function ScrollToTop() {
   return null;
 }
 
-// Smooth elegant page transition wrapper
-function PageTransitionWrapper({ children }) {
-  const location = useLocation();
-  const [navKey, setNavKey] = useState(location.pathname);
-  const [animating, setAnimating] = useState(false);
-
-  useEffect(() => {
-    setNavKey(location.pathname);
-    setAnimating(true);
-    const timer = setTimeout(() => setAnimating(false), 460);
-    return () => clearTimeout(timer);
-  }, [location.pathname]);
-
-  return (
-    <>
-      {animating && <div className="route-progress-bar" />}
-      <div key={navKey} className="page-enter" style={{ minHeight: '100%' }}>
-        {children}
-      </div>
-    </>
-  );
-}
-
 function AppContent() {
+  const location = useLocation();
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'var(--deep-pine)' }}>
       <ScrollToTop />
+      {/* Micro hairline progress sweep */}
+      <div key={`bar-${location.pathname}`} className="route-progress-bar" />
       <Navbar />
-      <main style={{ flex: 1 }}>
-        <PageTransitionWrapper>
-          <Routes>
+      <main style={{ flex: 1, position: 'relative', background: 'var(--deep-pine)' }}>
+        <div key={`view-${location.pathname}`} className="page-transition-view">
+          <Routes location={location}>
             {/* Primary Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
@@ -110,7 +91,7 @@ function AppContent() {
             <Route path="/admin" element={<AdminRedirect />} />
             <Route path="/login" element={<AdminRedirect />} />
           </Routes>
-        </PageTransitionWrapper>
+        </div>
       </main>
       <Footer />
     </div>
