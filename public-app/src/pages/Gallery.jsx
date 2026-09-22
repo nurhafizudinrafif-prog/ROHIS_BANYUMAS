@@ -649,7 +649,7 @@ export default function Gallery() {
                       justifyContent: 'center',
                       color: 'var(--warm-alabaster)',
                       cursor: 'pointer',
-                      transition: 'all 0.2s',
+                      transition: 'all 0.28s cubic-bezier(0.25, 1, 0.5, 1)',
                       textDecoration: 'none',
                     }}
                   >
@@ -669,7 +669,7 @@ export default function Gallery() {
                     justifyContent: 'center',
                     color: 'var(--warm-alabaster)',
                     cursor: 'pointer',
-                    transition: 'all 0.2s',
+                    transition: 'all 0.28s cubic-bezier(0.25, 1, 0.5, 1)',
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(239,68,68,0.85)')}
                   onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.06)')}
@@ -806,7 +806,7 @@ export default function Gallery() {
                     justifyContent: 'center',
                     cursor: 'pointer',
                     backdropFilter: 'blur(8px)',
-                    transition: 'all 0.2s',
+                    transition: 'all 0.28s cubic-bezier(0.25, 1, 0.5, 1)',
                     zIndex: 10,
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(16, 185, 129, 0.85)')}
@@ -836,7 +836,7 @@ export default function Gallery() {
                     justifyContent: 'center',
                     cursor: 'pointer',
                     backdropFilter: 'blur(8px)',
-                    transition: 'all 0.2s',
+                    transition: 'all 0.28s cubic-bezier(0.25, 1, 0.5, 1)',
                     zIndex: 10,
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(16, 185, 129, 0.85)')}

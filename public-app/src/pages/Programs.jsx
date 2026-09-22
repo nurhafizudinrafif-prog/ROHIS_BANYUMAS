@@ -192,7 +192,7 @@ export default function Programs() {
                       flexShrink: 0,
                       fontSize: '0.85rem',
                       fontWeight: 600,
-                      transition: 'all 0.2s ease',
+                      transition: 'all 0.28s cubic-bezier(0.25, 1, 0.5, 1)',
                       boxShadow: isActive ? '0 0 16px rgba(181, 141, 79, 0.25)' : 'none',
                     }}
                   >
@@ -225,7 +225,7 @@ export default function Programs() {
                       alignItems: 'center',
                       gap: '1.25rem',
                       cursor: 'pointer',
-                      transition: 'all 0.3s ease',
+                      transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
                       boxShadow: isActive ? '0 0 24px rgba(181, 141, 79, 0.16)' : 'none',
                     }}
                     onMouseEnter={e => {

@@ -70,7 +70,7 @@ export default function Contact() {
                   <a key={label} href="#" aria-label={label} style={{
                     width: 48, height: 48, borderRadius: '14px', background: `${color}10`,
                     border: `1px solid ${color}20`, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    color, transition: 'all 0.2s', textDecoration: 'none',
+                    color, transition: 'all 0.28s cubic-bezier(0.25, 1, 0.5, 1)', textDecoration: 'none',
                   }}>
                     <Icon size={20} />
                   </a>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { DataProvider } from './context/DataContext';
 import Navbar from './components/layout/Navbar';
@@ -32,23 +32,89 @@ function AdminRedirect() {
   );
 }
 
-// Automatically reset scroll or smoothly jump to anchor on page change
-function ScrollToTop() {
-  const { pathname, hash } = useLocation();
+// Smooth crossfade page transition wrapper
+function PageTransition({ children }) {
+  const location = useLocation();
+  const containerRef = useRef(null);
+  const prevPathRef = useRef(location.pathname);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
-    if (hash) {
-      const id = hash.replace('#', '');
-      const element = document.getElementById(id);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-        return;
-      }
+    // Skip animation on first render
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      prevPathRef.current = location.pathname;
+      return;
     }
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-  }, [pathname, hash]);
 
-  return null;
+    // Only animate on actual path changes
+    if (prevPathRef.current === location.pathname) return;
+    prevPathRef.current = location.pathname;
+
+    const el = containerRef.current;
+    if (!el) return;
+
+    // Immediately set to slightly transparent and offset
+    el.style.opacity = '0.15';
+    el.style.transform = 'translateY(6px)';
+    el.style.transition = 'none';
+
+    // Force browser reflow to ensure the initial state is painted
+    el.offsetHeight;
+
+    // Then smoothly animate to fully visible
+    el.style.transition = 'opacity 0.42s cubic-bezier(0.25, 1, 0.5, 1), transform 0.42s cubic-bezier(0.25, 1, 0.5, 1)';
+    el.style.opacity = '1';
+    el.style.transform = 'translateY(0)';
+
+    // Scroll to top smoothly
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+
+    // Handle hash anchors
+    if (location.hash) {
+      const id = location.hash.replace('#', '');
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const target = document.getElementById(id);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+      });
+    }
+  }, [location.pathname, location.hash]);
+
+  return (
+    <div
+      ref={containerRef}
+      style={{
+        minHeight: '100%',
+        width: '100%',
+        background: 'var(--deep-pine)',
+        willChange: 'opacity, transform',
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+// Thin elegant progress indicator on route change
+function RouteProgressBar() {
+  const location = useLocation();
+  const [show, setShow] = useState(false);
+  const pathRef = useRef(location.pathname);
+
+  useEffect(() => {
+    if (pathRef.current === location.pathname) return;
+    pathRef.current = location.pathname;
+    setShow(true);
+    const timer = setTimeout(() => setShow(false), 500);
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
+
+  if (!show) return null;
+  return <div className="route-progress-bar" />;
 }
 
 function AppContent() {
@@ -56,12 +122,10 @@ function AppContent() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'var(--deep-pine)' }}>
-      <ScrollToTop />
-      {/* Micro hairline progress sweep */}
-      <div key={`bar-${location.pathname}`} className="route-progress-bar" />
+      <RouteProgressBar />
       <Navbar />
       <main style={{ flex: 1, position: 'relative', background: 'var(--deep-pine)' }}>
-        <div key={`view-${location.pathname}`} className="page-transition-view">
+        <PageTransition>
           <Routes location={location}>
             {/* Primary Routes */}
             <Route path="/" element={<Home />} />
@@ -91,7 +155,7 @@ function AppContent() {
             <Route path="/admin" element={<AdminRedirect />} />
             <Route path="/login" element={<AdminRedirect />} />
           </Routes>
-        </div>
+        </PageTransition>
       </main>
       <Footer />
     </div>

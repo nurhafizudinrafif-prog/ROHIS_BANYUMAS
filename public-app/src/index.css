@@ -57,10 +57,15 @@
   --shadow-brass: 0 4px 24px rgba(181, 141, 79, 0.2);
 
   /* Transitions */
-  --transition-fast: 150ms ease;
-  --transition-normal: 300ms ease;
-  --transition-slow: 500ms ease;
-  --transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-fast: 180ms cubic-bezier(0.25, 0.1, 0.25, 1);
+  --transition-normal: 320ms cubic-bezier(0.25, 0.1, 0.25, 1);
+  --transition-slow: 520ms cubic-bezier(0.25, 0.1, 0.25, 1);
+  --transition-spring: 550ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Premium easing curves */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
 }
 
 /* ═══════════════════════════════════════════
@@ -76,6 +81,7 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   overflow-x: hidden;
   max-width: 100vw;
   width: 100%;
@@ -169,12 +175,13 @@ img, video, iframe {
   white-space: nowrap;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+  will-change: transform;
   transition: 
-    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-    background 0.28s ease,
-    border-color 0.28s ease,
-    color 0.28s ease;
+    transform 0.36s var(--ease-out-expo),
+    box-shadow 0.36s var(--ease-out-expo),
+    background 0.32s var(--ease-out-quart),
+    border-color 0.32s var(--ease-out-quart),
+    color 0.32s var(--ease-out-quart);
 }
 
 /* Subtle elegant shimmer sheen sweep across button on hover */
@@ -200,10 +207,11 @@ img, video, iframe {
   left: 150%;
 }
 
-/* Tactile press response */
+/* Tactile press response — gentle, confident compression */
 .btn:active {
-  transform: translateY(1px) scale(0.975);
-  transition-duration: 0.08s;
+  transform: translateY(1px) scale(0.97);
+  transition-duration: 0.12s;
+  transition-timing-function: var(--ease-out-quart);
 }
 
 /* Micro-motion for icons inside buttons */
@@ -323,17 +331,19 @@ button:not(:disabled) {
   cursor: pointer;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+  will-change: transform;
   transition: 
-    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-    background 0.25s ease,
-    border-color 0.25s ease,
-    color 0.25s ease;
+    transform 0.32s var(--ease-out-expo),
+    box-shadow 0.32s var(--ease-out-expo),
+    background 0.28s var(--ease-out-quart),
+    border-color 0.28s var(--ease-out-quart),
+    color 0.28s var(--ease-out-quart);
 }
 
 button:not(:disabled):active {
-  transform: scale(0.965);
-  transition-duration: 0.08s;
+  transform: scale(0.96);
+  transition-duration: 0.12s;
+  transition-timing-function: var(--ease-out-quart);
 }
 
 /* ═══════════════════════════════════════════
@@ -425,16 +435,22 @@ button:not(:disabled):active {
   overflow: hidden;
   box-shadow: var(--shadow-sm);
   border: 1px solid rgba(13, 43, 34, 0.07);
+  will-change: transform;
   transition: 
-    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.3s ease;
+    transform 0.42s var(--ease-out-expo),
+    box-shadow 0.42s var(--ease-out-expo),
+    border-color 0.35s var(--ease-out-quart);
 }
 
 .card-editorial:hover {
-  transform: translateY(-6px);
+  transform: translateY(-5px);
   box-shadow: 0 16px 36px rgba(13, 43, 34, 0.12);
   border-color: rgba(16, 185, 129, 0.3);
+}
+
+.card-editorial:active {
+  transform: translateY(-1px) scale(0.985);
+  transition-duration: 0.12s;
 }
 
 .card-editorial .card-image {
@@ -442,16 +458,16 @@ button:not(:disabled):active {
   height: 200px;
   object-fit: cover;
   background: linear-gradient(135deg, var(--deep-pine), var(--deep-pine-light));
-  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.6s var(--ease-out-expo);
 }
 
 .card-editorial:hover .card-image {
-  transform: scale(1.035);
+  transform: scale(1.03);
 }
 
 .card-editorial a svg,
 .card-editorial .card-body a svg {
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.32s var(--ease-out-expo);
 }
 
 .card-editorial:hover a svg,
@@ -524,23 +540,23 @@ textarea.form-input {
 }
 
 /* ═══════════════════════════════════════════
-   Motion & Animation System (Modern & Elegant)
+   Motion & Animation System (Premium Polish)
    ═══════════════════════════════════════════ */
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(24px) scale(0.985);
+    transform: translateY(18px);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
 @keyframes fadeInScale {
   from {
     opacity: 0;
-    transform: scale(0.92) translateY(6px);
+    transform: scale(0.94) translateY(4px);
   }
   to {
     opacity: 1;
@@ -556,7 +572,7 @@ textarea.form-input {
 @keyframes slideInLeft {
   from {
     opacity: 0;
-    transform: translateX(-28px);
+    transform: translateX(-20px);
   }
   to {
     opacity: 1;
@@ -567,7 +583,7 @@ textarea.form-input {
 @keyframes slideInRight {
   from {
     opacity: 0;
-    transform: translateX(28px);
+    transform: translateX(20px);
   }
   to {
     opacity: 1;
@@ -595,23 +611,23 @@ textarea.form-input {
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeInUp 0.6s var(--ease-out-expo) both;
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.45s ease forwards;
+  animation: fadeIn 0.5s var(--ease-out-quart) both;
 }
 
 .animate-scale-in {
-  animation: fadeInScale 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeInScale 0.5s var(--ease-out-expo) both;
 }
 
 .animate-slide-left {
-  animation: slideInLeft 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: slideInLeft 0.6s var(--ease-out-expo) both;
 }
 
 .animate-slide-right {
-  animation: slideInRight 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: slideInRight 0.6s var(--ease-out-expo) both;
 }
 
 .animate-float {
@@ -626,19 +642,10 @@ textarea.form-input {
 .delay-500 { animation-delay: 400ms; }
 
 /* ═══════════════════════════════════════════
-   Silky-Smooth Page Transition (Zero White Flash)
+   Page Transition Container
+   Transitions handled by JS (App.jsx PageTransition)
    ═══════════════════════════════════════════ */
-@keyframes pageSmoothFade {
-  0% {
-    opacity: 0.35;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
 .page-transition-view {
-  animation: pageSmoothFade 0.22s ease-out forwards;
   min-height: 100%;
   width: 100%;
   background: var(--deep-pine);
@@ -649,8 +656,8 @@ textarea.form-input {
     transform: scaleX(0);
     opacity: 1;
   }
-  60% {
-    transform: scaleX(0.75);
+  50% {
+    transform: scaleX(0.7);
     opacity: 1;
   }
   100% {
@@ -664,13 +671,13 @@ textarea.form-input {
   top: 0;
   left: 0;
   right: 0;
-  height: 2.5px;
+  height: 2px;
   background: linear-gradient(90deg, var(--emerald) 0%, #E6C587 50%, var(--emerald-light) 100%);
   z-index: 99999;
   pointer-events: none;
   transform-origin: left;
-  box-shadow: 0 0 12px rgba(16, 185, 129, 0.7);
-  animation: topBarSweep 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+  animation: topBarSweep 0.4s var(--ease-out-expo) forwards;
 }
 
 /* ═══════════════════════════════════════════
@@ -946,11 +953,12 @@ textarea.form-input {
    Navigation Links Motion (Navbar)
    ═══════════════════════════════════════════ */
 .nav-link-pill {
+  will-change: transform;
   transition: 
-    transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-    color 0.22s ease,
-    background 0.22s ease,
-    box-shadow 0.22s ease !important;
+    transform 0.3s var(--ease-out-expo),
+    color 0.28s var(--ease-out-quart),
+    background 0.28s var(--ease-out-quart),
+    box-shadow 0.28s var(--ease-out-quart) !important;
 }
 
 .nav-link-pill:hover {
@@ -960,7 +968,8 @@ textarea.form-input {
 }
 
 .nav-link-pill:active {
-  transform: scale(0.96);
+  transform: scale(0.955);
+  transition-duration: 0.1s;
 }
 
 /* ═══════════════════════════════════════════
@@ -1045,6 +1054,85 @@ textarea.form-input {
     flex-direction: column;
     gap: 1rem;
     min-width: 0;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   Universal Interactive Element Polish
+   All clickable links & elements get premium feel
+   ═══════════════════════════════════════════ */
+
+/* Smooth press response for all anchor links */
+a {
+  -webkit-tap-highlight-color: transparent;
+  transition: 
+    opacity 0.25s var(--ease-out-quart),
+    color 0.25s var(--ease-out-quart);
+}
+
+/* Glass card active state */
+.glass-card:active {
+  transform: translateY(0) scale(0.985);
+  transition-duration: 0.12s;
+}
+
+/* Member card active state */
+.member-card:active {
+  transform: translateY(-1px) scale(0.985);
+  transition-duration: 0.12s;
+}
+
+/* Division pill refined timing */
+.division-pill {
+  will-change: transform;
+  transition: 
+    transform 0.3s var(--ease-out-expo),
+    box-shadow 0.3s var(--ease-out-expo),
+    border-color 0.28s var(--ease-out-quart),
+    background 0.28s var(--ease-out-quart),
+    color 0.28s var(--ease-out-quart);
+}
+
+/* Footer social buttons refined */
+.footer-social-btn {
+  will-change: transform;
+  transition: 
+    transform 0.3s var(--ease-out-expo),
+    box-shadow 0.3s var(--ease-out-expo),
+    background 0.28s var(--ease-out-quart),
+    border-color 0.28s var(--ease-out-quart),
+    color 0.28s var(--ease-out-quart);
+}
+
+/* Instagram button refined */
+.btn-instagram {
+  will-change: transform;
+  transition: 
+    transform 0.3s var(--ease-out-expo),
+    box-shadow 0.3s var(--ease-out-expo),
+    background 0.28s var(--ease-out-quart),
+    border-color 0.28s var(--ease-out-quart),
+    color 0.28s var(--ease-out-quart);
+}
+
+/* ═══════════════════════════════════════════
+   Accessibility: Respect reduced motion
+   ═══════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .page-transition-view {
+    animation: none;
+    opacity: 1;
+  }
+  
+  .route-progress-bar {
+    animation: none;
+    opacity: 0;
   }
 }
 

@@ -91,7 +91,7 @@ export default function ArticleDetail() {
                   <Link to={`/articles/${a.slug}`} key={a.id} style={{
                     background: 'white', borderRadius: 'var(--radius-lg)', padding: '1.25rem',
                     textDecoration: 'none', border: '1px solid rgba(13,43,34,0.06)',
-                    transition: 'all 0.3s ease', boxShadow: 'var(--shadow-sm)',
+                    transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)', boxShadow: 'var(--shadow-sm)',
                   }}>
                     <span className="badge badge-emerald" style={{ fontSize: '0.7rem', marginBottom: '0.75rem' }}>{a.category}</span>
                     <h4 style={{ fontSize: '0.95rem', color: 'var(--deep-pine)', marginBottom: '0.35rem' }}>{a.title}</h4>

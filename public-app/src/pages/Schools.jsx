@@ -52,7 +52,7 @@ export default function Schools() {
               <div key={school.id} className="animate-fade-in-up" style={{
                 animationDelay: `${i * 60}ms`, background: 'white', borderRadius: 'var(--radius-xl)',
                 padding: '1.75rem', border: '1px solid rgba(13,43,34,0.06)', boxShadow: 'var(--shadow-sm)',
-                transition: 'all 0.3s',
+                transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
               }}
               onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; }}

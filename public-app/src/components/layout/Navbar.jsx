@@ -46,7 +46,7 @@ export default function Navbar() {
         : 'transparent',
       backdropFilter: scrolled ? 'blur(20px)' : 'none',
       borderBottom: scrolled ? '1px solid rgba(16, 185, 129, 0.1)' : 'none',
-      transition: 'all 0.3s ease',
+      transition: 'all 0.4s cubic-bezier(0.25, 1, 0.5, 1)',
     }}>
       <div className="container" style={{
         display: 'flex',
@@ -144,8 +144,9 @@ export default function Navbar() {
             flexShrink: 0,
             transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
-          onMouseDown={e => e.currentTarget.style.transform = 'scale(0.9)'}
+          onMouseDown={e => e.currentTarget.style.transform = 'scale(0.88)'}
           onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
+          onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
         >
           {isOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
@@ -165,7 +166,7 @@ export default function Navbar() {
           backdropFilter: 'blur(24px)',
           padding: '1rem 1.5rem 1.5rem',
           borderBottom: '1px solid rgba(16,185,129,0.15)',
-          animation: 'fadeInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+          animation: 'fadeInUp 0.35s cubic-bezier(0.25, 1, 0.5, 1) forwards',
         }}>
           {navLinks.map((link, idx) => {
             const isActive = location.pathname === link.path;
@@ -184,9 +185,9 @@ export default function Navbar() {
                   background: isActive ? 'rgba(16,185,129,0.1)' : 'transparent',
                   textDecoration: 'none',
                   marginBottom: '0.2rem',
-                  animation: 'slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) both',
-                  animationDelay: `${idx * 40}ms`,
-                  transition: 'transform 0.2s ease, background 0.2s ease',
+                  animation: 'slideInRight 0.35s cubic-bezier(0.25, 1, 0.5, 1) both',
+                  animationDelay: `${idx * 35}ms`,
+                  transition: 'transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), background 0.25s ease',
                 }}
               >
                 {link.label}

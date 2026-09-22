@@ -32,7 +32,7 @@ function StatCard({ value, suffix = '+', label, delay = 0, colorClass = 'stat-gr
       padding: '1.75rem 1.25rem',
       textAlign: 'center',
       animationDelay: `${delay}ms`,
-      transition: 'all 0.3s ease',
+      transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
       cursor: 'default',
     }}
     onMouseEnter={e => {
@@ -139,7 +139,7 @@ function EventCard({ event, index }) {
       alignItems: 'flex-start',
       border: '1px solid rgba(13,43,34,0.06)',
       boxShadow: 'var(--shadow-sm)',
-      transition: 'all 0.3s ease',
+      transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
     }}
     onMouseEnter={e => {
       e.currentTarget.style.transform = 'translateY(-2px)';
@@ -709,7 +709,7 @@ export default function Home() {
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  transition: 'all 0.3s ease',
+                  transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
                 }}
                 onMouseEnter={e => {
                   e.currentTarget.style.transform = 'translateY(-4px)';
@@ -860,7 +860,7 @@ export default function Home() {
                     borderRadius: 'var(--radius-xl)',
                     border: '1px solid rgba(13,43,34,0.08)',
                     boxShadow: 'var(--shadow-sm)',
-                    transition: 'all 0.3s ease',
+                    transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
                   }}
                   onMouseEnter={e => {
                     e.currentTarget.style.boxShadow = 'var(--shadow-md)';
@@ -995,7 +995,7 @@ export default function Home() {
                 textDecoration: 'none',
                 border: '1px solid rgba(13,43,34,0.06)',
                 boxShadow: 'var(--shadow-sm)',
-                transition: 'all 0.3s ease',
+                transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
                 display: 'block',
               }}
               onMouseEnter={e => {

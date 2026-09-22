@@ -39,7 +39,7 @@ export default function Events() {
                       animationDelay: `${i * 80}ms`, background: 'white', borderRadius: 'var(--radius-xl)',
                       padding: '1.75rem', display: 'flex', gap: '1.5rem', alignItems: 'flex-start',
                       border: '1px solid rgba(13,43,34,0.06)', boxShadow: 'var(--shadow-sm)',
-                      borderLeft: '4px solid var(--emerald)', transition: 'all 0.3s',
+                      borderLeft: '4px solid var(--emerald)', transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
                     }}>
                       <div style={{
                         minWidth: 68, textAlign: 'center', background: 'var(--emerald-glass)',
