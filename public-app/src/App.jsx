@@ -32,72 +32,23 @@ function AdminRedirect() {
   );
 }
 
-// Silky smooth crossfade page transition - zero dark flash, zero layout jump
-function PageTransition({ children }) {
-  const location = useLocation();
-  const containerRef = useRef(null);
-  const prevPathRef = useRef(location.pathname);
-  const isFirstRender = useRef(true);
+// Clean scroll restoration on route changes without any visual DOM flickering
+function ScrollToTop() {
+  const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    // Skip animation on first render
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      prevPathRef.current = location.pathname;
-      return;
+    if (hash) {
+      const id = hash.replace('#', '');
+      const target = document.getElementById(id);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
     }
-
-    // Only animate on actual path changes
-    if (prevPathRef.current === location.pathname) return;
-    prevPathRef.current = location.pathname;
-
-    // Immediately scroll to top before visual update
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [pathname, hash]);
 
-    const el = containerRef.current;
-    if (!el) return;
-
-    // Gentle crossfade: opacity never drops low enough to cause a dark flash or reload feel
-    el.style.transition = 'none';
-    el.style.opacity = '0.85';
-    el.style.transform = 'translateY(4px)';
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        if (!el) return;
-        el.style.transition = 'opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1), transform 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
-        el.style.opacity = '1';
-        el.style.transform = 'translateY(0)';
-      });
-    });
-
-    // Handle hash anchors smoothly
-    if (location.hash) {
-      const id = location.hash.replace('#', '');
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          const target = document.getElementById(id);
-          if (target) {
-            target.scrollIntoView({ behavior: 'smooth' });
-          }
-        });
-      });
-    }
-  }, [location.pathname, location.hash]);
-
-  return (
-    <div
-      ref={containerRef}
-      style={{
-        minHeight: '100%',
-        width: '100%',
-        background: 'var(--deep-pine)',
-        willChange: 'opacity, transform',
-      }}
-    >
-      {children}
-    </div>
-  );
+  return null;
 }
 
 function AppContent() {
@@ -105,39 +56,38 @@ function AppContent() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'var(--deep-pine)' }}>
+      <ScrollToTop />
       <Navbar />
       <main style={{ flex: 1, position: 'relative', background: 'var(--deep-pine)' }}>
-        <PageTransition>
-          <Routes location={location}>
-            {/* Primary Routes */}
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/programs" element={<Programs />} />
-            <Route path="/articles" element={<Articles />} />
-            <Route path="/articles/:slug" element={<ArticleDetail />} />
-            <Route path="/events" element={<Events />} />
-            <Route path="/schools" element={<Schools />} />
-            <Route path="/gallery" element={<Gallery />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/consultation" element={<Consultation />} />
-            <Route path="/library" element={<Library />} />
+        <Routes>
+          {/* Primary Routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/programs" element={<Programs />} />
+          <Route path="/articles" element={<Articles />} />
+          <Route path="/articles/:slug" element={<ArticleDetail />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/schools" element={<Schools />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/consultation" element={<Consultation />} />
+          <Route path="/library" element={<Library />} />
 
-            {/* Backward-Compatible Indonesian URL Aliases */}
-            <Route path="/tentang" element={<About />} />
-            <Route path="/program" element={<Programs />} />
-            <Route path="/agenda" element={<Events />} />
-            <Route path="/artikel" element={<Articles />} />
-            <Route path="/artikel/:slug" element={<ArticleDetail />} />
-            <Route path="/rohis-anggota" element={<Schools />} />
-            <Route path="/galeri" element={<Gallery />} />
-            <Route path="/kontak" element={<Contact />} />
-            <Route path="/pendaftaran" element={<Contact />} />
+          {/* Backward-Compatible Indonesian URL Aliases */}
+          <Route path="/tentang" element={<About />} />
+          <Route path="/program" element={<Programs />} />
+          <Route path="/agenda" element={<Events />} />
+          <Route path="/artikel" element={<Articles />} />
+          <Route path="/artikel/:slug" element={<ArticleDetail />} />
+          <Route path="/rohis-anggota" element={<Schools />} />
+          <Route path="/galeri" element={<Gallery />} />
+          <Route path="/kontak" element={<Contact />} />
+          <Route path="/pendaftaran" element={<Contact />} />
 
-            {/* Admin Portal Redirect Routes */}
-            <Route path="/admin" element={<AdminRedirect />} />
-            <Route path="/login" element={<AdminRedirect />} />
-          </Routes>
-        </PageTransition>
+          {/* Admin Portal Redirect Routes */}
+          <Route path="/admin" element={<AdminRedirect />} />
+          <Route path="/login" element={<AdminRedirect />} />
+        </Routes>
       </main>
       <Footer />
     </div>
