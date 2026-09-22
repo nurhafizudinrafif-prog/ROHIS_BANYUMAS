@@ -362,6 +362,19 @@
   transform: translateX(4px);
 }
 
+.admin-nav-item:active {
+  transform: translateX(2px) scale(0.98);
+  transition-duration: 0.08s;
+}
+
+.admin-nav-item svg {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.admin-nav-item:hover svg {
+  transform: scale(1.12);
+}
+
 .admin-nav-item.active {
   background: linear-gradient(
     135deg,
@@ -1000,6 +1013,19 @@
   color: #f87171;
   border-color: rgba(239, 68, 68, 0.60);
   box-shadow: 0 0 14px rgba(239, 68, 68, 0.40);
+}
+
+.btn-icon:active {
+  transform: translateY(0) scale(0.92);
+  transition-duration: 0.08s;
+}
+
+.btn-icon svg {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-icon:hover svg {
+  transform: scale(1.12);
 }
 
 /* 3D Liquid Glass Gallery Grid */

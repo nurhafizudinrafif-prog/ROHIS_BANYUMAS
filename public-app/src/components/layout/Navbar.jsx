@@ -106,16 +106,20 @@ export default function Navbar() {
             const isActive = location.pathname === link.path || 
               (link.path !== '/' && location.pathname.startsWith(link.path));
             return (
-              <Link key={link.path} to={link.path} style={{
-                padding: '0.45rem 0.85rem',
-                fontSize: '0.82rem',
-                fontWeight: isActive ? 600 : 500,
-                color: isActive ? 'var(--emerald-light)' : 'rgba(245,242,237,0.7)',
-                borderRadius: 'var(--radius-full)',
-                background: isActive ? 'rgba(16,185,129,0.12)' : 'transparent',
-                transition: 'all 0.2s ease',
-                textDecoration: 'none',
-              }}>
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`nav-link-pill ${isActive ? 'active' : ''}`}
+                style={{
+                  padding: '0.45rem 0.85rem',
+                  fontSize: '0.82rem',
+                  fontWeight: isActive ? 600 : 500,
+                  color: isActive ? 'var(--emerald-light)' : 'rgba(245,242,237,0.7)',
+                  borderRadius: 'var(--radius-full)',
+                  background: isActive ? 'rgba(16,185,129,0.12)' : 'transparent',
+                  textDecoration: 'none',
+                }}
+              >
                 {link.label}
               </Link>
             );
@@ -125,6 +129,7 @@ export default function Navbar() {
             target="_blank"
             rel="noopener noreferrer"
             title="Portal Admin & CMS"
+            className="nav-admin-chip"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -138,7 +143,6 @@ export default function Navbar() {
               background: 'rgba(181, 141, 79, 0.08)',
               textDecoration: 'none',
               marginLeft: '0.35rem',
-              transition: 'all 0.2s ease',
             }}
           >
             <span>CMS Admin</span>
@@ -146,18 +150,26 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Toggle */}
-        <button className="hide-desktop" onClick={() => setIsOpen(!isOpen)} aria-label="Menu Navigasi" style={{
-          background: 'rgba(255,255,255,0.1)',
-          border: 'none',
-          borderRadius: '10px',
-          padding: '0.5rem',
-          cursor: 'pointer',
-          color: 'var(--warm-alabaster)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexShrink: 0,
-        }}>
+        <button
+          className="hide-desktop"
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label="Menu Navigasi"
+          style={{
+            background: 'rgba(255,255,255,0.1)',
+            border: 'none',
+            borderRadius: '10px',
+            padding: '0.5rem',
+            cursor: 'pointer',
+            color: 'var(--warm-alabaster)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
+          onMouseDown={e => e.currentTarget.style.transform = 'scale(0.9)'}
+          onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
+        >
           {isOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
@@ -176,22 +188,30 @@ export default function Navbar() {
           backdropFilter: 'blur(24px)',
           padding: '1rem 1.5rem 1.5rem',
           borderBottom: '1px solid rgba(16,185,129,0.15)',
-          animation: 'fadeInUp 0.3s ease',
+          animation: 'fadeInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
         }}>
-          {navLinks.map((link) => {
+          {navLinks.map((link, idx) => {
             const isActive = location.pathname === link.path;
             return (
-              <Link key={link.path} to={link.path} style={{
-                display: 'block',
-                padding: '0.75rem 1rem',
-                fontSize: '0.95rem',
-                fontWeight: isActive ? 600 : 400,
-                color: isActive ? 'var(--emerald-light)' : 'rgba(245,242,237,0.8)',
-                borderRadius: 'var(--radius-md)',
-                background: isActive ? 'rgba(16,185,129,0.1)' : 'transparent',
-                textDecoration: 'none',
-                marginBottom: '0.2rem',
-              }}>
+              <Link
+                key={link.path}
+                to={link.path}
+                onClick={() => setIsOpen(false)}
+                style={{
+                  display: 'block',
+                  padding: '0.75rem 1rem',
+                  fontSize: '0.95rem',
+                  fontWeight: isActive ? 600 : 400,
+                  color: isActive ? 'var(--emerald-light)' : 'rgba(245,242,237,0.8)',
+                  borderRadius: 'var(--radius-md)',
+                  background: isActive ? 'rgba(16,185,129,0.1)' : 'transparent',
+                  textDecoration: 'none',
+                  marginBottom: '0.2rem',
+                  animation: 'slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) both',
+                  animationDelay: `${idx * 40}ms`,
+                  transition: 'transform 0.2s ease, background 0.2s ease',
+                }}
+              >
                 {link.label}
               </Link>
             );
@@ -212,6 +232,9 @@ export default function Navbar() {
               marginTop: '0.5rem',
               textAlign: 'center',
               border: '1px solid rgba(181, 141, 79, 0.3)',
+              animation: 'slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) both',
+              animationDelay: `${navLinks.length * 40}ms`,
+              transition: 'transform 0.2s ease, background 0.2s ease',
             }}
           >
             🔑 Masuk Panel Admin CMS

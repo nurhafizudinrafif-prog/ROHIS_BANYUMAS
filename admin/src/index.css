@@ -142,7 +142,7 @@ a:hover {
 }
 
 /* =========================================================
-   BUTTONS — 3D LIQUID GLASS & NEON EMERALD
+   BUTTONS — 3D LIQUID GLASS & NEON EMERALD (MOTION ENHANCED)
    ========================================================= */
 .btn {
   display: inline-flex;
@@ -156,8 +156,58 @@ a:hover {
   border-radius: var(--radius-md);
   border: none;
   cursor: pointer;
-  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
   text-decoration: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: 
+    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+
+/* Elegant light sheen glint */
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -130%;
+  width: 75%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-22deg);
+  transition: left 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.btn:hover::after {
+  left: 150%;
+}
+
+.btn:active {
+  transform: translateY(1px) scale(0.975);
+  transition-duration: 0.08s;
+}
+
+.btn svg {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+}
+
+.btn:hover svg {
+  transform: translateX(3px);
+}
+
+.btn:hover svg.lucide-arrow-left {
+  transform: translateX(-3px);
 }
 
 .btn-primary {
@@ -171,11 +221,11 @@ a:hover {
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
+  transform: translateY(-2.5px) scale(1.015);
   background: linear-gradient(135deg, #00F0CF 0%, #00ddb8 100%);
   box-shadow: 
-    0 6px 24px rgba(0, 255, 200, 0.55),
-    0 0 20px rgba(0, 255, 200, 0.35);
+    0 8px 28px rgba(0, 255, 200, 0.55),
+    0 0 24px rgba(0, 255, 200, 0.4);
   color: #031317 !important;
 }
 
@@ -188,9 +238,9 @@ a:hover {
 }
 
 .btn-gold:hover {
-  transform: translateY(-2px);
+  transform: translateY(-2.5px) scale(1.015);
   background: linear-gradient(135deg, #E8C76A 0%, #D4A843 100%);
-  box-shadow: 0 6px 22px rgba(212, 168, 67, 0.5);
+  box-shadow: 0 8px 26px rgba(212, 168, 67, 0.55);
   color: #031317 !important;
 }
 
@@ -204,11 +254,21 @@ a:hover {
 }
 
 .btn-outline:hover {
-  background: rgba(0, 255, 200, 0.10);
-  border-color: rgba(0, 255, 200, 0.65);
+  background: rgba(0, 255, 200, 0.12);
+  border-color: rgba(0, 255, 200, 0.7);
   color: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 255, 200, 0.25), inset 0 1px 0 rgba(0, 255, 200, 0.25);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 6px 20px rgba(0, 255, 200, 0.3), inset 0 1px 0 rgba(0, 255, 200, 0.25);
+}
+
+button:not(:disabled) {
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+button:not(:disabled):active {
+  transform: scale(0.965);
 }
 
 .btn-sm { padding: 0.4rem 0.85rem; font-size: 0.8rem; }

@@ -409,13 +409,7 @@ export default function Home() {
                 <Link to={hero.btnPrimaryLink || '/about'} className="btn btn-primary btn-lg">
                   {hero.btnPrimaryText || 'Kenali ROHIS Lebih Dekat'} <ArrowRight size={18} />
                 </Link>
-                <a href={hero.btnSecondaryLink || '#program'} className="btn btn-lg" style={{
-                  background: 'rgba(255,255,255,0.06)',
-                  color: 'var(--warm-alabaster)',
-                  border: '1px solid rgba(255,255,255,0.18)',
-                  backdropFilter: 'blur(8px)',
-                  textDecoration: 'none',
-                }}>
+                <a href={hero.btnSecondaryLink || '#program'} className="btn btn-glass btn-lg">
                   {hero.btnSecondaryText || '5 Pilar Gerakan'}
                 </a>
               </div>
@@ -1077,12 +1071,7 @@ export default function Home() {
             <Link to={closing.btnPrimaryLink || '/contact'} className="btn btn-primary btn-lg">
               {closing.btnPrimaryText || 'Daftar Menjadi Bagian ROKABA'} <ArrowRight size={18} />
             </Link>
-            <Link to={closing.btnSecondaryLink || '/contact'} className="btn btn-lg" style={{
-              background: 'rgba(255,255,255,0.06)',
-              color: 'var(--warm-alabaster)',
-              border: '1px solid rgba(255,255,255,0.2)',
-              backdropFilter: 'blur(8px)',
-            }}>
+            <Link to={closing.btnSecondaryLink || '/contact'} className="btn btn-glass btn-lg">
               {closing.btnSecondaryText || 'Hubungi Pengurus'}
             </Link>
           </div>

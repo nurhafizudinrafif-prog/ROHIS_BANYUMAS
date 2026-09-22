@@ -115,18 +115,14 @@ export default function Footer() {
                   { icon: Play, label: 'YouTube', url: 'https://www.youtube.com/@rohisbanyumas' },
                   { icon: MessageCircle, label: 'WhatsApp', url: 'https://wa.me/6281234567890' },
                 ].map(({ icon: Icon, label, url }) => (
-                  <a key={label} href={url} target="_blank" rel="noopener noreferrer" aria-label={label} style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: '10px',
-                    background: 'rgba(255,255,255,0.06)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'rgba(245,242,237,0.6)',
-                    transition: 'all 0.2s',
-                  }}>
+                  <a
+                    key={label}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className="footer-social-btn"
+                  >
                     <Icon size={16} />
                   </a>
                 ))}

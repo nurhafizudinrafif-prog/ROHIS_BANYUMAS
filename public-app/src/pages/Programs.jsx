@@ -425,33 +425,10 @@ export default function Programs() {
               {/* Action Button */}
               <Link
                 to={`/about?div=${current.key}#pengurus`}
+                className="btn btn-emerald"
                 style={{
                   marginTop: '2rem',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.8rem 1.5rem',
-                  borderRadius: '9999px',
-                  background: 'rgba(16, 185, 129, 0.22)',
-                  border: '1px solid var(--emerald)',
-                  color: 'var(--warm-alabaster)',
-                  fontSize: '0.88rem',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
                   width: '100%',
-                  justifyContent: 'center',
-                  textDecoration: 'none',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background = 'var(--emerald)';
-                  e.currentTarget.style.color = 'white';
-                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(16, 185, 129, 0.4)';
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background = 'rgba(16, 185, 129, 0.22)';
-                  e.currentTarget.style.color = 'var(--warm-alabaster)';
-                  e.currentTarget.style.boxShadow = 'none';
                 }}
               >
                 Lihat Struktur & Pengurus Divisi Ini <ArrowRight size={16} />
