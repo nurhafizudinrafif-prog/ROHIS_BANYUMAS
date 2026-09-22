@@ -71,23 +71,6 @@ export default function Footer() {
                   {link.label}
                 </Link>
               ))}
-              <a
-                href="https://rohis-banyumasadminid.vercel.app"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  color: 'var(--antique-brass)',
-                  fontSize: '0.85rem',
-                  fontWeight: 600,
-                  textDecoration: 'none',
-                  padding: '0.3rem 0',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.25rem',
-                }}
-              >
-                🔑 Portal Admin
-              </a>
             </div>
           </div>
 
@@ -142,7 +125,7 @@ export default function Footer() {
           fontSize: '0.78rem',
           color: 'rgba(245,242,237,0.35)',
         }}>
-          <span>© {new Date().getFullYear()} ROKABA — Forum Komunikasi Rohis Kabupaten Banyumas • <a href="https://rohis-banyumasadminid.vercel.app" target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(245,242,237,0.5)', textDecoration: 'underline' }}>Login CMS</a></span>
+          <span>© {new Date().getFullYear()} ROKABA — Forum Komunikasi Rohis Kabupaten Banyumas</span>
           <span>Dibangun dengan ❤️ untuk dakwah pelajar</span>
         </div>
       </div>

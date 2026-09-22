@@ -913,27 +913,6 @@ textarea.form-input {
   transform: scale(0.96);
 }
 
-.nav-admin-chip {
-  position: relative;
-  overflow: hidden;
-  transition: 
-    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-    background 0.25s ease,
-    border-color 0.25s ease !important;
-}
-
-.nav-admin-chip:hover {
-  transform: translateY(-2px) scale(1.02);
-  background: rgba(181, 141, 79, 0.2) !important;
-  border-color: rgba(181, 141, 79, 0.75) !important;
-  box-shadow: 0 4px 16px rgba(181, 141, 79, 0.35);
-}
-
-.nav-admin-chip:active {
-  transform: scale(0.96);
-}
-
 /* ═══════════════════════════════════════════
    5 Division Interactive Showcase (Mobile & Desktop)
    ═══════════════════════════════════════════ */
