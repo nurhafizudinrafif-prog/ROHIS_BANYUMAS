@@ -51,17 +51,17 @@ export function DataProvider({ children }) {
     users: fallbackData['rokaba:users'] || [],
     auditLogs: fallbackData['rokaba:audit_logs'] || [],
   });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [lastSync, setLastSync] = useState(null);
 
-  // Load all data on mount and sync
-  const loadAllData = useCallback(async () => {
-    setLoading(true);
+  // Load all data on mount and sync (silent by default to avoid screen refresh flickers)
+  const loadAllData = useCallback(async (isSilent = true) => {
+    if (!isSilent) setLoading(true);
     setError(null);
     try {
       const allData = await fetchAllData();
-      setData({
+      const nextData = {
         home: allData['rokaba:home'] || fallbackData['rokaba:home'],
         articles: (Array.isArray(allData['rokaba:articles']) && allData['rokaba:articles'].length > 0)
           ? allData['rokaba:articles']
@@ -80,32 +80,48 @@ export function DataProvider({ children }) {
         team: normalizeTeam(allData['rokaba:team'] || fallbackData['rokaba:team']),
         users: allData['rokaba:users'] || fallbackData['rokaba:users'] || [],
         auditLogs: allData['rokaba:audit_logs'] || fallbackData['rokaba:audit_logs'] || [],
+      };
+
+      setData((prev) => {
+        // Only trigger React state update if data actually changed
+        try {
+          if (JSON.stringify(prev) === JSON.stringify(nextData)) {
+            return prev;
+          }
+        } catch (e) {}
+        return nextData;
       });
       setLastSync(new Date());
     } catch (err) {
       setError(err.message);
       console.error('[DataContext] Failed to load data:', err);
     } finally {
-      setLoading(false);
+      if (!isSilent) setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    loadAllData();
-    const handleRevalidate = () => {
-      loadAllData();
-    };
-    const interval = setInterval(loadAllData, 12000); // Check for fresh updates every 12 seconds
-    window.addEventListener('focus', handleRevalidate);
-    window.addEventListener('storage', handleRevalidate);
+    // Initial fetch silently
+    loadAllData(true);
 
+    const handleRevalidate = () => {
+      loadAllData(true);
+    };
+
+    // Instant sync when admin updates anything
     let bc;
     try {
       bc = new BroadcastChannel('rokaba_realtime_sync');
       bc.onmessage = () => {
-        loadAllData();
+        loadAllData(true);
       };
     } catch (e) {}
+
+    window.addEventListener('focus', handleRevalidate);
+    window.addEventListener('storage', handleRevalidate);
+
+    // Occasional silent background check (60 seconds) without any screen flashes
+    const interval = setInterval(() => loadAllData(true), 60000);
 
     return () => {
       clearInterval(interval);

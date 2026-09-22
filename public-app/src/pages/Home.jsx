@@ -233,7 +233,7 @@ const defaultDivisionPrograms = [
 export default function Home() {
   const { home, articles, events, loading } = useData();
 
-  if (loading) {
+  if (loading && !home) {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--deep-pine)' }}>
         <div className="animate-float" style={{ textAlign: 'center' }}>
