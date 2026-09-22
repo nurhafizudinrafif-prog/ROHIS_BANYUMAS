@@ -1125,16 +1125,16 @@ export default function About() {
       {/* ═══════════════════════════════════════════
           Team / Struktur Pengurus ROKABA
           ═══════════════════════════════════════════ */}
-      <section className="section" id="pengurus">
+      <section className="section section-pine" id="pengurus" style={{ padding: '5.5rem 0' }}>
         <div className="container" style={{ maxWidth: 1200, margin: '0 auto' }}>
           {/* Section Title */}
           <div className="section-header">
             <span className="badge badge-emerald" style={{ marginBottom: '0.5rem' }}>
               <Users size={13} /> Struktur Kepengurusan
             </span>
-            <h2>Pengurus ROKABA</h2>
+            <h2 style={{ color: 'var(--warm-alabaster)' }}>Pengurus ROKABA</h2>
             <div className="section-divider" />
-            <p>
+            <p style={{ color: 'rgba(245, 242, 237, 0.65)' }}>
               Generasi muda berdedikasi yang mengemban amanah memajukan dakwah pelajar Islam di Kabupaten Banyumas Periode 2025/2026.
             </p>
           </div>
@@ -1303,8 +1303,10 @@ export default function About() {
             <div
               className="animate-fade-in-up"
               style={{
-                background: 'linear-gradient(135deg, rgba(13,43,34,0.03) 0%, rgba(16,185,129,0.06) 100%)',
-                border: '1px solid rgba(16,185,129,0.18)',
+                background: 'linear-gradient(135deg, rgba(20, 56, 44, 0.9) 0%, rgba(13, 43, 34, 0.95) 100%)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                border: '1px solid rgba(16, 185, 129, 0.25)',
                 borderRadius: 'var(--radius-xl)',
                 padding: '1.75rem 2rem',
                 marginBottom: '2rem',
@@ -1312,6 +1314,7 @@ export default function About() {
                 alignItems: 'center',
                 gap: '1.5rem',
                 flexWrap: 'wrap',
+                boxShadow: '0 12px 32px rgba(0, 0, 0, 0.25)',
               }}
             >
               <div
@@ -1324,7 +1327,7 @@ export default function About() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   boxShadow: 'var(--shadow-sm)',
-                  border: '1px solid rgba(13,43,34,0.08)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
                   color: activeDivMeta.accentColor,
                   flexShrink: 0,
                 }}
@@ -1333,7 +1336,7 @@ export default function About() {
               </div>
               <div style={{ flex: 1, minWidth: 260 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-                  <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--deep-pine)' }}>
+                  <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--warm-alabaster)', margin: 0 }}>
                     {activeDivMeta.label}
                   </h3>
                   <span className="badge badge-emerald" style={{ fontSize: '0.75rem' }}>
@@ -1342,20 +1345,22 @@ export default function About() {
                 </div>
                 <p
                   style={{
-                    color: 'var(--antique-brass)',
+                    color: '#E6C587',
                     fontSize: '0.88rem',
                     fontWeight: 600,
-                    marginTop: '0.2rem',
+                    marginTop: '0.25rem',
+                    marginBottom: 0,
                   }}
                 >
                   {activeDivMeta.tagline}
                 </p>
                 <p
                   style={{
-                    color: 'rgba(13,43,34,0.65)',
+                    color: 'rgba(245, 242, 237, 0.75)',
                     fontSize: '0.86rem',
-                    marginTop: '0.35rem',
-                    lineHeight: 1.6,
+                    marginTop: '0.4rem',
+                    marginBottom: 0,
+                    lineHeight: 1.65,
                   }}
                 >
                   {activeDivMeta.description}
@@ -1370,21 +1375,21 @@ export default function About() {
               style={{
                 marginBottom: '1.5rem',
                 fontSize: '0.88rem',
-                color: 'rgba(13,43,34,0.6)',
+                color: 'rgba(245, 242, 237, 0.75)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.5rem',
               }}
             >
               <span>
-                Menampilkan <strong>{filteredTeam.length}</strong> pengurus untuk pencarian &ldquo;{searchQuery}&rdquo;
+                Menampilkan <strong style={{ color: 'var(--warm-alabaster)' }}>{filteredTeam.length}</strong> pengurus untuk pencarian &ldquo;{searchQuery}&rdquo;
               </span>
               <button
                 onClick={() => setSearchQuery('')}
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: 'var(--emerald)',
+                  color: 'var(--emerald-light)',
                   fontWeight: 600,
                   cursor: 'pointer',
                   fontSize: '0.85rem',
@@ -1400,11 +1405,13 @@ export default function About() {
             /* Empty State */
             <div
               style={{
-                background: 'white',
+                background: 'rgba(255, 255, 255, 0.05)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
                 borderRadius: 'var(--radius-xl)',
                 padding: '3.5rem 2rem',
                 textAlign: 'center',
-                border: '1px dashed rgba(13,43,34,0.15)',
+                border: '1px dashed rgba(255, 255, 255, 0.2)',
               }}
             >
               <div
@@ -1412,20 +1419,20 @@ export default function About() {
                   width: 56,
                   height: 56,
                   borderRadius: '50%',
-                  background: 'rgba(13,43,34,0.05)',
+                  background: 'rgba(255, 255, 255, 0.1)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   margin: '0 auto 1rem',
-                  color: 'rgba(13,43,34,0.4)',
+                  color: 'var(--warm-alabaster)',
                 }}
               >
                 <Users size={26} />
               </div>
-              <h3 style={{ fontSize: '1.15rem', color: 'var(--deep-pine)', marginBottom: '0.5rem' }}>
+              <h3 style={{ fontSize: '1.15rem', color: 'var(--warm-alabaster)', marginBottom: '0.5rem' }}>
                 Tidak Ada Anggota Ditemukan
               </h3>
-              <p style={{ color: 'rgba(13,43,34,0.5)', fontSize: '0.88rem', maxWidth: 400, margin: '0 auto 1.5rem' }}>
+              <p style={{ color: 'rgba(245, 242, 237, 0.7)', fontSize: '0.88rem', maxWidth: 400, margin: '0 auto 1.5rem' }}>
                 Tidak ditemukan nama pengurus, jabatan, atau sekolah yang cocok dengan pencarian Anda.
               </p>
               <button
@@ -1458,7 +1465,7 @@ export default function About() {
                         justifyContent: 'space-between',
                         paddingBottom: '0.85rem',
                         marginBottom: '1.5rem',
-                        borderBottom: '2px solid rgba(13,43,34,0.08)',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
                         flexWrap: 'wrap',
                         gap: '0.75rem',
                       }}
@@ -1473,7 +1480,7 @@ export default function About() {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            border: '1px solid rgba(13,43,34,0.08)',
+                            border: '1px solid rgba(255, 255, 255, 0.15)',
                             color: division.accentColor,
                             boxShadow: 'var(--shadow-sm)',
                           }}
@@ -1481,10 +1488,10 @@ export default function About() {
                           <DivIcon size={20} />
                         </div>
                         <div>
-                          <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--deep-pine)' }}>
+                          <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--warm-alabaster)', margin: 0 }}>
                             {division.label}
                           </h3>
-                          <p style={{ fontSize: '0.82rem', color: 'rgba(13,43,34,0.6)' }}>
+                          <p style={{ fontSize: '0.82rem', color: 'rgba(245, 242, 237, 0.65)', marginTop: '0.2rem', margin: 0 }}>
                             {division.tagline}
                           </p>
                         </div>
