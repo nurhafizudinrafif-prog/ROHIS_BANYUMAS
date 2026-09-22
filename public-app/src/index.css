@@ -387,7 +387,7 @@ button:not(:disabled):active {
   color: var(--warm-alabaster);
 }
 
-.section-pine h1, .section-pine h2, .section-pine h3 {
+.section-pine h1, .section-pine h2, .section-pine h3, .section-pine h4, .section-pine h5, .section-pine h6 {
   color: var(--warm-alabaster);
 }
 

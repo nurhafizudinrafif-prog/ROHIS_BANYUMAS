@@ -459,7 +459,7 @@ export default function Home() {
                     padding: '0.35rem 0.8rem',
                     borderRadius: 'var(--radius-full)',
                     border: '1px solid rgba(181,141,79,0.3)',
-                    color: 'var(--antique-brass)',
+                    color: '#E6C587',
                     fontSize: '0.7rem',
                     fontWeight: 700,
                     letterSpacing: '0.08em',
@@ -477,15 +477,21 @@ export default function Home() {
                     color: 'var(--warm-alabaster)',
                   }}>
                     {hero.photoLoc && (
-                      <div style={{ fontSize: '0.72rem', color: 'var(--antique-brass)', fontWeight: 700, letterSpacing: '0.06em', marginBottom: '0.35rem' }}>
+                      <div style={{ fontSize: '0.72rem', color: '#E6C587', fontWeight: 700, letterSpacing: '0.06em', marginBottom: '0.35rem' }}>
                         📍 {hero.photoLoc}
                       </div>
                     )}
-                    <h4 style={{ fontSize: '1.05rem', fontWeight: 700, marginBottom: '0.35rem', lineHeight: 1.3 }}>
+                    <h4 style={{
+                      fontSize: '1.05rem',
+                      fontWeight: 700,
+                      marginBottom: '0.35rem',
+                      lineHeight: 1.3,
+                      color: 'var(--warm-alabaster)',
+                    }}>
                       {hero.photoTitle || 'Sinergi Kader Dakwah Pelajar se-Banyumas'}
                     </h4>
                     {hero.photoSub && (
-                      <p style={{ fontSize: '0.82rem', color: 'rgba(245,242,237,0.7)', margin: 0, lineHeight: 1.4 }}>
+                      <p style={{ fontSize: '0.82rem', color: 'rgba(245,242,237,0.75)', margin: 0, lineHeight: 1.4 }}>
                         {hero.photoSub}
                       </p>
                     )}
