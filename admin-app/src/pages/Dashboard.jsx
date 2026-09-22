@@ -82,6 +82,9 @@ export default function Dashboard() {
             <Link to="/qa" className="btn btn-secondary" style={{ justifyContent: 'flex-start' }}>
               <MessageCircle size={16} /> Moderasi Pertanyaan {pendingQA > 0 && <span className="badge badge-brass">{pendingQA}</span>}
             </Link>
+            <Link to="/library" className="btn btn-secondary" style={{ justifyContent: 'flex-start' }}>
+              <Library size={16} /> Kelola E-Library ({library.length} Materi)
+            </Link>
             <button onClick={handleBackup} className="btn btn-secondary" style={{ justifyContent: 'flex-start' }}>
               <Download size={16} /> Backup Data (JSON)
             </button>

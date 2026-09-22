@@ -45,6 +45,25 @@ export async function fetchCloudCMSData() {
         break;
       }
     }
+    if (parsed && typeof parsed === 'object' && (!parsed.library || !Array.isArray(parsed.library))) {
+      try {
+        const libRes = await fetch(`${UPSTASH_URL}/get/rokaba:library`, {
+          headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
+        });
+        if (libRes.ok) {
+          const libData = await libRes.json();
+          let parsedLib = libData.result;
+          while (typeof parsedLib === 'string') {
+            try { parsedLib = JSON.parse(parsedLib); } catch (e) { break; }
+          }
+          if (Array.isArray(parsedLib)) {
+            parsed.library = parsedLib;
+          }
+        }
+      } catch (e) {
+        console.warn('Gagal memuat rokaba:library dari Upstash:', e);
+      }
+    }
     return parsed;
   } catch (err) {
     console.warn('Gagal memuat data dari Cloud Upstash:', err);
@@ -84,6 +103,9 @@ export async function saveCloudCMSData(payload) {
     }
     if (payload.programs !== undefined) {
       mirrorTasks.push(upstashCommand(['SET', 'rokaba:programs', JSON.stringify(payload.programs)]));
+    }
+    if (payload.library !== undefined) {
+      mirrorTasks.push(upstashCommand(['SET', 'rokaba:library', JSON.stringify(payload.library)]));
     }
     if (payload.siteSettings !== undefined) {
       mirrorTasks.push(upstashCommand(['SET', 'rokaba:settings', JSON.stringify(payload.siteSettings)]));

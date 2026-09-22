@@ -27,6 +27,9 @@ import {
   Film,
   Layout,
   Sparkles,
+  BookOpen,
+  Presentation,
+  File,
 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import {
@@ -52,6 +55,7 @@ export default function AdminDashboard() {
     galleryCategories,
     memberSchools,
     team,
+    library,
     siteSettings,
     homeContent,
     programs,
@@ -70,6 +74,9 @@ export default function AdminDashboard() {
     addTeamMember,
     updateTeamMember,
     deleteTeamMember,
+    addLibraryItem,
+    updateLibraryItem,
+    deleteLibraryItem,
     updateHomeContent,
     updateProgram,
     updateSettings,
@@ -101,6 +108,7 @@ export default function AdminDashboard() {
   // Search & Filter States
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('Semua');
+  const [filterType, setFilterType] = useState('Semua');
 
   // Toast Notifications
   const [toast, setToast] = useState(null);
@@ -223,6 +231,14 @@ export default function AdminDashboard() {
         description: '',
         coverImage: '',
         media: [],
+      });
+    } else if (type === 'library') {
+      setFormData({
+        title: '',
+        category: 'Ibadah',
+        type: 'pdf',
+        size: '',
+        fileUrl: '',
       });
     } else {
       setFormData({});
@@ -400,6 +416,21 @@ export default function AdminDashboard() {
         addTeamMember(modalDivision, formData);
         showToast('Pengurus baru berhasil ditambahkan!');
       }
+    } else if (modalType === 'library') {
+      const payload = {
+        title: formData.title?.trim() || 'Materi Tanpa Judul',
+        category: formData.category?.trim() || 'Umum',
+        type: formData.type || 'pdf',
+        size: formData.size?.trim() || '1.0 MB',
+        fileUrl: formData.fileUrl?.trim() || '#',
+      };
+      if (editItem) {
+        updateLibraryItem(editItem.id, payload);
+        showToast('Materi E-Library berhasil diperbarui!');
+      } else {
+        addLibraryItem(payload);
+        showToast('Materi E-Library baru berhasil ditambahkan!');
+      }
     }
 
     closeModal();
@@ -438,6 +469,13 @@ export default function AdminDashboard() {
     if (window.confirm(`Yakin ingin menghapus pengurus "${name}"?`)) {
       deleteTeamMember(divisionKey, id);
       showToast('Pengurus berhasil dihapus.', 'warning');
+    }
+  };
+
+  const handleDeleteLibrary = (id, title) => {
+    if (window.confirm(`Yakin ingin menghapus materi "${title}" dari E-Library?`)) {
+      deleteLibraryItem(id);
+      showToast('Materi E-Library berhasil dihapus.', 'warning');
     }
   };
 
@@ -519,6 +557,17 @@ export default function AdminDashboard() {
       );
     });
   }, [memberSchools, searchQuery]);
+
+  const filteredLibrary = useMemo(() => {
+    return (library || []).filter((item) => {
+      const matchSearch =
+        item.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.category?.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchCat = filterCategory === 'Semua' || item.category === filterCategory;
+      const matchType = filterType === 'Semua' || item.type === filterType;
+      return matchSearch && matchCat && matchType;
+    });
+  }, [library, searchQuery, filterCategory, filterType]);
 
   // Total count stats
   const totalPengurus = useMemo(() => {
@@ -840,6 +889,20 @@ export default function AdminDashboard() {
               <span className="nav-counter">{totalPengurus}</span>
             </button>
 
+            <button
+              className={`admin-nav-item ${activeTab === 'library' ? 'active' : ''}`}
+              onClick={() => {
+                setActiveTab('library');
+                setSearchQuery('');
+                setFilterCategory('Semua');
+                setFilterType('Semua');
+              }}
+            >
+              <BookOpen size={18} />
+              <span>E-Library</span>
+              <span className="nav-counter">{library?.length || 0}</span>
+            </button>
+
             <div className="admin-nav-separator"></div>
 
             <button
@@ -893,6 +956,12 @@ export default function AdminDashboard() {
                     className="btn btn-outline btn-sm"
                   >
                     <Plus size={16} /> Buat Agenda
+                  </button>
+                  <button
+                    onClick={() => openAddModal('library')}
+                    className="btn btn-outline btn-sm"
+                  >
+                    <Plus size={16} /> Tambah E-Library
                   </button>
                 </div>
               </div>
@@ -992,6 +1061,22 @@ export default function AdminDashboard() {
                     className="stat-card-link"
                   >
                     Kelola Pengurus &rarr;
+                  </button>
+                </div>
+
+                <div className="admin-stat-card">
+                  <div className="stat-card-icon stat-icon-gold">
+                    <BookOpen size={24} />
+                  </div>
+                  <div className="stat-card-info">
+                    <span className="stat-count">{library?.length || 0}</span>
+                    <span className="stat-name">Materi E-Library & Dokumen</span>
+                  </div>
+                  <button
+                    onClick={() => setActiveTab('library')}
+                    className="stat-card-link"
+                  >
+                    Kelola E-Library &rarr;
                   </button>
                 </div>
               </div>
@@ -1764,6 +1849,191 @@ export default function AdminDashboard() {
           )}
 
           {/* ==================================== */}
+          {/* TAB: E-LIBRARY / PERPUSTAKAAN DIGITAL */}
+          {/* ==================================== */}
+          {activeTab === 'library' && (
+            <div className="tab-pane">
+              <div className="admin-header-row">
+                <div>
+                  <h2>Kelola E-Library (Perpustakaan Digital)</h2>
+                  <p>Kelola materi dakwah, kajian, modul ibadah, dan slide presentasi yang dapat diunduh publik.</p>
+                </div>
+                <button
+                  onClick={() => openAddModal('library')}
+                  className="btn btn-primary"
+                >
+                  <Plus size={16} /> Tambah Materi E-Library
+                </button>
+              </div>
+
+              {/* Filters */}
+              <div className="admin-filter-bar">
+                <div className="search-input-wrapper">
+                  <Search size={16} />
+                  <input
+                    type="text"
+                    placeholder="Cari judul materi atau kategori..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  {searchQuery && (
+                    <button onClick={() => setSearchQuery('')} className="btn-clear-search">
+                      <X size={14} />
+                    </button>
+                  )}
+                </div>
+
+                <div className="filter-select-wrapper">
+                  <label>Kategori:</label>
+                  <select
+                    value={filterCategory}
+                    onChange={(e) => setFilterCategory(e.target.value)}
+                    className="form-select"
+                  >
+                    <option value="Semua">Semua Kategori</option>
+                    <option value="Ibadah">Ibadah</option>
+                    <option value="Dakwah">Dakwah</option>
+                    <option value="Edukasi">Edukasi</option>
+                    <option value="Kajian">Kajian</option>
+                    <option value="Motivasi">Motivasi</option>
+                    <option value="Umum">Umum</option>
+                  </select>
+                </div>
+
+                <div className="filter-select-wrapper">
+                  <label>Tipe File:</label>
+                  <select
+                    value={filterType}
+                    onChange={(e) => setFilterType(e.target.value)}
+                    className="form-select"
+                  >
+                    <option value="Semua">Semua Format</option>
+                    <option value="pdf">PDF</option>
+                    <option value="slide">Slide Presentasi</option>
+                    <option value="doc">Dokumen / Word</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Library Table */}
+              <div className="admin-table-wrapper card">
+                <table className="admin-table">
+                  <thead>
+                    <tr>
+                      <th style={{ width: '56px' }}>Format</th>
+                      <th>Judul Materi</th>
+                      <th>Kategori</th>
+                      <th>Ukuran</th>
+                      <th>Tautan Unduhan</th>
+                      <th style={{ textAlign: 'right' }}>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredLibrary.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} className="text-center py-4">
+                          <div style={{ padding: '2.5rem 1rem', color: 'var(--text-muted)' }}>
+                            <BookOpen size={44} style={{ opacity: 0.35, marginBottom: '0.75rem', display: 'block', margin: '0 auto 0.75rem' }} />
+                            <p style={{ margin: 0, fontWeight: 500 }}>Tidak ada materi E-Library yang sesuai.</p>
+                            <button
+                              onClick={() => openAddModal('library')}
+                              className="btn btn-outline btn-sm"
+                              style={{ marginTop: '0.85rem' }}
+                            >
+                              <Plus size={14} /> Tambah Materi Pertama
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredLibrary.map((item) => {
+                        const typeConfig = {
+                          pdf: { label: 'PDF', bg: 'rgba(239,68,68,0.15)', color: '#EF4444', icon: FileText },
+                          slide: { label: 'SLIDE', bg: 'rgba(245,158,11,0.15)', color: '#F59E0B', icon: Presentation },
+                          doc: { label: 'DOC', bg: 'rgba(59,130,246,0.15)', color: '#3B82F6', icon: File },
+                        }[item.type || 'pdf'] || { label: 'FILE', bg: 'rgba(16,185,129,0.15)', color: '#10B981', icon: FileText };
+                        const TypeIcon = typeConfig.icon;
+
+                        return (
+                          <tr key={item.id}>
+                            <td>
+                              <div style={{
+                                width: 40,
+                                height: 40,
+                                borderRadius: '8px',
+                                background: typeConfig.bg,
+                                color: typeConfig.color,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontWeight: 800,
+                                fontSize: '0.75rem',
+                              }}>
+                                <TypeIcon size={18} />
+                              </div>
+                            </td>
+                            <td>
+                              <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '0.94rem' }}>
+                                {item.title}
+                              </div>
+                              <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                                Format: <strong style={{ color: typeConfig.color }}>{typeConfig.label}</strong> • ID: {item.id}
+                              </div>
+                            </td>
+                            <td>
+                              <span className="badge badge-emerald" style={{ fontSize: '0.72rem' }}>
+                                {item.category || 'Umum'}
+                              </span>
+                            </td>
+                            <td>
+                              <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                                {item.size || '-'}
+                              </span>
+                            </td>
+                            <td>
+                              {item.fileUrl && item.fileUrl !== '#' ? (
+                                <a
+                                  href={item.fileUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="btn btn-outline btn-xs"
+                                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', textDecoration: 'none' }}
+                                >
+                                  <ExternalLink size={12} /> Buka / Unduh
+                                </a>
+                              ) : (
+                                <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>Belum ada URL</span>
+                              )}
+                            </td>
+                            <td>
+                              <div className="table-actions">
+                                <button
+                                  onClick={() => openEditModal('library', item)}
+                                  className="btn-icon btn-icon-edit"
+                                  title="Edit Materi"
+                                >
+                                  <Pencil size={16} />
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteLibrary(item.id, item.title)}
+                                  className="btn-icon btn-icon-delete"
+                                  title="Hapus Materi"
+                                >
+                                  <Trash2 size={16} />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* ==================================== */}
           {/* TAB 7: PENGATURAN & BACKUP DATA      */}
           {/* ==================================== */}
           {activeTab === 'settings' && (
@@ -1980,6 +2250,7 @@ export default function AdminDashboard() {
                 {modalType === 'gallery' && 'Dokumentasi Galeri (Foto & Video)'}
                 {modalType === 'school' && 'ROHIS Sekolah'}
                 {modalType === 'member' && 'Pengurus Organisasi'}
+                {modalType === 'library' && 'Materi E-Library (Perpustakaan Digital)'}
               </h3>
               <button onClick={closeModal} className="btn-close-modal">
                 <X size={18} />
@@ -2555,6 +2826,168 @@ export default function AdminDashboard() {
                     aspectRatioHint="Pas Foto / Rasio 1:1 atau 3:4"
                     tip="Foto profil pengurus akan ditampilkan pada bagan struktur organisasi."
                   />
+                </>
+              )}
+
+              {/* E-LIBRARY FORM */}
+              {modalType === 'library' && (
+                <>
+                  <div className="form-group">
+                    <label className="form-label">Judul Materi / Dokumen *</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      value={formData.title || ''}
+                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                      placeholder="Contoh: Panduan Shalat Lengkap / Slide Etika Digital Islami"
+                      required
+                    />
+                  </div>
+
+                  <div className="form-grid-2">
+                    <div className="form-group">
+                      <label className="form-label">Kategori Materi *</label>
+                      <select
+                        className="form-select"
+                        value={formData.category || 'Ibadah'}
+                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                        required
+                      >
+                        <option value="Ibadah">Ibadah</option>
+                        <option value="Dakwah">Dakwah</option>
+                        <option value="Edukasi">Edukasi</option>
+                        <option value="Kajian">Kajian</option>
+                        <option value="Motivasi">Motivasi</option>
+                        <option value="Umum">Umum</option>
+                      </select>
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">Tipe / Format File *</label>
+                      <select
+                        className="form-select"
+                        value={formData.type || 'pdf'}
+                        onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                        required
+                      >
+                        <option value="pdf">PDF (Dokumen / E-Book)</option>
+                        <option value="slide">Slide Presentasi (PPT / Slide)</option>
+                        <option value="doc">Dokumen Teks (Word / DOC)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="form-grid-2">
+                    <div className="form-group">
+                      <label className="form-label">Estimasi Ukuran File</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        value={formData.size || ''}
+                        onChange={(e) => setFormData({ ...formData, size: e.target.value })}
+                        placeholder="Contoh: 2.5 MB, 1.8 MB, 5.2 MB"
+                      />
+                      <small style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '0.25rem', display: 'block' }}>
+                        Tuliskan kapasitas file (misal: 2.5 MB) agar pembaca mengetahui ukuran unduhan.
+                      </small>
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">Link Download / URL File *</label>
+                      <input
+                        type="url"
+                        className="form-input"
+                        value={formData.fileUrl || ''}
+                        onChange={(e) => setFormData({ ...formData, fileUrl: e.target.value })}
+                        placeholder="https://drive.google.com/file/d/... atau link file"
+                        required
+                      />
+                      <small style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '0.25rem', display: 'block' }}>
+                        Tempel tautan unduhan dari Google Drive, Dropbox, atau Cloud storage.
+                      </small>
+                    </div>
+                  </div>
+
+                  {/* Tips Google Drive */}
+                  <div style={{
+                    padding: '0.85rem 1rem',
+                    borderRadius: '8px',
+                    background: 'rgba(181, 141, 79, 0.08)',
+                    border: '1px solid rgba(181, 141, 79, 0.25)',
+                    fontSize: '0.78rem',
+                    color: 'var(--warm-alabaster)',
+                    lineHeight: 1.5,
+                  }}>
+                    <strong style={{ color: 'var(--antique-brass)' }}>💡 Tips Link Google Drive:</strong>
+                    <p style={{ margin: '0.25rem 0 0', opacity: 0.85 }}>
+                      Pastikan hak akses tautan pada Google Drive telah diubah menjadi <strong>"Siapa saja yang memiliki link (Anyone with the link)"</strong> agar seluruh pengunjung web publik dapat mengunduh materi tanpa hambatan izin akses.
+                    </p>
+                  </div>
+
+                  {/* Live Card Preview */}
+                  {formData.title && (
+                    <div style={{
+                      marginTop: '0.75rem',
+                      padding: '1rem',
+                      borderRadius: '12px',
+                      background: 'rgba(255, 255, 255, 0.04)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                    }}>
+                      <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--emerald-light)', marginBottom: '0.5rem' }}>
+                        👁️ Pratinjau Tampilan di Website Publik:
+                      </div>
+                      <div style={{
+                        background: '#ffffff',
+                        borderRadius: '12px',
+                        padding: '1.25rem',
+                        color: '#0D2B22',
+                        display: 'flex',
+                        gap: '1rem',
+                        alignItems: 'center',
+                      }}>
+                        <div style={{
+                          width: 48,
+                          height: 48,
+                          borderRadius: '10px',
+                          background: formData.type === 'slide' ? '#FEF3C7' : formData.type === 'doc' ? '#DBEAFE' : '#FEE2E2',
+                          color: formData.type === 'slide' ? '#D97706' : formData.type === 'doc' ? '#2563EB' : '#DC2626',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontWeight: 800,
+                          fontSize: '0.85rem',
+                          textTransform: 'uppercase',
+                          flexShrink: 0,
+                        }}>
+                          {formData.type || 'PDF'}
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ display: 'flex', gap: '0.35rem', marginBottom: '0.2rem' }}>
+                            <span style={{ fontSize: '0.65rem', padding: '1px 6px', borderRadius: '4px', background: '#E2E8F0', fontWeight: 600 }}>
+                              {formData.category || 'Ibadah'}
+                            </span>
+                            <span style={{ fontSize: '0.65rem', color: '#64748B' }}>
+                              {formData.size || 'Ukuran fleksibel'}
+                            </span>
+                          </div>
+                          <div style={{ fontWeight: 700, fontSize: '0.92rem', color: '#0F172A', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            {formData.title}
+                          </div>
+                        </div>
+                        <span style={{
+                          padding: '0.4rem 0.85rem',
+                          background: '#10B981',
+                          color: 'white',
+                          borderRadius: '6px',
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          flexShrink: 0,
+                        }}>
+                          Unduh
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </>
               )}
 

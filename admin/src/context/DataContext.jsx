@@ -7,6 +7,7 @@ import { team as initialTeam, structurePeriod, organizationFullName } from '../d
 import { instagramReels as initialInstagramReels, instagramProfile as initialInstagramProfile } from '../data/instagram';
 import { programs as initialPrograms } from '../data/programs';
 import { initialHomeContent } from '../data/homeContent';
+import { initialLibrary } from '../data/library';
 import { fetchCloudCMSData, saveCloudCMSData } from '../services/cloudSync';
 
 const STORAGE_KEY = 'rohis_banyumas_cms_data_v2';
@@ -46,6 +47,7 @@ export function DataProvider({ children }) {
   const [galleryCategories] = useState(initialGalleryCategories);
   const [memberSchools, setMemberSchools] = useState(stored?.memberSchools || initialMemberSchools);
   const [team, setTeam] = useState(stored?.team || initialTeam);
+  const [library, setLibrary] = useState(stored?.library || initialLibrary);
   const [instagramReels, setInstagramReels] = useState(stored?.instagramReels || initialInstagramReels);
   const [instagramProfile, setInstagramProfile] = useState(stored?.instagramProfile || initialInstagramProfile);
   const [homeContent, setHomeContent] = useState(stored?.homeContent || initialHomeContent);
@@ -72,6 +74,7 @@ export function DataProvider({ children }) {
         galleryItems,
         memberSchools,
         team,
+        library,
         instagramReels,
         instagramProfile,
         siteSettings,
@@ -93,7 +96,7 @@ export function DataProvider({ children }) {
       setSyncStatus('error');
       return false;
     }
-  }, [articles, events, galleryItems, memberSchools, team, instagramReels, instagramProfile, siteSettings, homeContent, programs]);
+  }, [articles, events, galleryItems, memberSchools, team, library, instagramReels, instagramProfile, siteSettings, homeContent, programs]);
 
   // Sync from Upstash Cloud Database on load, periodically, and on tab focus
   useEffect(() => {
@@ -108,6 +111,7 @@ export function DataProvider({ children }) {
           if (cloudData.galleryItems) setGalleryItems(cloudData.galleryItems);
           if (cloudData.memberSchools) setMemberSchools(cloudData.memberSchools);
           if (cloudData.team) setTeam(cloudData.team);
+          if (cloudData.library && Array.isArray(cloudData.library)) setLibrary(cloudData.library);
           if (cloudData.homeContent) setHomeContent(cloudData.homeContent);
           if (cloudData.programs) setPrograms(cloudData.programs);
           if (cloudData.instagramLivePosts && cloudData.instagramLivePosts.length > 0) {
@@ -156,6 +160,7 @@ export function DataProvider({ children }) {
         galleryItems,
         memberSchools,
         team,
+        library,
         instagramReels,
         instagramProfile,
         siteSettings,
@@ -182,7 +187,7 @@ export function DataProvider({ children }) {
     } catch (err) {
       console.error('Failed to save to localStorage:', err);
     }
-  }, [articles, events, galleryItems, memberSchools, team, instagramReels, instagramProfile, siteSettings, homeContent, programs, isInitialLoadDone]);
+  }, [articles, events, galleryItems, memberSchools, team, library, instagramReels, instagramProfile, siteSettings, homeContent, programs, isInitialLoadDone]);
 
   // Synchronize across open browser tabs
   useEffect(() => {
@@ -195,6 +200,7 @@ export function DataProvider({ children }) {
           if (remote.galleryItems) setGalleryItems(remote.galleryItems);
           if (remote.memberSchools) setMemberSchools(remote.memberSchools);
           if (remote.team) setTeam(remote.team);
+          if (remote.library && Array.isArray(remote.library)) setLibrary(remote.library);
           if (remote.instagramReels) setInstagramReels(remote.instagramReels);
           if (remote.instagramProfile) setInstagramProfile(remote.instagramProfile);
           if (remote.siteSettings) setSiteSettings(remote.siteSettings);
@@ -605,6 +611,41 @@ export function DataProvider({ children }) {
     setInstagramReels((prev) => prev.filter((item) => item.id !== id));
   }, []);
 
+  // --- CRUD: E-Library ---
+  const addLibraryItem = useCallback((item) => {
+    const newItem = {
+      id: item.id || `lib-${Date.now()}`,
+      title: item.title || 'Materi Baru',
+      category: item.category || 'Umum',
+      fileUrl: item.fileUrl || '#',
+      type: item.type || 'pdf',
+      size: item.size || '1.0 MB',
+      uploadedAt: new Date().toISOString(),
+    };
+    setLibrary((prev) => {
+      const updated = [newItem, ...prev];
+      persistToCloud({ library: updated });
+      return updated;
+    });
+    return newItem;
+  }, [persistToCloud]);
+
+  const updateLibraryItem = useCallback((id, updatedFields) => {
+    setLibrary((prev) => {
+      const updated = prev.map((item) => (item.id === id ? { ...item, ...updatedFields } : item));
+      persistToCloud({ library: updated });
+      return updated;
+    });
+  }, [persistToCloud]);
+
+  const deleteLibraryItem = useCallback((id) => {
+    setLibrary((prev) => {
+      const updated = prev.filter((item) => item.id !== id);
+      persistToCloud({ library: updated });
+      return updated;
+    });
+  }, [persistToCloud]);
+
   const value = {
     // Data
     articles,
@@ -613,6 +654,7 @@ export function DataProvider({ children }) {
     galleryCategories,
     memberSchools,
     team,
+    library,
     instagramReels,
     instagramProfile,
     siteSettings,
@@ -641,6 +683,10 @@ export function DataProvider({ children }) {
     addTeamMember,
     updateTeamMember,
     deleteTeamMember,
+
+    addLibraryItem,
+    updateLibraryItem,
+    deleteLibraryItem,
 
     addInstagramReel,
     updateInstagramReel,

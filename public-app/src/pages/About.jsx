@@ -1,5 +1,6 @@
 import { parseImageUrl } from '@shared/services/mediaHelper.js';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import {
   Users, Target, Heart, Award, BookOpen, Star,
@@ -39,7 +40,7 @@ const DIVISION_SHOWCASE = [
   {
     num: '01',
     key: 'SDM',
-    title: 'DIVISI SDM (SUMBER DAYA MANUSIA)',
+    title: 'Divisi Sumber Daya Manusia (SDM)',
     tag: 'DIVISI SDM',
     desc: 'Fokus pada pembinaan karakter, peningkatan kapasitas kader, regenerasi kepengurusan, serta penguatan soliditas anggota ROHIS se-Kabupaten Banyumas.',
     icon: Users,
@@ -56,8 +57,8 @@ const DIVISION_SHOWCASE = [
   {
     num: '02',
     key: 'Dakwah',
-    title: 'DIVISI DAKWAH',
-    tag: 'DIVISI Dakwah',
+    title: 'Divisi Syiar & Dakwah Islam',
+    tag: 'DIVISI DAKWAH',
     desc: 'Jantung gerakan dakwah Islam yang menyelenggarakan kajian keilmuan, pembinaan ruhiyah, serta syiar Islam yang rahmatan lil \'alamin bagi pelajar dan masyarakat.',
     icon: Flame,
     detailTitle: 'Divisi Dakwah',
@@ -73,8 +74,8 @@ const DIVISION_SHOWCASE = [
   {
     num: '03',
     key: 'Jurnalistik',
-    title: 'DIVISI JURNALISTIK',
-    tag: 'DIVISI Jurnalistik',
+    title: 'Divisi Media & Jurnalistik Kreatif',
+    tag: 'DIVISI JURNALISTIK',
     desc: 'Mengelola publikasi informasi, dokumentasi kegiatan, buletin dakwah, konten multimedia kreatif, dan syiar digital di era modern.',
     icon: Newspaper,
     detailTitle: 'Divisi Jurnalistik',
@@ -90,7 +91,7 @@ const DIVISION_SHOWCASE = [
   {
     num: '04',
     key: 'HUMAS',
-    title: 'DIVISI HUMAS (HUBUNGAN MASYARAKAT)',
+    title: 'Divisi Hubungan Masyarakat (HUMAS)',
     tag: 'DIVISI HUMAS',
     desc: 'Menjadi jembatan komunikasi, relasi, dan sinergi antara ROHIS sekolah, instansi pemerintah, lembaga keagamaan, serta masyarakat luas.',
     icon: Megaphone,
@@ -107,7 +108,7 @@ const DIVISION_SHOWCASE = [
   {
     num: '05',
     key: 'DANUS',
-    title: 'DIVISI DANUS (DANA USAHA)',
+    title: 'Divisi Dana Usaha (DANUS)',
     tag: 'DIVISI DANUS',
     desc: 'Membangun kemandirian finansial organisasi melalui kegiatan kewirausahaan halal, pengadaan merchandise resmi, kemitraan sponsorship, dan unit usaha produktif.',
     icon: Coins,
@@ -428,6 +429,8 @@ export default function About() {
     return list;
   }, [rawTeam]);
 
+  const [searchParams] = useSearchParams();
+
   // Division Filter & View States
   const [selectedDivision, setSelectedDivision] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
@@ -435,6 +438,26 @@ export default function About() {
 
   // Showcase Active Division Index (0: SDM, 1: Dakwah, 2: Jurnalistik, 3: HUMAS, 4: DANUS)
   const [activeShowcaseIdx, setActiveShowcaseIdx] = useState(1); // Default to Divisi Dakwah as in screenshot
+
+  // Support direct navigation from Beranda via ?div=SDM / ?div=Dakwah
+  useEffect(() => {
+    const divParam = searchParams.get('div');
+    if (divParam) {
+      const idx = DIVISION_SHOWCASE.findIndex(d =>
+        d.key.toLowerCase() === divParam.toLowerCase() ||
+        d.tag.toLowerCase().includes(divParam.toLowerCase()) ||
+        d.title.toLowerCase().includes(divParam.toLowerCase())
+      );
+      if (idx !== -1) {
+        setActiveShowcaseIdx(idx);
+        setSelectedDivision(DIVISION_SHOWCASE[idx].key);
+        setTimeout(() => {
+          const el = document.getElementById('program-divisi');
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
+    }
+  }, [searchParams]);
 
   // Calculate Member Counts per Division safely
   const divisionCounts = useMemo(() => {
@@ -825,17 +848,47 @@ export default function About() {
             </p>
           </div>
 
-          {/* Interactive 2-Column Explorer */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
-              gap: '2rem',
-              alignItems: 'start',
-            }}
-          >
-            {/* Left: 01 to 05 List Cards */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', minWidth: 0 }}>
+          {/* Interactive Responsive Explorer */}
+          <div className="showcase-grid-layout">
+            {/* Mobile: Sleek Horizontal Division Selector Tabs */}
+            <div className="showcase-mobile-tabs">
+              {DIVISION_SHOWCASE.map((item, idx) => {
+                const isActive = activeShowcaseIdx === idx;
+                return (
+                  <button
+                    key={item.num}
+                    onClick={() => setActiveShowcaseIdx(idx)}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.45rem',
+                      padding: '0.55rem 1rem',
+                      borderRadius: '9999px',
+                      border: isActive ? '1px solid #E6C587' : '1px solid rgba(255, 255, 255, 0.12)',
+                      background: isActive ? 'rgba(20, 56, 44, 0.95)' : 'rgba(10, 32, 24, 0.7)',
+                      color: isActive ? '#E6C587' : 'rgba(245, 242, 237, 0.75)',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      flexShrink: 0,
+                      fontSize: '0.85rem',
+                      fontWeight: 600,
+                      transition: 'all 0.2s ease',
+                      boxShadow: isActive ? '0 0 16px rgba(181, 141, 79, 0.25)' : 'none',
+                    }}
+                  >
+                    <span style={{
+                      fontSize: '0.75rem',
+                      fontWeight: 800,
+                      color: isActive ? 'var(--emerald-light)' : 'rgba(181, 141, 79, 0.8)',
+                    }}>{item.num}</span>
+                    <span>{item.key}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Desktop: 01 to 05 List Cards */}
+            <div className="showcase-desktop-list">
               {DIVISION_SHOWCASE.map((item, idx) => {
                 const isActive = activeShowcaseIdx === idx;
 
@@ -844,17 +897,16 @@ export default function About() {
                     key={item.num}
                     onClick={() => setActiveShowcaseIdx(idx)}
                     style={{
-                      background: isActive ? 'rgba(20, 56, 44, 0.9)' : 'rgba(10, 32, 24, 0.65)',
+                      background: isActive ? 'rgba(20, 56, 44, 0.95)' : 'rgba(10, 32, 24, 0.65)',
                       border: isActive ? '1px solid rgba(181, 141, 79, 0.75)' : '1px solid rgba(255, 255, 255, 0.08)',
                       borderRadius: '16px',
-                      padding: '1.15rem 1.25rem',
+                      padding: '1.25rem 1.5rem',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '1rem',
+                      gap: '1.25rem',
                       cursor: 'pointer',
                       transition: 'all 0.3s ease',
                       boxShadow: isActive ? '0 0 24px rgba(181, 141, 79, 0.16)' : 'none',
-                      boxSizing: 'border-box',
                     }}
                     onMouseEnter={e => {
                       if (!isActive) {
@@ -873,10 +925,10 @@ export default function About() {
                     <div
                       style={{
                         fontFamily: 'var(--font-heading)',
-                        fontSize: '1.5rem',
+                        fontSize: '1.65rem',
                         fontWeight: 800,
                         color: isActive ? '#E6C587' : 'rgba(181, 141, 79, 0.75)',
-                        minWidth: '2.2rem',
+                        minWidth: '2.5rem',
                         flexShrink: 0,
                         lineHeight: 1,
                       }}
@@ -892,29 +944,27 @@ export default function About() {
                           alignItems: 'center',
                           justifyContent: 'space-between',
                           gap: '0.5rem',
-                          flexWrap: 'wrap',
                         }}
                       >
                         <h4
                           style={{
-                            fontSize: '0.9rem',
+                            fontSize: '0.92rem',
                             fontWeight: 700,
                             color: 'var(--warm-alabaster)',
                             letterSpacing: '0.02em',
                             margin: 0,
-                            overflowWrap: 'break-word',
-                            wordBreak: 'break-word',
                           }}
                         >
                           {item.title}
                         </h4>
                         <span
                           style={{
-                            fontSize: '0.7rem',
+                            fontSize: '0.72rem',
                             color: '#E6C587',
                             fontWeight: 600,
                             letterSpacing: '0.04em',
                             textTransform: 'uppercase',
+                            flexShrink: 0,
                           }}
                         >
                           {item.tag}
@@ -927,8 +977,6 @@ export default function About() {
                           lineHeight: 1.55,
                           marginTop: '0.35rem',
                           margin: '0.35rem 0 0',
-                          overflowWrap: 'break-word',
-                          wordBreak: 'break-word',
                         }}
                       >
                         {item.desc}
@@ -944,10 +992,10 @@ export default function About() {
               })}
             </div>
 
-            {/* Right: Active Division Detail Panel */}
+            {/* Right: Active Division Detail Panel (Image 3) */}
             <div
               style={{
-                background: 'rgba(10, 32, 24, 0.8)',
+                background: 'rgba(10, 32, 24, 0.85)',
                 backdropFilter: 'blur(20px)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 borderRadius: '24px',
@@ -1089,7 +1137,7 @@ export default function About() {
                   e.currentTarget.style.boxShadow = 'none';
                 }}
               >
-                Silabus Lengkap Divisi Ini <ArrowRight size={16} />
+                Lihat Pengurus Divisi Ini <ArrowRight size={16} />
               </button>
             </div>
           </div>

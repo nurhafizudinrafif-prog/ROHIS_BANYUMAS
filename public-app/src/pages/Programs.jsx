@@ -9,7 +9,7 @@ const DIVISION_SHOWCASE = [
   {
     num: '01',
     key: 'SDM',
-    title: 'DIVISI SDM (SUMBER DAYA MANUSIA)',
+    title: 'Divisi Sumber Daya Manusia (SDM)',
     tag: 'DIVISI SDM',
     desc: 'Fokus pada pembinaan karakter, peningkatan kapasitas kader, regenerasi kepengurusan, serta penguatan soliditas anggota ROHIS se-Kabupaten Banyumas.',
     icon: Users,
@@ -26,8 +26,8 @@ const DIVISION_SHOWCASE = [
   {
     num: '02',
     key: 'Dakwah',
-    title: 'DIVISI DAKWAH',
-    tag: 'DIVISI Dakwah',
+    title: 'Divisi Syiar & Dakwah Islam',
+    tag: 'DIVISI DAKWAH',
     desc: 'Jantung gerakan dakwah Islam yang menyelenggarakan kajian keilmuan, pembinaan ruhiyah, serta syiar Islam yang rahmatan lil \'alamin bagi pelajar dan masyarakat.',
     icon: Flame,
     detailTitle: 'Divisi Dakwah',
@@ -43,8 +43,8 @@ const DIVISION_SHOWCASE = [
   {
     num: '03',
     key: 'Jurnalistik',
-    title: 'DIVISI JURNALISTIK',
-    tag: 'DIVISI Jurnalistik',
+    title: 'Divisi Media & Jurnalistik Kreatif',
+    tag: 'DIVISI JURNALISTIK',
     desc: 'Mengelola publikasi informasi, dokumentasi kegiatan, buletin dakwah, konten multimedia kreatif, dan syiar digital di era modern.',
     icon: Newspaper,
     detailTitle: 'Divisi Jurnalistik',
@@ -60,7 +60,7 @@ const DIVISION_SHOWCASE = [
   {
     num: '04',
     key: 'HUMAS',
-    title: 'DIVISI HUMAS (HUBUNGAN MASYARAKAT)',
+    title: 'Divisi Hubungan Masyarakat (HUMAS)',
     tag: 'DIVISI HUMAS',
     desc: 'Menjadi jembatan komunikasi, relasi, dan sinergi antara ROHIS sekolah, instansi pemerintah, lembaga keagamaan, serta masyarakat luas.',
     icon: Megaphone,
@@ -77,7 +77,7 @@ const DIVISION_SHOWCASE = [
   {
     num: '05',
     key: 'DANUS',
-    title: 'DIVISI DANUS (DANA USAHA)',
+    title: 'Divisi Dana Usaha (DANUS)',
     tag: 'DIVISI DANUS',
     desc: 'Membangun kemandirian finansial organisasi melalui kegiatan kewirausahaan halal, pengadaan merchandise resmi, kemitraan sponsorship, dan unit usaha produktif.',
     icon: Coins,
@@ -168,17 +168,47 @@ export default function Programs() {
         }}
       >
         <div className="container" style={{ maxWidth: 1200, margin: '0 auto' }}>
-          {/* Interactive 2-Column Explorer */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
-              gap: '2rem',
-              alignItems: 'start',
-            }}
-          >
-            {/* Left: 01 to 05 List Cards */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', minWidth: 0 }}>
+          {/* Interactive Responsive Explorer */}
+          <div className="showcase-grid-layout">
+            {/* Mobile: Sleek Horizontal Division Selector Tabs */}
+            <div className="showcase-mobile-tabs">
+              {DIVISION_SHOWCASE.map((item, idx) => {
+                const isActive = activeIdx === idx;
+                return (
+                  <button
+                    key={item.num}
+                    onClick={() => setActiveIdx(idx)}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.45rem',
+                      padding: '0.55rem 1rem',
+                      borderRadius: '9999px',
+                      border: isActive ? '1px solid #E6C587' : '1px solid rgba(255, 255, 255, 0.12)',
+                      background: isActive ? 'rgba(20, 56, 44, 0.95)' : 'rgba(10, 32, 24, 0.7)',
+                      color: isActive ? '#E6C587' : 'rgba(245, 242, 237, 0.75)',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      flexShrink: 0,
+                      fontSize: '0.85rem',
+                      fontWeight: 600,
+                      transition: 'all 0.2s ease',
+                      boxShadow: isActive ? '0 0 16px rgba(181, 141, 79, 0.25)' : 'none',
+                    }}
+                  >
+                    <span style={{
+                      fontSize: '0.75rem',
+                      fontWeight: 800,
+                      color: isActive ? 'var(--emerald-light)' : 'rgba(181, 141, 79, 0.8)',
+                    }}>{item.num}</span>
+                    <span>{item.key}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Desktop: 01 to 05 List Cards */}
+            <div className="showcase-desktop-list">
               {DIVISION_SHOWCASE.map((item, idx) => {
                 const isActive = activeIdx === idx;
 
@@ -187,17 +217,16 @@ export default function Programs() {
                     key={item.num}
                     onClick={() => setActiveIdx(idx)}
                     style={{
-                      background: isActive ? 'rgba(20, 56, 44, 0.9)' : 'rgba(10, 32, 24, 0.65)',
+                      background: isActive ? 'rgba(20, 56, 44, 0.95)' : 'rgba(10, 32, 24, 0.65)',
                       border: isActive ? '1px solid rgba(181, 141, 79, 0.75)' : '1px solid rgba(255, 255, 255, 0.08)',
                       borderRadius: '16px',
-                      padding: '1.15rem 1.25rem',
+                      padding: '1.25rem 1.5rem',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '1rem',
+                      gap: '1.25rem',
                       cursor: 'pointer',
                       transition: 'all 0.3s ease',
                       boxShadow: isActive ? '0 0 24px rgba(181, 141, 79, 0.16)' : 'none',
-                      boxSizing: 'border-box',
                     }}
                     onMouseEnter={e => {
                       if (!isActive) {
@@ -216,10 +245,10 @@ export default function Programs() {
                     <div
                       style={{
                         fontFamily: 'var(--font-heading)',
-                        fontSize: '1.5rem',
+                        fontSize: '1.65rem',
                         fontWeight: 800,
                         color: isActive ? '#E6C587' : 'rgba(181, 141, 79, 0.75)',
-                        minWidth: '2.2rem',
+                        minWidth: '2.5rem',
                         flexShrink: 0,
                         lineHeight: 1,
                       }}
@@ -235,29 +264,27 @@ export default function Programs() {
                           alignItems: 'center',
                           justifyContent: 'space-between',
                           gap: '0.5rem',
-                          flexWrap: 'wrap',
                         }}
                       >
                         <h4
                           style={{
-                            fontSize: '0.9rem',
+                            fontSize: '0.92rem',
                             fontWeight: 700,
                             color: 'var(--warm-alabaster)',
                             letterSpacing: '0.02em',
                             margin: 0,
-                            overflowWrap: 'break-word',
-                            wordBreak: 'break-word',
                           }}
                         >
                           {item.title}
                         </h4>
                         <span
                           style={{
-                            fontSize: '0.7rem',
+                            fontSize: '0.72rem',
                             color: '#E6C587',
                             fontWeight: 600,
                             letterSpacing: '0.04em',
                             textTransform: 'uppercase',
+                            flexShrink: 0,
                           }}
                         >
                           {item.tag}
@@ -270,8 +297,6 @@ export default function Programs() {
                           lineHeight: 1.55,
                           marginTop: '0.35rem',
                           margin: '0.35rem 0 0',
-                          overflowWrap: 'break-word',
-                          wordBreak: 'break-word',
                         }}
                       >
                         {item.desc}
@@ -399,7 +424,7 @@ export default function Programs() {
 
               {/* Action Button */}
               <Link
-                to="/about#pengurus"
+                to={`/about?div=${current.key}#pengurus`}
                 style={{
                   marginTop: '2rem',
                   display: 'inline-flex',
@@ -429,7 +454,7 @@ export default function Programs() {
                   e.currentTarget.style.boxShadow = 'none';
                 }}
               >
-                Silabus Lengkap Divisi Ini <ArrowRight size={16} />
+                Lihat Struktur & Pengurus Divisi Ini <ArrowRight size={16} />
               </Link>
             </div>
           </div>

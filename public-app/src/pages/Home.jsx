@@ -748,7 +748,12 @@ export default function Home() {
                     </span>
 
                     <h3 style={{ color: 'var(--warm-alabaster)', fontSize: '1.15rem', margin: '0.4rem 0 0.75rem', lineHeight: 1.3 }}>
-                      {div.title}
+                      <Link
+                        to={`/about?div=${div.division}#program-divisi`}
+                        style={{ color: 'inherit', textDecoration: 'none' }}
+                      >
+                        {div.title}
+                      </Link>
                     </h3>
 
                     <p style={{ color: 'rgba(245,242,237,0.65)', fontSize: '0.86rem', lineHeight: 1.6, marginBottom: '1.25rem' }}>
@@ -768,15 +773,18 @@ export default function Home() {
                   </div>
 
                   <div style={{ marginTop: '1.5rem', textAlign: 'right' }}>
-                    <Link to="/programs" style={{
-                      color: 'var(--emerald-light)',
-                      fontSize: '0.82rem',
-                      fontWeight: 600,
-                      textDecoration: 'none',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.3rem',
-                    }}>
+                    <Link
+                      to={`/about?div=${div.division}#program-divisi`}
+                      style={{
+                        color: 'var(--emerald-light)',
+                        fontSize: '0.82rem',
+                        fontWeight: 600,
+                        textDecoration: 'none',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.3rem',
+                      }}
+                    >
                       Detail Divisi <ArrowRight size={14} />
                     </Link>
                   </div>
@@ -786,8 +794,8 @@ export default function Home() {
           </div>
 
           <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
-            <Link to="/programs" className="btn btn-primary">
-              Pelajari Seluruh Program Kerja <ChevronRight size={18} />
+            <Link to="/about#program-divisi" className="btn btn-primary">
+              Pelajari Detail 5 Pilar Divisi <ChevronRight size={18} />
             </Link>
           </div>
         </div>
