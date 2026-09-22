@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { DataProvider } from './context/DataContext';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
@@ -32,45 +32,96 @@ function AdminRedirect() {
   );
 }
 
+// Automatically reset scroll or smoothly jump to anchor on page change
+function ScrollToTop() {
+  const { pathname, hash } = useLocation();
+
+  useEffect(() => {
+    if (hash) {
+      const id = hash.replace('#', '');
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [pathname, hash]);
+
+  return null;
+}
+
+// Smooth elegant page transition wrapper
+function PageTransitionWrapper({ children }) {
+  const location = useLocation();
+  const [navKey, setNavKey] = useState(location.pathname);
+  const [animating, setAnimating] = useState(false);
+
+  useEffect(() => {
+    setNavKey(location.pathname);
+    setAnimating(true);
+    const timer = setTimeout(() => setAnimating(false), 460);
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
+
+  return (
+    <>
+      {animating && <div className="route-progress-bar" />}
+      <div key={navKey} className="page-enter" style={{ minHeight: '100%' }}>
+        {children}
+      </div>
+    </>
+  );
+}
+
+function AppContent() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <ScrollToTop />
+      <Navbar />
+      <main style={{ flex: 1 }}>
+        <PageTransitionWrapper>
+          <Routes>
+            {/* Primary Routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/programs" element={<Programs />} />
+            <Route path="/articles" element={<Articles />} />
+            <Route path="/articles/:slug" element={<ArticleDetail />} />
+            <Route path="/events" element={<Events />} />
+            <Route path="/schools" element={<Schools />} />
+            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/consultation" element={<Consultation />} />
+            <Route path="/library" element={<Library />} />
+
+            {/* Backward-Compatible Indonesian URL Aliases */}
+            <Route path="/tentang" element={<About />} />
+            <Route path="/program" element={<Programs />} />
+            <Route path="/agenda" element={<Events />} />
+            <Route path="/artikel" element={<Articles />} />
+            <Route path="/artikel/:slug" element={<ArticleDetail />} />
+            <Route path="/rohis-anggota" element={<Schools />} />
+            <Route path="/galeri" element={<Gallery />} />
+            <Route path="/kontak" element={<Contact />} />
+            <Route path="/pendaftaran" element={<Contact />} />
+
+            {/* Admin Portal Redirect Routes */}
+            <Route path="/admin" element={<AdminRedirect />} />
+            <Route path="/login" element={<AdminRedirect />} />
+          </Routes>
+        </PageTransitionWrapper>
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
 export default function App() {
   return (
     <DataProvider>
       <Router>
-        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-          <Navbar />
-          <main style={{ flex: 1 }}>
-            <Routes>
-              {/* Primary Routes */}
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/programs" element={<Programs />} />
-              <Route path="/articles" element={<Articles />} />
-              <Route path="/articles/:slug" element={<ArticleDetail />} />
-              <Route path="/events" element={<Events />} />
-              <Route path="/schools" element={<Schools />} />
-              <Route path="/gallery" element={<Gallery />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/consultation" element={<Consultation />} />
-              <Route path="/library" element={<Library />} />
-
-              {/* Backward-Compatible Indonesian URL Aliases */}
-              <Route path="/tentang" element={<About />} />
-              <Route path="/program" element={<Programs />} />
-              <Route path="/agenda" element={<Events />} />
-              <Route path="/artikel" element={<Articles />} />
-              <Route path="/artikel/:slug" element={<ArticleDetail />} />
-              <Route path="/rohis-anggota" element={<Schools />} />
-              <Route path="/galeri" element={<Gallery />} />
-              <Route path="/kontak" element={<Contact />} />
-              <Route path="/pendaftaran" element={<Contact />} />
-
-              {/* Admin Portal Redirect Routes */}
-              <Route path="/admin" element={<AdminRedirect />} />
-              <Route path="/login" element={<AdminRedirect />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
+        <AppContent />
       </Router>
     </DataProvider>
   );

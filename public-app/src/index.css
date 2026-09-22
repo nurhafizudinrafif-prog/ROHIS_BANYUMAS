@@ -624,6 +624,52 @@ textarea.form-input {
 .delay-500 { animation-delay: 400ms; }
 
 /* ═══════════════════════════════════════════
+   Smooth Page Transition & Route Bar
+   ═══════════════════════════════════════════ */
+@keyframes pageEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: pageEnter 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+@keyframes routeProgressBar {
+  0% {
+    width: 0%;
+    opacity: 1;
+  }
+  65% {
+    width: 75%;
+    opacity: 1;
+  }
+  100% {
+    width: 100%;
+    opacity: 0;
+  }
+}
+
+.route-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--emerald) 0%, #E6C587 50%, var(--emerald-light) 100%);
+  z-index: 99999;
+  pointer-events: none;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.6), 0 0 6px rgba(230, 197, 135, 0.5);
+  animation: routeProgressBar 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ═══════════════════════════════════════════
    Loading Skeleton
    ═══════════════════════════════════════════ */
 .skeleton {
