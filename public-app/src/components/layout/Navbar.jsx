@@ -37,6 +37,8 @@ export default function Navbar() {
       top: 0,
       left: 0,
       right: 0,
+      width: '100%',
+      maxWidth: '100vw',
       zIndex: 1000,
       padding: scrolled ? '0.6rem 0' : '1rem 0',
       background: scrolled 
@@ -50,10 +52,11 @@ export default function Navbar() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        gap: '1rem',
+        gap: '0.75rem',
         maxWidth: 1200,
         margin: '0 auto',
-        padding: '0 1.5rem',
+        width: '100%',
+        boxSizing: 'border-box',
       }}>
         {/* Logo */}
         <Link to="/" style={{
@@ -143,7 +146,7 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Toggle */}
-        <button className="hide-desktop" onClick={() => setIsOpen(!isOpen)} style={{
+        <button className="hide-desktop" onClick={() => setIsOpen(!isOpen)} aria-label="Menu Navigasi" style={{
           background: 'rgba(255,255,255,0.1)',
           border: 'none',
           borderRadius: '10px',
@@ -153,6 +156,7 @@ export default function Navbar() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          flexShrink: 0,
         }}>
           {isOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
@@ -165,6 +169,9 @@ export default function Navbar() {
           top: '100%',
           left: 0,
           right: 0,
+          width: '100%',
+          maxWidth: '100vw',
+          boxSizing: 'border-box',
           background: 'rgba(13, 43, 34, 0.98)',
           backdropFilter: 'blur(24px)',
           padding: '1rem 1.5rem 1.5rem',

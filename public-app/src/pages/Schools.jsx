@@ -47,7 +47,7 @@ export default function Schools() {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.25rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))', gap: '1.25rem' }}>
             {filtered.map((school, i) => (
               <div key={school.id} className="animate-fade-in-up" style={{
                 animationDelay: `${i * 60}ms`, background: 'white', borderRadius: 'var(--radius-xl)',

@@ -167,18 +167,18 @@ export default function Programs() {
           padding: '4rem 0 6rem',
         }}
       >
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
+        <div className="container" style={{ maxWidth: 1200, margin: '0 auto' }}>
           {/* Interactive 2-Column Explorer */}
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
               gap: '2rem',
               alignItems: 'start',
             }}
           >
             {/* Left: 01 to 05 List Cards */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', minWidth: 0 }}>
               {DIVISION_SHOWCASE.map((item, idx) => {
                 const isActive = activeIdx === idx;
 
@@ -190,13 +190,14 @@ export default function Programs() {
                       background: isActive ? 'rgba(20, 56, 44, 0.9)' : 'rgba(10, 32, 24, 0.65)',
                       border: isActive ? '1px solid rgba(181, 141, 79, 0.75)' : '1px solid rgba(255, 255, 255, 0.08)',
                       borderRadius: '16px',
-                      padding: '1.25rem 1.5rem',
+                      padding: '1.15rem 1.25rem',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '1.25rem',
+                      gap: '1rem',
                       cursor: 'pointer',
                       transition: 'all 0.3s ease',
                       boxShadow: isActive ? '0 0 24px rgba(181, 141, 79, 0.16)' : 'none',
+                      boxSizing: 'border-box',
                     }}
                     onMouseEnter={e => {
                       if (!isActive) {
@@ -215,10 +216,10 @@ export default function Programs() {
                     <div
                       style={{
                         fontFamily: 'var(--font-heading)',
-                        fontSize: '1.65rem',
+                        fontSize: '1.5rem',
                         fontWeight: 800,
                         color: isActive ? '#E6C587' : 'rgba(181, 141, 79, 0.75)',
-                        minWidth: '2.5rem',
+                        minWidth: '2.2rem',
                         flexShrink: 0,
                         lineHeight: 1,
                       }}
@@ -227,7 +228,7 @@ export default function Programs() {
                     </div>
 
                     {/* Middle Text */}
-                    <div style={{ flex: 1 }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
                       <div
                         style={{
                           display: 'flex',
@@ -239,18 +240,20 @@ export default function Programs() {
                       >
                         <h4
                           style={{
-                            fontSize: '0.92rem',
+                            fontSize: '0.9rem',
                             fontWeight: 700,
                             color: 'var(--warm-alabaster)',
                             letterSpacing: '0.02em',
                             margin: 0,
+                            overflowWrap: 'break-word',
+                            wordBreak: 'break-word',
                           }}
                         >
                           {item.title}
                         </h4>
                         <span
                           style={{
-                            fontSize: '0.72rem',
+                            fontSize: '0.7rem',
                             color: '#E6C587',
                             fontWeight: 600,
                             letterSpacing: '0.04em',
@@ -267,6 +270,8 @@ export default function Programs() {
                           lineHeight: 1.55,
                           marginTop: '0.35rem',
                           margin: '0.35rem 0 0',
+                          overflowWrap: 'break-word',
+                          wordBreak: 'break-word',
                         }}
                       >
                         {item.desc}
@@ -289,10 +294,10 @@ export default function Programs() {
                 backdropFilter: 'blur(20px)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 borderRadius: '24px',
-                padding: '2.5rem 2rem',
+                padding: 'clamp(1.5rem, 4vw, 2.5rem) clamp(1.25rem, 3vw, 2rem)',
                 boxShadow: '0 16px 40px rgba(0, 0, 0, 0.3)',
-                position: 'sticky',
-                top: '6rem',
+                boxSizing: 'border-box',
+                minWidth: 0,
               }}
             >
               {/* Badge & Title Header */}

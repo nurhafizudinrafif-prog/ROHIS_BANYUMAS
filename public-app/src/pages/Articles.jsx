@@ -73,7 +73,7 @@ export default function Articles() {
           {/* Articles Grid */}
           {filtered.length > 0 ? (
             <div style={{
-              display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem',
+              display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '1.5rem',
             }}>
               {filtered.map((article, i) => (
                 <Link to={`/articles/${article.slug}`} key={article.id} className="card-editorial animate-fade-in-up"

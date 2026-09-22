@@ -31,7 +31,7 @@ export default function Contact() {
 
       <section className="section" style={{ background: 'var(--warm-alabaster)' }}>
         <div className="container" style={{ maxWidth: 1000, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '2.5rem' }}>
             {/* Contact Info */}
             <div>
               <h2 style={{ fontSize: '1.35rem', marginBottom: '1.5rem' }}>Informasi Kontak</h2>

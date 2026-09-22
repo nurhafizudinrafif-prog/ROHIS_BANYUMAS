@@ -349,10 +349,10 @@ export default function Home() {
           pointerEvents: 'none',
         }} />
 
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem', position: 'relative', zIndex: 1, width: '100%' }}>
+        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1, width: '100%' }}>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: heroPhotoSafe ? 'repeat(auto-fit, minmax(320px, 1fr))' : '1fr',
+            gridTemplateColumns: heroPhotoSafe ? 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))' : '1fr',
             gap: '3.5rem',
             alignItems: 'center',
           }}>
@@ -538,10 +538,10 @@ export default function Home() {
       {/* 3. TENTANG KAMI / ABOUT (DYNAMIC CMS TAB 2)         */}
       {/* ═══════════════════════════════════════════════════ */}
       <section className="section" style={{ background: 'var(--warm-alabaster)', padding: '5.5rem 0' }}>
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
+        <div className="container" style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: aboutPhotoSafe ? 'repeat(auto-fit, minmax(320px, 1fr))' : '1fr',
+            gridTemplateColumns: aboutPhotoSafe ? 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))' : '1fr',
             gap: '3.5rem',
             alignItems: 'center',
           }}>
@@ -909,7 +909,7 @@ export default function Home() {
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
             gap: '1.5rem',
           }}>
             {latestArticles.map((article, i) => (

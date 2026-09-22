@@ -241,7 +241,7 @@ export default function Gallery() {
 
       {/* ── CATEGORY FILTER BAR & MEDIA GRID ── */}
       <section className="section" style={{ background: 'var(--warm-alabaster)', minHeight: '60vh' }}>
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
+        <div className="container" style={{ maxWidth: 1200, margin: '0 auto' }}>
           
           {/* Sub-Filter: Categories */}
           {categories.length > 1 && (
@@ -252,6 +252,8 @@ export default function Gallery() {
                 gap: '0.5rem',
                 marginBottom: '2rem',
                 overflowX: 'auto',
+                width: '100%',
+                maxWidth: '100%',
                 paddingBottom: '0.5rem',
                 scrollbarWidth: 'none',
               }}
@@ -287,7 +289,7 @@ export default function Gallery() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
                 gap: '1.5rem',
               }}
             >

@@ -47,7 +47,7 @@ export default function Library() {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.25rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '1.25rem' }}>
             {filtered.map((item, i) => {
               const Icon = typeIcons[item.type] || FileText;
               const color = typeColors[item.type] || 'var(--emerald)';

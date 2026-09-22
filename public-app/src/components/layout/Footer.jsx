@@ -22,10 +22,10 @@ export default function Footer() {
       color: 'var(--warm-alabaster)',
       padding: '4rem 0 0',
     }}>
-      <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
+      <div className="container" style={{ maxWidth: 1200, margin: '0 auto' }}>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))',
           gap: '2.5rem',
           paddingBottom: '3rem',
           borderBottom: '1px solid rgba(245,242,237,0.08)',
