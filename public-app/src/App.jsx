@@ -32,7 +32,7 @@ function AdminRedirect() {
   );
 }
 
-// Smooth crossfade page transition wrapper
+// Silky smooth crossfade page transition - zero dark flash, zero layout jump
 function PageTransition({ children }) {
   const location = useLocation();
   const containerRef = useRef(null);
@@ -51,26 +51,27 @@ function PageTransition({ children }) {
     if (prevPathRef.current === location.pathname) return;
     prevPathRef.current = location.pathname;
 
+    // Immediately scroll to top before visual update
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+
     const el = containerRef.current;
     if (!el) return;
 
-    // Immediately set to slightly transparent and offset
-    el.style.opacity = '0.15';
-    el.style.transform = 'translateY(6px)';
+    // Gentle crossfade: opacity never drops low enough to cause a dark flash or reload feel
     el.style.transition = 'none';
+    el.style.opacity = '0.85';
+    el.style.transform = 'translateY(4px)';
 
-    // Force browser reflow to ensure the initial state is painted
-    el.offsetHeight;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (!el) return;
+        el.style.transition = 'opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1), transform 0.25s cubic-bezier(0.25, 1, 0.5, 1)';
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      });
+    });
 
-    // Then smoothly animate to fully visible
-    el.style.transition = 'opacity 0.42s cubic-bezier(0.25, 1, 0.5, 1), transform 0.42s cubic-bezier(0.25, 1, 0.5, 1)';
-    el.style.opacity = '1';
-    el.style.transform = 'translateY(0)';
-
-    // Scroll to top smoothly
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-
-    // Handle hash anchors
+    // Handle hash anchors smoothly
     if (location.hash) {
       const id = location.hash.replace('#', '');
       requestAnimationFrame(() => {
@@ -99,30 +100,11 @@ function PageTransition({ children }) {
   );
 }
 
-// Thin elegant progress indicator on route change
-function RouteProgressBar() {
-  const location = useLocation();
-  const [show, setShow] = useState(false);
-  const pathRef = useRef(location.pathname);
-
-  useEffect(() => {
-    if (pathRef.current === location.pathname) return;
-    pathRef.current = location.pathname;
-    setShow(true);
-    const timer = setTimeout(() => setShow(false), 500);
-    return () => clearTimeout(timer);
-  }, [location.pathname]);
-
-  if (!show) return null;
-  return <div className="route-progress-bar" />;
-}
-
 function AppContent() {
   const location = useLocation();
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'var(--deep-pine)' }}>
-      <RouteProgressBar />
       <Navbar />
       <main style={{ flex: 1, position: 'relative', background: 'var(--deep-pine)' }}>
         <PageTransition>

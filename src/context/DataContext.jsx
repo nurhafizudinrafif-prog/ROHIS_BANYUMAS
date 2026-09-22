@@ -86,15 +86,6 @@ export function DataProvider({ children }) {
     }
 
     syncFromCloud();
-
-    const interval = setInterval(syncFromCloud, 30000);
-    window.addEventListener('focus', syncFromCloud);
-
-    return () => {
-      isMounted = false;
-      clearInterval(interval);
-      window.removeEventListener('focus', syncFromCloud);
-    };
   }, []);
 
   // Save to localStorage whenever any state changes

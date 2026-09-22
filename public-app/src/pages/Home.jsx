@@ -409,9 +409,15 @@ export default function Home() {
                 <Link to={hero.btnPrimaryLink || '/about'} className="btn btn-primary btn-lg">
                   {hero.btnPrimaryText || 'Kenali ROHIS Lebih Dekat'} <ArrowRight size={18} />
                 </Link>
-                <a href={hero.btnSecondaryLink || '#program'} className="btn btn-glass btn-lg">
-                  {hero.btnSecondaryText || '5 Pilar Gerakan'}
-                </a>
+                {hero.btnSecondaryLink && hero.btnSecondaryLink.startsWith('#') ? (
+                  <a href={hero.btnSecondaryLink} className="btn btn-glass btn-lg">
+                    {hero.btnSecondaryText || '5 Pilar Gerakan'}
+                  </a>
+                ) : (
+                  <Link to={hero.btnSecondaryLink || '/programs'} className="btn btn-glass btn-lg">
+                    {hero.btnSecondaryText || '5 Pilar Gerakan'}
+                  </Link>
+                )}
               </div>
             </div>
 

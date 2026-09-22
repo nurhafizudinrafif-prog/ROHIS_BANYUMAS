@@ -1,5 +1,5 @@
 // DataContext - Centralized State Management with Cloud Sync
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { fetchData, saveData, fetchAllData } from '@shared/services/cloudSync.js';
 import { fallbackData } from '@shared/data/fallback.js';
 
@@ -36,31 +36,50 @@ export function normalizeTeam(raw) {
   return list;
 }
 
+function getInitialData() {
+  const getCached = (key, fallback) => {
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw) {
+        let parsed = JSON.parse(raw);
+        while (typeof parsed === 'string') {
+          try { parsed = JSON.parse(parsed); } catch { break; }
+        }
+        if (parsed) return parsed;
+      }
+    } catch {}
+    return fallback;
+  };
+
+  return {
+    home: getCached('rokaba:home', fallbackData['rokaba:home'] || null),
+    articles: getCached('rokaba:articles', fallbackData['rokaba:articles'] || []),
+    events: getCached('rokaba:events', fallbackData['rokaba:events'] || []),
+    schools: getCached('rokaba:schools', fallbackData['rokaba:schools'] || []),
+    gallery: getCached('rokaba:gallery', fallbackData['rokaba:gallery'] || []),
+    questions: getCached('rokaba:questions', fallbackData['rokaba:questions'] || []),
+    library: getCached('rokaba:library', fallbackData['rokaba:library'] || []),
+    team: normalizeTeam(getCached('rokaba:team', fallbackData['rokaba:team'])),
+    users: getCached('rokaba:users', fallbackData['rokaba:users'] || []),
+    auditLogs: getCached('rokaba:audit_logs', fallbackData['rokaba:audit_logs'] || []),
+  };
+}
+
 const DataContext = createContext(null);
 
 export function DataProvider({ children }) {
-  const [data, setData] = useState({
-    home: fallbackData['rokaba:home'] || null,
-    articles: fallbackData['rokaba:articles'] || [],
-    events: fallbackData['rokaba:events'] || [],
-    schools: fallbackData['rokaba:schools'] || [],
-    gallery: fallbackData['rokaba:gallery'] || [],
-    questions: fallbackData['rokaba:questions'] || [],
-    library: fallbackData['rokaba:library'] || [],
-    team: normalizeTeam(fallbackData['rokaba:team']),
-    users: fallbackData['rokaba:users'] || [],
-    auditLogs: fallbackData['rokaba:audit_logs'] || [],
-  });
-  const [loading, setLoading] = useState(false);
+  // 1. Initial State: Hydrate immediately from cache so page never flashes dummy data
+  const [data, setData] = useState(getInitialData);
   const [error, setError] = useState(null);
-  const [lastSync, setLastSync] = useState(null);
+  const lastSyncRef = useRef(null);
 
-  // Load all data on mount and sync (silent by default to avoid screen refresh flickers)
+  // Load all data silently in the background without screen refresh flickers
   const loadAllData = useCallback(async (isSilent = true) => {
-    if (!isSilent) setLoading(true);
     setError(null);
     try {
       const allData = await fetchAllData();
+      if (!allData || typeof allData !== 'object') return;
+
       const nextData = {
         home: allData['rokaba:home'] || fallbackData['rokaba:home'],
         articles: (Array.isArray(allData['rokaba:articles']) && allData['rokaba:articles'].length > 0)
@@ -91,24 +110,17 @@ export function DataProvider({ children }) {
         } catch (e) {}
         return nextData;
       });
-      setLastSync(new Date());
+      lastSyncRef.current = new Date();
     } catch (err) {
-      setError(err.message);
-      console.error('[DataContext] Failed to load data:', err);
-    } finally {
-      if (!isSilent) setLoading(false);
+      console.warn('[DataContext] Silent fetch warning:', err.message);
     }
   }, []);
 
   useEffect(() => {
-    // Initial fetch silently
+    // Initial silent sync on mount
     loadAllData(true);
 
-    const handleRevalidate = () => {
-      loadAllData(true);
-    };
-
-    // Instant sync when admin updates anything
+    // Instant sync when admin updates anything via BroadcastChannel
     let bc;
     try {
       bc = new BroadcastChannel('rokaba_realtime_sync');
@@ -117,16 +129,7 @@ export function DataProvider({ children }) {
       };
     } catch (e) {}
 
-    window.addEventListener('focus', handleRevalidate);
-    window.addEventListener('storage', handleRevalidate);
-
-    // Occasional silent background check (60 seconds) without any screen flashes
-    const interval = setInterval(() => loadAllData(true), 60000);
-
     return () => {
-      clearInterval(interval);
-      window.removeEventListener('focus', handleRevalidate);
-      window.removeEventListener('storage', handleRevalidate);
       if (bc) {
         try { bc.close(); } catch (e) {}
       }
@@ -137,7 +140,7 @@ export function DataProvider({ children }) {
   const refreshKey = useCallback(async (key) => {
     const value = await fetchData(`rokaba:${key}`);
     setData((prev) => ({ ...prev, [key]: value }));
-    setLastSync(new Date());
+    lastSyncRef.current = new Date();
     return value;
   }, []);
 
@@ -146,20 +149,21 @@ export function DataProvider({ children }) {
     const result = await saveData(`rokaba:${key}`, value);
     if (result.success) {
       setData((prev) => ({ ...prev, [key]: value }));
-      setLastSync(new Date());
+      lastSyncRef.current = new Date();
     }
     return result;
   }, []);
 
-  const value = {
+  // Memoize value to guarantee zero re-render cascades across consumer components
+  const value = useMemo(() => ({
     ...data,
-    loading,
+    loading: false,
     error,
-    lastSync,
+    lastSync: lastSyncRef.current,
     refreshKey,
     updateData,
     loadAllData,
-  };
+  }), [data, error, refreshKey, updateData, loadAllData]);
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
 }
