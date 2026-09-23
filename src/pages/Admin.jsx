@@ -81,15 +81,13 @@ export default function Admin() {
   // Authentication State
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return (
-      sessionStorage.getItem('rohis_admin_auth') === 'true' ||
-      localStorage.getItem('rohis_admin_auth') === 'true'
+      (() => { try { localStorage.removeItem('rohis_admin_auth'); return sessionStorage.getItem('rohis_admin_auth') === 'true'; } catch { return false; } })()
     );
   });
 
   const [loginUsername, setLoginUsername] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState('');
 
   // Dashboard Active Tab
@@ -578,6 +576,7 @@ export default function Admin() {
                       value={loginPassword}
                       onChange={(e) => setLoginPassword(e.target.value)}
                       placeholder="Masukkan password"
+                      autoComplete="current-password"
                       required
                     />
                     <button
@@ -591,16 +590,7 @@ export default function Admin() {
                   </div>
                 </div>
 
-                <div className="login-options-row">
-                  <label className="login-checkbox">
-                    <input
-                      type="checkbox"
-                      checked={rememberMe}
-                      onChange={(e) => setRememberMe(e.target.checked)}
-                    />
-                    <span>Ingat saya di perangkat ini</span>
-                  </label>
-                </div>
+
 
                 <button type="submit" className="btn btn-primary btn-lg btn-login">
                   <ShieldCheck size={18} /> Masuk ke Dashboard
