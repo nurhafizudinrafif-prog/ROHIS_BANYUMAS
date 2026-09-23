@@ -33,22 +33,24 @@ export default function AdminHomeCMS({
   const [localPrograms, setLocalPrograms] = useState(() => (programs && programs.length > 0 ? programs : defaultPrograms));
   const [activeSubTab, setActiveSubTab] = useState('hero'); // 'hero' | 'about' | 'programs' | 'timeline' | 'stats' | 'closing'
   const [isSaving, setIsSaving] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
 
-  // Sync if parent updates
+  // Sync from parent ONLY if user does not have active unsaved edits
   useEffect(() => {
-    if (homeContent) {
+    if (homeContent && !isDirty) {
       setFormData(homeContent);
     }
-  }, [homeContent]);
+  }, [homeContent, isDirty]);
 
   useEffect(() => {
-    if (programs && programs.length > 0) {
+    if (programs && programs.length > 0 && !isDirty) {
       setLocalPrograms(programs);
     }
-  }, [programs]);
+  }, [programs, isDirty]);
 
   // Nested field updater helper
   const updateHero = (field, val) => {
+    setIsDirty(true);
     setFormData((prev) => ({
       ...prev,
       hero: { ...prev.hero, [field]: val },
@@ -56,6 +58,7 @@ export default function AdminHomeCMS({
   };
 
   const updateAbout = (field, val) => {
+    setIsDirty(true);
     setFormData((prev) => ({
       ...prev,
       about: { ...prev.about, [field]: val },
@@ -63,6 +66,7 @@ export default function AdminHomeCMS({
   };
 
   const updateClosing = (field, val) => {
+    setIsDirty(true);
     setFormData((prev) => ({
       ...prev,
       closing: { ...prev.closing, [field]: val },
@@ -70,6 +74,7 @@ export default function AdminHomeCMS({
   };
 
   const updateStat = (index, field, val) => {
+    setIsDirty(true);
     setFormData((prev) => {
       const newStats = [...(prev.stats || [])];
       newStats[index] = { ...newStats[index], [field]: val };
@@ -79,6 +84,7 @@ export default function AdminHomeCMS({
 
   // Timeline handlers
   const handleAddTimeline = () => {
+    setIsDirty(true);
     const newId = `tl-${Date.now()}`;
     const newMilestone = {
       id: newId,
@@ -95,6 +101,7 @@ export default function AdminHomeCMS({
   };
 
   const updateTimelineItem = (index, field, val) => {
+    setIsDirty(true);
     setFormData((prev) => {
       const newTl = [...(prev.timeline || [])];
       newTl[index] = { ...newTl[index], [field]: val };
@@ -104,6 +111,7 @@ export default function AdminHomeCMS({
 
   const handleDeleteTimeline = (index) => {
     if (window.confirm('Yakin ingin menghapus jejak langkah ini?')) {
+      setIsDirty(true);
       setFormData((prev) => {
         const newTl = (prev.timeline || []).filter((_, i) => i !== index);
         return { ...prev, timeline: newTl };
@@ -113,6 +121,7 @@ export default function AdminHomeCMS({
 
   // Program / Divisi handlers
   const updateProgramField = (pIndex, field, val) => {
+    setIsDirty(true);
     setLocalPrograms((prev) => {
       const updated = [...prev];
       updated[pIndex] = { ...updated[pIndex], [field]: val };
@@ -121,6 +130,7 @@ export default function AdminHomeCMS({
   };
 
   const updateProgramDetailItem = (pIndex, dIndex, val) => {
+    setIsDirty(true);
     setLocalPrograms((prev) => {
       const updated = [...prev];
       const details = [...(updated[pIndex].details || [])];
@@ -131,6 +141,7 @@ export default function AdminHomeCMS({
   };
 
   const addProgramDetailItem = (pIndex) => {
+    setIsDirty(true);
     setLocalPrograms((prev) => {
       const updated = [...prev];
       const details = [...(updated[pIndex].details || []), 'Program kerja baru...'];
@@ -140,6 +151,7 @@ export default function AdminHomeCMS({
   };
 
   const removeProgramDetailItem = (pIndex, dIndex) => {
+    setIsDirty(true);
     setLocalPrograms((prev) => {
       const updated = [...prev];
       const details = (updated[pIndex].details || []).filter((_, i) => i !== dIndex);
@@ -166,6 +178,7 @@ export default function AdminHomeCMS({
         homeContent: formData,
         programs: localPrograms,
       });
+      setIsDirty(false);
 
       if (showToast) {
         showToast('Seluruh teks dan foto Beranda berhasil disimpan ke Cloud & langsung tayang!', 'success');
@@ -177,6 +190,16 @@ export default function AdminHomeCMS({
       }
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  // Discard Unsaved Changes
+  const handleReset = () => {
+    if (window.confirm('Batalkan seluruh perubahan yang belum disimpan dan kembalikan ke data tersimpan?')) {
+      setFormData(homeContent || initialHomeContent);
+      setLocalPrograms(programs && programs.length > 0 ? programs : defaultPrograms);
+      setIsDirty(false);
+      if (showToast) showToast('Perubahan dibatalkan.', 'info');
     }
   };
 
@@ -218,6 +241,23 @@ export default function AdminHomeCMS({
         </div>
 
         <div className="home-cms-top-actions">
+          {isDirty && (
+            <span style={{
+              fontSize: '0.8rem',
+              fontWeight: 600,
+              color: '#F59E0B',
+              background: 'rgba(245, 158, 11, 0.12)',
+              padding: '0.35rem 0.75rem',
+              borderRadius: '9999px',
+              border: '1px solid rgba(245, 158, 11, 0.3)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+            }}>
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#F59E0B', display: 'inline-block' }} />
+              Ada perubahan belum disimpan
+            </span>
+          )}
           <a
             href="https://www.rohis-banyumas.web.id/"
             target="_blank"
@@ -226,6 +266,17 @@ export default function AdminHomeCMS({
           >
             <ExternalLink size={14} /> Lihat Beranda Publik
           </a>
+          {isDirty && (
+            <button
+              type="button"
+              className="btn btn-outline btn-sm"
+              onClick={handleReset}
+              disabled={isSaving}
+              style={{ color: '#EF4444', borderColor: 'rgba(239, 68, 68, 0.35)' }}
+            >
+              <RotateCcw size={14} /> Batalkan
+            </button>
+          )}
           <button
             type="button"
             className="btn btn-primary btn-sm btn-save-master"

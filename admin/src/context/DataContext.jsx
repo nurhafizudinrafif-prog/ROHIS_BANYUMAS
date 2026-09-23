@@ -98,60 +98,55 @@ export function DataProvider({ children }) {
     }
   }, [articles, events, galleryItems, memberSchools, team, library, instagramReels, instagramProfile, siteSettings, homeContent, programs]);
 
-  // Sync from Upstash Cloud Database on load, periodically, and on tab focus
-  useEffect(() => {
-    let isMounted = true;
-    async function syncFromCloud() {
-      try {
-        setSyncStatus('syncing');
-        const cloudData = await fetchCloudCMSData();
-        if (cloudData && isMounted) {
-          if (cloudData.articles) setArticles(cloudData.articles);
-          if (cloudData.events) setEvents(cloudData.events);
-          if (cloudData.galleryItems) setGalleryItems(cloudData.galleryItems);
-          if (cloudData.memberSchools) setMemberSchools(cloudData.memberSchools);
-          if (cloudData.team) setTeam(cloudData.team);
-          if (cloudData.library && Array.isArray(cloudData.library)) setLibrary(cloudData.library);
-          if (cloudData.homeContent) setHomeContent(cloudData.homeContent);
-          if (cloudData.programs) setPrograms(cloudData.programs);
-          if (cloudData.instagramLivePosts && cloudData.instagramLivePosts.length > 0) {
-            setInstagramReels(cloudData.instagramLivePosts);
-          } else if (cloudData.instagramReels) {
-            setInstagramReels(cloudData.instagramReels);
-          }
-          if (cloudData.instagramProfile) setInstagramProfile(cloudData.instagramProfile);
-          if (cloudData.siteSettings) {
-            const cloudSettings = { ...cloudData.siteSettings };
-            if (cloudSettings.adminUsername === 'admin') cloudSettings.adminUsername = 'rohis banyumas';
-            if (cloudSettings.adminPassword === 'rohisbanyumas2026') cloudSettings.adminPassword = 'rbk banyumas';
-            setSiteSettings((prev) => ({ ...prev, ...cloudSettings }));
-          }
-          setLastCloudSync(new Date());
-          setSyncStatus('saved');
-        } else {
-          setSyncStatus('idle');
+  // Pull latest data from Upstash Cloud Database (called on initial mount or manual refresh)
+  const syncFromCloud = useCallback(async () => {
+    try {
+      setSyncStatus('syncing');
+      const cloudData = await fetchCloudCMSData();
+      if (cloudData) {
+        if (cloudData.articles) setArticles(cloudData.articles);
+        if (cloudData.events) setEvents(cloudData.events);
+        if (cloudData.galleryItems) setGalleryItems(cloudData.galleryItems);
+        if (cloudData.memberSchools) setMemberSchools(cloudData.memberSchools);
+        if (cloudData.team) setTeam(cloudData.team);
+        if (cloudData.library && Array.isArray(cloudData.library)) setLibrary(cloudData.library);
+        if (cloudData.homeContent) setHomeContent(cloudData.homeContent);
+        if (cloudData.programs) setPrograms(cloudData.programs);
+        if (cloudData.instagramLivePosts && cloudData.instagramLivePosts.length > 0) {
+          setInstagramReels(cloudData.instagramLivePosts);
+        } else if (cloudData.instagramReels) {
+          setInstagramReels(cloudData.instagramReels);
         }
-      } catch (err) {
-        console.warn('Sync from cloud error:', err);
-        setSyncStatus('error');
-      } finally {
-        if (isMounted) setIsInitialLoadDone(true);
+        if (cloudData.instagramProfile) setInstagramProfile(cloudData.instagramProfile);
+        if (cloudData.siteSettings) {
+          const cloudSettings = { ...cloudData.siteSettings };
+          if (cloudSettings.adminUsername === 'admin') cloudSettings.adminUsername = 'rohis banyumas';
+          if (cloudSettings.adminPassword === 'rohisbanyumas2026') cloudSettings.adminPassword = 'rbk banyumas';
+          setSiteSettings((prev) => ({ ...prev, ...cloudSettings }));
+        }
+        setLastCloudSync(new Date());
+        setSyncStatus('saved');
+        return true;
+      } else {
+        setSyncStatus('idle');
+        return false;
       }
+    } catch (err) {
+      console.warn('Sync from cloud error:', err);
+      setSyncStatus('error');
+      return false;
+    } finally {
+      setIsInitialLoadDone(true);
     }
-
-    syncFromCloud();
-
-    const interval = setInterval(syncFromCloud, 30000);
-    window.addEventListener('focus', syncFromCloud);
-
-    return () => {
-      isMounted = false;
-      clearInterval(interval);
-      window.removeEventListener('focus', syncFromCloud);
-    };
   }, []);
 
-  // Save to localStorage whenever any state changes & auto-sync to cloud with debouncing
+  // Sync from Upstash Cloud Database ONCE on initial load.
+  // Never auto-poll or refetch on window focus to prevent interrupting active admin edits.
+  useEffect(() => {
+    syncFromCloud();
+  }, [syncFromCloud]);
+
+  // Maintain local offline storage cache whenever state updates
   useEffect(() => {
     try {
       const payload = {
@@ -169,25 +164,10 @@ export function DataProvider({ children }) {
         savedAt: new Date().toISOString(),
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-
-      if (isInitialLoadDone) {
-        const timer = setTimeout(() => {
-          setSyncStatus('syncing');
-          saveCloudCMSData(payload).then((ok) => {
-            if (ok) {
-              setSyncStatus('saved');
-              setLastCloudSync(new Date());
-            } else {
-              setSyncStatus('error');
-            }
-          });
-        }, 800);
-        return () => clearTimeout(timer);
-      }
     } catch (err) {
       console.error('Failed to save to localStorage:', err);
     }
-  }, [articles, events, galleryItems, memberSchools, team, library, instagramReels, instagramProfile, siteSettings, homeContent, programs, isInitialLoadDone]);
+  }, [articles, events, galleryItems, memberSchools, team, library, instagramReels, instagramProfile, siteSettings, homeContent, programs]);
 
   // Synchronize across open browser tabs
   useEffect(() => {
@@ -702,6 +682,7 @@ export function DataProvider({ children }) {
     syncStatus,
     lastCloudSync,
     syncNow,
+    refreshFromCloud: syncFromCloud,
     resetToDefault,
     exportBackup,
     importBackup,

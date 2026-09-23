@@ -149,10 +149,16 @@ export default function AdminDashboard() {
     instagramUrl: siteSettings.instagramUrl || '',
     youtubeUrl: siteSettings.youtubeUrl || '',
   });
+  const [isSettingsDirty, setIsSettingsDirty] = useState(false);
 
-  // Keep settings form in sync when siteSettings change
+  const handleSettingsChange = (field, value) => {
+    setIsSettingsDirty(true);
+    setSettingsForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  // Keep settings form in sync when siteSettings change (only if user hasn't made unsaved edits)
   useEffect(() => {
-    if (siteSettings) {
+    if (siteSettings && !isSettingsDirty) {
       setSettingsForm((prev) => ({
         ...prev,
         adminUsername: siteSettings.adminUsername || 'rohis banyumas',
@@ -167,7 +173,7 @@ export default function AdminDashboard() {
         youtubeUrl: siteSettings.youtubeUrl || prev.youtubeUrl || '',
       }));
     }
-  }, [siteSettings]);
+  }, [siteSettings, isSettingsDirty]);
 
   // Handle Login
   const handleLogin = (e) => {
@@ -483,6 +489,7 @@ export default function AdminDashboard() {
   const handleSaveSettings = (e) => {
     e.preventDefault();
     updateSettings(settingsForm);
+    setIsSettingsDirty(false);
     showToast('Pengaturan website dan kredensial admin berhasil disimpan!');
   };
 
@@ -2057,9 +2064,7 @@ export default function AdminDashboard() {
                           type="text"
                           className="form-input"
                           value={settingsForm.adminUsername}
-                          onChange={(e) =>
-                            setSettingsForm({ ...settingsForm, adminUsername: e.target.value })
-                          }
+                          onChange={(e) => handleSettingsChange('adminUsername', e.target.value)}
                           required
                         />
                       </div>
@@ -2069,9 +2074,7 @@ export default function AdminDashboard() {
                           type="text"
                           className="form-input"
                           value={settingsForm.adminPassword}
-                          onChange={(e) =>
-                            setSettingsForm({ ...settingsForm, adminPassword: e.target.value })
-                          }
+                          onChange={(e) => handleSettingsChange('adminPassword', e.target.value)}
                           required
                         />
                       </div>
@@ -2084,9 +2087,7 @@ export default function AdminDashboard() {
                           type="text"
                           className="form-input"
                           value={settingsForm.orgName}
-                          onChange={(e) =>
-                            setSettingsForm({ ...settingsForm, orgName: e.target.value })
-                          }
+                          onChange={(e) => handleSettingsChange('orgName', e.target.value)}
                           placeholder="Organisasi ROHIS Kabupaten Banyumas"
                         />
                       </div>
@@ -2096,9 +2097,7 @@ export default function AdminDashboard() {
                           type="text"
                           className="form-input"
                           value={settingsForm.period}
-                          onChange={(e) =>
-                            setSettingsForm({ ...settingsForm, period: e.target.value })
-                          }
+                          onChange={(e) => handleSettingsChange('period', e.target.value)}
                           placeholder="Contoh: 2024–2025"
                         />
                       </div>
@@ -2111,9 +2110,7 @@ export default function AdminDashboard() {
                           type="email"
                           className="form-input"
                           value={settingsForm.email}
-                          onChange={(e) =>
-                            setSettingsForm({ ...settingsForm, email: e.target.value })
-                          }
+                          onChange={(e) => handleSettingsChange('email', e.target.value)}
                         />
                       </div>
                       <div className="form-group">
@@ -2122,9 +2119,7 @@ export default function AdminDashboard() {
                           type="text"
                           className="form-input"
                           value={settingsForm.whatsapp}
-                          onChange={(e) =>
-                            setSettingsForm({ ...settingsForm, whatsapp: e.target.value })
-                          }
+                          onChange={(e) => handleSettingsChange('whatsapp', e.target.value)}
                         />
                       </div>
                     </div>
@@ -2135,9 +2130,7 @@ export default function AdminDashboard() {
                         type="text"
                         className="form-input"
                         value={settingsForm.address}
-                        onChange={(e) =>
-                          setSettingsForm({ ...settingsForm, address: e.target.value })
-                        }
+                        onChange={(e) => handleSettingsChange('address', e.target.value)}
                       />
                     </div>
 
@@ -2148,9 +2141,7 @@ export default function AdminDashboard() {
                           type="url"
                           className="form-input"
                           value={settingsForm.instagramUrl}
-                          onChange={(e) =>
-                            setSettingsForm({ ...settingsForm, instagramUrl: e.target.value })
-                          }
+                          onChange={(e) => handleSettingsChange('instagramUrl', e.target.value)}
                         />
                       </div>
                       <div className="form-group">
@@ -2159,9 +2150,7 @@ export default function AdminDashboard() {
                           type="url"
                           className="form-input"
                           value={settingsForm.youtubeUrl}
-                          onChange={(e) =>
-                            setSettingsForm({ ...settingsForm, youtubeUrl: e.target.value })
-                          }
+                          onChange={(e) => handleSettingsChange('youtubeUrl', e.target.value)}
                         />
                       </div>
                     </div>
