@@ -613,66 +613,7 @@ export default function AdminDashboard() {
                 </div>
               )}
 
-              {/* Box Bantuan Kredensial Login */}
-              <div
-                style={{
-                  background: 'rgba(212, 160, 23, 0.08)',
-                  border: '1px solid rgba(212, 160, 23, 0.35)',
-                  borderRadius: '12px',
-                  padding: '1.1rem',
-                  marginBottom: '1.25rem',
-                  fontSize: '0.88rem',
-                }}
-              >
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    marginBottom: '0.6rem',
-                    flexWrap: 'wrap',
-                    gap: '0.5rem',
-                  }}
-                >
-                  <strong
-                    style={{
-                      color: 'var(--gold-400, #e0b042)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      fontSize: '0.92rem',
-                    }}
-                  >
-                    🔑 Kredensial Resmi Admin:
-                  </strong>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setLoginUsername('rohis banyumas');
-                      setLoginPassword('rbk banyumas');
-                    }}
-                    className="btn btn-sm btn-gold"
-                    style={{
-                      padding: '0.35rem 0.75rem',
-                      fontSize: '0.8rem',
-                      cursor: 'pointer',
-                      borderRadius: '6px',
-                    }}
-                  >
-                    ⚡ Isi Kredensial Otomatis
-                  </button>
-                </div>
-                <div style={{ color: 'rgba(255,255,255,0.85)', lineHeight: 1.6 }}>
-                  <div>
-                    Username: <strong style={{ color: '#5eead4', fontFamily: 'monospace' }}>rohis banyumas</strong>{' '}
-                    <span style={{ opacity: 0.7 }}>(atau <code>admin</code>)</span>
-                  </div>
-                  <div>
-                    Password: <strong style={{ color: '#5eead4', fontFamily: 'monospace' }}>rbk banyumas</strong>{' '}
-                    <span style={{ opacity: 0.7 }}>(atau <code>admin</code>)</span>
-                  </div>
-                </div>
-              </div>
+
 
               <form onSubmit={handleLogin} className="admin-login-form">
                 <div className="form-group">
