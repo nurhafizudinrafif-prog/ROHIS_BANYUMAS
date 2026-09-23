@@ -1,4 +1,16 @@
 {
+  "redirects": [
+    {
+      "source": "/tentang",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/tentang/",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/robots.txt",

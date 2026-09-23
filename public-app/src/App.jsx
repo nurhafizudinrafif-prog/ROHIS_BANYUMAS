@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { DataProvider } from './context/DataContext';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
@@ -74,7 +74,7 @@ function AppContent() {
           <Route path="/library" element={<Library />} />
 
           {/* Backward-Compatible Indonesian URL Aliases */}
-          <Route path="/tentang" element={<About />} />
+          <Route path="/tentang" element={<Navigate to="/" replace />} />
           <Route path="/program" element={<Programs />} />
           <Route path="/agenda" element={<Events />} />
           <Route path="/artikel" element={<Articles />} />
