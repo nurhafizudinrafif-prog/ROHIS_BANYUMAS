@@ -128,10 +128,17 @@
   cursor: pointer;
 }
 
+.admin-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
 .btn-login {
   width: 100%;
   justify-content: center;
   gap: 0.5rem;
+  margin-top: 0.75rem;
 }
 
 .admin-login-footer {

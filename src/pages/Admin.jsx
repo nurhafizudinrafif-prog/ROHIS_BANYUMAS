@@ -592,7 +592,7 @@ export default function Admin() {
 
 
 
-                <button type="submit" className="btn btn-primary btn-lg btn-login">
+                <button type="submit" className="btn btn-primary btn-lg btn-login" style={{ marginTop: '0.75rem' }}>
                   <ShieldCheck size={18} /> Masuk ke Dashboard
                 </button>
               </form>
