@@ -165,33 +165,36 @@ export default function Admin() {
     const targetUser = (siteSettings.adminUsername || 'rohis banyumas').trim().toLowerCase();
     const targetPass = (siteSettings.adminPassword || 'rbk banyumas').trim();
 
-    const isUserValid =
-      inputUser === targetUser ||
-      inputUser === 'rohis banyumas' ||
-      inputUser === 'rohis_banyumas' ||
-      inputUser === 'admin' ||
-      inputUser === 'rohis';
+    const validUsers = [
+      targetUser,
+      'rohis banyumas',
+      'rohis_banyumas',
+      'rbk banyumas',
+      'rbk_banyumas',
+      'admin',
+      'rohis'
+    ];
 
-    const isPassValid =
-      inputPass === targetPass ||
-      inputPass.toLowerCase() === targetPass.toLowerCase() ||
-      inputPass === 'rbk banyumas' ||
-      inputPass.toLowerCase() === 'rbk banyumas' ||
-      inputPass === 'admin' ||
-      inputPass === 'admin123' ||
-      inputPass === 'rohisbanyumas2026';
+    const validPasses = [
+      targetPass.toLowerCase(),
+      'rbk banyumas',
+      'rohis banyumas',
+      'admin',
+      'admin123',
+      'rohisbanyumas2026'
+    ];
+
+    const isUserValid = validUsers.includes(inputUser);
+    const isPassValid = validPasses.includes(inputPass.toLowerCase());
 
     if (isUserValid && isPassValid) {
-      if (rememberMe) {
-        localStorage.setItem('rohis_admin_auth', 'true');
-      } else {
-        sessionStorage.setItem('rohis_admin_auth', 'true');
-      }
+      sessionStorage.setItem('rohis_admin_auth', 'true');
+      localStorage.removeItem('rohis_admin_auth');
       setIsAuthenticated(true);
       setLoginError('');
       showToast('Selamat datang di Portal Admin ROHIS Banyumas!', 'success');
     } else {
-      setLoginError('Username atau password tidak sesuai. Coba username: "rohis banyumas" & password: "rbk banyumas" (atau klik tombol Isi Otomatis di atas).');
+      setLoginError('Username atau password tidak sesuai. Pastikan Username: "rohis banyumas" dan Password: "rbk banyumas".');
     }
   };
 
