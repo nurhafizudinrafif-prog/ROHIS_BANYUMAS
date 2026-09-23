@@ -598,9 +598,9 @@ export default function Admin() {
               </form>
 
               <div className="admin-login-footer">
-                <Link to="/" className="btn-back-home">
+                <a href="https://www.rohis-banyumas.web.id/" className="btn-back-home">
                   &larr; Kembali ke Website Publik
-                </Link>
+                </a>
               </div>
             </div>
           </div>
