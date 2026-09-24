@@ -38,7 +38,7 @@ export default function App() {
               <Route path="/library" element={<Library />} />
 
               {/* Backward-Compatible Indonesian URL Aliases */}
-              <Route path="/tentang" element={<Navigate to="/" replace />} />
+              <Route path="/tentang" element={<Navigate to="/about" replace />} />
               <Route path="/program" element={<Programs />} />
               <Route path="/agenda" element={<Events />} />
               <Route path="/artikel" element={<Articles />} />

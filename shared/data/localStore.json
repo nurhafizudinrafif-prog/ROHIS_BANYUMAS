@@ -683,7 +683,17 @@
       "lastLogin": null
     }
   ],
-  "rokaba:audit_logs": [],
+  "rokaba:audit_logs": [
+    {
+      "id": "log-1790263498247",
+      "timestamp": "2026-09-24T15:24:58.247Z",
+      "userId": "user-001",
+      "username": "admin_rokaba",
+      "action": "UPDATE",
+      "module": "questions",
+      "detail": "Published Q&A"
+    }
+  ],
   "rokaba:team": {
     "bph": [
       {

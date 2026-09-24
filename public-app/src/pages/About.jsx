@@ -196,7 +196,7 @@ const DIVISIONS = [
  * Normalizes member division to match division id
  */
 function getMemberDivisionId(member) {
-  const div = (member?.division || '').toLowerCase();
+  const div = (member?.division || member?.groupKey || member?.groupName || '').toLowerCase();
   if (div.includes('bph')) return 'BPH';
   if (div.includes('sdm')) return 'SDM';
   if (div.includes('dakwah')) return 'Dakwah';
@@ -406,6 +406,37 @@ function MemberCard({ member, index }) {
 export default function About() {
   const { team } = useData();
 
+  // Normalize team data from both object schema ({ bph: [], divisions: [] }) and flat array
+  const teamList = useMemo(() => {
+    if (!team) return [];
+    if (Array.isArray(team)) return team;
+    if (typeof team === 'object') {
+      const list = [];
+      if (Array.isArray(team.bph)) {
+        team.bph.forEach(m => list.push({
+          ...m,
+          division: m.division || 'BPH',
+          groupKey: 'bph',
+          groupName: 'Badan Pengurus Harian (BPH)'
+        }));
+      }
+      if (Array.isArray(team.divisions)) {
+        team.divisions.forEach(div => {
+          (div.members || []).forEach(m => {
+            list.push({
+              ...m,
+              division: m.division || div.shortName || div.name || 'Divisi',
+              groupKey: (div.shortName || div.id || '').toLowerCase(),
+              groupName: div.name
+            });
+          });
+        });
+      }
+      return list;
+    }
+    return [];
+  }, [team]);
+
   // Division Filter & View States
   const [selectedDivision, setSelectedDivision] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
@@ -416,12 +447,12 @@ export default function About() {
 
   // Calculate Member Counts per Division
   const divisionCounts = useMemo(() => {
-    const counts = { ALL: team.length };
+    const counts = { ALL: teamList.length };
     DIVISIONS.slice(1).forEach(div => {
-      counts[div.id] = team.filter(m => getMemberDivisionId(m) === div.id).length;
+      counts[div.id] = teamList.filter(m => getMemberDivisionId(m) === div.id).length;
     });
     return counts;
-  }, [team]);
+  }, [teamList]);
 
   // Active Division Meta for Pengurus
   const activeDivMeta = useMemo(() => {
@@ -430,7 +461,7 @@ export default function About() {
 
   // Filtered List for Pengurus
   const filteredTeam = useMemo(() => {
-    return team.filter(member => {
+    return teamList.filter(member => {
       const matchDivision =
         selectedDivision === 'ALL' || getMemberDivisionId(member) === selectedDivision;
       if (!matchDivision) return false;
@@ -438,12 +469,12 @@ export default function About() {
       if (!searchQuery.trim()) return true;
       const q = searchQuery.toLowerCase().trim();
       const name = (member.name || '').toLowerCase();
-      const pos = (member.position || '').toLowerCase();
+      const pos = (member.position || member.role || '').toLowerCase();
       const school = (member.school || '').toLowerCase();
       const ig = (member.instagram || '').toLowerCase();
       return name.includes(q) || pos.includes(q) || school.includes(q) || ig.includes(q);
     });
-  }, [team, selectedDivision, searchQuery]);
+  }, [teamList, selectedDivision, searchQuery]);
 
   const currentShowcase = DIVISION_SHOWCASE[activeShowcaseIdx] || DIVISION_SHOWCASE[0];
   const ShowcaseIcon = currentShowcase.icon;
@@ -1387,7 +1418,7 @@ export default function About() {
             /* ── GROUPED BY DIVISION VIEW ── */
             <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
               {DIVISIONS.slice(1).map(division => {
-                const divisionMembers = team.filter(m => getMemberDivisionId(m) === division.id);
+                const divisionMembers = teamList.filter(m => getMemberDivisionId(m) === division.id);
                 if (divisionMembers.length === 0) return null;
 
                 const DivIcon = division.icon;
