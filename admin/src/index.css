@@ -1,298 +1,248 @@
-/* ============================================
-   ROHIS Kabupaten Banyumas — Admin Design System
-   Emerald & Obsidian Dark Theme (Pure Liquid Glass)
-   ============================================ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
 
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800;900&family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+/* ═══════════════════════════════════════════
+   ROKABA Admin — Dark Bento Glass Theme
+   ═══════════════════════════════════════════ */
 
 :root {
-  /* Emerald Palette */
-  --color-primary: #00DDB8;
-  --color-primary-light: #00F0CF;
-  --color-primary-dark: #008f75;
-  --color-primary-glow: rgba(0, 255, 200, 0.35);
+  --deep-pine: #0D2B22;
+  --deep-pine-light: #163D31;
+  --warm-alabaster: #F5F2ED;
+  --antique-brass: #B58D4F;
+  --antique-brass-light: #C9A76B;
+  --emerald: #10B981;
+  --emerald-dark: #059669;
+  --emerald-light: #34D399;
+  --emerald-glass: rgba(16, 185, 129, 0.12);
 
-  /* Gold Palette */
-  --color-gold: #D4A843;
-  --color-gold-light: #F3D078;
-  --color-gold-dark: #B8922E;
+  --bg-dark: #0A0F1A;
+  --bg-card: #111827;
+  --bg-card-hover: #1A2332;
+  --border-glass: rgba(255, 255, 255, 0.06);
+  --border-glass-hover: rgba(255, 255, 255, 0.12);
+  --text-primary: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
 
-  /* Dark Obsidian Canvas */
-  --dark-bg: radial-gradient(circle at 50% 20%, #041014 0%, #020708 70%, #010405 100%);
-  --color-bg: #020708;
-  --color-surface: rgba(4, 18, 22, 0.65);
-  --color-surface-light: rgba(6, 26, 32, 0.80);
-  --color-surface-hover: rgba(0, 255, 200, 0.08);
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-bg-strong: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-blur: 20px;
 
-  /* Text Colors */
-  --color-text: #F8FAFC;
-  --color-text-secondary: rgba(255, 255, 255, 0.72);
-  --color-text-muted: rgba(255, 255, 255, 0.45);
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Inter', sans-serif;
 
-  /* Semantic Alerts */
-  --color-danger: #EF4444;
-  --color-success: #00F0CF;
-  --color-warning: #F59E0B;
-
-  /* Typography */
-  --font-heading: 'Plus Jakarta Sans', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
-
-  /* Spacing */
-  --space-xs: 0.25rem;
-  --space-sm: 0.5rem;
-  --space-md: 1rem;
-  --space-lg: 1.5rem;
-  --space-xl: 2rem;
-  --space-2xl: 3rem;
-
-  /* Radii */
   --radius-sm: 0.375rem;
   --radius-md: 0.75rem;
   --radius-lg: 1rem;
-  --radius-xl: 1.5rem;
+  --radius-xl: 1.25rem;
   --radius-full: 9999px;
-  --radius-glass: 22px;
 
-  /* Pure Emerald Liquid Glass Recipe (NO WHITE EFFECT) */
-  --glass-bg: linear-gradient(
-    135deg,
-    rgba(0, 255, 200, 0.04) 0%,
-    rgba(4, 18, 22, 0.62) 45%,
-    rgba(2, 9, 11, 0.78) 100%
-  );
-  --glass-blur: blur(14px) saturate(150%);
-  --liquid-border: rgba(0, 255, 200, 0.16);
-  --liquid-border-hover: rgba(0, 255, 200, 0.50);
-  --liquid-shadow: 
-    0 25px 60px -10px rgba(0, 0, 0, 0.85),
-    0 12px 28px -6px rgba(0, 0, 0, 0.60),
-    0 4px 12px rgba(0, 0, 0, 0.40);
-  --liquid-inset: 
-    inset 0 1.2px 0 0 rgba(0, 255, 200, 0.25),
-    inset 0 -1px 0 0 rgba(0, 255, 180, 0.12),
-    inset 0 0 24px 0 rgba(0, 0, 0, 0.45);
-  --liquid-blur: blur(14px) saturate(150%);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+  --shadow-emerald: 0 4px 24px rgba(16, 185, 129, 0.2);
 
   --transition-fast: 150ms ease;
-  --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-liquid: all 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-normal: 300ms ease;
 }
 
-*, *::before, *::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
   font-family: var(--font-body);
-  font-size: 16px;
+  background: var(--bg-dark);
+  color: var(--text-primary);
   line-height: 1.6;
-  color: var(--color-text);
-  background-color: #020708;
-  -webkit-font-smoothing: antialiased;
-  min-height: 100vh;
   overflow-x: hidden;
-  position: relative;
 }
 
-a {
-  color: var(--color-primary-light);
-  text-decoration: none;
-  transition: color var(--transition-fast);
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
-a:hover {
-  color: #FFFFFF;
-}
+a { color: inherit; text-decoration: none; }
 
-.container {
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 var(--space-lg);
-}
-
-/* =========================================================
-   CORE LIQUID GLASS CARD & PANELS
-   ========================================================= */
-.liquid-glass,
-.glass-card,
-.card,
-.admin-login-card,
-.admin-stat-card,
-.settings-card,
-.admin-gallery-card,
-.admin-subpanel,
-.overview-panel {
-  position: relative;
-  isolation: isolate;
-  background: var(--glass-bg);
-  backdrop-filter: var(--liquid-blur);
-  -webkit-backdrop-filter: var(--liquid-blur);
-  border: 1px solid var(--liquid-border);
-  border-top: 1.5px solid rgba(0, 255, 200, 0.35);
-  border-left: 1px solid rgba(0, 255, 200, 0.18);
-  border-right: 1px solid rgba(0, 255, 200, 0.18);
-  border-bottom: 1px solid rgba(0, 255, 180, 0.10);
+/* ═══════ Glass Card ═══════ */
+.glass-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
   border-radius: var(--radius-xl);
-  box-shadow: var(--liquid-shadow), var(--liquid-inset);
-  transition: transform 400ms cubic-bezier(.2,.8,.2,1), box-shadow 400ms cubic-bezier(.2,.8,.2,1), border-color 350ms ease;
+  transition: all var(--transition-normal);
 }
 
-/* =========================================================
-   BUTTONS — 3D LIQUID GLASS & NEON EMERALD
-   ========================================================= */
+.glass-card:hover {
+  border-color: var(--border-glass-hover);
+  background: var(--bg-card-hover);
+}
+
+/* ═══════ Buttons ═══════ */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  padding: 0.65rem 1.5rem;
   font-family: var(--font-heading);
   font-weight: 600;
-  font-size: 0.9rem;
-  padding: 0.6rem 1.25rem;
-  border-radius: var(--radius-md);
+  font-size: 0.85rem;
   border: none;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: all var(--transition-base);
-  text-decoration: none;
+  transition: all var(--transition-normal);
+  white-space: nowrap;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, rgba(0, 255, 200, 0.90) 0%, rgba(0, 212, 170, 0.85) 100%);
-  color: #031317 !important;
-  font-weight: 700;
-  border: 1px solid rgba(0, 255, 200, 0.6);
-  box-shadow: 
-    0 4px 16px rgba(0, 255, 200, 0.35),
-    inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, var(--emerald), var(--emerald-dark));
+  color: white;
+  box-shadow: var(--shadow-emerald);
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  background: linear-gradient(135deg, #00F0CF 0%, #00ddb8 100%);
-  box-shadow: 
-    0 6px 24px rgba(0, 255, 200, 0.55),
-    0 0 20px rgba(0, 255, 200, 0.35);
-  color: #031317 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 30px rgba(16, 185, 129, 0.35);
 }
 
-.btn-gold {
-  background: linear-gradient(135deg, #D4A843 0%, #B8922E 100%);
-  color: #031317 !important;
-  font-weight: 700;
-  border: 1px solid rgba(212, 168, 67, 0.5);
-  box-shadow: 0 4px 16px rgba(212, 168, 67, 0.35);
+.btn-secondary {
+  background: var(--glass-bg-strong);
+  color: var(--text-primary);
+  border: 1px solid var(--border-glass);
 }
 
-.btn-gold:hover {
-  transform: translateY(-2px);
-  background: linear-gradient(135deg, #E8C76A 0%, #D4A843 100%);
-  box-shadow: 0 6px 22px rgba(212, 168, 67, 0.5);
-  color: #031317 !important;
+.btn-secondary:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: var(--border-glass-hover);
 }
 
-.btn-outline {
-  background: rgba(4, 18, 22, 0.65);
-  backdrop-filter: var(--liquid-blur);
-  -webkit-backdrop-filter: var(--liquid-blur);
-  color: #00F0CF;
-  border: 1px solid rgba(0, 255, 200, 0.35);
-  box-shadow: inset 0 1px 0 rgba(0, 255, 200, 0.15);
+.btn-danger {
+  background: rgba(239, 68, 68, 0.15);
+  color: #EF4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
-.btn-outline:hover {
-  background: rgba(0, 255, 200, 0.10);
-  border-color: rgba(0, 255, 200, 0.65);
-  color: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 255, 200, 0.25), inset 0 1px 0 rgba(0, 255, 200, 0.25);
+.btn-danger:hover {
+  background: rgba(239, 68, 68, 0.25);
 }
 
-.btn-sm { padding: 0.4rem 0.85rem; font-size: 0.8rem; }
-.btn-xs { padding: 0.25rem 0.6rem; font-size: 0.75rem; }
-.btn-lg { padding: 0.75rem 1.75rem; font-size: 1rem; }
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 0.5rem 0.75rem;
+}
 
-/* =========================================================
-   BADGES & PILLS
-   ========================================================= */
+.btn-ghost:hover {
+  background: var(--glass-bg-strong);
+  color: var(--text-primary);
+}
+
+.btn-sm { padding: 0.45rem 1rem; font-size: 0.78rem; }
+
+/* ═══════ Badge ═══════ */
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  font-size: 0.75rem;
-  font-weight: 700;
+  gap: 0.25rem;
   padding: 0.25rem 0.65rem;
+  font-size: 0.72rem;
+  font-weight: 600;
   border-radius: var(--radius-full);
 }
 
-.badge-primary {
-  background: rgba(0, 255, 200, 0.12);
-  color: #00F0CF;
-  border: 1px solid rgba(0, 255, 200, 0.35);
-  box-shadow: 0 0 10px rgba(0, 255, 200, 0.15);
-}
+.badge-emerald { background: var(--emerald-glass); color: var(--emerald-light); }
+.badge-brass { background: rgba(181,141,79,0.15); color: var(--antique-brass-light); }
+.badge-red { background: rgba(239,68,68,0.15); color: #F87171; }
 
-.badge-gold {
-  background: rgba(212, 168, 67, 0.15);
-  color: var(--color-gold-light);
-  border: 1px solid rgba(212, 168, 67, 0.35);
-}
-
-.badge-secondary {
-  background: rgba(0, 255, 200, 0.08);
-  color: #99f6e4;
-  border: 1px solid rgba(0, 255, 200, 0.22);
-}
-
-.badge-completed {
-  background: rgba(100, 116, 139, 0.2);
-  color: #94a3b8;
-  border: 1px solid rgba(100, 116, 139, 0.3);
-}
-
-/* =========================================================
-   FORMS & INPUTS — 3D LIQUID GLASS
-   ========================================================= */
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-
+/* ═══════ Form ═══════ */
+.form-group { margin-bottom: 1.25rem; }
 .form-label {
-  font-size: 0.85rem;
+  display: block;
   font-weight: 600;
-  color: var(--color-text-secondary);
+  font-size: 0.8rem;
+  margin-bottom: 0.4rem;
+  color: var(--text-secondary);
 }
 
-.form-input, .form-textarea, .form-select {
+.form-input {
   width: 100%;
-  padding: 0.65rem 0.95rem;
-  background: rgba(4, 18, 22, 0.65);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1.5px solid rgba(0, 255, 200, 0.18);
-  border-top: 1.5px solid rgba(0, 255, 200, 0.32);
-  border-radius: var(--radius-md);
-  color: var(--color-text);
+  padding: 0.7rem 1rem;
   font-family: var(--font-body);
-  font-size: 0.9rem;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.50);
+  font-size: 0.88rem;
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  background: var(--glass-bg-strong);
+  color: var(--text-primary);
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.form-input:focus, .form-textarea:focus, .form-select:focus {
+.form-input:focus {
   outline: none;
-  border-color: #00F0CF;
-  border-top-color: #00F0CF;
-  background: rgba(0, 255, 200, 0.06);
-  box-shadow: 0 0 0 3px rgba(0, 255, 210, 0.20), inset 0 1px 2px rgba(0, 255, 210, 0.35);
+  border-color: var(--emerald);
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.15);
 }
 
-.pattern-bg {
-  background-image: radial-gradient(rgba(0, 255, 200, 0.06) 1px, transparent 1px);
-  background-size: 24px 24px;
+.form-input::placeholder { color: var(--text-muted); }
+textarea.form-input { min-height: 100px; resize: vertical; }
+
+select.form-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2.5rem;
+}
+
+/* ═══════ Animations ═══════ */
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideIn { from { opacity: 0; transform: translateX(-16px); } to { opacity: 1; transform: translateX(0); } }
+
+.animate-fade-in-up { animation: fadeInUp 0.4s ease forwards; }
+.animate-fade-in { animation: fadeIn 0.3s ease forwards; }
+
+/* ═══════ Scrollbar ═══════ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+/* ═══════ Table ═══════ */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border-glass);
+}
+
+.data-table td {
+  padding: 0.85rem 1rem;
+  font-size: 0.88rem;
+  border-bottom: 1px solid var(--border-glass);
+  color: var(--text-secondary);
+}
+
+.data-table tr:hover td {
+  background: var(--glass-bg);
+}
+
+/* ═══════ Responsive ═══════ */
+@media (max-width: 768px) {
+  .hide-mobile { display: none !important; }
 }

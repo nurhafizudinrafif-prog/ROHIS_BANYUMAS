@@ -1,9 +1,7 @@
-import React from 'react';
 import logoImg from '../assets/logo.png';
 
 /**
  * RohisLogo - Official Emblem for ROHIS Kabupaten Banyumas.
- * Renders the authentic official logo with proper proportions and optional ambient glow.
  */
 export default function RohisLogo({ 
   size = 42, 

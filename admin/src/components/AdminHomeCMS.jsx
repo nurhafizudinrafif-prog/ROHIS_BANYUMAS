@@ -1,3 +1,4 @@
+import './AdminHomeCMS.css';
 import { useState, useEffect } from 'react';
 import {
   Save,
@@ -17,9 +18,10 @@ import {
   ChevronUp,
 } from 'lucide-react';
 import ImageUploadField from './ImageUploadField';
-import { initialHomeContent } from '../data/homeContent';
-import { programs as defaultPrograms } from '../data/programs';
-import { saveCloudCMSData } from '../services/cloudSync';
+import { fallbackData } from '@shared/data/fallback.js';
+const initialHomeContent = fallbackData['rokaba:home'];
+const defaultPrograms = fallbackData['rokaba:programs'];
+import { saveData } from '@shared/services/cloudSync.js';
 
 export default function AdminHomeCMS({
   homeContent,
@@ -70,6 +72,20 @@ export default function AdminHomeCMS({
     setFormData((prev) => ({
       ...prev,
       closing: { ...prev.closing, [field]: val },
+    }));
+  };
+
+  const updateSection = (secName, field, val) => {
+    setIsDirty(true);
+    setFormData((prev) => ({
+      ...prev,
+      sections: {
+        ...(prev.sections || {}),
+        [secName]: {
+          ...(prev.sections?.[secName] || {}),
+          [field]: val,
+        },
+      },
     }));
   };
 
@@ -173,11 +189,9 @@ export default function AdminHomeCMS({
         });
       }
 
-      // Explicit Cloud Save to Upstash Redis
-      await saveCloudCMSData({
-        homeContent: formData,
-        programs: localPrograms,
-      });
+      // Save home and programs
+      await saveData('rokaba:home', formData);
+      await saveData('rokaba:programs', localPrograms);
       setIsDirty(false);
 
       if (showToast) {
@@ -214,10 +228,8 @@ export default function AdminHomeCMS({
       defaultPrograms.forEach((prog) => {
         if (onSaveProgram) onSaveProgram(prog.id, prog);
       });
-      saveCloudCMSData({
-        homeContent: initialHomeContent,
-        programs: defaultPrograms,
-      });
+      saveData('rokaba:home', initialHomeContent);
+      saveData('rokaba:programs', defaultPrograms);
       if (showToast) {
         showToast('Konten beranda berhasil dikembalikan ke standar awal!', 'info');
       }
@@ -338,6 +350,14 @@ export default function AdminHomeCMS({
         >
           <MessageSquare size={16} />
           <span>6. Ajakan Bergabung (CTA)</span>
+        </button>
+        <button
+          type="button"
+          className={`subnav-btn ${activeSubTab === 'sections' ? 'active' : ''}`}
+          onClick={() => setActiveSubTab('sections')}
+        >
+          <Sparkles size={16} />
+          <span>7. Pengantar Artikel, Agenda & Layanan</span>
         </button>
       </div>
 
@@ -1068,6 +1088,167 @@ export default function AdminHomeCMS({
                   value={formData.closing?.btnSecondaryLink || ''}
                   onChange={(e) => updateClosing('btnSecondaryLink', e.target.value)}
                   placeholder="/kontak"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SUB-TAB 7: SECTION INTRO (ARTIKEL, AGENDA, LAYANAN) */}
+      {activeSubTab === 'sections' && (
+        <div className="home-cms-section card">
+          <div className="cms-section-header">
+            <div>
+              <h3>Pengaturan Pengantar Bagian Beranda</h3>
+              <p className="text-muted">
+                Atur judul, badge, deskripsi pengantar, dan teks tombol untuk bagian Artikel Dakwah, Agenda & Kajian, serta Layanan & Direktori di halaman beranda.
+              </p>
+            </div>
+            <span className="badge badge-primary">Beranda Dinamis</span>
+          </div>
+
+          {/* 1. Pengantar Bagian Artikel */}
+          <div style={{ marginBottom: '2.5rem', paddingBottom: '2rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+            <h4 style={{ color: 'var(--accent-gold, #E6C587)', fontSize: '1.05rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              📚 1. Bagian Artikel Pilihan (Homepage Articles)
+            </h4>
+            <p className="text-muted" style={{ fontSize: '0.85rem', marginBottom: '1.25rem' }}>
+              Teks pengantar yang tampil di atas grid 3 artikel dakwah terbaru.
+            </p>
+
+            <div className="cms-form-grid">
+              <div className="form-group">
+                <label className="form-label">Badge / Tagline Kecil</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={formData.sections?.articles?.tag || ''}
+                  onChange={(e) => updateSection('articles', 'tag', e.target.value)}
+                  placeholder="LITERASI DAKWAH DIGITAL"
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Judul Utama Bagian Artikel</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={formData.sections?.articles?.title || ''}
+                  onChange={(e) => updateSection('articles', 'title', e.target.value)}
+                  placeholder="Kajian & Artikel Pilihan Pelajar"
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Teks Tombol Aksi</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={formData.sections?.articles?.btnText || ''}
+                  onChange={(e) => updateSection('articles', 'btnText', e.target.value)}
+                  placeholder="Buka Seluruh Artikel"
+                />
+              </div>
+
+              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                <label className="form-label">Deskripsi Pengantar Artikel</label>
+                <textarea
+                  className="form-textarea"
+                  rows={2}
+                  value={formData.sections?.articles?.desc || ''}
+                  onChange={(e) => updateSection('articles', 'desc', e.target.value)}
+                  placeholder="Perluas cakrawala keislaman, wawasan kontemporer, dan inspirasi akhlak lewat karya tulis kader dakwah sekolah se-Banyumas."
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* 2. Pengantar Bagian Agenda */}
+          <div style={{ marginBottom: '2.5rem', paddingBottom: '2rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+            <h4 style={{ color: 'var(--accent-gold, #E6C587)', fontSize: '1.05rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              📅 2. Bagian Agenda & Kajian (Homepage Events)
+            </h4>
+            <p className="text-muted" style={{ fontSize: '0.85rem', marginBottom: '1.25rem' }}>
+              Teks pengantar yang tampil di atas daftar agenda kegiatan rohis mendatang.
+            </p>
+
+            <div className="cms-form-grid">
+              <div className="form-group">
+                <label className="form-label">Badge / Tagline Kecil</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={formData.sections?.events?.tag || ''}
+                  onChange={(e) => updateSection('events', 'tag', e.target.value)}
+                  placeholder="AGENDA MENDATANG"
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Judul Utama Bagian Agenda</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={formData.sections?.events?.title || ''}
+                  onChange={(e) => updateSection('events', 'title', e.target.value)}
+                  placeholder="Agenda & Kajian Pelajar Muslim"
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Teks Tombol Aksi</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={formData.sections?.events?.btnText || ''}
+                  onChange={(e) => updateSection('events', 'btnText', e.target.value)}
+                  placeholder="Jelajahi Semua Agenda"
+                />
+              </div>
+
+              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                <label className="form-label">Deskripsi Pengantar Agenda</label>
+                <textarea
+                  className="form-textarea"
+                  rows={2}
+                  value={formData.sections?.events?.desc || ''}
+                  onChange={(e) => updateSection('events', 'desc', e.target.value)}
+                  placeholder="Ikuti beragam kegiatan inspiratif, pelatihan kepemimpinan, dan kajian ilmiah remaja bersama ROKABA Banyumas."
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* 3. Pengantar Bagian Layanan & Direktori */}
+          <div>
+            <h4 style={{ color: 'var(--accent-gold, #E6C587)', fontSize: '1.05rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              🏛️ 3. Bagian Layanan & Direktori (Homepage Services)
+            </h4>
+            <p className="text-muted" style={{ fontSize: '0.85rem', marginBottom: '1.25rem' }}>
+              Teks pengantar untuk 3 kartu layanan unggulan (Konsultasi, E-Library, Direktori ROHIS Sekolah).
+            </p>
+
+            <div className="cms-form-grid">
+              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                <label className="form-label">Judul Utama Bagian Layanan</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={formData.sections?.services?.title || ''}
+                  onChange={(e) => updateSection('services', 'title', e.target.value)}
+                  placeholder="Layanan & Program Unggulan Kami"
+                />
+              </div>
+
+              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                <label className="form-label">Deskripsi Pengantar Layanan</label>
+                <textarea
+                  className="form-textarea"
+                  rows={2}
+                  value={formData.sections?.services?.desc || ''}
+                  onChange={(e) => updateSection('services', 'desc', e.target.value)}
+                  placeholder="ROKABA hadir sebagai wadah sinergi dan kolaborasi bagi seluruh Rohis sekolah di Banyumas dengan berbagai program terintegrasi."
                 />
               </div>
             </div>

@@ -1,0 +1,102 @@
+import { useState } from 'react';
+import { useData } from '../context/DataContext';
+import { useAuth } from '../context/AuthContext';
+import { Shield, Plus, Edit3, Trash2, Save, X, Users } from 'lucide-react';
+
+export default function UserManager() {
+  const { users, schools, updateData, addAuditLog } = useData();
+  const { user } = useAuth();
+  const [editing, setEditing] = useState(null);
+  const [isNew, setIsNew] = useState(false);
+
+  const handleNew = () => {
+    setEditing({ id: `user-${Date.now()}`, username: '', role: 'editor_sekolah', schoolId: '', lastLogin: null });
+    setIsNew(true);
+  };
+
+  const handleSave = async () => {
+    if (!editing || !editing.username) return;
+    const updated = isNew ? [...users, editing] : users.map(u => u.id === editing.id ? editing : u);
+    await updateData('users', updated);
+    await addAuditLog(user.id, user.username, isNew ? 'CREATE' : 'UPDATE', 'users', `${isNew ? 'Created' : 'Updated'} user: ${editing.username}`);
+    setEditing(null);
+    setIsNew(false);
+  };
+
+  const handleDelete = async (u) => {
+    if (u.role === 'superadmin') return alert('Tidak bisa menghapus Super Admin');
+    if (!confirm(`Hapus user "${u.username}"?`)) return;
+    await updateData('users', users.filter(item => item.id !== u.id));
+    await addAuditLog(user.id, user.username, 'DELETE', 'users', `Deleted user: ${u.username}`);
+  };
+
+  return (
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+        <h1 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Manajemen User</h1>
+        <button onClick={handleNew} className="btn btn-primary"><Plus size={16} /> Tambah User</button>
+      </div>
+
+      <div className="glass-card" style={{ overflow: 'auto' }}>
+        <table className="data-table">
+          <thead>
+            <tr><th>Username</th><th>Role</th><th>Sekolah</th><th>Login Terakhir</th><th style={{ textAlign: 'right' }}>Aksi</th></tr>
+          </thead>
+          <tbody>
+            {users.map(u => (
+              <tr key={u.id}>
+                <td style={{ fontWeight: 600 }}>{u.username}</td>
+                <td><span className={`badge ${u.role === 'superadmin' ? 'badge-emerald' : 'badge-brass'}`}>{u.role}</span></td>
+                <td>{u.schoolId ? (schools.find(s => s.id === u.schoolId)?.name || u.schoolId) : '—'}</td>
+                <td style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{u.lastLogin ? new Date(u.lastLogin).toLocaleDateString('id-ID') : '—'}</td>
+                <td style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
+                  <button onClick={() => { setEditing({ ...u }); setIsNew(false); }} className="btn btn-sm btn-ghost" style={{ color: 'var(--emerald)' }}><Edit3 size={14} /></button>
+                  <button onClick={() => handleDelete(u)} className="btn btn-sm btn-ghost" style={{ color: '#F87171' }}><Trash2 size={14} /></button>
+                </td>
+              </tr>
+            ))}
+            {users.length === 0 && (
+              <tr><td colSpan={5} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>Tidak ada user</td></tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Edit Modal */}
+      {editing && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
+          <div className="glass-card animate-fade-in-up" style={{ width: '100%', maxWidth: 450, padding: '2rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h2 style={{ fontSize: '1.15rem' }}>{isNew ? 'Tambah' : 'Edit'} User</h2>
+              <button onClick={() => { setEditing(null); setIsNew(false); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}><X size={20} /></button>
+            </div>
+            <div className="form-group">
+              <label className="form-label">Username</label>
+              <input type="text" className="form-input" value={editing.username} onChange={e => setEditing({ ...editing, username: e.target.value })} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Role</label>
+              <select className="form-input" value={editing.role} onChange={e => setEditing({ ...editing, role: e.target.value })}>
+                <option value="superadmin">Super Admin</option>
+                <option value="editor_sekolah">Editor Sekolah</option>
+              </select>
+            </div>
+            {editing.role === 'editor_sekolah' && (
+              <div className="form-group">
+                <label className="form-label">Sekolah</label>
+                <select className="form-input" value={editing.schoolId || ''} onChange={e => setEditing({ ...editing, schoolId: e.target.value })}>
+                  <option value="">Pilih sekolah...</option>
+                  {schools.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                </select>
+              </div>
+            )}
+            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
+              <button onClick={handleSave} className="btn btn-primary" style={{ flex: 1 }}><Save size={16} /> Simpan</button>
+              <button onClick={() => { setEditing(null); setIsNew(false); }} className="btn btn-secondary">Batal</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

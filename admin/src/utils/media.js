@@ -1,22 +1,15 @@
-// Utilitas pemrosesan media (Foto & Video) untuk Admin
-// Mendukung Google Drive (Foto & Video), YouTube, dan Direct Media
+// Media processing utilities ported to admin-app
+// Supports Google Drive (Photos & Videos), YouTube, TikTok, Instagram & Direct Media
 
-// ============================================
-// GOOGLE DRIVE HELPERS
-// ============================================
 export function extractGoogleDriveId(url) {
   if (!url || typeof url !== 'string') return null;
   const trimmed = url.trim();
-  // Pattern 1: /file/d/FILE_ID
   const match1 = trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
   if (match1) return match1[1];
-  // Pattern 2: id=FILE_ID
   const match2 = trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
   if (match2) return match2[1];
-  // Pattern 3: /open?id=FILE_ID
   const match3 = trimmed.match(/\/open\?id=([a-zA-Z0-9_-]+)/);
   if (match3) return match3[1];
-  // Pattern 4: /d/FILE_ID
   const match4 = trimmed.match(/\/d\/([a-zA-Z0-9_-]+)/);
   if (match4) return match4[1];
   return null;
@@ -57,9 +50,6 @@ export function getDirectImageUrl(url) {
   return url;
 }
 
-// ============================================
-// YOUTUBE HELPERS
-// ============================================
 export function extractYouTubeId(url) {
   if (!url || typeof url !== 'string') return null;
   const trimmed = url.trim();
@@ -80,9 +70,6 @@ export function getYouTubeThumbnail(url) {
   return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
 }
 
-// ============================================
-// TIKTOK & INSTAGRAM HELPERS
-// ============================================
 export function extractTikTokId(input = '') {
   if (!input || typeof input !== 'string') return '';
   const trimmed = input.trim();
@@ -109,9 +96,6 @@ export function getInstagramEmbedUrl(url) {
   return `https://www.instagram.com/p/${code}/embed/captioned/`;
 }
 
-// ============================================
-// GENERAL MEDIA HELPERS
-// ============================================
 export function isVideoMedia(mediaItem) {
   if (!mediaItem) return false;
   if (mediaItem.type === 'video') return true;
@@ -201,8 +185,8 @@ export function getMediaSummary(item) {
     photos,
     videos,
     label: [
-      photos > 0 ? `${photos} Foto` : null,
-      videos > 0 ? `${videos} Video` : null,
-    ].filter(Boolean).join(' • ') || '0 Media',
+        photos > 0 ? `${photos} Foto` : null,
+        videos > 0 ? `${videos} Video` : null,
+      ].filter(Boolean).join(' • ') || '0 Media',
   };
 }

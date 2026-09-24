@@ -3,8 +3,8 @@
 
 import { fallbackData } from '../data/fallback.js';
 
-const UPSTASH_URL = import.meta.env.VITE_UPSTASH_REDIS_REST_URL;
-const UPSTASH_TOKEN = import.meta.env.VITE_UPSTASH_REDIS_REST_TOKEN;
+const UPSTASH_URL = import.meta.env.VITE_UPSTASH_REDIS_REST_URL || 'https://holy-gobbler-70550.upstash.io';
+const UPSTASH_TOKEN = import.meta.env.VITE_UPSTASH_REDIS_REST_TOKEN || 'gQAAAAAAAROWAAIgcDJlOTE0NTNiY2EyYjA0MjU3YmNjNjJkMzc3YmZmYjQ2NA';
 
 const headers = {
   Authorization: `Bearer ${UPSTASH_TOKEN}`,

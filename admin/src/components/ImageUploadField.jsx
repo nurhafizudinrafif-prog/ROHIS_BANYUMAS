@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Upload, X, Image as ImageIcon, Check, RefreshCw } from 'lucide-react';
+import { Upload, X, Image as ImageIcon, RefreshCw } from 'lucide-react';
 import { getDirectImageUrl, extractGoogleDriveId } from '../utils/media';
 
 export default function ImageUploadField({
@@ -24,7 +24,6 @@ export default function ImageUploadField({
       return;
     }
 
-    // Limit check (recommend under 8MB to prevent local storage quota issues)
     if (file.size > 8 * 1024 * 1024) {
       alert('Ukuran berkas melebihi 8MB. Mohon gunakan foto dengan ukuran lebih kecil untuk performa optimal.');
       return;
@@ -54,27 +53,37 @@ export default function ImageUploadField({
   const displaySrc = typeof value === 'string' && value ? getDirectImageUrl(value) : '';
 
   return (
-    <div className="admin-image-field-block">
+    <div style={{ marginBottom: '1.25rem' }}>
       {label && (
-        <div className="image-field-label-row">
-          <label className="form-label">
-            {label} {required && <span className="text-danger">*</span>}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+          <label className="form-label" style={{ marginBottom: 0 }}>
+            {label} {required && <span style={{ color: '#EF4444' }}>*</span>}
           </label>
           {aspectRatioHint && (
-            <span className="aspect-hint-badge">{aspectRatioHint}</span>
+            <span style={{
+              fontSize: '0.72rem',
+              color: 'var(--antique-brass)',
+              background: 'rgba(181, 141, 79, 0.1)',
+              padding: '0.15rem 0.5rem',
+              borderRadius: '999px',
+              border: '1px solid rgba(181, 141, 79, 0.25)',
+            }}>
+              {aspectRatioHint}
+            </span>
           )}
         </div>
       )}
 
       {/* Input Group: URL text input + Upload Button */}
-      <div className="image-input-action-row">
-        <div className="image-input-wrapper">
-          <span className="image-input-icon">
+      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+        <div style={{ position: 'relative', flex: 1 }}>
+          <span style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>
             <ImageIcon size={16} />
           </span>
           <input
             type="text"
-            className="form-input image-url-input"
+            className="form-input"
+            style={{ paddingLeft: '2.5rem' }}
             value={value || ''}
             onChange={(e) => {
               setLoadError(false);
@@ -87,7 +96,14 @@ export default function ImageUploadField({
 
         <button
           type="button"
-          className="btn btn-gold btn-upload-trigger"
+          className="btn"
+          style={{
+            background: 'linear-gradient(135deg, var(--antique-brass), #967035)',
+            color: '#FFFFFF',
+            whiteSpace: 'nowrap',
+            flexShrink: 0,
+            padding: '0.65rem 1rem',
+          }}
           onClick={() => fileInputRef.current?.click()}
           disabled={isProcessing}
           title="Pilih dan upload foto dari memori komputer atau smartphone"
@@ -100,7 +116,7 @@ export default function ImageUploadField({
           ) : (
             <>
               <Upload size={15} />
-              <span>Pilih Berkas Foto</span>
+              <span>Pilih Foto</span>
             </>
           )}
         </button>
@@ -114,14 +130,36 @@ export default function ImageUploadField({
         />
       </div>
 
-      {/* Live Preview Card if image is provided */}
+      {/* Live Preview Card */}
       {value && typeof value === 'string' && value.trim().length > 0 && (
-        <div className="image-live-preview-card">
-          <div className="image-preview-figure">
+        <div style={{
+          marginTop: '0.75rem',
+          background: 'var(--bg-card)',
+          border: '1px solid var(--border-glass)',
+          borderRadius: 'var(--radius-md)',
+          padding: '0.85rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '1rem',
+        }}>
+          <div style={{
+            width: 80,
+            height: 60,
+            borderRadius: 'var(--radius-sm)',
+            overflow: 'hidden',
+            background: '#05080E',
+            flexShrink: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative',
+          }}>
             {!loadError ? (
               <img
                 src={displaySrc}
                 alt="Pratinjau Foto"
+                referrerPolicy="no-referrer"
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 onError={() => {
                   if (driveId) {
                     setLoadError(false);
@@ -131,63 +169,68 @@ export default function ImageUploadField({
                 }}
               />
             ) : (
-              <div className="image-preview-error">
-                <ImageIcon size={28} />
-                <span>Gambar tidak dapat dimuat dari URL ini</span>
+              <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
+                <ImageIcon size={20} />
               </div>
             )}
-            <div className="image-type-indicator">
-              {isDataUrl ? (
-                <span className="badge-tag-file">📁 FOTO LOKAL (UPLOAD)</span>
-              ) : isDrive ? (
-                <span className="badge-tag-drive">☁️ GOOGLE DRIVE</span>
-              ) : (
-                <span className="badge-tag-web">🌐 WEB URL</span>
-              )}
-            </div>
           </div>
 
-          <div className="image-preview-meta">
-            <div className="image-meta-info">
-              <strong className="image-meta-title">
-                {isDataUrl ? 'Foto Berhasil Diunggah' : isDrive ? 'Terhubung ke Google Drive' : 'Foto dari Tautan Web'}
-              </strong>
-              <p className="image-meta-path text-muted" title={value}>
-                {isDataUrl
-                  ? `Format Data URL Base64 (~${Math.round(value.length / 1024)} KB)`
-                  : value.length > 55
-                  ? value.substring(0, 52) + '...'
-                  : value}
-              </p>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
+              <span style={{
+                fontSize: '0.68rem',
+                fontWeight: 700,
+                padding: '0.1rem 0.4rem',
+                borderRadius: '4px',
+                background: isDataUrl ? 'rgba(59, 130, 246, 0.2)' : isDrive ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 255, 255, 0.1)',
+                color: isDataUrl ? '#60A5FA' : isDrive ? '#34D399' : '#CBD5E1',
+              }}>
+                {isDataUrl ? 'UPLOAD LOKAL' : isDrive ? 'GOOGLE DRIVE' : 'WEB URL'}
+              </span>
+              <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                {isDataUrl ? 'Foto Berhasil Disimpan' : isDrive ? 'Google Drive Terhubung' : 'Foto Online'}
+              </span>
             </div>
+            <p style={{
+              fontSize: '0.75rem',
+              color: 'var(--text-muted)',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              margin: 0,
+            }} title={value}>
+              {value}
+            </p>
+          </div>
 
-            <div className="image-meta-actions">
-              <button
-                type="button"
-                className="btn btn-outline btn-xs"
-                onClick={() => fileInputRef.current?.click()}
-                title="Ganti dengan foto lain"
-              >
-                <RefreshCw size={13} /> Ganti Foto
-              </button>
-              <button
-                type="button"
-                className="btn btn-danger-ghost btn-xs"
-                onClick={() => {
-                  onChange('');
-                  setLoadError(false);
-                }}
-                title="Hapus foto ini"
-              >
-                <X size={14} /> Hapus
-              </button>
-            </div>
+          <div style={{ display: 'flex', gap: '0.4rem', flexShrink: 0 }}>
+            <button
+              type="button"
+              className="btn btn-outline"
+              style={{ padding: '0.35rem 0.65rem', fontSize: '0.75rem' }}
+              onClick={() => fileInputRef.current?.click()}
+              title="Ganti dengan foto lain"
+            >
+              <RefreshCw size={12} /> Ganti
+            </button>
+            <button
+              type="button"
+              className="btn"
+              style={{ padding: '0.35rem 0.65rem', fontSize: '0.75rem', background: 'rgba(239, 68, 68, 0.15)', color: '#F87171' }}
+              onClick={() => {
+                onChange('');
+                setLoadError(false);
+              }}
+              title="Hapus foto ini"
+            >
+              <X size={12} /> Hapus
+            </button>
           </div>
         </div>
       )}
 
       {tip && (
-        <p className="image-field-tip text-muted">
+        <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.4rem', marginBotom: 0 }}>
           💡 {tip}
         </p>
       )}
