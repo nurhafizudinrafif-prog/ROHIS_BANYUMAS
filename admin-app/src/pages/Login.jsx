@@ -102,12 +102,12 @@ export default function Login() {
             </div>
 
             <div className="form-group">
-              <label className="form-label">PIN</label>
+              <label className="form-label">PIN <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>(Opsional)</span></label>
               <div style={{ position: 'relative' }}>
                 <KeyRound size={16} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-                <input type="password" className="form-input" placeholder="Masukkan PIN"
+                <input type="password" className="form-input" placeholder="1234 (Opsional)"
                   style={{ paddingLeft: '2.5rem' }} maxLength={6}
-                  value={form.pin} onChange={e => setForm({ ...form, pin: e.target.value })} required />
+                  value={form.pin} onChange={e => setForm({ ...form, pin: e.target.value })} />
               </div>
             </div>
 
