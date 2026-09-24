@@ -1,7 +1,8 @@
-import { parseImageUrl } from '@shared/services/mediaHelper.js';
+import { parseImageUrl, extractDriveId } from '@shared/services/mediaHelper.js';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../context/DataContext';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 import { BookOpen, Search, Filter, Clock, User, ChevronRight, FileText } from 'lucide-react';
 
 export default function Articles() {
@@ -9,13 +10,15 @@ export default function Articles() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('Semua');
 
-  const categories = ['Semua', ...new Set((articles || []).map(a => a.category).filter(Boolean))];
+  const categories = ['Semua', ...new Set(articles.map(a => a.category).filter(Boolean))];
 
-  const filtered = (articles || [])
+  const filtered = articles
     .filter(a => category === 'Semua' || a.category === category)
-    .filter(a => ((a.title || '').toLowerCase().includes((search || '').toLowerCase()) || 
-                 (a.author || '').toLowerCase().includes((search || '').toLowerCase())))
-    .sort((a, b) => new Date(b.date || b.publishedAt || 0) - new Date(a.date || a.publishedAt || 0));
+    .filter(a => (a.title || '').toLowerCase().includes(search.toLowerCase()) || 
+                 (a.author || '').toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) => new Date(b.publishedAt || b.date || 0) - new Date(a.publishedAt || a.date || 0));
+
+  useScrollReveal([filtered, category, search]);
 
   return (
     <div>
@@ -73,11 +76,11 @@ export default function Articles() {
           {/* Articles Grid */}
           {filtered.length > 0 ? (
             <div style={{
-              display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '1.5rem',
+              display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem',
             }}>
               {filtered.map((article, i) => (
-                <Link to={`/articles/${article.slug}`} key={article.id} className="card-editorial animate-fade-in-up"
-                  style={{ animationDelay: `${i * 80}ms`, textDecoration: 'none' }}>
+                <Link to={`/articles/${article.slug}`} key={article.id} className={`card-editorial reveal-scale delay-${(i % 6 + 1) * 80}`}
+                  style={{ textDecoration: 'none' }}>
                   <div style={{
                     height: 180,
                     background: `linear-gradient(135deg, var(--deep-pine) 0%, var(--deep-pine-light) 100%)`,
@@ -89,22 +92,26 @@ export default function Articles() {
                       alt={article.title}
                       referrerPolicy="no-referrer"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                      onError={(e) => {
+                        const driveId = extractDriveId(article.image);
+                        if (driveId && !e.currentTarget.src.includes('lh3.googleusercontent.com')) {
+                          e.currentTarget.src = `https://lh3.googleusercontent.com/d/${driveId}`;
+                        } else {
+                          e.currentTarget.style.display = 'none';
+                        }
+                      }}
                     />
                   ) : (
                     <FileText size={40} style={{ color: 'rgba(245,242,237,0.12)' }} />
                   )}
-                    <span className="badge badge-emerald" style={{ position: 'absolute', top: '1rem', left: '1rem' }}>
-                      {article.category}
-                    </span>
                   </div>
                   <div className="card-body">
                     <h3 style={{ color: 'var(--deep-pine)', marginBottom: '0.5rem', fontSize: '1.1rem' }}>{article.title}</h3>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '0.78rem', color: 'rgba(13,43,34,0.45)', marginTop: '0.75rem' }}>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><User size={13} /> {article.author}</span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}><User size={13} /> {article.author || 'Tim ROKABA'}</span>
                       <span style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
                         <Clock size={13} />
-                        {new Date(article.date || article.publishedAt || Date.now()).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        {new Date(article.publishedAt || article.date || Date.now()).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
                       </span>
                     </div>
                   </div>

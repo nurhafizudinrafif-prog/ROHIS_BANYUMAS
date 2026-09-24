@@ -6,8 +6,7 @@ import { ArrowLeft, Clock, User, Tag, Share2 } from 'lucide-react';
 export default function ArticleDetail() {
   const { slug } = useParams();
   const { articles } = useData();
-  const safeArticles = Array.isArray(articles) ? articles : [];
-  const article = safeArticles.find(a => a.slug === slug || String(a.id) === String(slug));
+  const article = articles.find(a => a.slug === slug);
 
   if (!article) {
     return (
@@ -18,7 +17,7 @@ export default function ArticleDetail() {
     );
   }
 
-  const relatedArticles = safeArticles.filter(a => a.category === article.category && a.id !== article.id).slice(0, 3);
+  const relatedArticles = articles.filter(a => a.category === article.category && a.id !== article.id).slice(0, 3);
 
   return (
     <div>
@@ -51,7 +50,7 @@ export default function ArticleDetail() {
             <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><User size={15} /> {article.author}</span>
             <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
               <Clock size={15} />
-              {new Date(article.date || article.publishedAt || Date.now()).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+              {new Date(article.publishedAt).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
             </span>
           </div>
         </div>
@@ -91,7 +90,7 @@ export default function ArticleDetail() {
                   <Link to={`/articles/${a.slug}`} key={a.id} style={{
                     background: 'white', borderRadius: 'var(--radius-lg)', padding: '1.25rem',
                     textDecoration: 'none', border: '1px solid rgba(13,43,34,0.06)',
-                    transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)', boxShadow: 'var(--shadow-sm)',
+                    transition: 'all 0.3s ease', boxShadow: 'var(--shadow-sm)',
                   }}>
                     <span className="badge badge-emerald" style={{ fontSize: '0.7rem', marginBottom: '0.75rem' }}>{a.category}</span>
                     <h4 style={{ fontSize: '0.95rem', color: 'var(--deep-pine)', marginBottom: '0.35rem' }}>{a.title}</h4>

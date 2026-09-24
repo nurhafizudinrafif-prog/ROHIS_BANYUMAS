@@ -2,8 +2,11 @@ import { useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
-import { Plus, Edit3, Trash2, Save, X, Search, Sparkles, Video as VideoIcon, Image as ImageIcon, ExternalLink, HelpCircle } from 'lucide-react';
+import { Plus, Edit3, Trash2, Save, X, Search, Sparkles, Video as VideoIcon, Image as ImageIcon, ExternalLink, HelpCircle, FileText } from 'lucide-react';
 import { parseMediaItem } from '@shared/services/mediaHelper.js';
+import { getDirectImageUrl, extractGoogleDriveId } from '../utils/media';
+import AdminHomeCMS from '../components/AdminHomeCMS';
+import ImageUploadField from '../components/ImageUploadField';
 
 const schemas = {
   articles: {
@@ -105,32 +108,22 @@ export default function ContentManager() {
 
   if (!schema) return <div style={{ padding: '2rem', color: 'var(--text-muted)' }}>Tipe konten tidak ditemukan.</div>;
 
-  // ═══ HOME EDITOR (Single Object) ═══
-  if (schema.isSingle) {
-    const handleSaveHome = async () => {
-      await dataCtx.updateData('home', homeForm);
-      await dataCtx.addAuditLog(user.id, user.username, 'UPDATE', 'home', 'Updated home page content');
-    };
-
+  // ═══ HOME EDITOR (Full Visual Section Editor) ═══
+  if (type === 'home') {
     return (
-      <div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 800 }}>{schema.label}</h1>
-          <button onClick={handleSaveHome} className="btn btn-primary"><Save size={16} /> Simpan</button>
-        </div>
-        <div className="glass-card" style={{ padding: '1.5rem' }}>
-          {schema.fields.map(f => (
-            <div className="form-group" key={f.key}>
-              <label className="form-label">{f.label}</label>
-              {f.type === 'textarea' ? (
-                <textarea className="form-input" value={homeForm[f.key] || ''} onChange={e => setHomeForm({ ...homeForm, [f.key]: e.target.value })} />
-              ) : (
-                <input type="text" className="form-input" value={homeForm[f.key] || ''} onChange={e => setHomeForm({ ...homeForm, [f.key]: e.target.value })} />
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
+      <AdminHomeCMS
+        homeContent={dataCtx.home}
+        programs={dataCtx.programs}
+        onSaveHomeContent={async (newHome) => {
+          await dataCtx.updateData('home', newHome);
+          await dataCtx.addAuditLog(user.id, user.username, 'UPDATE', 'home', 'Updated home page content');
+        }}
+        onSaveProgram={async (pId, newProg) => {
+          const currentPrograms = dataCtx.programs || [];
+          const updated = currentPrograms.map(p => p.id === pId ? newProg : p);
+          await dataCtx.updateData('programs', updated);
+        }}
+      />
     );
   }
 
@@ -200,7 +193,21 @@ export default function ContentManager() {
                 background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: '0.25rem',
               }}><X size={20} /></button>
             </div>
-            {schema.fields.map(f => (
+            {schema.fields.map(f => {
+              if (f.key === 'image' || f.key === 'coverImage') {
+                return (
+                  <ImageUploadField
+                    key={f.key}
+                    label={f.label}
+                    required={f.required}
+                    value={editing[f.key] || ''}
+                    onChange={val => setEditing({ ...editing, [f.key]: val })}
+                    placeholder="Tempel URL gambar atau klik Pilih Berkas Foto..."
+                  />
+                );
+              }
+
+              return (
               <div className="form-group" key={f.key}>
                 <label className="form-label">{f.label} {f.required && <span style={{ color: '#F87171' }}>*</span>}</label>
                 {f.type === 'textarea' ? (
@@ -252,7 +259,8 @@ export default function ContentManager() {
     </div>
   )}
               </div>
-            ))}
+              );
+            })}
 
             {/* Live Media Preview for Gallery */}
   {type === 'gallery' && (editing.driveId || editing.thumbnail) && (() => {
@@ -367,6 +375,16 @@ export default function ContentManager() {
                 <th>Tanggal</th>
                 <th style={{ textAlign: 'right' }}>Aksi</th>
               </tr>
+            ) : type === 'articles' ? (
+              <tr>
+                <th>#</th>
+                <th>Sampul Foto</th>
+                <th>Judul Artikel</th>
+                <th>Kategori</th>
+                <th>Penulis</th>
+                <th>Tanggal Terbit</th>
+                <th style={{ textAlign: 'right' }}>Aksi</th>
+              </tr>
             ) : (
               <tr>
                 <th>#</th>
@@ -397,21 +415,21 @@ export default function ContentManager() {
                       }}>
                         {media.thumbnailUrl ? (
                           <img
-    src={media.thumbnailUrl}
-    alt=""
-    referrerPolicy="no-referrer"
-    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-    onError={(e) => {
-      const cur = e.currentTarget.src;
-      if (media.fallbackThumbnailUrl && cur !== media.fallbackThumbnailUrl) {
-        e.currentTarget.src = media.fallbackThumbnailUrl;
-      } else if (media.tertiaryThumbnailUrl && cur !== media.tertiaryThumbnailUrl) {
-        e.currentTarget.src = media.tertiaryThumbnailUrl;
-      } else {
-        e.currentTarget.style.display = 'none';
-      }
-    }}
-  />
+                            src={media.thumbnailUrl}
+                            alt=""
+                            referrerPolicy="no-referrer"
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            onError={(e) => {
+                              const cur = e.currentTarget.src;
+                              if (media.fallbackThumbnailUrl && cur !== media.fallbackThumbnailUrl) {
+                                e.currentTarget.src = media.fallbackThumbnailUrl;
+                              } else if (media.tertiaryThumbnailUrl && cur !== media.tertiaryThumbnailUrl) {
+                                e.currentTarget.src = media.tertiaryThumbnailUrl;
+                              } else {
+                                e.currentTarget.style.display = 'none';
+                              }
+                            }}
+                          />
                         ) : (
                           isVideo ? <VideoIcon size={20} color="var(--emerald)" /> : <ImageIcon size={20} color="var(--antique-brass)" />
                         )}
@@ -456,6 +474,74 @@ export default function ContentManager() {
                         <Edit3 size={14} />
                       </button>
                       <button onClick={() => handleDelete(item)} className="btn btn-sm btn-ghost" style={{ color: '#F87171' }} title="Hapus">
+                        <Trash2 size={14} />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              }
+
+              if (type === 'articles') {
+                const imgUrl = item.image ? getDirectImageUrl(item.image) : '';
+                const driveId = extractGoogleDriveId(item.image);
+                return (
+                  <tr key={item.id}>
+                    <td style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>{i + 1}</td>
+                    <td style={{ width: 80 }}>
+                      <div style={{
+                        width: 64,
+                        height: 44,
+                        borderRadius: 'var(--radius-sm)',
+                        overflow: 'hidden',
+                        background: '#0D2B22',
+                        position: 'relative',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                        {imgUrl ? (
+                          <img
+                            src={imgUrl}
+                            alt=""
+                            referrerPolicy="no-referrer"
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            onError={(e) => {
+                              if (driveId && !e.currentTarget.src.includes('thumbnail?id=')) {
+                                e.currentTarget.src = `https://drive.google.com/thumbnail?id=${driveId}&sz=w600`;
+                              } else {
+                                e.currentTarget.style.display = 'none';
+                              }
+                            }}
+                          />
+                        ) : (
+                          <FileText size={20} color="var(--emerald)" />
+                        )}
+                      </div>
+                    </td>
+                    <td style={{ fontWeight: 600, color: 'var(--text-primary)', maxWidth: 260 }}>
+                      {item.title}
+                      {item.slug && (
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          /{item.slug}
+                        </div>
+                      )}
+                    </td>
+                    <td>
+                      <span className="badge badge-emerald" style={{ fontSize: '0.7rem' }}>
+                        {item.category || 'Dakwah'}
+                      </span>
+                    </td>
+                    <td style={{ color: 'var(--text-muted)', fontSize: '0.82rem' }}>
+                      {item.author || 'ROKABA'}
+                    </td>
+                    <td style={{ color: 'var(--text-muted)', fontSize: '0.78rem', whiteSpace: 'nowrap' }}>
+                      {item.date || (item.publishedAt ? new Date(item.publishedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '-')}
+                    </td>
+                    <td style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
+                      <button onClick={() => { setEditing({ ...item }); setIsNew(false); }} className="btn btn-sm btn-ghost" style={{ color: 'var(--emerald)' }} title="Edit Artikel">
+                        <Edit3 size={14} />
+                      </button>
+                      <button onClick={() => handleDelete(item)} className="btn btn-sm btn-ghost" style={{ color: '#F87171' }} title="Hapus Artikel">
                         <Trash2 size={14} />
                       </button>
                     </td>

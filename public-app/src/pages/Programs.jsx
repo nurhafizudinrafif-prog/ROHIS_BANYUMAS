@@ -9,7 +9,7 @@ const DIVISION_SHOWCASE = [
   {
     num: '01',
     key: 'SDM',
-    title: 'Divisi Sumber Daya Manusia (SDM)',
+    title: 'DIVISI SDM (SUMBER DAYA MANUSIA)',
     tag: 'DIVISI SDM',
     desc: 'Fokus pada pembinaan karakter, peningkatan kapasitas kader, regenerasi kepengurusan, serta penguatan soliditas anggota ROHIS se-Kabupaten Banyumas.',
     icon: Users,
@@ -26,8 +26,8 @@ const DIVISION_SHOWCASE = [
   {
     num: '02',
     key: 'Dakwah',
-    title: 'Divisi Syiar & Dakwah Islam',
-    tag: 'DIVISI DAKWAH',
+    title: 'DIVISI DAKWAH',
+    tag: 'DIVISI Dakwah',
     desc: 'Jantung gerakan dakwah Islam yang menyelenggarakan kajian keilmuan, pembinaan ruhiyah, serta syiar Islam yang rahmatan lil \'alamin bagi pelajar dan masyarakat.',
     icon: Flame,
     detailTitle: 'Divisi Dakwah',
@@ -43,8 +43,8 @@ const DIVISION_SHOWCASE = [
   {
     num: '03',
     key: 'Jurnalistik',
-    title: 'Divisi Media & Jurnalistik Kreatif',
-    tag: 'DIVISI JURNALISTIK',
+    title: 'DIVISI JURNALISTIK',
+    tag: 'DIVISI Jurnalistik',
     desc: 'Mengelola publikasi informasi, dokumentasi kegiatan, buletin dakwah, konten multimedia kreatif, dan syiar digital di era modern.',
     icon: Newspaper,
     detailTitle: 'Divisi Jurnalistik',
@@ -60,7 +60,7 @@ const DIVISION_SHOWCASE = [
   {
     num: '04',
     key: 'HUMAS',
-    title: 'Divisi Hubungan Masyarakat (HUMAS)',
+    title: 'DIVISI HUMAS (HUBUNGAN MASYARAKAT)',
     tag: 'DIVISI HUMAS',
     desc: 'Menjadi jembatan komunikasi, relasi, dan sinergi antara ROHIS sekolah, instansi pemerintah, lembaga keagamaan, serta masyarakat luas.',
     icon: Megaphone,
@@ -77,7 +77,7 @@ const DIVISION_SHOWCASE = [
   {
     num: '05',
     key: 'DANUS',
-    title: 'Divisi Dana Usaha (DANUS)',
+    title: 'DIVISI DANUS (DANA USAHA)',
     tag: 'DIVISI DANUS',
     desc: 'Membangun kemandirian finansial organisasi melalui kegiatan kewirausahaan halal, pengadaan merchandise resmi, kemitraan sponsorship, dan unit usaha produktif.',
     icon: Coins,
@@ -167,48 +167,18 @@ export default function Programs() {
           padding: '4rem 0 6rem',
         }}
       >
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto' }}>
-          {/* Interactive Responsive Explorer */}
-          <div className="showcase-grid-layout">
-            {/* Mobile: Sleek Horizontal Division Selector Tabs */}
-            <div className="showcase-mobile-tabs">
-              {DIVISION_SHOWCASE.map((item, idx) => {
-                const isActive = activeIdx === idx;
-                return (
-                  <button
-                    key={item.num}
-                    onClick={() => setActiveIdx(idx)}
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.45rem',
-                      padding: '0.55rem 1rem',
-                      borderRadius: '9999px',
-                      border: isActive ? '1px solid #E6C587' : '1px solid rgba(255, 255, 255, 0.12)',
-                      background: isActive ? 'rgba(20, 56, 44, 0.95)' : 'rgba(10, 32, 24, 0.7)',
-                      color: isActive ? '#E6C587' : 'rgba(245, 242, 237, 0.75)',
-                      cursor: 'pointer',
-                      whiteSpace: 'nowrap',
-                      flexShrink: 0,
-                      fontSize: '0.85rem',
-                      fontWeight: 600,
-                      transition: 'all 0.28s cubic-bezier(0.25, 1, 0.5, 1)',
-                      boxShadow: isActive ? '0 0 16px rgba(181, 141, 79, 0.25)' : 'none',
-                    }}
-                  >
-                    <span style={{
-                      fontSize: '0.75rem',
-                      fontWeight: 800,
-                      color: isActive ? 'var(--emerald-light)' : 'rgba(181, 141, 79, 0.8)',
-                    }}>{item.num}</span>
-                    <span>{item.key}</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Desktop: 01 to 05 List Cards */}
-            <div className="showcase-desktop-list">
+        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
+          {/* Interactive 2-Column Explorer */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+              gap: '2rem',
+              alignItems: 'start',
+            }}
+          >
+            {/* Left: 01 to 05 List Cards */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {DIVISION_SHOWCASE.map((item, idx) => {
                 const isActive = activeIdx === idx;
 
@@ -217,7 +187,7 @@ export default function Programs() {
                     key={item.num}
                     onClick={() => setActiveIdx(idx)}
                     style={{
-                      background: isActive ? 'rgba(20, 56, 44, 0.95)' : 'rgba(10, 32, 24, 0.65)',
+                      background: isActive ? 'rgba(20, 56, 44, 0.9)' : 'rgba(10, 32, 24, 0.65)',
                       border: isActive ? '1px solid rgba(181, 141, 79, 0.75)' : '1px solid rgba(255, 255, 255, 0.08)',
                       borderRadius: '16px',
                       padding: '1.25rem 1.5rem',
@@ -225,7 +195,7 @@ export default function Programs() {
                       alignItems: 'center',
                       gap: '1.25rem',
                       cursor: 'pointer',
-                      transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
+                      transition: 'all 0.3s ease',
                       boxShadow: isActive ? '0 0 24px rgba(181, 141, 79, 0.16)' : 'none',
                     }}
                     onMouseEnter={e => {
@@ -257,13 +227,14 @@ export default function Programs() {
                     </div>
 
                     {/* Middle Text */}
-                    <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ flex: 1 }}>
                       <div
                         style={{
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'space-between',
                           gap: '0.5rem',
+                          flexWrap: 'wrap',
                         }}
                       >
                         <h4
@@ -284,7 +255,6 @@ export default function Programs() {
                             fontWeight: 600,
                             letterSpacing: '0.04em',
                             textTransform: 'uppercase',
-                            flexShrink: 0,
                           }}
                         >
                           {item.tag}
@@ -319,10 +289,10 @@ export default function Programs() {
                 backdropFilter: 'blur(20px)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 borderRadius: '24px',
-                padding: 'clamp(1.5rem, 4vw, 2.5rem) clamp(1.25rem, 3vw, 2rem)',
+                padding: '2.5rem 2rem',
                 boxShadow: '0 16px 40px rgba(0, 0, 0, 0.3)',
-                boxSizing: 'border-box',
-                minWidth: 0,
+                position: 'sticky',
+                top: '6rem',
               }}
             >
               {/* Badge & Title Header */}
@@ -424,14 +394,37 @@ export default function Programs() {
 
               {/* Action Button */}
               <Link
-                to={`/about?div=${current.key}#pengurus`}
-                className="btn btn-emerald"
+                to="/about#pengurus"
                 style={{
                   marginTop: '2rem',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.8rem 1.5rem',
+                  borderRadius: '9999px',
+                  background: 'rgba(16, 185, 129, 0.22)',
+                  border: '1px solid var(--emerald)',
+                  color: 'var(--warm-alabaster)',
+                  fontSize: '0.88rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
                   width: '100%',
+                  justifyContent: 'center',
+                  textDecoration: 'none',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.background = 'var(--emerald)';
+                  e.currentTarget.style.color = 'white';
+                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(16, 185, 129, 0.4)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = 'rgba(16, 185, 129, 0.22)';
+                  e.currentTarget.style.color = 'var(--warm-alabaster)';
+                  e.currentTarget.style.boxShadow = 'none';
                 }}
               >
-                Lihat Struktur & Pengurus Divisi Ini <ArrowRight size={16} />
+                Silabus Lengkap Divisi Ini <ArrowRight size={16} />
               </Link>
             </div>
           </div>

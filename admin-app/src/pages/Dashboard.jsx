@@ -1,6 +1,6 @@
 import { useData } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
-import { FileText, Calendar, School, MessageCircle, Library, Users, TrendingUp, Clock, Download, Upload } from 'lucide-react';
+import { FileText, Calendar, School, MessageCircle, Library, Users, TrendingUp, Clock, Download, Upload, Image as ImageIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 function StatCard({ icon: Icon, value, label, color, link }) {
@@ -24,15 +24,18 @@ function StatCard({ icon: Icon, value, label, color, link }) {
 }
 
 export default function Dashboard() {
-  const { articles, events, schools, questions, library, auditLogs, team, users } = useData();
+  const { articles, events, schools, gallery, questions, library, auditLogs, team, users } = useData();
   const { user } = useAuth();
 
   const pendingQA = questions.filter(q => q.status === 'pending').length;
   const upcomingEvents = events.filter(e => e.status === 'upcoming').length;
+  const totalPengurus = Array.isArray(team)
+    ? team.length
+    : ((team?.bph?.length || 0) + (team?.divisions?.reduce((acc, d) => acc + (d.members?.length || 0), 0) || 0));
 
   // Backup handler
   const handleBackup = () => {
-    const backupData = { articles, events, schools, questions, library, team, users, auditLogs };
+    const backupData = { articles, events, schools, gallery, questions, library, team, users, auditLogs };
     const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -59,10 +62,11 @@ export default function Dashboard() {
       }}>
         <StatCard icon={FileText} value={articles.length} label="Artikel" color="var(--emerald)" link="/content/articles" />
         <StatCard icon={Calendar} value={upcomingEvents} label="Agenda Mendatang" color="var(--antique-brass)" link="/content/events" />
+        <StatCard icon={ImageIcon} value={(gallery || []).length} label="Album Galeri" color="#06B6D4" link="/content/gallery" />
         <StatCard icon={School} value={schools.length} label="Sekolah" color="#7C3AED" link="/content/schools" />
         <StatCard icon={MessageCircle} value={pendingQA} label="Q&A Menunggu" color="#F59E0B" link="/qa" />
         <StatCard icon={Library} value={library.length} label="Materi Library" color="#3B82F6" link="/library" />
-        <StatCard icon={Users} value={team.length} label="Pengurus" color="#EC4899" link="/content/team" />
+        <StatCard icon={Users} value={totalPengurus} label="Pengurus" color="#EC4899" link="/content/team" />
       </div>
 
       {/* Quick Actions & Recent Logs */}

@@ -10,11 +10,10 @@ export default function Library() {
   const [search, setSearch] = useState('');
   const [catFilter, setCatFilter] = useState('Semua');
 
-  const safeLibrary = Array.isArray(library) ? library : [];
-  const categories = ['Semua', ...new Set(safeLibrary.map(l => l.category).filter(Boolean))];
-  const filtered = safeLibrary
+  const categories = ['Semua', ...new Set(library.map(l => l.category))];
+  const filtered = library
     .filter(l => catFilter === 'Semua' || l.category === catFilter)
-    .filter(l => (l.title || '').toLowerCase().includes((search || '').toLowerCase()));
+    .filter(l => l.title.toLowerCase().includes(search.toLowerCase()));
 
   return (
     <div>
@@ -47,7 +46,7 @@ export default function Library() {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '1.25rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.25rem' }}>
             {filtered.map((item, i) => {
               const Icon = typeIcons[item.type] || FileText;
               const color = typeColors[item.type] || 'var(--emerald)';
@@ -55,7 +54,7 @@ export default function Library() {
                 <div key={item.id} className="animate-fade-in-up" style={{
                   animationDelay: `${i * 60}ms`, background: 'white', borderRadius: 'var(--radius-xl)',
                   padding: '1.75rem', border: '1px solid rgba(13,43,34,0.06)', boxShadow: 'var(--shadow-sm)',
-                  display: 'flex', gap: '1.25rem', alignItems: 'flex-start', transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
+                  display: 'flex', gap: '1.25rem', alignItems: 'flex-start', transition: 'all 0.3s',
                 }}
                 onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; }}
                 onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; }}

@@ -8,8 +8,7 @@ export default function Consultation() {
   const [submitted, setSubmitted] = useState(false);
   const [expanded, setExpanded] = useState(null);
 
-  const safeQuestions = Array.isArray(questions) ? questions : [];
-  const published = safeQuestions.filter(q => q.isPublic && q.status === 'answered');
+  const published = questions.filter(q => q.isPublic && q.status === 'answered');
   const categories = ['Umum', 'Fiqih', 'Akhlak', 'Motivasi', 'Ibadah'];
 
   const handleSubmit = (e) => {
@@ -39,7 +38,7 @@ export default function Consultation() {
 
       <section className="section" style={{ background: 'var(--warm-alabaster)' }}>
         <div className="container" style={{ maxWidth: 900, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '2rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '2rem' }}>
             {/* Form */}
             <div>
               <h2 style={{ fontSize: '1.35rem', marginBottom: '1.5rem' }}>Ajukan Pertanyaan</h2>

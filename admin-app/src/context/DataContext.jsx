@@ -6,7 +6,8 @@ const DataContext = createContext(null);
 export function DataProvider({ children }) {
   const [data, setData] = useState({
     home: null, articles: [], events: [], schools: [], gallery: [],
-    questions: [], library: [], team: [], users: [], auditLogs: [],
+    questions: [], library: [], team: { bph: [], divisions: [] },
+    programs: [], settings: null, users: [], auditLogs: [],
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -24,7 +25,9 @@ export function DataProvider({ children }) {
         gallery: all['rokaba:gallery'] || [],
         questions: all['rokaba:questions'] || [],
         library: all['rokaba:library'] || [],
-        team: all['rokaba:team'] || [],
+        team: all['rokaba:team'] || { bph: [], divisions: [] },
+        programs: all['rokaba:programs'] || [],
+        settings: all['rokaba:settings'] || null,
         users: all['rokaba:users'] || [],
         auditLogs: all['rokaba:audit_logs'] || [],
       });

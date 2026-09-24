@@ -241,7 +241,7 @@ export default function Gallery() {
 
       {/* ── CATEGORY FILTER BAR & MEDIA GRID ── */}
       <section className="section" style={{ background: 'var(--warm-alabaster)', minHeight: '60vh' }}>
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
           
           {/* Sub-Filter: Categories */}
           {categories.length > 1 && (
@@ -252,8 +252,6 @@ export default function Gallery() {
                 gap: '0.5rem',
                 marginBottom: '2rem',
                 overflowX: 'auto',
-                width: '100%',
-                maxWidth: '100%',
                 paddingBottom: '0.5rem',
                 scrollbarWidth: 'none',
               }}
@@ -289,7 +287,7 @@ export default function Gallery() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
                 gap: '1.5rem',
               }}
             >
@@ -649,7 +647,7 @@ export default function Gallery() {
                       justifyContent: 'center',
                       color: 'var(--warm-alabaster)',
                       cursor: 'pointer',
-                      transition: 'all 0.28s cubic-bezier(0.25, 1, 0.5, 1)',
+                      transition: 'all 0.2s',
                       textDecoration: 'none',
                     }}
                   >
@@ -669,7 +667,7 @@ export default function Gallery() {
                     justifyContent: 'center',
                     color: 'var(--warm-alabaster)',
                     cursor: 'pointer',
-                    transition: 'all 0.28s cubic-bezier(0.25, 1, 0.5, 1)',
+                    transition: 'all 0.2s',
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(239,68,68,0.85)')}
                   onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.06)')}
@@ -806,7 +804,7 @@ export default function Gallery() {
                     justifyContent: 'center',
                     cursor: 'pointer',
                     backdropFilter: 'blur(8px)',
-                    transition: 'all 0.28s cubic-bezier(0.25, 1, 0.5, 1)',
+                    transition: 'all 0.2s',
                     zIndex: 10,
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(16, 185, 129, 0.85)')}
@@ -836,7 +834,7 @@ export default function Gallery() {
                     justifyContent: 'center',
                     cursor: 'pointer',
                     backdropFilter: 'blur(8px)',
-                    transition: 'all 0.28s cubic-bezier(0.25, 1, 0.5, 1)',
+                    transition: 'all 0.2s',
                     zIndex: 10,
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(16, 185, 129, 0.85)')}

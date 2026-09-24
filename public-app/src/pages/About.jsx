@@ -1,6 +1,5 @@
 import { parseImageUrl } from '@shared/services/mediaHelper.js';
-import { useState, useMemo, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useState, useMemo } from 'react';
 import { useData } from '../context/DataContext';
 import {
   Users, Target, Heart, Award, BookOpen, Star,
@@ -40,7 +39,7 @@ const DIVISION_SHOWCASE = [
   {
     num: '01',
     key: 'SDM',
-    title: 'Divisi Sumber Daya Manusia (SDM)',
+    title: 'DIVISI SDM (SUMBER DAYA MANUSIA)',
     tag: 'DIVISI SDM',
     desc: 'Fokus pada pembinaan karakter, peningkatan kapasitas kader, regenerasi kepengurusan, serta penguatan soliditas anggota ROHIS se-Kabupaten Banyumas.',
     icon: Users,
@@ -57,8 +56,8 @@ const DIVISION_SHOWCASE = [
   {
     num: '02',
     key: 'Dakwah',
-    title: 'Divisi Syiar & Dakwah Islam',
-    tag: 'DIVISI DAKWAH',
+    title: 'DIVISI DAKWAH',
+    tag: 'DIVISI Dakwah',
     desc: 'Jantung gerakan dakwah Islam yang menyelenggarakan kajian keilmuan, pembinaan ruhiyah, serta syiar Islam yang rahmatan lil \'alamin bagi pelajar dan masyarakat.',
     icon: Flame,
     detailTitle: 'Divisi Dakwah',
@@ -74,8 +73,8 @@ const DIVISION_SHOWCASE = [
   {
     num: '03',
     key: 'Jurnalistik',
-    title: 'Divisi Media & Jurnalistik Kreatif',
-    tag: 'DIVISI JURNALISTIK',
+    title: 'DIVISI JURNALISTIK',
+    tag: 'DIVISI Jurnalistik',
     desc: 'Mengelola publikasi informasi, dokumentasi kegiatan, buletin dakwah, konten multimedia kreatif, dan syiar digital di era modern.',
     icon: Newspaper,
     detailTitle: 'Divisi Jurnalistik',
@@ -91,7 +90,7 @@ const DIVISION_SHOWCASE = [
   {
     num: '04',
     key: 'HUMAS',
-    title: 'Divisi Hubungan Masyarakat (HUMAS)',
+    title: 'DIVISI HUMAS (HUBUNGAN MASYARAKAT)',
     tag: 'DIVISI HUMAS',
     desc: 'Menjadi jembatan komunikasi, relasi, dan sinergi antara ROHIS sekolah, instansi pemerintah, lembaga keagamaan, serta masyarakat luas.',
     icon: Megaphone,
@@ -108,7 +107,7 @@ const DIVISION_SHOWCASE = [
   {
     num: '05',
     key: 'DANUS',
-    title: 'Divisi Dana Usaha (DANUS)',
+    title: 'DIVISI DANUS (DANA USAHA)',
     tag: 'DIVISI DANUS',
     desc: 'Membangun kemandirian finansial organisasi melalui kegiatan kewirausahaan halal, pengadaan merchandise resmi, kemitraan sponsorship, dan unit usaha produktif.',
     icon: Coins,
@@ -197,15 +196,14 @@ const DIVISIONS = [
  * Normalizes member division to match division id
  */
 function getMemberDivisionId(member) {
-  const div = (member?.division || member?.department || '').toLowerCase();
-  const role = (member?.role || member?.position || '').toLowerCase();
-  if (div.includes('bph') || role.includes('ketua') || role.includes('sekretaris') || role.includes('bendahara') || role.includes('kadep')) return 'BPH';
+  const div = (member?.division || '').toLowerCase();
+  if (div.includes('bph')) return 'BPH';
   if (div.includes('sdm')) return 'SDM';
   if (div.includes('dakwah')) return 'Dakwah';
   if (div.includes('humas')) return 'HUMAS';
-  if (div.includes('jurnalistik') || div.includes('media')) return 'Jurnalistik';
+  if (div.includes('jurnalistik')) return 'Jurnalistik';
   if (div.includes('danus') || div.includes('dana')) return 'DANUS';
-  return 'BPH';
+  return 'LAINNYA';
 }
 
 /**
@@ -233,9 +231,9 @@ function MemberCard({ member, index }) {
     member.role === 'Ketua Ikhwan' ||
     member.role === 'Ketua Akhwat';
   const isKoordinator =
-    (member.position || member.role || '').toLowerCase().includes('koordinator') ||
-    (member.position || member.role || '').toLowerCase().includes('sekretaris') ||
-    (member.position || member.role || '').toLowerCase().includes('bendahara');
+    (member.position || '').toLowerCase().includes('koordinator') ||
+    (member.position || '').toLowerCase().includes('sekretaris') ||
+    (member.position || '').toLowerCase().includes('bendahara');
 
   const igUrl = formatInstagramUrl(member.instagram);
   const igHandle = formatInstagramHandle(member.instagram);
@@ -325,68 +323,80 @@ function MemberCard({ member, index }) {
             gap: '0.35rem',
             fontSize: '0.78rem',
             color: 'rgba(13, 43, 34, 0.65)',
-            marginBottom: '0.75rem',
-            lineHeight: 1.3,
+            marginBottom: '0.5rem',
+            maxWidth: '100%',
           }}
         >
-          <GraduationCap size={13} style={{ flexShrink: 0, color: 'var(--antique-brass)' }} />
-          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          <GraduationCap size={14} style={{ color: 'var(--antique-brass)', flexShrink: 0 }} />
+          <span
+            style={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              maxWidth: 190,
+            }}
+            title={member.school}
+          >
             {member.school}
           </span>
         </div>
       ) : (
-        <div style={{ height: '1.2rem', marginBottom: '0.75rem' }} />
+        <div style={{ height: '1.2rem', marginBottom: '0.5rem' }} />
       )}
 
-      {/* Bio Snippet if exists */}
-      {member.bio && (
-        <p
-          style={{
-            fontSize: '0.76rem',
-            color: 'rgba(13, 43, 34, 0.55)',
-            lineHeight: 1.45,
-            marginBottom: '0.85rem',
-            fontStyle: 'italic',
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-          }}
-        >
-          "{member.bio}"
-        </p>
-      )}
+      {/* Period */}
+      <div
+        style={{
+          fontSize: '0.72rem',
+          color: 'rgba(13, 43, 34, 0.4)',
+          marginBottom: '1.15rem',
+        }}
+      >
+        Periode {member.period || '2025/2026'}
+      </div>
 
       {/* Instagram Button */}
-      <div style={{ marginTop: 'auto', paddingTop: '0.5rem' }}>
+      <div style={{ marginTop: 'auto', width: '100%' }}>
         {igUrl ? (
           <a
             href={igUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-instagram"
-            aria-label={`Instagram ${member.name}`}
-            title={`Buka Instagram ${igHandle}`}
+            title={`Kunjungi profil Instagram ${member.name} (${igHandle})`}
+            style={{ width: '100%' }}
           >
             <InstagramIcon size={14} />
-            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <span
+              style={{
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
               {igHandle}
             </span>
+            <ExternalLink size={11} style={{ opacity: 0.7, marginLeft: 'auto', flexShrink: 0 }} />
           </a>
         ) : (
-          <span
+          <div
             style={{
               display: 'inline-flex',
               alignItems: 'center',
+              justifyContent: 'center',
               gap: '0.35rem',
-              fontSize: '0.72rem',
-              color: 'rgba(13, 43, 34, 0.3)',
-              padding: '0.3rem 0.6rem',
+              padding: '0.45rem 0.8rem',
+              fontSize: '0.74rem',
+              borderRadius: 'var(--radius-full)',
+              background: 'rgba(13, 43, 34, 0.04)',
+              color: 'rgba(13, 43, 34, 0.4)',
+              border: '1px dashed rgba(13, 43, 34, 0.12)',
+              width: '100%',
             }}
           >
-            <InstagramIcon size={13} style={{ opacity: 0.4 }} />
-            <span>—</span>
-          </span>
+            <InstagramIcon size={13} style={{ opacity: 0.5 }} />
+            <span>Instagram: -</span>
+          </div>
         )}
       </div>
     </div>
@@ -394,42 +404,7 @@ function MemberCard({ member, index }) {
 }
 
 export default function About() {
-  const { team: rawTeam } = useData();
-
-  // Safely normalize team to always be an array of members
-  const team = useMemo(() => {
-    if (Array.isArray(rawTeam)) return rawTeam;
-    if (!rawTeam || typeof rawTeam !== 'object') return [];
-    const list = [];
-    if (Array.isArray(rawTeam.bph)) {
-      rawTeam.bph.forEach((m, idx) => list.push({
-        ...m,
-        id: m.id || `bph-${idx}`,
-        position: m.position || m.role || 'Pengurus BPH',
-        role: m.role || m.position || 'Pengurus BPH',
-        division: m.division || 'BPH',
-      }));
-    }
-    const divs = Array.isArray(rawTeam.divisions)
-      ? rawTeam.divisions
-      : (rawTeam.divisions ? Object.values(rawTeam.divisions) : []);
-    divs.forEach(div => {
-      const divName = div.name || div.title || div.id || 'Divisi';
-      const short = div.shortName || divName;
-      if (Array.isArray(div.members)) {
-        div.members.forEach((m, idx) => list.push({
-          ...m,
-          id: m.id || `${short}-${idx}`,
-          position: m.position || m.role || 'Anggota Divisi',
-          role: m.role || m.position || 'Anggota Divisi',
-          division: m.division || short || divName,
-        }));
-      }
-    });
-    return list;
-  }, [rawTeam]);
-
-  const [searchParams] = useSearchParams();
+  const { team } = useData();
 
   // Division Filter & View States
   const [selectedDivision, setSelectedDivision] = useState('ALL');
@@ -439,32 +414,11 @@ export default function About() {
   // Showcase Active Division Index (0: SDM, 1: Dakwah, 2: Jurnalistik, 3: HUMAS, 4: DANUS)
   const [activeShowcaseIdx, setActiveShowcaseIdx] = useState(1); // Default to Divisi Dakwah as in screenshot
 
-  // Support direct navigation from Beranda via ?div=SDM / ?div=Dakwah
-  useEffect(() => {
-    const divParam = searchParams.get('div');
-    if (divParam) {
-      const idx = DIVISION_SHOWCASE.findIndex(d =>
-        d.key.toLowerCase() === divParam.toLowerCase() ||
-        d.tag.toLowerCase().includes(divParam.toLowerCase()) ||
-        d.title.toLowerCase().includes(divParam.toLowerCase())
-      );
-      if (idx !== -1) {
-        setActiveShowcaseIdx(idx);
-        setSelectedDivision(DIVISION_SHOWCASE[idx].key);
-        setTimeout(() => {
-          const el = document.getElementById('program-divisi');
-          if (el) el.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-      }
-    }
-  }, [searchParams]);
-
-  // Calculate Member Counts per Division safely
+  // Calculate Member Counts per Division
   const divisionCounts = useMemo(() => {
-    const safeTeam = Array.isArray(team) ? team : [];
-    const counts = { ALL: safeTeam.length };
+    const counts = { ALL: team.length };
     DIVISIONS.slice(1).forEach(div => {
-      counts[div.id] = safeTeam.filter(m => getMemberDivisionId(m) === div.id).length;
+      counts[div.id] = team.filter(m => getMemberDivisionId(m) === div.id).length;
     });
     return counts;
   }, [team]);
@@ -474,10 +428,9 @@ export default function About() {
     return DIVISIONS.find(d => d.id === selectedDivision) || DIVISIONS[0];
   }, [selectedDivision]);
 
-  // Filtered List for Pengurus safely
+  // Filtered List for Pengurus
   const filteredTeam = useMemo(() => {
-    const safeTeam = Array.isArray(team) ? team : [];
-    return safeTeam.filter(member => {
+    return team.filter(member => {
       const matchDivision =
         selectedDivision === 'ALL' || getMemberDivisionId(member) === selectedDivision;
       if (!matchDivision) return false;
@@ -485,7 +438,7 @@ export default function About() {
       if (!searchQuery.trim()) return true;
       const q = searchQuery.toLowerCase().trim();
       const name = (member.name || '').toLowerCase();
-      const pos = (member.position || member.role || '').toLowerCase();
+      const pos = (member.position || '').toLowerCase();
       const school = (member.school || '').toLowerCase();
       const ig = (member.instagram || '').toLowerCase();
       return name.includes(q) || pos.includes(q) || school.includes(q) || ig.includes(q);
@@ -523,6 +476,7 @@ export default function About() {
           style={{
             maxWidth: 1200,
             margin: '0 auto',
+            padding: '0 1.5rem',
             position: 'relative',
             zIndex: 1,
           }}
@@ -534,12 +488,11 @@ export default function About() {
             className="animate-fade-in-up delay-100"
             style={{
               fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(1.85rem, 5vw, 3rem)',
+              fontSize: 'clamp(2rem, 5vw, 3rem)',
               fontWeight: 800,
               color: 'var(--warm-alabaster)',
               maxWidth: 700,
-              lineHeight: 1.18,
-              wordBreak: 'break-word',
+              lineHeight: 1.15,
             }}
           >
             Forum Komunikasi Rohis{' '}
@@ -575,12 +528,12 @@ export default function About() {
           borderBottom: '1px solid rgba(255,255,255,0.05)',
         }}
       >
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
-              gap: '2.5rem',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gap: '3.5rem',
               alignItems: 'center',
             }}
           >
@@ -695,7 +648,7 @@ export default function About() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
               gap: '2rem',
             }}
           >
@@ -776,7 +729,7 @@ export default function About() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
               gap: '1.5rem',
             }}
           >
@@ -836,7 +789,7 @@ export default function About() {
           borderTop: '1px solid rgba(255,255,255,0.06)',
         }}
       >
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
           <div className="section-header" style={{ marginBottom: '3rem' }}>
             <span className="badge badge-emerald" style={{ marginBottom: '0.75rem' }}>
               <Sparkles size={14} /> 5 Pilar Gerakan
@@ -848,47 +801,17 @@ export default function About() {
             </p>
           </div>
 
-          {/* Interactive Responsive Explorer */}
-          <div className="showcase-grid-layout">
-            {/* Mobile: Sleek Horizontal Division Selector Tabs */}
-            <div className="showcase-mobile-tabs">
-              {DIVISION_SHOWCASE.map((item, idx) => {
-                const isActive = activeShowcaseIdx === idx;
-                return (
-                  <button
-                    key={item.num}
-                    onClick={() => setActiveShowcaseIdx(idx)}
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.45rem',
-                      padding: '0.55rem 1rem',
-                      borderRadius: '9999px',
-                      border: isActive ? '1px solid #E6C587' : '1px solid rgba(255, 255, 255, 0.12)',
-                      background: isActive ? 'rgba(20, 56, 44, 0.95)' : 'rgba(10, 32, 24, 0.7)',
-                      color: isActive ? '#E6C587' : 'rgba(245, 242, 237, 0.75)',
-                      cursor: 'pointer',
-                      whiteSpace: 'nowrap',
-                      flexShrink: 0,
-                      fontSize: '0.85rem',
-                      fontWeight: 600,
-                      transition: 'all 0.28s cubic-bezier(0.25, 1, 0.5, 1)',
-                      boxShadow: isActive ? '0 0 16px rgba(181, 141, 79, 0.25)' : 'none',
-                    }}
-                  >
-                    <span style={{
-                      fontSize: '0.75rem',
-                      fontWeight: 800,
-                      color: isActive ? 'var(--emerald-light)' : 'rgba(181, 141, 79, 0.8)',
-                    }}>{item.num}</span>
-                    <span>{item.key}</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Desktop: 01 to 05 List Cards */}
-            <div className="showcase-desktop-list">
+          {/* Interactive 2-Column Explorer */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+              gap: '2rem',
+              alignItems: 'start',
+            }}
+          >
+            {/* Left: 01 to 05 List Cards */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {DIVISION_SHOWCASE.map((item, idx) => {
                 const isActive = activeShowcaseIdx === idx;
 
@@ -897,7 +820,7 @@ export default function About() {
                     key={item.num}
                     onClick={() => setActiveShowcaseIdx(idx)}
                     style={{
-                      background: isActive ? 'rgba(20, 56, 44, 0.95)' : 'rgba(10, 32, 24, 0.65)',
+                      background: isActive ? 'rgba(20, 56, 44, 0.9)' : 'rgba(10, 32, 24, 0.65)',
                       border: isActive ? '1px solid rgba(181, 141, 79, 0.75)' : '1px solid rgba(255, 255, 255, 0.08)',
                       borderRadius: '16px',
                       padding: '1.25rem 1.5rem',
@@ -905,7 +828,7 @@ export default function About() {
                       alignItems: 'center',
                       gap: '1.25rem',
                       cursor: 'pointer',
-                      transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
+                      transition: 'all 0.3s ease',
                       boxShadow: isActive ? '0 0 24px rgba(181, 141, 79, 0.16)' : 'none',
                     }}
                     onMouseEnter={e => {
@@ -937,13 +860,14 @@ export default function About() {
                     </div>
 
                     {/* Middle Text */}
-                    <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ flex: 1 }}>
                       <div
                         style={{
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'space-between',
                           gap: '0.5rem',
+                          flexWrap: 'wrap',
                         }}
                       >
                         <h4
@@ -964,7 +888,6 @@ export default function About() {
                             fontWeight: 600,
                             letterSpacing: '0.04em',
                             textTransform: 'uppercase',
-                            flexShrink: 0,
                           }}
                         >
                           {item.tag}
@@ -992,17 +915,17 @@ export default function About() {
               })}
             </div>
 
-            {/* Right: Active Division Detail Panel (Image 3) */}
+            {/* Right: Active Division Detail Panel */}
             <div
               style={{
-                background: 'rgba(10, 32, 24, 0.85)',
+                background: 'rgba(10, 32, 24, 0.8)',
                 backdropFilter: 'blur(20px)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 borderRadius: '24px',
-                padding: 'clamp(1.5rem, 4vw, 2.5rem) clamp(1.25rem, 3vw, 2rem)',
+                padding: '2.5rem 2rem',
                 boxShadow: '0 16px 40px rgba(0, 0, 0, 0.3)',
-                boxSizing: 'border-box',
-                minWidth: 0,
+                position: 'sticky',
+                top: '6rem',
               }}
             >
               {/* Badge & Title Header */}
@@ -1109,13 +1032,35 @@ export default function About() {
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                   setSelectedDivision(currentShowcase.key);
                 }}
-                className="btn btn-emerald"
                 style={{
                   marginTop: '2rem',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.8rem 1.5rem',
+                  borderRadius: '9999px',
+                  background: 'rgba(16, 185, 129, 0.22)',
+                  border: '1px solid var(--emerald)',
+                  color: 'var(--warm-alabaster)',
+                  fontSize: '0.88rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
                   width: '100%',
+                  justifyContent: 'center',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.background = 'var(--emerald)';
+                  e.currentTarget.style.color = 'white';
+                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(16, 185, 129, 0.4)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = 'rgba(16, 185, 129, 0.22)';
+                  e.currentTarget.style.color = 'var(--warm-alabaster)';
+                  e.currentTarget.style.boxShadow = 'none';
                 }}
               >
-                Lihat Pengurus Divisi Ini <ArrowRight size={16} />
+                Silabus Lengkap Divisi Ini <ArrowRight size={16} />
               </button>
             </div>
           </div>
@@ -1125,16 +1070,16 @@ export default function About() {
       {/* ═══════════════════════════════════════════
           Team / Struktur Pengurus ROKABA
           ═══════════════════════════════════════════ */}
-      <section className="section section-pine" id="pengurus" style={{ padding: '5.5rem 0' }}>
+      <section className="section" id="pengurus">
         <div className="container" style={{ maxWidth: 1200, margin: '0 auto' }}>
           {/* Section Title */}
           <div className="section-header">
             <span className="badge badge-emerald" style={{ marginBottom: '0.5rem' }}>
               <Users size={13} /> Struktur Kepengurusan
             </span>
-            <h2 style={{ color: 'var(--warm-alabaster)' }}>Pengurus ROKABA</h2>
+            <h2>Pengurus ROKABA</h2>
             <div className="section-divider" />
-            <p style={{ color: 'rgba(245, 242, 237, 0.65)' }}>
+            <p>
               Generasi muda berdedikasi yang mengemban amanah memajukan dakwah pelajar Islam di Kabupaten Banyumas Periode 2025/2026.
             </p>
           </div>
@@ -1156,8 +1101,7 @@ export default function About() {
               <div
                 style={{
                   position: 'relative',
-                  flex: '1 1 240px',
-                  minWidth: 0,
+                  flex: '1 1 300px',
                   maxWidth: 420,
                 }}
               >
@@ -1303,10 +1247,8 @@ export default function About() {
             <div
               className="animate-fade-in-up"
               style={{
-                background: 'linear-gradient(135deg, rgba(20, 56, 44, 0.9) 0%, rgba(13, 43, 34, 0.95) 100%)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
-                border: '1px solid rgba(16, 185, 129, 0.25)',
+                background: 'linear-gradient(135deg, rgba(13,43,34,0.03) 0%, rgba(16,185,129,0.06) 100%)',
+                border: '1px solid rgba(16,185,129,0.18)',
                 borderRadius: 'var(--radius-xl)',
                 padding: '1.75rem 2rem',
                 marginBottom: '2rem',
@@ -1314,7 +1256,6 @@ export default function About() {
                 alignItems: 'center',
                 gap: '1.5rem',
                 flexWrap: 'wrap',
-                boxShadow: '0 12px 32px rgba(0, 0, 0, 0.25)',
               }}
             >
               <div
@@ -1327,7 +1268,7 @@ export default function About() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   boxShadow: 'var(--shadow-sm)',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  border: '1px solid rgba(13,43,34,0.08)',
                   color: activeDivMeta.accentColor,
                   flexShrink: 0,
                 }}
@@ -1336,7 +1277,7 @@ export default function About() {
               </div>
               <div style={{ flex: 1, minWidth: 260 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-                  <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--warm-alabaster)', margin: 0 }}>
+                  <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--deep-pine)' }}>
                     {activeDivMeta.label}
                   </h3>
                   <span className="badge badge-emerald" style={{ fontSize: '0.75rem' }}>
@@ -1345,22 +1286,20 @@ export default function About() {
                 </div>
                 <p
                   style={{
-                    color: '#E6C587',
+                    color: 'var(--antique-brass)',
                     fontSize: '0.88rem',
                     fontWeight: 600,
-                    marginTop: '0.25rem',
-                    marginBottom: 0,
+                    marginTop: '0.2rem',
                   }}
                 >
                   {activeDivMeta.tagline}
                 </p>
                 <p
                   style={{
-                    color: 'rgba(245, 242, 237, 0.75)',
+                    color: 'rgba(13,43,34,0.65)',
                     fontSize: '0.86rem',
-                    marginTop: '0.4rem',
-                    marginBottom: 0,
-                    lineHeight: 1.65,
+                    marginTop: '0.35rem',
+                    lineHeight: 1.6,
                   }}
                 >
                   {activeDivMeta.description}
@@ -1375,21 +1314,21 @@ export default function About() {
               style={{
                 marginBottom: '1.5rem',
                 fontSize: '0.88rem',
-                color: 'rgba(245, 242, 237, 0.75)',
+                color: 'rgba(13,43,34,0.6)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.5rem',
               }}
             >
               <span>
-                Menampilkan <strong style={{ color: 'var(--warm-alabaster)' }}>{filteredTeam.length}</strong> pengurus untuk pencarian &ldquo;{searchQuery}&rdquo;
+                Menampilkan <strong>{filteredTeam.length}</strong> pengurus untuk pencarian &ldquo;{searchQuery}&rdquo;
               </span>
               <button
                 onClick={() => setSearchQuery('')}
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: 'var(--emerald-light)',
+                  color: 'var(--emerald)',
                   fontWeight: 600,
                   cursor: 'pointer',
                   fontSize: '0.85rem',
@@ -1405,13 +1344,11 @@ export default function About() {
             /* Empty State */
             <div
               style={{
-                background: 'rgba(255, 255, 255, 0.05)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
+                background: 'white',
                 borderRadius: 'var(--radius-xl)',
                 padding: '3.5rem 2rem',
                 textAlign: 'center',
-                border: '1px dashed rgba(255, 255, 255, 0.2)',
+                border: '1px dashed rgba(13,43,34,0.15)',
               }}
             >
               <div
@@ -1419,20 +1356,20 @@ export default function About() {
                   width: 56,
                   height: 56,
                   borderRadius: '50%',
-                  background: 'rgba(255, 255, 255, 0.1)',
+                  background: 'rgba(13,43,34,0.05)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   margin: '0 auto 1rem',
-                  color: 'var(--warm-alabaster)',
+                  color: 'rgba(13,43,34,0.4)',
                 }}
               >
                 <Users size={26} />
               </div>
-              <h3 style={{ fontSize: '1.15rem', color: 'var(--warm-alabaster)', marginBottom: '0.5rem' }}>
+              <h3 style={{ fontSize: '1.15rem', color: 'var(--deep-pine)', marginBottom: '0.5rem' }}>
                 Tidak Ada Anggota Ditemukan
               </h3>
-              <p style={{ color: 'rgba(245, 242, 237, 0.7)', fontSize: '0.88rem', maxWidth: 400, margin: '0 auto 1.5rem' }}>
+              <p style={{ color: 'rgba(13,43,34,0.5)', fontSize: '0.88rem', maxWidth: 400, margin: '0 auto 1.5rem' }}>
                 Tidak ditemukan nama pengurus, jabatan, atau sekolah yang cocok dengan pencarian Anda.
               </p>
               <button
@@ -1450,7 +1387,7 @@ export default function About() {
             /* ── GROUPED BY DIVISION VIEW ── */
             <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
               {DIVISIONS.slice(1).map(division => {
-                const divisionMembers = (Array.isArray(team) ? team : []).filter(m => getMemberDivisionId(m) === division.id);
+                const divisionMembers = team.filter(m => getMemberDivisionId(m) === division.id);
                 if (divisionMembers.length === 0) return null;
 
                 const DivIcon = division.icon;
@@ -1465,7 +1402,7 @@ export default function About() {
                         justifyContent: 'space-between',
                         paddingBottom: '0.85rem',
                         marginBottom: '1.5rem',
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                        borderBottom: '2px solid rgba(13,43,34,0.08)',
                         flexWrap: 'wrap',
                         gap: '0.75rem',
                       }}
@@ -1480,7 +1417,7 @@ export default function About() {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            border: '1px solid rgba(255, 255, 255, 0.15)',
+                            border: '1px solid rgba(13,43,34,0.08)',
                             color: division.accentColor,
                             boxShadow: 'var(--shadow-sm)',
                           }}
@@ -1488,10 +1425,10 @@ export default function About() {
                           <DivIcon size={20} />
                         </div>
                         <div>
-                          <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--warm-alabaster)', margin: 0 }}>
+                          <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--deep-pine)' }}>
                             {division.label}
                           </h3>
-                          <p style={{ fontSize: '0.82rem', color: 'rgba(245, 242, 237, 0.65)', marginTop: '0.2rem', margin: 0 }}>
+                          <p style={{ fontSize: '0.82rem', color: 'rgba(13,43,34,0.6)' }}>
                             {division.tagline}
                           </p>
                         </div>
@@ -1505,7 +1442,7 @@ export default function About() {
                     <div
                       style={{
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 220px), 1fr))',
+                        gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
                         gap: '1.5rem',
                       }}
                     >
@@ -1522,7 +1459,7 @@ export default function About() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 220px), 1fr))',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
                 gap: '1.5rem',
               }}
             >

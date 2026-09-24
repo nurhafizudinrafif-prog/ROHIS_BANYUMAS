@@ -3,9 +3,8 @@ import { Calendar, MapPin, Clock, CheckCircle, AlertCircle } from 'lucide-react'
 
 export default function Events() {
   const { events } = useData();
-  const safeEvents = Array.isArray(events) ? events : [];
-  const upcoming = safeEvents.filter(e => e.status !== 'completed').sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
-  const completed = safeEvents.filter(e => e.status === 'completed').sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+  const upcoming = events.filter(e => e.status === 'upcoming').sort((a, b) => new Date(a.date) - new Date(b.date));
+  const completed = events.filter(e => e.status === 'completed').sort((a, b) => new Date(b.date) - new Date(a.date));
 
   return (
     <div>
@@ -39,7 +38,7 @@ export default function Events() {
                       animationDelay: `${i * 80}ms`, background: 'white', borderRadius: 'var(--radius-xl)',
                       padding: '1.75rem', display: 'flex', gap: '1.5rem', alignItems: 'flex-start',
                       border: '1px solid rgba(13,43,34,0.06)', boxShadow: 'var(--shadow-sm)',
-                      borderLeft: '4px solid var(--emerald)', transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
+                      borderLeft: '4px solid var(--emerald)', transition: 'all 0.3s',
                     }}>
                       <div style={{
                         minWidth: 68, textAlign: 'center', background: 'var(--emerald-glass)',

@@ -37,8 +37,6 @@ export default function Navbar() {
       top: 0,
       left: 0,
       right: 0,
-      width: '100%',
-      maxWidth: '100vw',
       zIndex: 1000,
       padding: scrolled ? '0.6rem 0' : '1rem 0',
       background: scrolled 
@@ -46,17 +44,15 @@ export default function Navbar() {
         : 'transparent',
       backdropFilter: scrolled ? 'blur(20px)' : 'none',
       borderBottom: scrolled ? '1px solid rgba(16, 185, 129, 0.1)' : 'none',
-      transition: 'all 0.4s cubic-bezier(0.25, 1, 0.5, 1)',
+      transition: 'all 0.3s ease',
     }}>
       <div className="container" style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        gap: '0.75rem',
         maxWidth: 1200,
         margin: '0 auto',
-        width: '100%',
-        boxSizing: 'border-box',
+        padding: '0 1.5rem',
       }}>
         {/* Logo */}
         <Link to="/" style={{
@@ -64,7 +60,6 @@ export default function Navbar() {
           alignItems: 'center',
           gap: '0.65rem',
           textDecoration: 'none',
-          flexShrink: 0,
         }}>
           <img
             src={logoImg}
@@ -106,20 +101,16 @@ export default function Navbar() {
             const isActive = location.pathname === link.path || 
               (link.path !== '/' && location.pathname.startsWith(link.path));
             return (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`nav-link-pill ${isActive ? 'active' : ''}`}
-                style={{
-                  padding: '0.45rem 0.85rem',
-                  fontSize: '0.82rem',
-                  fontWeight: isActive ? 600 : 500,
-                  color: isActive ? 'var(--emerald-light)' : 'rgba(245,242,237,0.7)',
-                  borderRadius: 'var(--radius-full)',
-                  background: isActive ? 'rgba(16,185,129,0.12)' : 'transparent',
-                  textDecoration: 'none',
-                }}
-              >
+              <Link key={link.path} to={link.path} style={{
+                padding: '0.45rem 0.85rem',
+                fontSize: '0.82rem',
+                fontWeight: isActive ? 600 : 500,
+                color: isActive ? 'var(--emerald-light)' : 'rgba(245,242,237,0.7)',
+                borderRadius: 'var(--radius-full)',
+                background: isActive ? 'rgba(16,185,129,0.12)' : 'transparent',
+                transition: 'all 0.2s ease',
+                textDecoration: 'none',
+              }}>
                 {link.label}
               </Link>
             );
@@ -127,27 +118,17 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Toggle */}
-        <button
-          className="hide-desktop"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Menu Navigasi"
-          style={{
-            background: 'rgba(255,255,255,0.1)',
-            border: 'none',
-            borderRadius: '10px',
-            padding: '0.5rem',
-            cursor: 'pointer',
-            color: 'var(--warm-alabaster)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0,
-            transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-          }}
-          onMouseDown={e => e.currentTarget.style.transform = 'scale(0.88)'}
-          onMouseUp={e => e.currentTarget.style.transform = 'scale(1)'}
-          onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
-        >
+        <button className="hide-desktop" onClick={() => setIsOpen(!isOpen)} style={{
+          background: 'rgba(255,255,255,0.1)',
+          border: 'none',
+          borderRadius: '10px',
+          padding: '0.5rem',
+          cursor: 'pointer',
+          color: 'var(--warm-alabaster)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
           {isOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
@@ -159,37 +140,26 @@ export default function Navbar() {
           top: '100%',
           left: 0,
           right: 0,
-          width: '100%',
-          maxWidth: '100vw',
-          boxSizing: 'border-box',
           background: 'rgba(13, 43, 34, 0.98)',
           backdropFilter: 'blur(24px)',
           padding: '1rem 1.5rem 1.5rem',
           borderBottom: '1px solid rgba(16,185,129,0.15)',
-          animation: 'fadeInUp 0.35s cubic-bezier(0.25, 1, 0.5, 1) forwards',
+          animation: 'fadeInUp 0.3s ease',
         }}>
-          {navLinks.map((link, idx) => {
+          {navLinks.map((link) => {
             const isActive = location.pathname === link.path;
             return (
-              <Link
-                key={link.path}
-                to={link.path}
-                onClick={() => setIsOpen(false)}
-                style={{
-                  display: 'block',
-                  padding: '0.75rem 1rem',
-                  fontSize: '0.95rem',
-                  fontWeight: isActive ? 600 : 400,
-                  color: isActive ? 'var(--emerald-light)' : 'rgba(245,242,237,0.8)',
-                  borderRadius: 'var(--radius-md)',
-                  background: isActive ? 'rgba(16,185,129,0.1)' : 'transparent',
-                  textDecoration: 'none',
-                  marginBottom: '0.2rem',
-                  animation: 'slideInRight 0.35s cubic-bezier(0.25, 1, 0.5, 1) both',
-                  animationDelay: `${idx * 35}ms`,
-                  transition: 'transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), background 0.25s ease',
-                }}
-              >
+              <Link key={link.path} to={link.path} style={{
+                display: 'block',
+                padding: '0.75rem 1rem',
+                fontSize: '0.95rem',
+                fontWeight: isActive ? 600 : 400,
+                color: isActive ? 'var(--emerald-light)' : 'rgba(245,242,237,0.8)',
+                borderRadius: 'var(--radius-md)',
+                background: isActive ? 'rgba(16,185,129,0.1)' : 'transparent',
+                textDecoration: 'none',
+                marginBottom: '0.2rem',
+              }}>
                 {link.label}
               </Link>
             );

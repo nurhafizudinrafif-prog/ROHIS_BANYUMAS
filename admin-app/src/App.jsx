@@ -5,6 +5,9 @@ import Login from './pages/Login';
 import AdminLayout from './components/AdminLayout';
 import Dashboard from './pages/Dashboard';
 import ContentManager from './pages/ContentManager';
+import GalleryManager from './pages/GalleryManager';
+import TeamManager from './pages/TeamManager';
+import Settings from './pages/Settings';
 import QAModeration from './pages/QAModeration';
 import LibraryManager from './pages/LibraryManager';
 import UserManager from './pages/UserManager';
@@ -22,11 +25,14 @@ function AppRoutes() {
       <Route path="/login" element={isLoggedIn ? <Navigate to="/" replace /> : <Login />} />
       <Route path="/" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
         <Route index element={<Dashboard />} />
+        <Route path="content/gallery" element={<GalleryManager />} />
+        <Route path="content/team" element={<TeamManager />} />
         <Route path="content/:type" element={<ContentManager />} />
         <Route path="qa" element={<QAModeration />} />
         <Route path="library" element={<LibraryManager />} />
         <Route path="users" element={<UserManager />} />
         <Route path="audit" element={<AuditLogs />} />
+        <Route path="settings" element={<Settings />} />
       </Route>
     </Routes>
   );
