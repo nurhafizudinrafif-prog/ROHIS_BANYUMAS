@@ -150,7 +150,7 @@ export default function AdminLayout() {
       </header>
 
       {/* ══════════ SIDEBAR & PAGE CONTENT ══════════ */}
-      <div className="admin-container">
+      <div className={`admin-container ${sidebarOpen ? 'sidebar-open' : ''}`}>
         {/* Mobile Backdrop Overlay */}
         {sidebarOpen && (
           <div

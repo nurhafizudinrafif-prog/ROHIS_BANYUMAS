@@ -32,7 +32,7 @@
   justify-content: space-between;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 50;
 }
 
 .admin-topbar-left {
@@ -157,7 +157,6 @@
   display: flex;
   flex: 1;
   position: relative;
-  z-index: 1;
 }
 
 .admin-sidebar {
@@ -311,7 +310,6 @@
   overflow-y: auto;
   overflow-x: hidden;
   position: relative;
-  z-index: 1;
 }
 
 /* ══════════ MOBILE TOGGLE & DRAWER ══════════ */
@@ -341,9 +339,9 @@
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  z-index: 998;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1050;
   animation: fadeIn 0.2s ease forwards;
 }
 
@@ -428,6 +426,11 @@
     gap: 0.45rem;
   }
 
+  .admin-container.sidebar-open {
+    position: relative;
+    z-index: 1050;
+  }
+
   /* Off-canvas mobile drawer */
   .admin-sidebar {
     position: fixed;
@@ -438,21 +441,24 @@
     max-width: 86vw;
     height: 100vh;
     min-height: 100vh;
-    z-index: 999;
+    height: 100dvh;
+    min-height: 100dvh;
+    z-index: 1100;
     transform: translateX(-100%);
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     box-shadow: none;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     padding: 1.25rem 1rem;
-    background: rgba(3, 14, 17, 0.97);
+    background: #02090C;
+    border-right: 1px solid rgba(0, 255, 200, 0.2);
   }
 
   .admin-sidebar.open {
     transform: translateX(0);
     box-shadow:
-      0 0 50px rgba(0, 0, 0, 0.85),
-      4px 0 25px rgba(0, 240, 207, 0.18);
+      0 0 60px rgba(0, 0, 0, 0.95),
+      6px 0 30px rgba(0, 240, 207, 0.25);
   }
 
   .admin-sidebar-mobile-header {
