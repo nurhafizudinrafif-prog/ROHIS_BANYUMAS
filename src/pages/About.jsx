@@ -1,11 +1,10 @@
-import { parseImageUrl } from '@shared/services/mediaHelper.js';
-import { useState, useMemo } from 'react';
-import { useData } from '../context/DataContext';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Users, Target, Heart, Award, BookOpen, Star,
-  GraduationCap, Search, ExternalLink, ShieldCheck,
-  Flame, Megaphone, Newspaper, Coins, Sparkles, X,
-  Grid, Layers, ArrowRight, CheckCircle2
+  GraduationCap, ExternalLink, ShieldCheck,
+  Flame, Megaphone, Newspaper, Coins, Sparkles,
+  ArrowRight, CheckCircle2, School
 } from 'lucide-react';
 
 /**
@@ -123,369 +122,11 @@ const DIVISION_SHOWCASE = [
   },
 ];
 
-/**
- * Master Division Definitions for Filtering Pengurus
- */
-const DIVISIONS = [
-  {
-    id: 'ALL',
-    label: 'Semua Divisi',
-    shortName: 'Semua',
-    icon: Sparkles,
-    tagline: 'Sinergi Seluruh Divisi Pengurus ROKABA',
-    description: 'Seluruh struktur kepengurusan ROHIS Kabupaten Banyumas yang bersinergi dalam menjalankan misi dakwah pelajar.',
-    accentColor: 'var(--emerald)',
-  },
-  {
-    id: 'BPH',
-    label: 'Badan Pengurus Harian (BPH)',
-    shortName: 'BPH',
-    icon: ShieldCheck,
-    tagline: 'Pusat Koordinasi, Kesekretariatan & Pengambilan Kebijakan',
-    description: 'Penanggung jawab utama arah kebijakan organisasi, koordinasi umum, tata kelola persuratan, dan manajemen perbendaharaan.',
-    accentColor: 'var(--antique-brass)',
-  },
-  {
-    id: 'SDM',
-    label: 'Divisi Sumber Daya Manusia (SDM)',
-    shortName: 'SDM',
-    icon: Users,
-    tagline: 'Kaderisasi, Pembinaan Karakter & Pengembangan Potensi',
-    description: 'Fokus pada regenerasi, peningkatan mutu kader rohis sekolah, mentoring kepemimpinan, dan Latihan Dasar Kepemimpinan (LDK).',
-    accentColor: '#10B981',
-  },
-  {
-    id: 'Dakwah',
-    label: 'Divisi Syiar & Dakwah',
-    shortName: 'Dakwah',
-    icon: Flame,
-    tagline: 'Penyebaran Nilai Islam Rahmatan Lil Alamin',
-    description: 'Menginisiasi agenda kajian keislaman pelajar, pembinaan spiritual ibadah, agenda safari dakwah, dan dialog agama.',
-    accentColor: '#F59E0B',
-  },
-  {
-    id: 'HUMAS',
-    label: 'Divisi Hubungan Masyarakat (HUMAS)',
-    shortName: 'HUMAS',
-    icon: Megaphone,
-    tagline: 'Sinergi Antar-Sekolah & Kemitraan Eksternal',
-    description: 'Menjadi jembatan silaturahmi antar pangkalan Rohis SMA/SMK/MA se-Banyumas, dinas/kemenag, serta stakeholder eksternal.',
-    accentColor: '#3B82F6',
-  },
-  {
-    id: 'Jurnalistik',
-    label: 'Divisi Media & Jurnalistik',
-    shortName: 'Jurnalistik',
-    icon: Newspaper,
-    tagline: 'Kreativitas Visual, Buletin & Dakwah Digital',
-    description: 'Mengelola publikasi media sosial resmi, produksi konten kreatif grafis & video, buletin digital, dan pengelolaan portal website.',
-    accentColor: '#EC4899',
-  },
-  {
-    id: 'DANUS',
-    label: 'Divisi Dana Usaha (DANUS)',
-    shortName: 'DANUS',
-    icon: Coins,
-    tagline: 'Kemandirian Finansial & Kewirausahaan Mandiri',
-    description: 'Mendorong kemandirian operasional dakwah melalui unit usaha halal, penyediaan atribut resmi rohis, dan sponsorship kreatif.',
-    accentColor: '#8B5CF6',
-  },
-];
 
-/**
- * Normalizes member division to match division id
- */
-function getMemberDivisionId(member) {
-  const div = (member?.division || member?.groupKey || member?.groupName || '').toLowerCase();
-  if (div.includes('bph')) return 'BPH';
-  if (div.includes('sdm')) return 'SDM';
-  if (div.includes('dakwah')) return 'Dakwah';
-  if (div.includes('humas')) return 'HUMAS';
-  if (div.includes('jurnalistik')) return 'Jurnalistik';
-  if (div.includes('danus') || div.includes('dana')) return 'DANUS';
-  return 'LAINNYA';
-}
-
-/**
- * Normalizes Instagram URL and Handle
- */
-function formatInstagramUrl(handle) {
-  if (!handle) return null;
-  const clean = handle.trim().replace(/^@+/, '').replace(/^https?:\/\/(www\.)?instagram\.com\//, '').replace(/\/+$/, '');
-  if (!clean) return null;
-  return `https://www.instagram.com/${clean}/`;
-}
-
-function formatInstagramHandle(handle) {
-  if (!handle) return '';
-  const clean = handle.trim().replace(/^@+/, '').replace(/^https?:\/\/(www\.)?instagram\.com\//, '').replace(/\/+$/, '');
-  return `@${clean}`;
-}
-
-/**
- * Member Card Component
- */
-function MemberCard({ member, index }) {
-  const isLeadership =
-    member.role === 'Ketua Umum' ||
-    member.role === 'Ketua Ikhwan' ||
-    member.role === 'Ketua Akhwat';
-  const isKoordinator =
-    (member.position || '').toLowerCase().includes('koordinator') ||
-    (member.position || '').toLowerCase().includes('sekretaris') ||
-    (member.position || '').toLowerCase().includes('bendahara');
-
-  const igUrl = formatInstagramUrl(member.instagram);
-  const igHandle = formatInstagramHandle(member.instagram);
-  const initials = member.name
-    ? member.name
-        .split(' ')
-        .filter(Boolean)
-        .map(n => n[0])
-        .join('')
-        .slice(0, 2)
-        .toUpperCase()
-    : 'RO';
-
-  const [imgError, setImgError] = useState(false);
-  const hasPhoto = Boolean(member.photo && typeof member.photo === 'string' && member.photo.trim().length > 0 && !imgError);
-
-  return (
-    <div
-      className="member-card animate-fade-in-up"
-      style={{
-        animationDelay: `${(index % 12) * 50}ms`,
-      }}
-    >
-      {/* Area Foto Bagian Atas Membentang Penuh dengan Tepi Halus (Sesuai Mockup) */}
-      <div className={`member-card-photo-wrapper ${isLeadership ? 'leadership' : ''}`}>
-        {hasPhoto ? (
-          <img
-            src={parseImageUrl(member.photo)}
-            referrerPolicy="no-referrer"
-            alt={member.name}
-            onError={() => setImgError(true)}
-            className="member-card-photo"
-            loading="lazy"
-          />
-        ) : (
-          <div className="member-card-initials-wrapper">
-            <span className="member-card-initials-text">{initials}</span>
-          </div>
-        )}
-      </div>
-
-      {/* Bagian Informasi Pengurus di Bawah Foto */}
-      <div className="member-card-content">
-        {/* Position Badge */}
-        <div style={{ marginBottom: '0.65rem' }}>
-          <span
-            className="badge"
-            style={{
-              fontSize: '0.72rem',
-              padding: '0.25rem 0.75rem',
-              fontWeight: 600,
-              background: isLeadership
-                ? 'rgba(181, 141, 79, 0.15)'
-                : isKoordinator
-                  ? 'var(--emerald-glass)'
-                  : 'rgba(13, 43, 34, 0.05)',
-              color: isLeadership
-                ? '#996C2A'
-                : isKoordinator
-                  ? 'var(--emerald-dark)'
-                  : 'rgba(13, 43, 34, 0.7)',
-              border: isLeadership
-                ? '1px solid rgba(181, 141, 79, 0.35)'
-                : isKoordinator
-                  ? '1px solid rgba(16, 185, 129, 0.28)'
-                  : '1px solid rgba(13, 43, 34, 0.08)',
-            }}
-          >
-            {member.position || member.role || 'Pengurus'}
-          </span>
-        </div>
-
-        {/* Member Name */}
-        <h4
-          style={{
-            fontSize: '1.05rem',
-            fontWeight: 800,
-            marginBottom: '0.35rem',
-            color: 'var(--deep-pine)',
-            lineHeight: 1.3,
-            minHeight: '2.6rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          {member.name}
-        </h4>
-
-        {/* School Name */}
-        {member.school ? (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.35rem',
-              fontSize: '0.8rem',
-              color: 'rgba(13, 43, 34, 0.65)',
-              marginBottom: '0.45rem',
-              maxWidth: '100%',
-            }}
-          >
-            <GraduationCap size={14} style={{ color: 'var(--antique-brass)', flexShrink: 0 }} />
-            <span
-              style={{
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                maxWidth: 200,
-              }}
-              title={member.school}
-            >
-              {member.school}
-            </span>
-          </div>
-        ) : (
-          <div style={{ height: '1.2rem', marginBottom: '0.45rem' }} />
-        )}
-
-        {/* Period */}
-        <div
-          style={{
-            fontSize: '0.74rem',
-            color: 'rgba(13, 43, 34, 0.45)',
-            marginBottom: '1rem',
-          }}
-        >
-          Periode {member.period || '2025/2026'}
-        </div>
-
-        {/* Instagram Button */}
-        <div style={{ marginTop: 'auto', width: '100%' }}>
-          {igUrl ? (
-            <a
-              href={igUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-instagram"
-              title={`Kunjungi profil Instagram ${member.name} (${igHandle})`}
-              style={{ width: '100%' }}
-            >
-              <InstagramIcon size={14} />
-              <span
-                style={{
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {igHandle}
-              </span>
-              <ExternalLink size={11} style={{ opacity: 0.7, marginLeft: 'auto', flexShrink: 0 }} />
-            </a>
-          ) : (
-            <div
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.35rem',
-                padding: '0.45rem 0.8rem',
-                fontSize: '0.74rem',
-                borderRadius: 'var(--radius-full)',
-                background: 'rgba(13, 43, 34, 0.04)',
-                color: 'rgba(13, 43, 34, 0.4)',
-                border: '1px dashed rgba(13, 43, 34, 0.12)',
-                width: '100%',
-              }}
-            >
-              <InstagramIcon size={13} style={{ opacity: 0.5 }} />
-              <span>Instagram: -</span>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default function About() {
-  const { team } = useData();
-
-  // Normalize team data from both object schema ({ bph: [], divisions: [] }) and flat array
-  const teamList = useMemo(() => {
-    if (!team) return [];
-    if (Array.isArray(team)) return team;
-    if (typeof team === 'object') {
-      const list = [];
-      if (Array.isArray(team.bph)) {
-        team.bph.forEach(m => list.push({
-          ...m,
-          division: m.division || 'BPH',
-          groupKey: 'bph',
-          groupName: 'Badan Pengurus Harian (BPH)'
-        }));
-      }
-      if (Array.isArray(team.divisions)) {
-        team.divisions.forEach(div => {
-          (div.members || []).forEach(m => {
-            list.push({
-              ...m,
-              division: m.division || div.shortName || div.name || 'Divisi',
-              groupKey: (div.shortName || div.id || '').toLowerCase(),
-              groupName: div.name
-            });
-          });
-        });
-      }
-      return list;
-    }
-    return [];
-  }, [team]);
-
-  // Division Filter & View States
-  const [selectedDivision, setSelectedDivision] = useState('ALL');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [viewMode, setViewMode] = useState('tabs'); // 'tabs' | 'grouped'
-
   // Showcase Active Division Index (0: SDM, 1: Dakwah, 2: Jurnalistik, 3: HUMAS, 4: DANUS)
-  const [activeShowcaseIdx, setActiveShowcaseIdx] = useState(1); // Default to Divisi Dakwah as in screenshot
-
-  // Calculate Member Counts per Division
-  const divisionCounts = useMemo(() => {
-    const counts = { ALL: teamList.length };
-    DIVISIONS.slice(1).forEach(div => {
-      counts[div.id] = teamList.filter(m => getMemberDivisionId(m) === div.id).length;
-    });
-    return counts;
-  }, [teamList]);
-
-  // Active Division Meta for Pengurus
-  const activeDivMeta = useMemo(() => {
-    return DIVISIONS.find(d => d.id === selectedDivision) || DIVISIONS[0];
-  }, [selectedDivision]);
-
-  // Filtered List for Pengurus
-  const filteredTeam = useMemo(() => {
-    return teamList.filter(member => {
-      const matchDivision =
-        selectedDivision === 'ALL' || getMemberDivisionId(member) === selectedDivision;
-      if (!matchDivision) return false;
-
-      if (!searchQuery.trim()) return true;
-      const q = searchQuery.toLowerCase().trim();
-      const name = (member.name || '').toLowerCase();
-      const pos = (member.position || member.role || '').toLowerCase();
-      const school = (member.school || '').toLowerCase();
-      const ig = (member.instagram || '').toLowerCase();
-      return name.includes(q) || pos.includes(q) || school.includes(q) || ig.includes(q);
-    });
-  }, [teamList, selectedDivision, searchQuery]);
+  const [activeShowcaseIdx, setActiveShowcaseIdx] = useState(1); // Default to Divisi Dakwah
 
   const currentShowcase = DIVISION_SHOWCASE[activeShowcaseIdx] || DIVISION_SHOWCASE[0];
   const ShowcaseIcon = currentShowcase.icon;
@@ -1067,13 +708,9 @@ export default function About() {
                 ))}
               </div>
 
-              {/* Action Button */}
-              <button
-                onClick={() => {
-                  const el = document.getElementById('pengurus');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  setSelectedDivision(currentShowcase.key);
-                }}
+              {/* Action Button: Link ke Halaman Anggota */}
+              <Link
+                to="/schools#pengurus"
                 style={{
                   marginTop: '2rem',
                   display: 'inline-flex',
@@ -1090,6 +727,7 @@ export default function About() {
                   transition: 'all 0.2s ease',
                   width: '100%',
                   justifyContent: 'center',
+                  textDecoration: 'none',
                 }}
                 onMouseEnter={e => {
                   e.currentTarget.style.background = 'var(--emerald)';
@@ -1102,414 +740,97 @@ export default function About() {
                   e.currentTarget.style.boxShadow = 'none';
                 }}
               >
-                Silabus Lengkap Divisi Ini <ArrowRight size={16} />
-              </button>
+                Lihat Pengurus & Anggota Divisi Ini <ArrowRight size={16} />
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════════
-          Team / Struktur Pengurus ROKABA
+          CTA Section: Struktur Pengurus & Sekolah Anggota
           ═══════════════════════════════════════════ */}
-      <section className="section" id="pengurus">
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto' }}>
-          {/* Section Title */}
-          <div className="section-header">
-            <span className="badge badge-emerald" style={{ marginBottom: '0.5rem' }}>
-              <Users size={13} /> Struktur Kepengurusan
+      <section className="section" style={{ background: 'var(--warm-alabaster)', borderTop: '1px solid rgba(13,43,34,0.06)' }}>
+        <div className="container" style={{ maxWidth: 1050, margin: '0 auto' }}>
+          <div
+            style={{
+              background: 'linear-gradient(135deg, var(--deep-pine) 0%, #153a2f 100%)',
+              borderRadius: '24px',
+              padding: '3.5rem 2.5rem',
+              color: 'var(--warm-alabaster)',
+              boxShadow: 'var(--shadow-xl)',
+              border: '1px solid rgba(181,141,79,0.3)',
+              position: 'relative',
+              overflow: 'hidden',
+              textAlign: 'center',
+            }}
+          >
+            {/* Background Accent */}
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                width: 320,
+                height: 320,
+                background: 'radial-gradient(circle, rgba(16,185,129,0.15) 0%, transparent 70%)',
+                pointerEvents: 'none',
+              }}
+            />
+
+            <span className="badge badge-gold" style={{ marginBottom: '1.25rem' }}>
+              <Users size={14} /> Fungsionaris & Basis Rohis
             </span>
-            <h2>Pengurus ROKABA</h2>
-            <div className="section-divider" />
-            <p>
-              Generasi muda berdedikasi yang mengemban amanah memajukan dakwah pelajar Islam di Kabupaten Banyumas Periode 2025/2026.
+            <h2
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontSize: 'clamp(1.75rem, 4vw, 2.35rem)',
+                fontWeight: 800,
+                color: 'var(--warm-alabaster)',
+                marginBottom: '1rem',
+                lineHeight: 1.25,
+              }}
+            >
+              Kenali Fungsionaris & Pangkalan Sekolah Anggota
+            </h2>
+            <p
+              style={{
+                color: 'rgba(245,242,237,0.78)',
+                maxWidth: 660,
+                margin: '0 auto 2.25rem',
+                fontSize: '0.98rem',
+                lineHeight: 1.7,
+              }}
+            >
+              Struktur fungsionaris Badan Pengurus Harian (BPH), Divisi SDM, Dakwah, HUMAS, Jurnalistik, DANUS, serta direktori pangkalan ROHIS SMA, SMK, dan MA se-Kabupaten Banyumas dapat Anda telusuri secara lengkap pada halaman <strong>Anggota</strong>.
             </p>
-          </div>
 
-          {/* Division Filter Tabs & Controls */}
-          <div style={{ marginBottom: '2rem' }}>
-            {/* Search and View Controls */}
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                gap: '1rem',
-                marginBottom: '1.25rem',
-              }}
-            >
-              {/* Search Box */}
-              <div
-                style={{
-                  position: 'relative',
-                  flex: '1 1 300px',
-                  maxWidth: 420,
-                }}
-              >
-                <Search
-                  size={17}
-                  style={{
-                    position: 'absolute',
-                    left: '1rem',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    color: 'rgba(13,43,34,0.4)',
-                    pointerEvents: 'none',
-                  }}
-                />
-                <input
-                  type="text"
-                  placeholder="Cari nama, jabatan, sekolah, atau IG..."
-                  value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '0.68rem 2.4rem 0.68rem 2.7rem',
-                    borderRadius: 'var(--radius-full)',
-                    border: '1px solid rgba(13,43,34,0.12)',
-                    background: 'white',
-                    fontSize: '0.88rem',
-                    color: 'var(--deep-pine)',
-                    outline: 'none',
-                    boxShadow: 'var(--shadow-sm)',
-                    transition: 'border-color var(--transition-fast)',
-                  }}
-                />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery('')}
-                    style={{
-                      position: 'absolute',
-                      right: '0.8rem',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      color: 'rgba(13,43,34,0.4)',
-                      padding: '0.2rem',
-                    }}
-                    title="Hapus pencarian"
-                  >
-                    <X size={15} />
-                  </button>
-                )}
-              </div>
-
-              {/* View Mode Toggle (Only visible when ALL division selected & no search) */}
-              {selectedDivision === 'ALL' && !searchQuery.trim() && (
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    background: 'white',
-                    padding: '0.25rem',
-                    borderRadius: 'var(--radius-full)',
-                    border: '1px solid rgba(13,43,34,0.1)',
-                    boxShadow: 'var(--shadow-sm)',
-                  }}
-                >
-                  <button
-                    onClick={() => setViewMode('tabs')}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.4rem',
-                      padding: '0.45rem 0.9rem',
-                      borderRadius: 'var(--radius-full)',
-                      border: 'none',
-                      fontSize: '0.8rem',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      background: viewMode === 'tabs' ? 'var(--deep-pine)' : 'transparent',
-                      color: viewMode === 'tabs' ? 'var(--warm-alabaster)' : 'rgba(13,43,34,0.6)',
-                      transition: 'all var(--transition-fast)',
-                    }}
-                  >
-                    <Grid size={14} /> Grid
-                  </button>
-                  <button
-                    onClick={() => setViewMode('grouped')}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.4rem',
-                      padding: '0.45rem 0.9rem',
-                      borderRadius: 'var(--radius-full)',
-                      border: 'none',
-                      fontSize: '0.8rem',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      background: viewMode === 'grouped' ? 'var(--deep-pine)' : 'transparent',
-                      color: viewMode === 'grouped' ? 'var(--warm-alabaster)' : 'rgba(13,43,34,0.6)',
-                      transition: 'all var(--transition-fast)',
-                    }}
-                  >
-                    <Layers size={14} /> Per Divisi
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Division Pill Buttons */}
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '0.6rem',
-                alignItems: 'center',
-              }}
-            >
-              {DIVISIONS.map(div => {
-                const isActive = selectedDivision === div.id;
-                const IconComponent = div.icon;
-                const count = divisionCounts[div.id] || 0;
-
-                return (
-                  <button
-                    key={div.id}
-                    onClick={() => {
-                      setSelectedDivision(div.id);
-                    }}
-                    className={`division-pill ${isActive ? 'active' : ''}`}
-                    title={div.label}
-                  >
-                    <IconComponent size={15} style={{ color: isActive ? 'var(--emerald-light)' : div.accentColor }} />
-                    <span>{div.shortName}</span>
-                    <span className="pill-count">{count}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Division Hero Banner (Shown when a specific division is filtered) */}
-          {selectedDivision !== 'ALL' && (
-            <div
-              className="animate-fade-in-up"
-              style={{
-                background: 'linear-gradient(135deg, rgba(13,43,34,0.03) 0%, rgba(16,185,129,0.06) 100%)',
-                border: '1px solid rgba(16,185,129,0.18)',
-                borderRadius: 'var(--radius-xl)',
-                padding: '1.75rem 2rem',
-                marginBottom: '2rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '1.5rem',
-                flexWrap: 'wrap',
-              }}
-            >
-              <div
-                style={{
-                  width: 58,
-                  height: 58,
-                  borderRadius: '16px',
-                  background: 'white',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: 'var(--shadow-sm)',
-                  border: '1px solid rgba(13,43,34,0.08)',
-                  color: activeDivMeta.accentColor,
-                  flexShrink: 0,
-                }}
-              >
-                <activeDivMeta.icon size={28} />
-              </div>
-              <div style={{ flex: 1, minWidth: 260 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-                  <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--deep-pine)' }}>
-                    {activeDivMeta.label}
-                  </h3>
-                  <span className="badge badge-emerald" style={{ fontSize: '0.75rem' }}>
-                    {filteredTeam.length} Pengurus
-                  </span>
-                </div>
-                <p
-                  style={{
-                    color: 'var(--antique-brass)',
-                    fontSize: '0.88rem',
-                    fontWeight: 600,
-                    marginTop: '0.2rem',
-                  }}
-                >
-                  {activeDivMeta.tagline}
-                </p>
-                <p
-                  style={{
-                    color: 'rgba(13,43,34,0.65)',
-                    fontSize: '0.86rem',
-                    marginTop: '0.35rem',
-                    lineHeight: 1.6,
-                  }}
-                >
-                  {activeDivMeta.description}
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* Search Result Feedback */}
-          {searchQuery && (
-            <div
-              style={{
-                marginBottom: '1.5rem',
-                fontSize: '0.88rem',
-                color: 'rgba(13,43,34,0.6)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-              }}
-            >
-              <span>
-                Menampilkan <strong>{filteredTeam.length}</strong> pengurus untuk pencarian &ldquo;{searchQuery}&rdquo;
-              </span>
-              <button
-                onClick={() => setSearchQuery('')}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: 'var(--emerald)',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  fontSize: '0.85rem',
-                }}
-              >
-                Reset
-              </button>
-            </div>
-          )}
-
-          {/* ═══ DISPLAY CONTENT ═══ */}
-          {filteredTeam.length === 0 ? (
-            /* Empty State */
-            <div
-              style={{
-                background: 'white',
-                borderRadius: 'var(--radius-xl)',
-                padding: '3.5rem 2rem',
-                textAlign: 'center',
-                border: '1px dashed rgba(13,43,34,0.15)',
-              }}
-            >
-              <div
-                style={{
-                  width: 56,
-                  height: 56,
-                  borderRadius: '50%',
-                  background: 'rgba(13,43,34,0.05)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  margin: '0 auto 1rem',
-                  color: 'rgba(13,43,34,0.4)',
-                }}
-              >
-                <Users size={26} />
-              </div>
-              <h3 style={{ fontSize: '1.15rem', color: 'var(--deep-pine)', marginBottom: '0.5rem' }}>
-                Tidak Ada Anggota Ditemukan
-              </h3>
-              <p style={{ color: 'rgba(13,43,34,0.5)', fontSize: '0.88rem', maxWidth: 400, margin: '0 auto 1.5rem' }}>
-                Tidak ditemukan nama pengurus, jabatan, atau sekolah yang cocok dengan pencarian Anda.
-              </p>
-              <button
-                onClick={() => {
-                  setSearchQuery('');
-                  setSelectedDivision('ALL');
-                }}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+              <Link
+                to="/schools#pengurus"
                 className="btn btn-emerald"
-                style={{ fontSize: '0.85rem', padding: '0.6rem 1.4rem' }}
+                style={{
+                  fontSize: '0.95rem',
+                  padding: '0.85rem 1.85rem',
+                  boxShadow: '0 8px 24px rgba(16,185,129,0.35)',
+                }}
               >
-                Lihat Semua Pengurus
-              </button>
+                <Users size={18} /> Struktur Pengurus ROKABA
+              </Link>
+              <Link
+                to="/schools#sekolah"
+                className="btn btn-outline"
+                style={{
+                  fontSize: '0.95rem',
+                  padding: '0.85rem 1.85rem',
+                  borderColor: 'rgba(245,242,237,0.3)',
+                  color: 'var(--warm-alabaster)',
+                }}
+              >
+                <School size={18} /> Direktori Sekolah Anggota
+              </Link>
             </div>
-          ) : selectedDivision === 'ALL' && !searchQuery.trim() && viewMode === 'grouped' ? (
-            /* ── GROUPED BY DIVISION VIEW ── */
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
-              {DIVISIONS.slice(1).map(division => {
-                const divisionMembers = teamList.filter(m => getMemberDivisionId(m) === division.id);
-                if (divisionMembers.length === 0) return null;
-
-                const DivIcon = division.icon;
-
-                return (
-                  <div key={division.id} id={`divisi-${division.id.toLowerCase()}`}>
-                    {/* Division Header Banner inside grouped view */}
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        paddingBottom: '0.85rem',
-                        marginBottom: '1.5rem',
-                        borderBottom: '2px solid rgba(13,43,34,0.08)',
-                        flexWrap: 'wrap',
-                        gap: '0.75rem',
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                        <div
-                          style={{
-                            width: 40,
-                            height: 40,
-                            borderRadius: '12px',
-                            background: 'white',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            border: '1px solid rgba(13,43,34,0.08)',
-                            color: division.accentColor,
-                            boxShadow: 'var(--shadow-sm)',
-                          }}
-                        >
-                          <DivIcon size={20} />
-                        </div>
-                        <div>
-                          <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--deep-pine)' }}>
-                            {division.label}
-                          </h3>
-                          <p style={{ fontSize: '0.82rem', color: 'rgba(13,43,34,0.6)' }}>
-                            {division.tagline}
-                          </p>
-                        </div>
-                      </div>
-                      <span className="badge badge-emerald" style={{ fontSize: '0.75rem' }}>
-                        {divisionMembers.length} Pengurus
-                      </span>
-                    </div>
-
-                    {/* Member Cards Grid */}
-                    <div
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-                        gap: '1.5rem',
-                      }}
-                    >
-                      {divisionMembers.map((member, i) => (
-                        <MemberCard key={member.id} member={member} index={i} />
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            /* ── STANDARD FILTERED GRID VIEW ── */
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-                gap: '1.5rem',
-              }}
-            >
-              {filteredTeam.map((member, i) => (
-                <MemberCard key={member.id} member={member} index={i} />
-              ))}
-            </div>
-          )}
+          </div>
         </div>
       </section>
     </div>

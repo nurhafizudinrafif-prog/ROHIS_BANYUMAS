@@ -9,7 +9,7 @@ const navLinks = [
   { path: '/programs', label: 'Program' },
   { path: '/articles', label: 'Artikel' },
   { path: '/events', label: 'Agenda' },
-  { path: '/schools', label: 'Sekolah' },
+  { path: '/schools', label: 'Anggota' },
   { path: '/consultation', label: 'Konsultasi' },
   { path: '/library', label: 'E-Library' },
   { path: '/gallery', label: 'Galeri' },

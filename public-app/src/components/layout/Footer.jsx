@@ -8,7 +8,7 @@ const footerLinks = [
   { label: 'Program', path: '/programs' },
   { label: 'Artikel', path: '/articles' },
   { label: 'Agenda', path: '/events' },
-  { label: 'Sekolah', path: '/schools' },
+  { label: 'Anggota', path: '/schools' },
   { label: 'Galeri', path: '/gallery' },
   { label: 'Konsultasi', path: '/consultation' },
   { label: 'E-Library', path: '/library' },

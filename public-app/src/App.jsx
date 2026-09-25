@@ -43,6 +43,8 @@ export default function App() {
               <Route path="/agenda" element={<Events />} />
               <Route path="/artikel" element={<Articles />} />
               <Route path="/artikel/:slug" element={<ArticleDetail />} />
+              <Route path="/anggota" element={<Schools />} />
+              <Route path="/sekolah" element={<Schools />} />
               <Route path="/rohis-anggota" element={<Schools />} />
               <Route path="/galeri" element={<Gallery />} />
               <Route path="/kontak" element={<Contact />} />
