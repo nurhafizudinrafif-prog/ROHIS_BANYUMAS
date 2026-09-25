@@ -129,6 +129,7 @@ function formatInstagramHandle(handle) {
  */
 function MemberCard({ member, index }) {
   const [imgError, setImgError] = useState(false);
+  const [triedFallback, setTriedFallback] = useState(false);
   const isLeadership =
     member.role === 'Ketua Umum' ||
     member.role === 'Ketua Ikhwan' ||
@@ -150,7 +151,24 @@ function MemberCard({ member, index }) {
         .toUpperCase()
     : 'RO';
 
+  const driveIdMatch = member.photo && typeof member.photo === 'string'
+    ? (member.photo.match(/\/file\/d\/([a-zA-Z0-9_-]+)/i) || member.photo.match(/[?&]id=([a-zA-Z0-9_-]+)/i))
+    : null;
+  const driveId = driveIdMatch ? driveIdMatch[1] : null;
+
+  const photoSrc = triedFallback && driveId
+    ? `https://drive.google.com/thumbnail?id=${driveId}&sz=w1000`
+    : parseImageUrl(member.photo);
+
   const hasPhoto = Boolean(member.photo && typeof member.photo === 'string' && member.photo.trim().length > 0 && !imgError);
+
+  const handleImgError = () => {
+    if (driveId && !triedFallback) {
+      setTriedFallback(true);
+    } else {
+      setImgError(true);
+    }
+  };
 
   return (
     <div
@@ -163,10 +181,10 @@ function MemberCard({ member, index }) {
       <div className={`member-card-photo-wrapper ${isLeadership ? 'leadership' : ''}`}>
         {hasPhoto ? (
           <img
-            src={parseImageUrl(member.photo)}
+            src={photoSrc}
             referrerPolicy="no-referrer"
             alt={member.name}
-            onError={() => setImgError(true)}
+            onError={handleImgError}
             className="member-card-photo"
             loading="lazy"
           />

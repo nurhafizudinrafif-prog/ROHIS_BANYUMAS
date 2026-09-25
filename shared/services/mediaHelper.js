@@ -129,7 +129,7 @@ export function parseImageUrl(url) {
   const trimmed = url.trim();
   const driveId = extractDriveId(trimmed);
   if (driveId) {
-    return getDriveThumbnailUrl(driveId);
+    return `https://lh3.googleusercontent.com/d/${driveId}`;
   }
   return trimmed;
 }

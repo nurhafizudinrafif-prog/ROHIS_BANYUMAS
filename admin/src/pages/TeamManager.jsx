@@ -3,7 +3,7 @@ import { useData } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
 import {
   Users, Plus, Edit3, Trash2, Save, X, Search, Shield,
-  GraduationCap, User, CheckCircle2, AlertCircle
+  GraduationCap, User, CheckCircle2, AlertCircle, RefreshCw
 } from 'lucide-react';
 import ImageUploadField from '../components/ImageUploadField';
 import { InstagramIcon } from '../components/SocialIcons';
@@ -18,6 +18,7 @@ export default function TeamManager() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingMember, setEditingMember] = useState(null);
   const [targetGroup, setTargetGroup] = useState('bph'); // 'bph' or division shortName
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     role: '',
@@ -91,74 +92,106 @@ export default function TeamManager() {
   const handleDelete = async (member) => {
     if (!window.confirm(`Yakin ingin menghapus ${member.name} (${member.role}) dari kepengurusan?`)) return;
 
-    let updatedTeam;
-    if (member.groupKey === 'bph') {
-      updatedTeam = {
-        ...team,
-        bph: (team.bph || []).filter(m => m.id !== member.id),
-      };
-    } else {
-      updatedTeam = {
-        ...team,
-        divisions: (team.divisions || []).map(div => {
-          if ((div.shortName || div.id).toLowerCase() === member.groupKey.toLowerCase()) {
-            return {
-              ...div,
-              members: (div.members || []).filter(m => m.id !== member.id),
-            };
-          }
-          return div;
-        }),
-      };
-    }
+    try {
+      let updatedTeam;
+      if (member.groupKey === 'bph') {
+        updatedTeam = {
+          ...team,
+          bph: (team.bph || []).filter(m => m.id !== member.id),
+        };
+      } else {
+        updatedTeam = {
+          ...team,
+          divisions: (team.divisions || []).map(div => {
+            if ((div.shortName || div.id).toLowerCase() === member.groupKey.toLowerCase()) {
+              return {
+                ...div,
+                members: (div.members || []).filter(m => m.id !== member.id),
+              };
+            }
+            return div;
+          }),
+        };
+      }
 
-    await updateData('team', updatedTeam);
-    await addAuditLog(user.id, user.username, 'DELETE', 'team', `Deleted member: ${member.name}`);
+      await updateData('team', updatedTeam);
+      try {
+        if (addAuditLog) {
+          await addAuditLog(user?.id || 'admin', user?.username || 'admin', 'DELETE', 'team', `Deleted member: ${member.name}`);
+        }
+      } catch {}
+    } catch (err) {
+      console.error('Delete member error:', err);
+      alert('Gagal menghapus data pengurus: ' + (err.message || 'Terjadi kesalahan sistem'));
+    }
   };
 
   const handleSave = async (e) => {
     e.preventDefault();
     if (!formData.name.trim()) return;
 
-    let updatedTeam = { ...team };
-    const memberPayload = {
-      id: editingMember ? editingMember.id : `member-${Date.now()}`,
-      name: formData.name.trim(),
-      role: formData.role.trim() || 'Anggota',
-      school: formData.school.trim() || '-',
-      instagram: formData.instagram.trim().replace(/^@/, ''),
-      photo: formData.photo.trim(),
-    };
+    setIsSubmitting(true);
+    try {
+      let updatedTeam = { ...team };
 
-    if (editingMember) {
-      // If group didn't change:
-      if (editingMember.groupKey === targetGroup) {
-        if (targetGroup === 'bph') {
-          updatedTeam.bph = (team.bph || []).map(m => m.id === editingMember.id ? { ...m, ...memberPayload } : m);
+      // Sanitize Google Drive URL if duplicated or pasted awkwardly
+      let cleanPhoto = (formData.photo || '').trim();
+      const driveMatch = cleanPhoto.match(/\/file\/d\/([a-zA-Z0-9_-]+)/i) || cleanPhoto.match(/[?&]id=([a-zA-Z0-9_-]+)/i);
+      if (driveMatch && driveMatch[1]) {
+        cleanPhoto = `https://drive.google.com/file/d/${driveMatch[1]}/view?usp=sharing`;
+      }
+
+      const memberPayload = {
+        id: editingMember ? editingMember.id : `member-${Date.now()}`,
+        name: formData.name.trim(),
+        role: formData.role.trim() || 'Anggota',
+        school: formData.school.trim() || '-',
+        instagram: (formData.instagram || '').trim().replace(/^@/, ''),
+        photo: cleanPhoto,
+      };
+
+      if (editingMember) {
+        // If group didn't change:
+        if (editingMember.groupKey === targetGroup) {
+          if (targetGroup === 'bph') {
+            updatedTeam.bph = (team.bph || []).map(m => m.id === editingMember.id ? { ...m, ...memberPayload } : m);
+          } else {
+            updatedTeam.divisions = (team.divisions || []).map(div => {
+              if ((div.shortName || div.id).toLowerCase() === targetGroup.toLowerCase()) {
+                return {
+                  ...div,
+                  members: (div.members || []).map(m => m.id === editingMember.id ? { ...m, ...memberPayload } : m),
+                };
+              }
+              return div;
+            });
+          }
         } else {
-          updatedTeam.divisions = (team.divisions || []).map(div => {
-            if ((div.shortName || div.id).toLowerCase() === targetGroup.toLowerCase()) {
-              return {
-                ...div,
-                members: (div.members || []).map(m => m.id === editingMember.id ? { ...m, ...memberPayload } : m),
-              };
-            }
-            return div;
-          });
+          // Group changed: remove from old, add to new
+          if (editingMember.groupKey === 'bph') {
+            updatedTeam.bph = (team.bph || []).filter(m => m.id !== editingMember.id);
+          } else {
+            updatedTeam.divisions = (team.divisions || []).map(div => {
+              if ((div.shortName || div.id).toLowerCase() === editingMember.groupKey.toLowerCase()) {
+                return { ...div, members: (div.members || []).filter(m => m.id !== editingMember.id) };
+              }
+              return div;
+            });
+          }
+          // Add to new group
+          if (targetGroup === 'bph') {
+            updatedTeam.bph = [...(updatedTeam.bph || []), memberPayload];
+          } else {
+            updatedTeam.divisions = (updatedTeam.divisions || []).map(div => {
+              if ((div.shortName || div.id).toLowerCase() === targetGroup.toLowerCase()) {
+                return { ...div, members: [...(div.members || []), memberPayload] };
+              }
+              return div;
+            });
+          }
         }
       } else {
-        // Group changed: remove from old, add to new
-        if (editingMember.groupKey === 'bph') {
-          updatedTeam.bph = (team.bph || []).filter(m => m.id !== editingMember.id);
-        } else {
-          updatedTeam.divisions = (team.divisions || []).map(div => {
-            if ((div.shortName || div.id).toLowerCase() === editingMember.groupKey.toLowerCase()) {
-              return { ...div, members: (div.members || []).filter(m => m.id !== editingMember.id) };
-            }
-            return div;
-          });
-        }
-        // Add to new group
+        // Create new
         if (targetGroup === 'bph') {
           updatedTeam.bph = [...(updatedTeam.bph || []), memberPayload];
         } else {
@@ -170,30 +203,30 @@ export default function TeamManager() {
           });
         }
       }
-    } else {
-      // Create new
-      if (targetGroup === 'bph') {
-        updatedTeam.bph = [...(updatedTeam.bph || []), memberPayload];
-      } else {
-        updatedTeam.divisions = (updatedTeam.divisions || []).map(div => {
-          if ((div.shortName || div.id).toLowerCase() === targetGroup.toLowerCase()) {
-            return { ...div, members: [...(div.members || []), memberPayload] };
-          }
-          return div;
-        });
+
+      await updateData('team', updatedTeam);
+
+      try {
+        if (addAuditLog) {
+          await addAuditLog(
+            user?.id || 'admin',
+            user?.username || 'admin',
+            editingMember ? 'UPDATE' : 'CREATE',
+            'team',
+            `${editingMember ? 'Updated' : 'Added'} member: ${memberPayload.name} (${targetGroup.toUpperCase()})`
+          );
+        }
+      } catch (logErr) {
+        console.warn('Audit log write failed:', logErr);
       }
+
+      setModalOpen(false);
+    } catch (err) {
+      console.error('Save member error:', err);
+      alert('Gagal menyimpan data: ' + (err.message || 'Terjadi kendala jaringan.'));
+    } finally {
+      setIsSubmitting(false);
     }
-
-    await updateData('team', updatedTeam);
-    await addAuditLog(
-      user.id,
-      user.username,
-      editingMember ? 'UPDATE' : 'CREATE',
-      'team',
-      `${editingMember ? 'Updated' : 'Added'} member: ${memberPayload.name} (${targetGroup.toUpperCase()})`
-    );
-
-    setModalOpen(false);
   };
 
   return (
@@ -481,11 +514,29 @@ export default function TeamManager() {
               />
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '1.5rem' }}>
-                <button type="button" onClick={() => setModalOpen(false)} className="btn btn-outline">
+                <button
+                  type="button"
+                  onClick={() => setModalOpen(false)}
+                  className="btn btn-outline"
+                  disabled={isSubmitting}
+                >
                   Batal
                 </button>
-                <button type="submit" className="btn btn-primary">
-                  <Save size={16} /> Simpan Data Pengurus
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={isSubmitting}
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <RefreshCw size={16} className="spin-icon" /> Menyimpan Data...
+                    </>
+                  ) : (
+                    <>
+                      <Save size={16} /> Simpan Data Pengurus
+                    </>
+                  )}
                 </button>
               </div>
             </form>
