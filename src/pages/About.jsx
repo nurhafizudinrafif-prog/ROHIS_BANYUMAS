@@ -257,8 +257,8 @@ function MemberCard({ member, index }) {
         animationDelay: `${(index % 12) * 50}ms`,
       }}
     >
-      {/* Kotak Foto dengan Tepi Halus (Portrait Rounded Rectangle / Squircle) */}
-      <div className={`member-card-avatar ${isLeadership ? 'leadership' : ''}`}>
+      {/* Area Foto Bagian Atas Membentang Penuh dengan Tepi Halus (Sesuai Mockup) */}
+      <div className={`member-card-photo-wrapper ${isLeadership ? 'leadership' : ''}`}>
         {hasPhoto ? (
           <img
             src={parseImageUrl(member.photo)}
@@ -275,137 +275,140 @@ function MemberCard({ member, index }) {
         )}
       </div>
 
-      {/* Position Badge */}
-      <div style={{ marginBottom: '0.65rem' }}>
-        <span
-          className="badge"
-          style={{
-            fontSize: '0.72rem',
-            padding: '0.25rem 0.75rem',
-            fontWeight: 600,
-            background: isLeadership
-              ? 'rgba(181, 141, 79, 0.15)'
-              : isKoordinator
-                ? 'var(--emerald-glass)'
-                : 'rgba(13, 43, 34, 0.05)',
-            color: isLeadership
-              ? '#996C2A'
-              : isKoordinator
-                ? 'var(--emerald-dark)'
-                : 'rgba(13, 43, 34, 0.7)',
-            border: isLeadership
-              ? '1px solid rgba(181, 141, 79, 0.35)'
-              : isKoordinator
-                ? '1px solid rgba(16, 185, 129, 0.28)'
-                : '1px solid rgba(13, 43, 34, 0.08)',
-          }}
-        >
-          {member.position || member.role || 'Pengurus'}
-        </span>
-      </div>
+      {/* Bagian Informasi Pengurus di Bawah Foto */}
+      <div className="member-card-content">
+        {/* Position Badge */}
+        <div style={{ marginBottom: '0.65rem' }}>
+          <span
+            className="badge"
+            style={{
+              fontSize: '0.72rem',
+              padding: '0.25rem 0.75rem',
+              fontWeight: 600,
+              background: isLeadership
+                ? 'rgba(181, 141, 79, 0.15)'
+                : isKoordinator
+                  ? 'var(--emerald-glass)'
+                  : 'rgba(13, 43, 34, 0.05)',
+              color: isLeadership
+                ? '#996C2A'
+                : isKoordinator
+                  ? 'var(--emerald-dark)'
+                  : 'rgba(13, 43, 34, 0.7)',
+              border: isLeadership
+                ? '1px solid rgba(181, 141, 79, 0.35)'
+                : isKoordinator
+                  ? '1px solid rgba(16, 185, 129, 0.28)'
+                  : '1px solid rgba(13, 43, 34, 0.08)',
+            }}
+          >
+            {member.position || member.role || 'Pengurus'}
+          </span>
+        </div>
 
-      {/* Member Name */}
-      <h4
-        style={{
-          fontSize: '1rem',
-          fontWeight: 700,
-          marginBottom: '0.35rem',
-          color: 'var(--deep-pine)',
-          lineHeight: 1.3,
-          minHeight: '2.6rem',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        {member.name}
-      </h4>
-
-      {/* School Name */}
-      {member.school ? (
-        <div
+        {/* Member Name */}
+        <h4
           style={{
+            fontSize: '1.05rem',
+            fontWeight: 800,
+            marginBottom: '0.35rem',
+            color: 'var(--deep-pine)',
+            lineHeight: 1.3,
+            minHeight: '2.6rem',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '0.35rem',
-            fontSize: '0.78rem',
-            color: 'rgba(13, 43, 34, 0.65)',
-            marginBottom: '0.5rem',
-            maxWidth: '100%',
           }}
         >
-          <GraduationCap size={14} style={{ color: 'var(--antique-brass)', flexShrink: 0 }} />
-          <span
+          {member.name}
+        </h4>
+
+        {/* School Name */}
+        {member.school ? (
+          <div
             style={{
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              maxWidth: 190,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.35rem',
+              fontSize: '0.8rem',
+              color: 'rgba(13, 43, 34, 0.65)',
+              marginBottom: '0.45rem',
+              maxWidth: '100%',
             }}
-            title={member.school}
           >
-            {member.school}
-          </span>
-        </div>
-      ) : (
-        <div style={{ height: '1.2rem', marginBottom: '0.5rem' }} />
-      )}
-
-      {/* Period */}
-      <div
-        style={{
-          fontSize: '0.72rem',
-          color: 'rgba(13, 43, 34, 0.4)',
-          marginBottom: '1.15rem',
-        }}
-      >
-        Periode {member.period || '2025/2026'}
-      </div>
-
-      {/* Instagram Button */}
-      <div style={{ marginTop: 'auto', width: '100%' }}>
-        {igUrl ? (
-          <a
-            href={igUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-instagram"
-            title={`Kunjungi profil Instagram ${member.name} (${igHandle})`}
-            style={{ width: '100%' }}
-          >
-            <InstagramIcon size={14} />
+            <GraduationCap size={14} style={{ color: 'var(--antique-brass)', flexShrink: 0 }} />
             <span
               style={{
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
+                maxWidth: 200,
+              }}
+              title={member.school}
+            >
+              {member.school}
+            </span>
+          </div>
+        ) : (
+          <div style={{ height: '1.2rem', marginBottom: '0.45rem' }} />
+        )}
+
+        {/* Period */}
+        <div
+          style={{
+            fontSize: '0.74rem',
+            color: 'rgba(13, 43, 34, 0.45)',
+            marginBottom: '1rem',
+          }}
+        >
+          Periode {member.period || '2025/2026'}
+        </div>
+
+        {/* Instagram Button */}
+        <div style={{ marginTop: 'auto', width: '100%' }}>
+          {igUrl ? (
+            <a
+              href={igUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-instagram"
+              title={`Kunjungi profil Instagram ${member.name} (${igHandle})`}
+              style={{ width: '100%' }}
+            >
+              <InstagramIcon size={14} />
+              <span
+                style={{
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {igHandle}
+              </span>
+              <ExternalLink size={11} style={{ opacity: 0.7, marginLeft: 'auto', flexShrink: 0 }} />
+            </a>
+          ) : (
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.35rem',
+                padding: '0.45rem 0.8rem',
+                fontSize: '0.74rem',
+                borderRadius: 'var(--radius-full)',
+                background: 'rgba(13, 43, 34, 0.04)',
+                color: 'rgba(13, 43, 34, 0.4)',
+                border: '1px dashed rgba(13, 43, 34, 0.12)',
+                width: '100%',
               }}
             >
-              {igHandle}
-            </span>
-            <ExternalLink size={11} style={{ opacity: 0.7, marginLeft: 'auto', flexShrink: 0 }} />
-          </a>
-        ) : (
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.35rem',
-              padding: '0.45rem 0.8rem',
-              fontSize: '0.74rem',
-              borderRadius: 'var(--radius-full)',
-              background: 'rgba(13, 43, 34, 0.04)',
-              color: 'rgba(13, 43, 34, 0.4)',
-              border: '1px dashed rgba(13, 43, 34, 0.12)',
-              width: '100%',
-            }}
-          >
-            <InstagramIcon size={13} style={{ opacity: 0.5 }} />
-            <span>Instagram: -</span>
-          </div>
-        )}
+              <InstagramIcon size={13} style={{ opacity: 0.5 }} />
+              <span>Instagram: -</span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

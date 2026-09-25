@@ -665,12 +665,12 @@ textarea.form-input {
 
 .member-card {
   background: white;
-  border-radius: var(--radius-xl);
-  padding: 1.75rem 1.35rem;
+  border-radius: 22px;
+  padding: 0.85rem 0.85rem 1.4rem 0.85rem;
   text-align: center;
-  border: 1px solid rgba(13, 43, 34, 0.07);
-  box-shadow: var(--shadow-sm);
-  transition: all var(--transition-normal);
+  border: 1px solid rgba(13, 43, 34, 0.08);
+  box-shadow: 0 4px 20px rgba(13, 43, 34, 0.06);
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -679,32 +679,43 @@ textarea.form-input {
 }
 
 .member-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 14px 32px rgba(13, 43, 34, 0.09);
+  transform: translateY(-6px);
+  box-shadow: 0 16px 36px rgba(13, 43, 34, 0.12);
   border-color: rgba(16, 185, 129, 0.35);
 }
 
-/* Kotak foto pengurus dengan sudut melengkung halus (Portrait Rounded Rectangle / Squircle) */
-.member-card-avatar {
-  width: 104px;
-  height: 124px;
-  border-radius: 18px; /* Sudut melengkung halus, bukan bundar */
-  background: linear-gradient(135deg, var(--deep-pine), var(--deep-pine-light));
+/* Area Foto Bagian Atas Membentang Penuh dengan Tepi Halus (Sesuai Mockup Disetujui) */
+.member-card-photo-wrapper {
+  width: 100%;
+  aspect-ratio: 1 / 1.12;
+  min-height: 200px;
+  max-height: 260px;
+  border-radius: 16px; /* Sudut melengkung halus */
+  background: radial-gradient(circle at 50% 35%, #133a2e 0%, #092119 55%, #04100c 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 0.95rem;
-  border: 2px solid rgba(16, 185, 129, 0.25);
-  box-shadow: 0 6px 18px rgba(13, 43, 34, 0.1);
+  border: 1.5px solid rgba(16, 185, 129, 0.22);
+  box-shadow: 0 4px 16px rgba(13, 43, 34, 0.08);
   overflow: hidden;
   position: relative;
   flex-shrink: 0;
-  transition: all var(--transition-normal);
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.member-card:hover .member-card-avatar {
+.member-card:hover .member-card-photo-wrapper {
   border-color: var(--emerald);
-  box-shadow: 0 10px 24px rgba(16, 185, 129, 0.22);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.2);
+}
+
+.member-card-photo-wrapper.leadership {
+  border: 2px solid rgba(181, 141, 79, 0.55);
+  box-shadow: 0 6px 20px rgba(181, 141, 79, 0.18);
+}
+
+.member-card:hover .member-card-photo-wrapper.leadership {
+  border-color: #E6C587;
+  box-shadow: 0 10px 28px rgba(181, 141, 79, 0.3);
 }
 
 .member-card-photo {
@@ -713,49 +724,55 @@ textarea.form-input {
   object-fit: cover;
   object-position: top center;
   display: block;
-  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .member-card:hover .member-card-photo {
-  transform: scale(1.06);
+  transform: scale(1.05);
 }
 
-.member-card-avatar.leadership {
-  border-color: rgba(181, 141, 79, 0.65);
-  box-shadow: 0 6px 20px rgba(181, 141, 79, 0.22);
-}
-
-.member-card:hover .member-card-avatar.leadership {
-  border-color: #E6C587;
-  box-shadow: 0 10px 28px rgba(181, 141, 79, 0.35);
-}
-
+/* Fallback Inisial Mewah Khas ROKABA saat belum ada foto */
 .member-card-initials-wrapper {
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(145deg, #0A261E 0%, #061914 100%);
+  background: radial-gradient(circle at 50% 35%, #143e31 0%, #09241c 60%, #030d0a 100%);
   position: relative;
+  overflow: hidden;
 }
 
 .member-card-initials-wrapper::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 40%, rgba(16, 185, 129, 0.18), transparent 70%);
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(181, 141, 79, 0.12) 0%, transparent 60%),
+    repeating-linear-gradient(45deg, rgba(16, 185, 129, 0.03) 0, rgba(16, 185, 129, 0.03) 1px, transparent 0, transparent 16px);
   pointer-events: none;
 }
 
 .member-card-initials-text {
-  font-size: 1.55rem;
+  font-size: 2.2rem;
   font-weight: 800;
-  color: var(--emerald-light);
+  color: #E6C587;
   font-family: var(--font-heading);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.6);
   position: relative;
   z-index: 1;
+}
+
+/* Bagian Konten Informasi di Bawah Foto */
+.member-card-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 1rem;
+  flex: 1;
 }
 
 .btn-instagram {
