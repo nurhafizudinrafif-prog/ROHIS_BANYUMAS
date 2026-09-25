@@ -480,7 +480,7 @@ export default function Home() {
   const aboutPhoto = parseImageUrl(about.photoUrl);
 
   return (
-    <div style={{ overflowX: 'hidden' }}>
+    <div style={{ overflowX: 'clip', width: '100%' }}>
       {/* ═══ 1. HERO SECTION ═══ */}
       <section
         style={{
@@ -815,7 +815,7 @@ export default function Home() {
               <div
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))',
                   gap: '1.25rem',
                   marginBottom: '2rem',
                 }}
@@ -987,7 +987,7 @@ export default function Home() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
               gap: '1.5rem',
             }}
           >
@@ -1303,7 +1303,7 @@ export default function Home() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
               gap: '1.5rem',
             }}
           >

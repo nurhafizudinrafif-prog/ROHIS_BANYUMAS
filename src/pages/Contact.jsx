@@ -1,153 +1,124 @@
 import { useState } from 'react';
-import { useScrollAnimation } from '../utils';
-import { Mail, Phone, MapPin, Send, CheckCircle, MessageCircle } from 'lucide-react';
-import { InstagramIcon, YoutubeIcon } from '../components/InstagramSection';
-import './Contact.css';
-import './About.css';
+import { Mail, Phone, MapPin, Send, CheckCircle, MessageCircle, Camera, Play } from 'lucide-react';
 
 export default function Contact() {
-  useScrollAnimation();
+  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setSubmitted(true);
+    setTimeout(() => setSubmitted(false), 4000);
+    setForm({ name: '', email: '', subject: '', message: '' });
   };
 
   return (
-    <main className="page-contact">
-      <section className="page-hero pattern-bg">
-        <div className="container text-center">
-          <span className="badge badge-primary animate-hero delay-0">Kontak</span>
-          <h1 className="page-hero-title animate-hero delay-1">Hubungi Kami</h1>
-          <p className="page-hero-subtitle animate-hero delay-2">
-            Punya pertanyaan, saran, atau ingin berkolaborasi? Jangan ragu untuk menghubungi kami.
+    <div style={{ overflowX: 'clip', width: '100%' }}>
+      <section style={{
+        background: 'var(--deep-pine)', paddingTop: '8rem', paddingBottom: '3rem', position: 'relative', overflow: 'hidden', width: '100%',
+      }}>
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 60% 50%, rgba(16,185,129,0.06) 0%, transparent 50%)', pointerEvents: 'none' }} />
+        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', position: 'relative' }}>
+          <span className="badge badge-emerald animate-fade-in-up" style={{ marginBottom: '1rem' }}><Mail size={14} /> Kontak</span>
+          <h1 className="animate-fade-in-up delay-100" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4.5vw, 2.8rem)', fontWeight: 800, color: 'var(--warm-alabaster)' }}>
+            Hubungi Kami
+          </h1>
+          <p className="animate-fade-in-up delay-200" style={{ color: 'rgba(245,242,237,0.55)', maxWidth: 500, marginTop: '0.75rem' }}>
+            Silakan hubungi kami untuk pertanyaan, kerja sama, atau informasi lebih lanjut.
           </p>
         </div>
       </section>
 
-      <section className="section">
-        <div className="container">
-          <div className="contact-grid">
+      <section className="section" style={{ background: 'var(--warm-alabaster)', width: '100%' }}>
+        <div className="container" style={{ maxWidth: 1000, margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '2rem' }}>
             {/* Contact Info */}
-            <div className="contact-info animate-on-scroll delay-1">
-              <h3>Informasi Kontak</h3>
-              <p>Silakan hubungi kami melalui salah satu kanal berikut atau isi formulir di samping.</p>
-
-              <div className="contact-info-list">
-                <div className="contact-info-item">
-                  <div className="contact-info-icon">
-                    <MapPin size={20} />
+            <div>
+              <h2 style={{ fontSize: '1.35rem', marginBottom: '1.5rem' }}>Informasi Kontak</h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginBottom: '2rem' }}>
+                {[
+                  { icon: MapPin, label: 'Alamat', value: 'Purwokerto, Kabupaten Banyumas, Jawa Tengah 53100', color: 'var(--emerald)' },
+                  { icon: Mail, label: 'Email', value: 'info@rohisbanyumas.id', color: 'var(--antique-brass)' },
+                  { icon: Phone, label: 'Telepon', value: '+62 812-3456-7890', color: '#7C3AED' },
+                ].map(({ icon: Icon, label, value, color }, i) => (
+                  <div key={i} style={{
+                    background: 'white', borderRadius: 'var(--radius-lg)', padding: '1.25rem',
+                    display: 'flex', gap: '1rem', alignItems: 'flex-start',
+                    border: '1px solid rgba(13,43,34,0.06)',
+                  }}>
+                    <div style={{
+                      width: 44, height: 44, borderRadius: '12px', background: `${color}12`,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                    }}>
+                      <Icon size={20} style={{ color }} />
+                    </div>
+                    <div>
+                      <p style={{ fontSize: '0.78rem', color: 'rgba(13,43,34,0.4)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</p>
+                      <p style={{ fontSize: '0.95rem', fontWeight: 500, marginTop: '0.15rem' }}>{value}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h4>Alamat Sekretariat</h4>
-                    <p>Purwokerto, Kabupaten Banyumas, Jawa Tengah 53100</p>
-                  </div>
-                </div>
-                <div className="contact-info-item">
-                  <div className="contact-info-icon">
-                    <Mail size={20} />
-                  </div>
-                  <div>
-                    <h4>Email</h4>
-                    <p>info@rohisbanyumas.id</p>
-                  </div>
-                </div>
-                <div className="contact-info-item">
-                  <div className="contact-info-icon">
-                    <Phone size={20} />
-                  </div>
-                  <div>
-                    <h4>Telepon / WhatsApp</h4>
-                    <p>+62 812-3456-7890</p>
-                  </div>
-                </div>
+                ))}
               </div>
 
-              <div className="contact-social">
-                <h4>Media Sosial</h4>
-                <div className="contact-social-links">
-                  <a
-                    href="https://www.instagram.com/rohis_banyumas/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="contact-social-link"
-                  >
-                    <InstagramIcon size={18} /> @rohis_banyumas
+              <h3 style={{ fontSize: '1rem', marginBottom: '1rem' }}>Media Sosial</h3>
+              <div style={{ display: 'flex', gap: '0.75rem' }}>
+                {[
+                  { icon: Camera, label: 'Instagram', color: '#E4405F' },
+                  { icon: Play, label: 'YouTube', color: '#FF0000' },
+                  { icon: MessageCircle, label: 'WhatsApp', color: '#25D366' },
+                ].map(({ icon: Icon, label, color }) => (
+                  <a key={label} href="#" aria-label={label} style={{
+                    width: 48, height: 48, borderRadius: '14px', background: `${color}10`,
+                    border: `1px solid ${color}20`, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    color, transition: 'all 0.2s', textDecoration: 'none',
+                  }}>
+                    <Icon size={20} />
                   </a>
-                  <a
-                    href="https://youtube.com/@rohisbanyumas9?si=bJpq4dcozF81AHGr"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="contact-social-link"
-                  >
-                    <YoutubeIcon size={18} /> @rohisbanyumas9
-                  </a>
-                  <a
-                    href="https://wa.me/6281234567890"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="contact-social-link"
-                  >
-                    <MessageCircle size={18} /> WhatsApp Center
-                  </a>
-                </div>
+                ))}
               </div>
             </div>
 
-            {/* Contact Form */}
-            <div className="contact-form-wrapper animate-on-scroll delay-2">
-              {submitted ? (
-                <div className="contact-success">
-                  <CheckCircle size={48} />
-                  <h3>Pesan Terkirim!</h3>
-                  <p>Terima kasih atas pesan Anda. Kami akan segera merespons. Jazakallahu khairan!</p>
+            {/* Form */}
+            <div>
+              <h2 style={{ fontSize: '1.35rem', marginBottom: '1.5rem' }}>Kirim Pesan</h2>
+              {submitted && (
+                <div className="animate-fade-in-up" style={{
+                  background: 'var(--emerald-glass)', border: '1px solid var(--emerald)',
+                  borderRadius: 'var(--radius-lg)', padding: '1rem', marginBottom: '1.25rem',
+                  display: 'flex', alignItems: 'center', gap: '0.75rem',
+                }}>
+                  <CheckCircle size={20} style={{ color: 'var(--emerald)' }} />
+                  <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>Pesan berhasil dikirim!</span>
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="contact-form">
-                  <h3>Kirim Pesan</h3>
-                  <div className="form-group">
-                    <label className="form-label">Nama Lengkap *</label>
-                    <input className="form-input" type="text" placeholder="Nama Anda" required />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">Email *</label>
-                    <input className="form-input" type="email" placeholder="email@contoh.com" required />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">Subjek</label>
-                    <input className="form-input" type="text" placeholder="Tentang apa?" />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">Pesan *</label>
-                    <textarea className="form-textarea" placeholder="Tulis pesan Anda di sini..." rows={5} required />
-                  </div>
-                  <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%' }}>
-                    <Send size={16} /> Kirim Pesan
-                  </button>
-                </form>
               )}
-            </div>
-          </div>
-
-          {/* Map */}
-          <div className="contact-map animate-on-scroll" style={{ marginTop: 'var(--space-3xl)' }}>
-            <h3 style={{ marginBottom: 'var(--space-lg)', textAlign: 'center' }}>Lokasi Kami</h3>
-            <div className="contact-map-embed">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63282.13073281482!2d109.19676235!3d-7.43137595!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e655ea49d3f1bbd%3A0x5027a76e35632c0!2sPurwokerto%2C%20Banyumas%20Regency%2C%20Central%20Java!5e0!3m2!1sen!2sid!4v1693000000000"
-                width="100%"
-                height="400"
-                style={{ border: 0, borderRadius: 'var(--radius-lg)' }}
-                allowFullScreen=""
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Lokasi ROHIS Kabupaten Banyumas"
-              />
+              <form onSubmit={handleSubmit} style={{
+                background: 'white', borderRadius: 'var(--radius-xl)', padding: '2rem',
+                border: '1px solid rgba(13,43,34,0.06)', boxShadow: 'var(--shadow-sm)',
+              }}>
+                <div className="form-group">
+                  <label className="form-label">Nama</label>
+                  <input type="text" className="form-input" required placeholder="Nama lengkap" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Email</label>
+                  <input type="email" className="form-input" required placeholder="email@contoh.com" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Subjek</label>
+                  <input type="text" className="form-input" required placeholder="Topik pesan" value={form.subject} onChange={e => setForm({ ...form, subject: e.target.value })} />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Pesan</label>
+                  <textarea className="form-input" required placeholder="Tulis pesan Anda..." value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} />
+                </div>
+                <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
+                  <Send size={16} /> Kirim Pesan
+                </button>
+              </form>
             </div>
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

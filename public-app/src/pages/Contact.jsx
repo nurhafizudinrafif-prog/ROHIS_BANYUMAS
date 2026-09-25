@@ -13,12 +13,12 @@ export default function Contact() {
   };
 
   return (
-    <div>
+    <div style={{ overflowX: 'clip', width: '100%' }}>
       <section style={{
-        background: 'var(--deep-pine)', paddingTop: '8rem', paddingBottom: '3rem', position: 'relative', overflow: 'hidden',
+        background: 'var(--deep-pine)', paddingTop: '8rem', paddingBottom: '3rem', position: 'relative', overflow: 'hidden', width: '100%',
       }}>
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 60% 50%, rgba(16,185,129,0.06) 0%, transparent 50%)', pointerEvents: 'none' }} />
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem', position: 'relative' }}>
+        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', position: 'relative' }}>
           <span className="badge badge-emerald animate-fade-in-up" style={{ marginBottom: '1rem' }}><Mail size={14} /> Kontak</span>
           <h1 className="animate-fade-in-up delay-100" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4.5vw, 2.8rem)', fontWeight: 800, color: 'var(--warm-alabaster)' }}>
             Hubungi Kami
@@ -29,9 +29,9 @@ export default function Contact() {
         </div>
       </section>
 
-      <section className="section" style={{ background: 'var(--warm-alabaster)' }}>
+      <section className="section" style={{ background: 'var(--warm-alabaster)', width: '100%' }}>
         <div className="container" style={{ maxWidth: 1000, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '2rem' }}>
             {/* Contact Info */}
             <div>
               <h2 style={{ fontSize: '1.35rem', marginBottom: '1.5rem' }}>Informasi Kontak</h2>

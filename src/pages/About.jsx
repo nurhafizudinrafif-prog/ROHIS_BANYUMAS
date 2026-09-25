@@ -132,7 +132,7 @@ export default function About() {
   const ShowcaseIcon = currentShowcase.icon;
 
   return (
-    <div>
+    <div style={{ overflowX: 'clip', width: '100%' }}>
       {/* ═══ HERO ═══ */}
       <section
         style={{
@@ -141,6 +141,7 @@ export default function About() {
           paddingBottom: '4rem',
           position: 'relative',
           overflow: 'hidden',
+          width: '100%',
         }}
       >
         <div
@@ -159,7 +160,6 @@ export default function About() {
           style={{
             maxWidth: 1200,
             margin: '0 auto',
-            padding: '0 1.5rem',
             position: 'relative',
             zIndex: 1,
           }}
@@ -205,18 +205,19 @@ export default function About() {
             radial-gradient(ellipse at 70% 30%, rgba(16,185,129,0.08) 0%, transparent 60%),
             url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2310B981' stroke-width='0.75' stroke-opacity='0.08'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40 Z'/%3E%3Ccircle cx='40' cy='40' r='18'/%3E%3Ccircle cx='40' cy='40' r='28'/%3E%3Cpath d='M0 0 L80 80 M80 0 L0 80'/%3E%3C/g%3E%3C/svg%3E")
           `,
-          padding: '5rem 0',
           position: 'relative',
+          overflow: 'hidden',
+          width: '100%',
           borderTop: '1px solid rgba(255,255,255,0.05)',
           borderBottom: '1px solid rgba(255,255,255,0.05)',
         }}
       >
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
+        <div className="container" style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-              gap: '3.5rem',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
+              gap: 'clamp(1.5rem, 4vw, 3rem)',
               alignItems: 'center',
             }}
           >
@@ -331,8 +332,8 @@ export default function About() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-              gap: '2rem',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
+              gap: '1.5rem',
             }}
           >
             <div
@@ -340,7 +341,7 @@ export default function About() {
               style={{
                 background: 'white',
                 borderRadius: 'var(--radius-xl)',
-                padding: '2.5rem',
+                padding: 'clamp(1.5rem, 4vw, 2.5rem)',
                 border: '1px solid rgba(13,43,34,0.06)',
                 boxShadow: 'var(--shadow-sm)',
               }}
@@ -370,7 +371,7 @@ export default function About() {
               style={{
                 background: 'white',
                 borderRadius: 'var(--radius-xl)',
-                padding: '2.5rem',
+                padding: 'clamp(1.5rem, 4vw, 2.5rem)',
                 border: '1px solid rgba(13,43,34,0.06)',
                 boxShadow: 'var(--shadow-sm)',
               }}
@@ -412,8 +413,8 @@ export default function About() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-              gap: '1.5rem',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))',
+              gap: '1.25rem',
             }}
           >
             {[
@@ -468,12 +469,14 @@ export default function About() {
             radial-gradient(ellipse at 30% 70%, rgba(16,185,129,0.06) 0%, transparent 65%),
             url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2310B981' stroke-width='0.75' stroke-opacity='0.08'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40 Z'/%3E%3Ccircle cx='40' cy='40' r='18'/%3E%3Ccircle cx='40' cy='40' r='28'/%3E%3Cpath d='M0 0 L80 80 M80 0 L0 80'/%3E%3C/g%3E%3C/svg%3E")
           `,
-          padding: '5rem 0',
           borderTop: '1px solid rgba(255,255,255,0.06)',
+          position: 'relative',
+          overflow: 'hidden',
+          width: '100%',
         }}
       >
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
-          <div className="section-header" style={{ marginBottom: '3rem' }}>
+        <div className="container" style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <div className="section-header" style={{ marginBottom: '2.5rem' }}>
             <span className="badge badge-emerald" style={{ marginBottom: '0.75rem' }}>
               <Sparkles size={14} /> 5 Pilar Gerakan
             </span>
@@ -488,13 +491,16 @@ export default function About() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
-              gap: '2rem',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
+              gap: '1.5rem',
               alignItems: 'start',
+              width: '100%',
+              maxWidth: '100%',
+              boxSizing: 'border-box',
             }}
           >
             {/* Left: 01 to 05 List Cards */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}>
               {DIVISION_SHOWCASE.map((item, idx) => {
                 const isActive = activeShowcaseIdx === idx;
 
@@ -506,13 +512,16 @@ export default function About() {
                       background: isActive ? 'rgba(20, 56, 44, 0.9)' : 'rgba(10, 32, 24, 0.65)',
                       border: isActive ? '1px solid rgba(181, 141, 79, 0.75)' : '1px solid rgba(255, 255, 255, 0.08)',
                       borderRadius: '16px',
-                      padding: '1.25rem 1.5rem',
+                      padding: 'clamp(0.85rem, 3vw, 1.15rem)',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '1.25rem',
+                      gap: 'clamp(0.6rem, 2vw, 1rem)',
                       cursor: 'pointer',
                       transition: 'all 0.3s ease',
                       boxShadow: isActive ? '0 0 24px rgba(181, 141, 79, 0.16)' : 'none',
+                      width: '100%',
+                      maxWidth: '100%',
+                      boxSizing: 'border-box',
                     }}
                     onMouseEnter={e => {
                       if (!isActive) {
@@ -534,7 +543,7 @@ export default function About() {
                         fontSize: '1.65rem',
                         fontWeight: 800,
                         color: isActive ? '#E6C587' : 'rgba(181, 141, 79, 0.75)',
-                        minWidth: '2.5rem',
+                        minWidth: '2.2rem',
                         flexShrink: 0,
                         lineHeight: 1,
                       }}
@@ -543,7 +552,7 @@ export default function About() {
                     </div>
 
                     {/* Middle Text */}
-                    <div style={{ flex: 1 }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
                       <div
                         style={{
                           display: 'flex',
@@ -560,6 +569,7 @@ export default function About() {
                             color: 'var(--warm-alabaster)',
                             letterSpacing: '0.02em',
                             margin: 0,
+                            wordBreak: 'break-word',
                           }}
                         >
                           {item.title}
@@ -571,6 +581,7 @@ export default function About() {
                             fontWeight: 600,
                             letterSpacing: '0.04em',
                             textTransform: 'uppercase',
+                            flexShrink: 0,
                           }}
                         >
                           {item.tag}
@@ -583,6 +594,7 @@ export default function About() {
                           lineHeight: 1.55,
                           marginTop: '0.35rem',
                           margin: '0.35rem 0 0',
+                          wordBreak: 'break-word',
                         }}
                       >
                         {item.desc}
@@ -605,10 +617,13 @@ export default function About() {
                 backdropFilter: 'blur(20px)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 borderRadius: '24px',
-                padding: '2.5rem 2rem',
+                padding: 'clamp(1.5rem, 4vw, 2.25rem) clamp(1.15rem, 3vw, 1.75rem)',
                 boxShadow: '0 16px 40px rgba(0, 0, 0, 0.3)',
                 position: 'sticky',
-                top: '6rem',
+                top: '5.5rem',
+                width: '100%',
+                maxWidth: '100%',
+                boxSizing: 'border-box',
               }}
             >
               {/* Badge & Title Header */}
@@ -756,7 +771,7 @@ export default function About() {
             style={{
               background: 'linear-gradient(135deg, var(--deep-pine) 0%, #153a2f 100%)',
               borderRadius: '24px',
-              padding: '3.5rem 2.5rem',
+              padding: 'clamp(2rem, 5vw, 3.5rem) clamp(1.25rem, 4vw, 2.5rem)',
               color: 'var(--warm-alabaster)',
               boxShadow: 'var(--shadow-xl)',
               border: '1px solid rgba(181,141,79,0.3)',

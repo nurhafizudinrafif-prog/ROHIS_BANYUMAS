@@ -20,14 +20,14 @@ export default function ArticleDetail() {
   const relatedArticles = articles.filter(a => a.category === article.category && a.id !== article.id).slice(0, 3);
 
   return (
-    <div>
+    <div style={{ overflowX: 'clip', width: '100%' }}>
       {/* Hero */}
       <section style={{
         background: 'var(--deep-pine)', paddingTop: '7rem', paddingBottom: '3rem',
-        position: 'relative', overflow: 'hidden',
+        position: 'relative', overflow: 'hidden', width: '100%',
       }}>
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 40% 60%, rgba(16,185,129,0.08) 0%, transparent 50%)', pointerEvents: 'none' }} />
-        <div className="container" style={{ maxWidth: 800, margin: '0 auto', padding: '0 1.5rem', position: 'relative' }}>
+        <div className="container" style={{ maxWidth: 800, margin: '0 auto', position: 'relative' }}>
           <Link to="/articles" className="animate-fade-in-up" style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
             color: 'rgba(245,242,237,0.5)', fontSize: '0.85rem', marginBottom: '1.5rem', textDecoration: 'none',
@@ -85,7 +85,7 @@ export default function ArticleDetail() {
           {relatedArticles.length > 0 && (
             <div style={{ marginTop: '3rem' }}>
               <h3 style={{ marginBottom: '1.5rem', fontSize: '1.25rem' }}>Artikel Terkait</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 240px), 1fr))', gap: '1rem' }}>
                 {relatedArticles.map(a => (
                   <Link to={`/articles/${a.slug}`} key={a.id} style={{
                     background: 'white', borderRadius: 'var(--radius-lg)', padding: '1.25rem',

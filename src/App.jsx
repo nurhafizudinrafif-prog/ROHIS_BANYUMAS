@@ -1,62 +1,59 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { DataProvider } from './context/DataContext';
-import ScrollToTop from './utils';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import FloatingButtons from './components/FloatingButtons';
-import DynamicBackground from './components/DynamicBackground';
+import Navbar from './components/layout/Navbar';
+import Footer from './components/layout/Footer';
+import ScrollProgressBar from './components/layout/ScrollProgressBar';
 import Home from './pages/Home';
 import About from './pages/About';
-import Programs from './pages/Programs';
 import Articles from './pages/Articles';
 import ArticleDetail from './pages/ArticleDetail';
+import Events from './pages/Events';
+import Schools from './pages/Schools';
 import Gallery from './pages/Gallery';
-import Agenda from './pages/Agenda';
-import MemberSchools from './pages/MemberSchools';
-import Registration from './pages/Registration';
 import Contact from './pages/Contact';
-import Admin from './pages/Admin';
-import CloudAgent from './pages/CloudAgent';
+import Consultation from './pages/Consultation';
+import Library from './pages/Library';
+import Programs from './pages/Programs';
 
-function AppContent() {
-  const location = useLocation();
-  const isStandalone = location.pathname.startsWith('/admin') || location.pathname.startsWith('/cloud-agent');
-
-  return (
-    <>
-      <ScrollToTop />
-      {/* Elegant & Living Dynamic Islamic Background */}
-      <DynamicBackground />
-
-      {!isStandalone && <Navbar />}
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/tentang" element={<About />} />
-        <Route path="/program" element={<Programs />} />
-        <Route path="/artikel" element={<Articles />} />
-        <Route path="/artikel/:slug" element={<ArticleDetail />} />
-        <Route path="/galeri" element={<Gallery />} />
-        <Route path="/agenda" element={<Agenda />} />
-        <Route path="/rohis-anggota" element={<MemberSchools />} />
-        <Route path="/pendaftaran" element={<Registration />} />
-        <Route path="/kontak" element={<Contact />} />
-        <Route path="/admin" element={<Admin />} />
-        <Route path="/cloud-agent" element={<CloudAgent />} />
-      </Routes>
-      {!isStandalone && <Footer />}
-      {!isStandalone && <FloatingButtons />}
-    </>
-  );
-}
-
-function App() {
+export default function App() {
   return (
     <DataProvider>
       <Router>
-        <AppContent />
+        <ScrollProgressBar />
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', width: '100%', maxWidth: '100vw', overflowX: 'clip' }}>
+          <Navbar />
+          <main style={{ flex: 1, width: '100%', maxWidth: '100vw', overflowX: 'clip' }}>
+            <Routes>
+              {/* Primary Routes */}
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/programs" element={<Programs />} />
+              <Route path="/articles" element={<Articles />} />
+              <Route path="/articles/:slug" element={<ArticleDetail />} />
+              <Route path="/events" element={<Events />} />
+              <Route path="/schools" element={<Schools />} />
+              <Route path="/gallery" element={<Gallery />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/consultation" element={<Consultation />} />
+              <Route path="/library" element={<Library />} />
+
+              {/* Backward-Compatible Indonesian URL Aliases */}
+              <Route path="/tentang" element={<Navigate to="/about" replace />} />
+              <Route path="/program" element={<Programs />} />
+              <Route path="/agenda" element={<Events />} />
+              <Route path="/artikel" element={<Articles />} />
+              <Route path="/artikel/:slug" element={<ArticleDetail />} />
+              <Route path="/anggota" element={<Schools />} />
+              <Route path="/sekolah" element={<Schools />} />
+              <Route path="/rohis-anggota" element={<Schools />} />
+              <Route path="/galeri" element={<Gallery />} />
+              <Route path="/kontak" element={<Contact />} />
+              <Route path="/pendaftaran" element={<Contact />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
       </Router>
     </DataProvider>
   );
 }
-
-export default App;

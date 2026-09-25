@@ -76,14 +76,37 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
 }
 
 body {
   font-family: var(--font-body);
-  background-color: var(--warm-alabaster);
+  background-color: var(--deep-pine);
   color: var(--deep-pine);
   line-height: 1.7;
   overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+}
+
+#root {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+  background-color: var(--deep-pine);
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+  flex: 1;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -91,6 +114,11 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   line-height: 1.2;
   color: var(--deep-pine);
+  overflow-wrap: break-word;
+}
+
+p, span, a, input, textarea {
+  overflow-wrap: break-word;
 }
 
 a {
@@ -98,7 +126,7 @@ a {
   text-decoration: none;
 }
 
-img {
+img, video, iframe, canvas, svg {
   max-width: 100%;
   height: auto;
 }
@@ -316,6 +344,8 @@ img {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 var(--space-xl);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* ═══════════════════════════════════════════
@@ -577,11 +607,14 @@ textarea.form-input {
    ═══════════════════════════════════════════ */
 @media (max-width: 768px) {
   .section {
-    padding: var(--space-2xl) var(--space-md);
+    padding: 3.5rem 0 !important;
   }
   
   .container {
-    padding: 0 var(--space-md);
+    padding: 0 1rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .hide-mobile {
@@ -599,20 +632,32 @@ textarea.form-input {
    Scrollbar Custom
    ═══════════════════════════════════════════ */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--warm-alabaster);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(13, 43, 34, 0.2);
+  background: rgba(16, 185, 129, 0.25);
   border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(13, 43, 34, 0.35);
+  background: rgba(16, 185, 129, 0.45);
+}
+
+.no-scrollbar {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 /* ═══════════════════════════════════════════

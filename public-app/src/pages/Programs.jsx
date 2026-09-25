@@ -99,7 +99,7 @@ export default function Programs() {
   const CurrentIcon = current.icon;
 
   return (
-    <div>
+    <div style={{ overflowX: 'clip', width: '100%' }}>
       {/* ═══ HERO ═══ */}
       <section
         style={{
@@ -108,6 +108,7 @@ export default function Programs() {
           paddingBottom: '3.5rem',
           position: 'relative',
           overflow: 'hidden',
+          width: '100%',
         }}
       >
         <div
@@ -123,7 +124,6 @@ export default function Programs() {
           style={{
             maxWidth: 1200,
             margin: '0 auto',
-            padding: '0 1.5rem',
             position: 'relative',
           }}
         >
@@ -164,21 +164,23 @@ export default function Programs() {
             radial-gradient(ellipse at 30% 70%, rgba(16,185,129,0.06) 0%, transparent 65%),
             url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2310B981' stroke-width='0.75' stroke-opacity='0.08'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40 Z'/%3E%3Ccircle cx='40' cy='40' r='18'/%3E%3Ccircle cx='40' cy='40' r='28'/%3E%3Cpath d='M0 0 L80 80 M80 0 L0 80'/%3E%3C/g%3E%3C/svg%3E")
           `,
-          padding: '4rem 0 6rem',
+          position: 'relative',
+          overflow: 'hidden',
+          width: '100%',
         }}
       >
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
+        <div className="container" style={{ maxWidth: 1200, margin: '0 auto' }}>
           {/* Interactive 2-Column Explorer */}
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
-              gap: '2rem',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
+              gap: '1.5rem',
               alignItems: 'start',
             }}
           >
             {/* Left: 01 to 05 List Cards */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
               {DIVISION_SHOWCASE.map((item, idx) => {
                 const isActive = activeIdx === idx;
 
@@ -190,10 +192,10 @@ export default function Programs() {
                       background: isActive ? 'rgba(20, 56, 44, 0.9)' : 'rgba(10, 32, 24, 0.65)',
                       border: isActive ? '1px solid rgba(181, 141, 79, 0.75)' : '1px solid rgba(255, 255, 255, 0.08)',
                       borderRadius: '16px',
-                      padding: '1.25rem 1.5rem',
+                      padding: '1.15rem 1.15rem',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '1.25rem',
+                      gap: '1rem',
                       cursor: 'pointer',
                       transition: 'all 0.3s ease',
                       boxShadow: isActive ? '0 0 24px rgba(181, 141, 79, 0.16)' : 'none',
@@ -289,10 +291,10 @@ export default function Programs() {
                 backdropFilter: 'blur(20px)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 borderRadius: '24px',
-                padding: '2.5rem 2rem',
+                padding: 'clamp(1.5rem, 4vw, 2.25rem) clamp(1.15rem, 3vw, 1.75rem)',
                 boxShadow: '0 16px 40px rgba(0, 0, 0, 0.3)',
                 position: 'sticky',
-                top: '6rem',
+                top: '5.5rem',
               }}
             >
               {/* Badge & Title Header */}
@@ -394,7 +396,7 @@ export default function Programs() {
 
               {/* Action Button */}
               <Link
-                to="/about#pengurus"
+                to="/schools#pengurus"
                 style={{
                   marginTop: '2rem',
                   display: 'inline-flex',

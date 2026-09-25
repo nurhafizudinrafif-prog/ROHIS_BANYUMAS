@@ -95,7 +95,7 @@ export default function Gallery() {
   );
 
   return (
-    <div>
+    <div style={{ overflowX: 'clip', width: '100%' }}>
       {/* ── HERO SECTION ── */}
       <section
         style={{
@@ -104,6 +104,7 @@ export default function Gallery() {
           paddingBottom: '3.5rem',
           position: 'relative',
           overflow: 'hidden',
+          width: '100%',
         }}
       >
         <div
@@ -120,7 +121,6 @@ export default function Gallery() {
           style={{
             maxWidth: 1200,
             margin: '0 auto',
-            padding: '0 1.5rem',
             position: 'relative',
           }}
         >
@@ -287,8 +287,8 @@ export default function Gallery() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-                gap: '1.5rem',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
+                gap: '1.25rem',
               }}
             >
               {filteredItems.map((item, i) => {
@@ -854,7 +854,7 @@ export default function Gallery() {
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem', flexWrap: 'wrap' }}>
-                <div style={{ flex: 1, minWidth: 260 }}>
+                <div style={{ flex: 1, minWidth: 'min(100%, 220px)' }}>
                   <h2
                     style={{
                       fontSize: '1.2rem',

@@ -21,14 +21,14 @@ export default function Articles() {
   useScrollReveal([filtered, category, search]);
 
   return (
-    <div>
+    <div style={{ overflowX: 'clip', width: '100%' }}>
       {/* Hero */}
       <section style={{
         background: 'var(--deep-pine)', paddingTop: '8rem', paddingBottom: '3rem',
-        position: 'relative', overflow: 'hidden',
+        position: 'relative', overflow: 'hidden', width: '100%',
       }}>
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 50%, rgba(16,185,129,0.06) 0%, transparent 60%)', pointerEvents: 'none' }} />
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem', position: 'relative' }}>
+        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', position: 'relative' }}>
           <span className="badge badge-emerald animate-fade-in-up" style={{ marginBottom: '1rem' }}>
             <BookOpen size={14} /> Artikel & Literasi
           </span>
@@ -47,13 +47,13 @@ export default function Articles() {
       </section>
 
       {/* Filters & Content */}
-      <section className="section" style={{ background: 'var(--warm-alabaster)' }}>
+      <section className="section" style={{ background: 'var(--warm-alabaster)', width: '100%' }}>
         <div className="container" style={{ maxWidth: 1200, margin: '0 auto' }}>
           {/* Search & Filter */}
           <div style={{
             display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap', alignItems: 'center',
           }}>
-            <div style={{ position: 'relative', flex: '1 1 300px' }}>
+            <div style={{ position: 'relative', flex: '1 1 240px' }}>
               <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'rgba(13,43,34,0.3)' }} />
               <input
                 type="text" placeholder="Cari artikel..." value={search}
@@ -76,7 +76,7 @@ export default function Articles() {
           {/* Articles Grid */}
           {filtered.length > 0 ? (
             <div style={{
-              display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem',
+              display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '1.25rem',
             }}>
               {filtered.map((article, i) => (
                 <Link to={`/articles/${article.slug}`} key={article.id} className={`card-editorial reveal-scale delay-${(i % 6 + 1) * 80}`}
