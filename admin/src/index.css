@@ -242,7 +242,131 @@ select.form-input {
   background: var(--glass-bg);
 }
 
-/* ═══════ Responsive ═══════ */
+/* ═══════ Responsive Utilities ═══════ */
+.table-responsive {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--radius-xl);
+}
+
+.table-responsive table {
+  min-width: 600px;
+}
+
+.modal-overlay-responsive {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-card-responsive {
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+}
+
 @media (max-width: 768px) {
   .hide-mobile { display: none !important; }
 }
+
+@media (max-width: 640px) {
+  body {
+    font-size: 0.95rem;
+  }
+
+  .glass-card {
+    border-radius: var(--radius-lg);
+  }
+
+  /* Prevent iOS Safari auto-zoom on input focus */
+  .form-input {
+    font-size: 16px;
+    padding: 0.65rem 0.85rem;
+  }
+
+  .btn {
+    padding: 0.55rem 1.1rem;
+    font-size: 0.82rem;
+  }
+
+  .modal-overlay-responsive {
+    padding: 0.75rem;
+    align-items: center;
+  }
+
+  .modal-card-responsive {
+    max-height: 92vh;
+    padding: 1.25rem !important;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 0.65rem 0.75rem;
+    font-size: 0.82rem;
+  }
+}
+
+/* ═══════ Comprehensive Mobile Layout Containment ═══════ */
+@media (max-width: 480px) {
+  /* Global containment - prevent any horizontal overflow */
+  html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  /* Ensure all grids with minmax fallback to single column on very small screens */
+  .glass-card {
+    overflow: hidden;
+    word-break: break-word;
+  }
+
+  /* Toast notifications centered on mobile */
+  .admin-floating-toast {
+    left: 0.5rem;
+    right: 0.5rem;
+    max-width: calc(100% - 1rem);
+  }
+
+  /* Table responsive: ensure smooth horizontal scrolling indicator */
+  .table-responsive {
+    position: relative;
+    border-radius: var(--radius-lg);
+  }
+
+  .table-responsive::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 24px;
+    background: linear-gradient(90deg, transparent, rgba(0,0,0,0.2));
+    pointer-events: none;
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    opacity: 0.5;
+  }
+
+  /* Modal cards on tiny screens */
+  .modal-card-responsive {
+    max-width: 100% !important;
+    border-radius: var(--radius-lg) !important;
+  }
+
+  /* Ensure long text doesn't overflow cards */
+  h1, h2, h3, h4 {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+}
+

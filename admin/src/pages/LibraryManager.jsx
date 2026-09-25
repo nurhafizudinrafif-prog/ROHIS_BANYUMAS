@@ -100,7 +100,7 @@ export default function LibraryManager() {
       {/* Header Section */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+          <h1 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.5rem)', fontWeight: 800, color: 'var(--text-primary)' }}>
             Kelola E-Library (Perpustakaan Digital)
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '0.2rem' }}>
@@ -130,7 +130,7 @@ export default function LibraryManager() {
         justifyContent: 'space-between'
       }}>
         {/* Search Input */}
-        <div style={{ position: 'relative', flex: '1 1 300px', maxWidth: 420 }}>
+        <div style={{ position: 'relative', flex: '1 1 240px', width: '100%', maxWidth: '100%' }}>
           <Search size={16} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
           <input
             type="text"
@@ -195,9 +195,9 @@ export default function LibraryManager() {
       </div>
 
       {/* Main Data Table */}
-      <div className="glass-card" style={{ overflow: 'hidden', padding: 0 }}>
+      <div className="glass-card table-responsive" style={{ overflow: 'hidden', padding: 0 }}>
         <div style={{ overflowX: 'auto' }}>
-          <table className="data-table">
+          <table className="data-table" style={{ minWidth: 640 }}>
             <thead>
               <tr>
                 <th style={{ width: '40px', textAlign: 'center' }}>#</th>
@@ -373,23 +373,10 @@ export default function LibraryManager() {
 
       {/* Modal Add / Edit */}
       {editing && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(0,0,0,0.65)',
-          backdropFilter: 'blur(8px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000,
-          padding: '1rem'
-        }}>
-          <div className="glass-card animate-fade-in-up" style={{
-            width: '100%',
+        <div className="modal-overlay-responsive">
+          <div className="glass-card modal-card-responsive animate-fade-in-up" style={{
             maxWidth: 560,
-            padding: '2rem',
-            maxHeight: '90vh',
-            overflowY: 'auto'
+            padding: '1.75rem',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
               <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>
@@ -415,7 +402,7 @@ export default function LibraryManager() {
               />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(180px, 100%), 1fr))', gap: '1rem', marginBottom: '1rem' }}>
               <div className="form-group">
                 <label className="form-label">Kategori Materi</label>
                 <select
@@ -446,7 +433,7 @@ export default function LibraryManager() {
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(200px, 100%), 1fr))', gap: '1rem', marginBottom: '1rem' }}>
               <div className="form-group">
                 <label className="form-label">Estimasi Ukuran File</label>
                 <input

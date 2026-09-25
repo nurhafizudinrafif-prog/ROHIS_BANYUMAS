@@ -147,11 +147,12 @@ export default function Settings() {
       {/* Toast Notification */}
       {toast && (
         <div style={{
-          position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 9999,
+          position: 'fixed', bottom: '1.5rem', right: '1.5rem', zIndex: 9999,
           background: toast.type === 'success' ? '#065F46' : '#991B1B',
           color: '#FFFFFF', padding: '0.85rem 1.25rem', borderRadius: 'var(--radius-md)',
           boxShadow: 'var(--shadow-lg)', display: 'flex', alignItems: 'center', gap: '0.65rem',
           border: '1px solid rgba(255,255,255,0.2)',
+          maxWidth: 'calc(100vw - 2rem)',
         }}>
           {toast.type === 'success' ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />}
           <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>{toast.message}</span>
@@ -159,17 +160,17 @@ export default function Settings() {
       )}
 
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.75rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+          <h1 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.75rem)', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
             <SettingsIcon size={26} color="var(--emerald)" /> Pengaturan & Cadangan Sistem
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.25rem' }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginTop: '0.25rem' }}>
             Kelola identitas resmi organisasi, informasi kontak, tautan media sosial, serta pencadangan database.
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '0.65rem' }}>
+        <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
           <button type="button" onClick={handleExportBackup} className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
             <Download size={16} /> Unduh Backup JSON
           </button>
@@ -182,12 +183,12 @@ export default function Settings() {
 
       <form onSubmit={handleSaveSettings}>
         {/* Card 1: Identitas Organisasi */}
-        <div className="glass-card" style={{ padding: '1.75rem', marginBottom: '1.5rem' }}>
+        <div className="glass-card" style={{ padding: '1.5rem', marginBottom: '1.5rem' }}>
           <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--emerald)' }}>
             <Building2 size={18} /> Identitas Resmi Organisasi
           </h3>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(240px, 100%), 1fr))', gap: '1.25rem' }}>
             <div className="form-group">
               <label className="form-label">Nama Lengkap Organisasi</label>
               <input
@@ -219,7 +220,7 @@ export default function Settings() {
             <Phone size={18} /> Saluran Kontak & Sekretariat
           </h3>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem', marginBottom: '1.25rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(280px, 100%), 1fr))', gap: '1.25rem', marginBottom: '1.25rem' }}>
             <div className="form-group">
               <label className="form-label">Email Resmi</label>
               <div style={{ position: 'relative' }}>
@@ -278,7 +279,7 @@ export default function Settings() {
             <InstagramIcon size={18} /> Media Sosial Resmi
           </h3>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(280px, 100%), 1fr))', gap: '1.25rem' }}>
             <div className="form-group">
               <label className="form-label">URL Instagram Resmi</label>
               <div style={{ position: 'relative' }}>

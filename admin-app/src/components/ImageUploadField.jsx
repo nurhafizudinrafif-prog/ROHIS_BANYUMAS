@@ -75,8 +75,8 @@ export default function ImageUploadField({
       )}
 
       {/* Input Group: URL text input + Upload Button */}
-      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-        <div style={{ position: 'relative', flex: 1 }}>
+      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+        <div style={{ position: 'relative', flex: '1 1 200px', minWidth: 0 }}>
           <span style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>
             <ImageIcon size={16} />
           </span>
@@ -140,7 +140,8 @@ export default function ImageUploadField({
           padding: '0.85rem',
           display: 'flex',
           alignItems: 'center',
-          gap: '1rem',
+          gap: '0.75rem',
+          flexWrap: 'wrap',
         }}>
           <div style={{
             width: 80,

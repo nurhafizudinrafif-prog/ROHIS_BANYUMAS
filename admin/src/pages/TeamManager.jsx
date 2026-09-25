@@ -200,10 +200,10 @@ export default function TeamManager() {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+          <h1 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.75rem)', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
             <Users size={26} color="var(--emerald)" /> Struktur Kepengurusan ROKABA
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.25rem' }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginTop: '0.25rem' }}>
             Kelola data pengurus Badan Pengurus Harian (BPH) dan 5 Divisi Gerakan ROHIS Kabupaten Banyumas.
           </p>
         </div>
@@ -222,6 +222,8 @@ export default function TeamManager() {
         display: 'flex',
         gap: '0.5rem',
         overflowX: 'auto',
+        WebkitOverflowScrolling: 'touch',
+        scrollbarWidth: 'none',
         padding: '0.5rem',
         background: 'var(--bg-card)',
         borderRadius: 'var(--radius-lg)',
@@ -276,8 +278,8 @@ export default function TeamManager() {
       {/* Members Grid */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-        gap: '1.25rem',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(min(260px, 100%), 1fr))',
+        gap: '1rem',
       }}>
         {filteredMembers.map(member => (
           <div
@@ -386,16 +388,10 @@ export default function TeamManager() {
 
       {/* Modal Add / Edit */}
       {modalOpen && (
-        <div style={{
-          position: 'fixed', inset: 0, zIndex: 1000,
-          background: 'rgba(0, 0, 0, 0.75)',
-          backdropFilter: 'blur(8px)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          padding: '1rem',
-        }}>
-          <div className="glass-card" style={{
-            width: '100%', maxWidth: 540, maxHeight: '90vh', overflowY: 'auto',
-            padding: '1.75rem', position: 'relative',
+        <div className="modal-overlay-responsive">
+          <div className="glass-card modal-card-responsive" style={{
+            maxWidth: 540,
+            padding: '1.75rem',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 800 }}>

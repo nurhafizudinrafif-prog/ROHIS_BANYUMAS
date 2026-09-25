@@ -33,12 +33,12 @@ export default function UserManager() {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-        <h1 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Manajemen User</h1>
+        <h1 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.5rem)', fontWeight: 800 }}>Manajemen User</h1>
         <button onClick={handleNew} className="btn btn-primary"><Plus size={16} /> Tambah User</button>
       </div>
 
-      <div className="glass-card" style={{ overflow: 'auto' }}>
-        <table className="data-table">
+      <div className="glass-card table-responsive">
+        <table className="data-table" style={{ minWidth: 540 }}>
           <thead>
             <tr><th>Username</th><th>Role</th><th>Sekolah</th><th>Login Terakhir</th><th style={{ textAlign: 'right' }}>Aksi</th></tr>
           </thead>
@@ -64,8 +64,8 @@ export default function UserManager() {
 
       {/* Edit Modal */}
       {editing && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
-          <div className="glass-card animate-fade-in-up" style={{ width: '100%', maxWidth: 450, padding: '2rem' }}>
+        <div className="modal-overlay-responsive">
+          <div className="glass-card modal-card-responsive animate-fade-in-up" style={{ maxWidth: 450, padding: '1.75rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
               <h2 style={{ fontSize: '1.15rem' }}>{isNew ? 'Tambah' : 'Edit'} User</h2>
               <button onClick={() => { setEditing(null); setIsNew(false); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}><X size={20} /></button>

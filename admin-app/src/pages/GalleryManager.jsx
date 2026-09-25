@@ -160,10 +160,10 @@ export default function GalleryManager() {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-            <ImageIcon size={26} color="var(--emerald)" /> Galeri Dokumentasi Kegiatan
+          <h1 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.75rem)', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <ImageIcon size={26} color="var(--emerald)" /> Kelola Galeri & Dokumentasi Kegiatan
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '0.25rem' }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginTop: '0.25rem' }}>
             Kelola album foto dan video dokumentasi kegiatan, kajian akbar, pelatihan, dan bakti sosial ROHIS Banyumas.
           </p>
         </div>
@@ -182,6 +182,8 @@ export default function GalleryManager() {
         display: 'flex',
         gap: '0.5rem',
         overflowX: 'auto',
+        WebkitOverflowScrolling: 'touch',
+        scrollbarWidth: 'none',
         padding: '0.5rem',
         background: 'var(--bg-card)',
         borderRadius: 'var(--radius-lg)',
@@ -218,8 +220,8 @@ export default function GalleryManager() {
       {/* Albums Grid */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-        gap: '1.5rem',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))',
+        gap: '1.25rem',
       }}>
         {filteredAlbums.map(album => {
           const summary = getMediaSummary(album);
@@ -352,16 +354,10 @@ export default function GalleryManager() {
 
       {/* Modal Add / Edit Album */}
       {modalOpen && (
-        <div style={{
-          position: 'fixed', inset: 0, zIndex: 1000,
-          background: 'rgba(0, 0, 0, 0.8)',
-          backdropFilter: 'blur(8px)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          padding: '1rem',
-        }}>
-          <div className="glass-card" style={{
-            width: '100%', maxWidth: 720, maxHeight: '92vh', overflowY: 'auto',
-            padding: '1.75rem', position: 'relative',
+        <div className="modal-overlay-responsive">
+          <div className="glass-card modal-card-responsive" style={{
+            maxWidth: 720,
+            padding: '1.75rem',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
               <h3 style={{ fontSize: '1.3rem', fontWeight: 800 }}>
@@ -373,7 +369,7 @@ export default function GalleryManager() {
             </div>
 
             <form onSubmit={handleSaveAlbum}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(260px, 100%), 1fr))', gap: '1rem', marginBottom: '1rem' }}>
                 <div className="form-group">
                   <label className="form-label">Judul Album / Kegiatan</label>
                   <input
@@ -400,7 +396,7 @@ export default function GalleryManager() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(200px, 100%), 1fr))', gap: '1rem', marginBottom: '1rem' }}>
                 <div className="form-group">
                   <label className="form-label">Tanggal Pelaksanaan</label>
                   <input
@@ -460,11 +456,12 @@ export default function GalleryManager() {
                 </p>
 
                 {/* Form Add New Media Item */}
-                <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr auto', gap: '0.5rem', alignItems: 'center', marginBottom: '1rem' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center', marginBottom: '1rem' }}>
                   <select
                     className="form-input"
                     value={newMedia.type}
                     onChange={e => setNewMedia({ ...newMedia, type: e.target.value })}
+                    style={{ width: '120px', flexShrink: 0 }}
                   >
                     <option value="image">📷 Foto</option>
                     <option value="video">🎥 Video</option>
@@ -476,13 +473,14 @@ export default function GalleryManager() {
                     value={newMedia.url}
                     onChange={e => setNewMedia({ ...newMedia, url: e.target.value })}
                     placeholder="URL Media (Google Drive, YouTube, Web URL, dll)..."
+                    style={{ flex: '1 1 200px', minWidth: 0 }}
                   />
 
                   <button
                     type="button"
                     onClick={handleAddMediaItem}
                     className="btn btn-primary"
-                    style={{ whiteSpace: 'nowrap' }}
+                    style={{ whiteSpace: 'nowrap', flexShrink: 0 }}
                   >
                     <Plus size={15} /> Tambah
                   </button>
@@ -501,6 +499,7 @@ export default function GalleryManager() {
                           display: 'flex',
                           alignItems: 'center',
                           gap: '0.75rem',
+                          flexWrap: 'wrap',
                           background: isCover ? 'rgba(16, 185, 129, 0.1)' : 'var(--bg-card)',
                           border: isCover ? '1px solid rgba(16, 185, 129, 0.4)' : '1px solid var(--border-glass)',
                           padding: '0.5rem 0.75rem',

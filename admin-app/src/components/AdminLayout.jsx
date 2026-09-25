@@ -1,18 +1,20 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import {
   LayoutDashboard, FileText, Calendar, School, Image, Users,
   MessageCircle, Shield, ClipboardList, LogOut, BookOpen,
-  RefreshCw, Home, Settings, ExternalLink, CheckCircle2
+  RefreshCw, Home, Settings, ExternalLink, CheckCircle2,
+  Menu, X
 } from 'lucide-react';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import RohisLogo from './RohisLogo';
 import DynamicBackground from './DynamicBackground';
 import './AdminLayout.css';
 
 export default function AdminLayout() {
   const { user, logout } = useAuth();
+  const location = useLocation();
   const {
     articles = [],
     events = [],
@@ -26,8 +28,26 @@ export default function AdminLayout() {
     saving,
   } = useData();
 
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
+
+  // Auto-close sidebar on route change
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [location.pathname]);
+
+  // Lock background scroll when mobile sidebar is open
+  useEffect(() => {
+    if (sidebarOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [sidebarOpen]);
 
   // Total team count
   const totalPengurus = useMemo(() => {
@@ -58,41 +78,39 @@ export default function AdminLayout() {
 
       {/* Floating Toast Notification */}
       {toastMessage && (
-        <div style={{
-          position: 'fixed',
-          top: 72,
-          right: 24,
-          zIndex: 9999,
-          background: 'rgba(4, 19, 21, 0.95)',
-          border: '1px solid #00F0CF',
-          boxShadow: '0 8px 30px rgba(0, 240, 207, 0.25)',
-          color: '#F1F5F9',
-          padding: '0.75rem 1.25rem',
-          borderRadius: '0.75rem',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.6rem',
-          fontSize: '0.85rem',
-          backdropFilter: 'blur(12px)',
-          animation: 'fadeInUp 0.3s ease forwards',
-        }}>
-          <CheckCircle2 size={18} style={{ color: '#00F0CF' }} />
+        <div className="admin-floating-toast">
+          <CheckCircle2 size={18} style={{ color: '#00F0CF', flexShrink: 0 }} />
           <span>{toastMessage.message}</span>
         </div>
       )}
 
-      {/* ══════════ TOPBAR (Identical to reference screenshot) ══════════ */}
+      {/* ══════════ TOPBAR (Identical to reference screenshot, Responsive on HP) ══════════ */}
       <header className="admin-topbar">
         <div className="admin-topbar-left">
+          {/* Mobile Hamburger Drawer Toggle */}
+          <button
+            className="mobile-menu-toggle"
+            onClick={() => setSidebarOpen(prev => !prev)}
+            aria-label={sidebarOpen ? 'Tutup navigasi' : 'Buka navigasi'}
+            title={sidebarOpen ? 'Tutup Menu' : 'Buka Menu Navigasi'}
+          >
+            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+
           <div className="admin-brand">
             <RohisLogo size={36} showGlow={true} />
             <div className="admin-brand-info">
               <h3>Admin ROKABA CMS</h3>
               <span className="admin-status-badge">
                 <span className={`status-dot ${isSyncing || saving ? 'syncing' : ''}`}></span>
-                {isSyncing || saving
-                  ? 'Menyinkronkan ke Cloud...'
-                  : 'Cloud Upstash Terhubung (Real-Time)'}
+                <span className="status-text-full">
+                  {isSyncing || saving
+                    ? 'Menyinkronkan ke Cloud...'
+                    : 'Cloud Upstash Terhubung (Real-Time)'}
+                </span>
+                <span className="status-text-compact">
+                  {isSyncing || saving ? 'Sinkron...' : 'Online'}
+                </span>
               </span>
             </div>
           </div>
@@ -106,7 +124,7 @@ export default function AdminLayout() {
             title="Paksa sinkronisasi data ke Cloud Upstash & Web Publik"
           >
             <RefreshCw size={14} className={isSyncing ? 'spin-icon' : ''} />
-            <span>{isSyncing ? 'Menyinkronkan...' : 'Sinkronkan Sekarang'}</span>
+            <span className="btn-topbar-text">{isSyncing ? 'Menyinkronkan...' : 'Sinkronkan'}</span>
           </button>
 
           <a
@@ -117,7 +135,7 @@ export default function AdminLayout() {
             title="Buka Website Publik ROKABA Banyumas"
           >
             <ExternalLink size={14} />
-            <span>Lihat Web Publik</span>
+            <span className="btn-topbar-text">Lihat Web</span>
           </a>
 
           <button
@@ -126,16 +144,43 @@ export default function AdminLayout() {
             title="Keluar dari Panel Admin"
           >
             <LogOut size={15} />
-            <span>Keluar</span>
+            <span className="btn-topbar-text">Keluar</span>
           </button>
         </div>
       </header>
 
       {/* ══════════ SIDEBAR & PAGE CONTENT ══════════ */}
       <div className="admin-container">
-        {/* Sidebar Nav */}
-        <aside className="admin-sidebar">
-          <nav className="admin-nav">
+        {/* Mobile Backdrop Overlay */}
+        {sidebarOpen && (
+          <div
+            className="admin-sidebar-backdrop"
+            onClick={() => setSidebarOpen(false)}
+            aria-hidden="true"
+          />
+        )}
+
+        {/* Sidebar Nav (Desktop Sticky & Mobile Slide Drawer) */}
+        <aside className={`admin-sidebar ${sidebarOpen ? 'open' : ''}`}>
+          {/* Mobile Drawer Header */}
+          <div className="admin-sidebar-mobile-header">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <RohisLogo size={28} />
+              <span style={{ fontWeight: 700, fontSize: '0.95rem', color: '#FFFFFF', letterSpacing: '-0.01em' }}>
+                Navigasi Admin
+              </span>
+            </div>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="btn-sidebar-close"
+              aria-label="Tutup menu"
+              title="Tutup Menu"
+            >
+              <X size={18} />
+            </button>
+          </div>
+
+          <nav className="admin-nav" onClick={(e) => { if (e.target.closest('a')) setSidebarOpen(false); }}>
             <NavLink to="/" end className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
               <LayoutDashboard size={18} />
               <span>Ringkasan</span>

@@ -49,10 +49,10 @@ export default function QAModeration() {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Moderasi Q&A</h1>
+          <h1 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.5rem)', fontWeight: 800 }}>Moderasi Q&A</h1>
           {pending > 0 && <span className="badge badge-brass" style={{ marginTop: '0.35rem' }}>{pending} pertanyaan menunggu jawaban</span>}
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
           {['all', 'pending', 'answered'].map(f => (
             <button key={f} onClick={() => setFilter(f)}
               className={`btn btn-sm ${filter === f ? 'btn-primary' : 'btn-secondary'}`}>
@@ -115,11 +115,8 @@ export default function QAModeration() {
 
       {/* Answer Modal */}
       {answerModal && (
-        <div style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem',
-        }}>
-          <div className="glass-card animate-fade-in-up" style={{ width: '100%', maxWidth: 550, padding: '2rem' }}>
+        <div className="modal-overlay-responsive">
+          <div className="glass-card modal-card-responsive animate-fade-in-up" style={{ maxWidth: 550, padding: '1.75rem' }}>
             <h2 style={{ fontSize: '1.15rem', marginBottom: '1rem' }}>Jawab Pertanyaan</h2>
             <div style={{
               background: 'var(--glass-bg)', borderRadius: 'var(--radius-md)', padding: '1rem',

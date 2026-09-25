@@ -66,7 +66,7 @@ export default function AuditLogs() {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-        <h1 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Audit Log & Backup</h1>
+        <h1 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.5rem)', fontWeight: 800 }}>Audit Log & Backup</h1>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
           <button onClick={handleBackup} className="btn btn-sm btn-secondary"><Download size={14} /> Backup</button>
           <button onClick={handleRestore} className="btn btn-sm btn-secondary"><Upload size={14} /> Restore</button>
@@ -76,12 +76,12 @@ export default function AuditLogs() {
 
       <div style={{ position: 'relative', marginBottom: '1.25rem' }}>
         <Search size={16} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-        <input type="text" className="form-input" placeholder="Cari log..." style={{ paddingLeft: '2.5rem', maxWidth: 400 }}
+        <input type="text" className="form-input" placeholder="Cari log..." style={{ paddingLeft: '2.5rem', maxWidth: 400, width: '100%' }}
           value={search} onChange={e => setSearch(e.target.value)} />
       </div>
 
-      <div className="glass-card" style={{ overflow: 'auto' }}>
-        <table className="data-table">
+      <div className="glass-card table-responsive">
+        <table className="data-table" style={{ minWidth: 540 }}>
           <thead>
             <tr><th>Waktu</th><th>User</th><th>Aksi</th><th>Modul</th><th>Detail</th></tr>
           </thead>

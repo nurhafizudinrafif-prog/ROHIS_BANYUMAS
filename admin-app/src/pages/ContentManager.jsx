@@ -167,7 +167,7 @@ export default function ContentManager() {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-        <h1 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Kelola {schema.label}</h1>
+        <h1 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.5rem)', fontWeight: 800 }}>Kelola {schema.label}</h1>
         <button onClick={handleNew} className="btn btn-primary"><Plus size={16} /> Tambah {schema.label}</button>
       </div>
 
@@ -175,17 +175,14 @@ export default function ContentManager() {
       <div style={{ position: 'relative', marginBottom: '1.25rem' }}>
         <Search size={16} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
         <input type="text" className="form-input" placeholder={`Cari ${schema.label.toLowerCase()}...`}
-          style={{ paddingLeft: '2.5rem', maxWidth: 400 }} value={search} onChange={e => setSearch(e.target.value)} />
+          style={{ paddingLeft: '2.5rem', maxWidth: 400, width: '100%' }} value={search} onChange={e => setSearch(e.target.value)} />
       </div>
 
       {/* Edit Modal */}
       {editing && (
-        <div style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem',
-        }}>
-          <div className="glass-card animate-fade-in-up" style={{
-            width: '100%', maxWidth: 600, maxHeight: '85vh', overflow: 'auto', padding: '2rem',
+        <div className="modal-overlay-responsive">
+          <div className="glass-card modal-card-responsive animate-fade-in-up" style={{
+            maxWidth: 600, padding: '1.75rem',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
               <h2 style={{ fontSize: '1.15rem' }}>{isNew ? 'Tambah' : 'Edit'} {schema.label}</h2>
@@ -362,8 +359,8 @@ export default function ContentManager() {
       )}
 
       {/* Data Table */}
-      <div className="glass-card" style={{ overflow: 'auto' }}>
-        <table className="data-table">
+      <div className="glass-card table-responsive">
+        <table className="data-table" style={{ minWidth: type === 'gallery' ? 640 : (type === 'articles' ? 680 : 540) }}>
           <thead>
             {type === 'gallery' ? (
               <tr>

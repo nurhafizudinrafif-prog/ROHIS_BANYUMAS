@@ -6,18 +6,19 @@ import { Link } from 'react-router-dom';
 function StatCard({ icon: Icon, value, label, color, link }) {
   return (
     <Link to={link} className="glass-card" style={{
-      padding: '1.5rem', textDecoration: 'none',
-      display: 'flex', alignItems: 'flex-start', gap: '1rem',
+      padding: '1.15rem 1rem', textDecoration: 'none',
+      display: 'flex', alignItems: 'center', gap: '0.85rem',
+      minWidth: 0,
     }}>
       <div style={{
-        width: 44, height: 44, borderRadius: '12px',
+        width: 42, height: 42, borderRadius: '12px',
         background: `${color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
       }}>
         <Icon size={20} style={{ color }} />
       </div>
-      <div>
-        <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.75rem', lineHeight: 1 }}>{value}</div>
-        <div style={{ color: 'var(--text-muted)', fontSize: '0.78rem', marginTop: '0.25rem', fontWeight: 500 }}>{label}</div>
+      <div style={{ minWidth: 0, overflow: 'hidden' }}>
+        <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.6rem', lineHeight: 1 }}>{value}</div>
+        <div style={{ color: 'var(--text-muted)', fontSize: '0.76rem', marginTop: '0.25rem', fontWeight: 500, whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{label}</div>
       </div>
     </Link>
   );
@@ -47,18 +48,18 @@ export default function Dashboard() {
 
   return (
     <div>
-      <div style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.35rem' }}>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h1 style={{ fontSize: 'clamp(1.35rem, 4vw, 1.75rem)', fontWeight: 800, marginBottom: '0.35rem' }}>
           Selamat Datang, <span style={{ color: 'var(--emerald)' }}>{user?.username}</span>
         </h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}>
           Kelola seluruh konten ROKABA dari dashboard ini.
         </p>
       </div>
 
       {/* Stats Grid */}
       <div style={{
-        display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1rem', marginBottom: '2rem',
+        display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(150px, 100%), 1fr))', gap: '0.85rem', marginBottom: '1.75rem',
       }}>
         <StatCard icon={FileText} value={articles.length} label="Artikel" color="var(--emerald)" link="/content/articles" />
         <StatCard icon={Calendar} value={upcomingEvents} label="Agenda Mendatang" color="var(--antique-brass)" link="/content/events" />
@@ -70,7 +71,7 @@ export default function Dashboard() {
       </div>
 
       {/* Quick Actions & Recent Logs */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '1.25rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(270px, 100%), 1fr))', gap: '1.25rem' }}>
         {/* Quick Actions */}
         <div className="glass-card" style={{ padding: '1.5rem' }}>
           <h3 style={{ fontSize: '1.05rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
