@@ -173,7 +173,42 @@ export async function fetchAllData() {
     'rokaba:settings',
   ];
 
-  // Try to load all keys from local dev API in a single shot
+  // Level 1: Try Upstash Cloud (Single-shot MGET for real-time sync across admin & web)
+  if (UPSTASH_URL && UPSTASH_TOKEN) {
+    try {
+      const response = await fetch(UPSTASH_URL, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(['MGET', ...keys]),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        if (data.result && Array.isArray(data.result)) {
+          const results = {};
+          keys.forEach((key, i) => {
+            const raw = data.result[i];
+            if (raw) {
+              try {
+                results[key] = JSON.parse(raw);
+              } catch {
+                results[key] = raw;
+              }
+            } else {
+              results[key] = fallbackData[key] || null;
+            }
+            try {
+              if (results[key]) localStorage.setItem(key, JSON.stringify(results[key]));
+            } catch { /* localStorage might be full */ }
+          });
+          return results;
+        }
+      }
+    } catch (err) {
+      console.warn('[CloudSync] Upstash MGET failed, falling back to local:', err.message);
+    }
+  }
+
+  // Level 2: Try to load all keys from local dev API in a single shot
   try {
     const apiRes = await fetch('/api/sync');
     if (apiRes.ok) {
@@ -193,6 +228,7 @@ export async function fetchAllData() {
     // proceed to individual fetch
   }
 
+  // Level 3: Individual fallback
   const results = {};
   await Promise.all(
     keys.map(async (key) => {
