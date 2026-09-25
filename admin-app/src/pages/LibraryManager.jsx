@@ -73,11 +73,11 @@ export default function LibraryManager() {
     }
 
     await updateData('library', updated);
-    if (addAuditLog && user) {
-      await addAuditLog(user.id, user.username, isNew ? 'CREATE' : 'UPDATE', 'library', `${isNew ? 'Added' : 'Updated'} materi E-Library: ${itemToSave.title}`);
-    }
     setEditing(null);
     setIsNew(false);
+    if (addAuditLog && user) {
+      addAuditLog(user.id, user.username, isNew ? 'CREATE' : 'UPDATE', 'library', `${isNew ? 'Added' : 'Updated'} materi E-Library: ${itemToSave.title}`).catch(() => {});
+    }
   };
 
   const handleDelete = async (item) => {

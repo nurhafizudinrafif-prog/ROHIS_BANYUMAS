@@ -205,10 +205,11 @@ export default function TeamManager() {
       }
 
       await updateData('team', updatedTeam);
+      setModalOpen(false);
 
       try {
         if (addAuditLog) {
-          await addAuditLog(
+          addAuditLog(
             user?.id || 'admin',
             user?.username || 'admin',
             editingMember ? 'UPDATE' : 'CREATE',
@@ -219,8 +220,6 @@ export default function TeamManager() {
       } catch (logErr) {
         console.warn('Audit log write failed:', logErr);
       }
-
-      setModalOpen(false);
     } catch (err) {
       console.error('Save member error:', err);
       alert('Gagal menyimpan data: ' + (err.message || 'Terjadi kendala jaringan.'));

@@ -33,11 +33,58 @@ export default function ImageUploadField({
     setLoadError(false);
     const reader = new FileReader();
     reader.onload = (event) => {
-      const result = event.target?.result;
-      if (result) {
-        onChange(result);
+      const rawData = event.target?.result;
+      if (!rawData) {
+        setIsProcessing(false);
+        return;
       }
-      setIsProcessing(false);
+
+      // If SVG or already very small (< 50KB), keep as is
+      if (file.type.includes('svg') || file.size < 50 * 1024) {
+        onChange(rawData);
+        setIsProcessing(false);
+        return;
+      }
+
+      // Automatically compress and resize client-side via HTML5 Canvas
+      const img = new Image();
+      img.onload = () => {
+        try {
+          let w = img.width;
+          let h = img.height;
+          const maxDim = 800; // Optimal for web cards & avatar portraits
+
+          if (w > maxDim || h > maxDim) {
+            if (w > h) {
+              h = Math.round((h * maxDim) / w);
+              w = maxDim;
+            } else {
+              w = Math.round((w * maxDim) / h);
+              h = maxDim;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          ctx.drawImage(img, 0, 0, w, h);
+
+          const compressed = canvas.toDataURL('image/jpeg', 0.82);
+          onChange(compressed);
+        } catch {
+          onChange(rawData);
+        } finally {
+          setIsProcessing(false);
+        }
+      };
+      img.onerror = () => {
+        onChange(rawData);
+        setIsProcessing(false);
+      };
+      img.src = rawData;
     };
     reader.onerror = () => {
       setIsProcessing(false);

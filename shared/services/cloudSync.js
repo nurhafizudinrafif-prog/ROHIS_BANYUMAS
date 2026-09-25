@@ -80,43 +80,48 @@ export async function saveData(key, value) {
   } catch {}
   const jsonValue = JSON.stringify(value);
 
-  // 1. Update LocalStorage immediately
+  // 1. Update LocalStorage immediately (synchronous, 0ms)
   try {
     localStorage.setItem(key, jsonValue);
   } catch { /* localStorage might be full */ }
 
-  // 2. Push to Local Dev Sync API (/api/sync)
-  try {
-    await fetch('/api/sync', {
+  // 2. Dispatch Local Dev API & Upstash Cloud simultaneously in parallel
+  const tasks = [];
+
+  // Dev API sync
+  tasks.push(
+    fetch('/api/sync', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ key, value }),
-    });
-  } catch {
-    // Dev API might be offline
+    }).catch(() => null)
+  );
+
+  // Upstash Cloud sync
+  if (UPSTASH_URL && UPSTASH_TOKEN) {
+    tasks.push(
+      fetch(UPSTASH_URL, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(['SET', key, jsonValue]),
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          return { success: true, source: 'cloud' };
+        })
+        .catch((err) => {
+          console.warn(`[CloudSync] Cloud save warning for ${key}:`, err.message);
+          return { success: false, source: 'local', error: err.message };
+        })
+    );
   }
 
-  // 3. Push to Upstash Cloud (if configured)
-  if (!UPSTASH_URL || !UPSTASH_TOKEN) {
-    console.info('[CloudSync] Saved locally. Upstash credentials not set.');
-    return { success: true, source: 'local' };
+  const results = await Promise.allSettled(tasks);
+  const cloudRes = results.find((r) => r.status === 'fulfilled' && r.value?.source === 'cloud');
+  if (cloudRes && cloudRes.value?.success) {
+    return { success: true, source: 'cloud' };
   }
-
-  try {
-    const response = await fetch(UPSTASH_URL, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(['SET', key, jsonValue]),
-    });
-
-    if (response.ok) {
-      return { success: true, source: 'cloud' };
-    }
-    throw new Error(`HTTP ${response.status}`);
-  } catch (err) {
-    console.error(`[CloudSync] Save failed for ${key}:`, err.message);
-    return { success: false, source: 'local', error: err.message };
-  }
+  return { success: true, source: 'local' };
 }
 
 /**

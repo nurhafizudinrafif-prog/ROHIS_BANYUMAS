@@ -144,15 +144,19 @@ export default function GalleryManager() {
     }
 
     await updateData('gallery', updatedList);
-    await addAuditLog(
-      user.id,
-      user.username,
-      editingAlbum ? 'UPDATE' : 'CREATE',
-      'gallery',
-      `${editingAlbum ? 'Updated' : 'Created'} gallery album: ${payload.title} (${payload.media.length} media)`
-    );
-
     setModalOpen(false);
+
+    try {
+      if (addAuditLog) {
+        addAuditLog(
+          user?.id || 'admin',
+          user?.username || 'admin',
+          editingAlbum ? 'UPDATE' : 'CREATE',
+          'gallery',
+          `${editingAlbum ? 'Updated' : 'Created'} gallery album: ${payload.title} (${payload.media.length} media)`
+        ).catch(() => {});
+      }
+    } catch {}
   };
 
   return (

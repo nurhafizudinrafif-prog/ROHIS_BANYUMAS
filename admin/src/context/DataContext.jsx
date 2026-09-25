@@ -42,28 +42,28 @@ export function DataProvider({ children }) {
   useEffect(() => { loadAllData(); }, [loadAllData]);
 
   const updateData = useCallback(async (key, value) => {
+    // 1. Instant Optimistic UI update (0ms perceived latency)
+    setData(prev => ({ ...prev, [key]: value }));
+    setLastSync(new Date());
     setSaving(true);
     try {
       const result = await saveData(`rokaba:${key}`, value);
-      if (result.success) {
-        setData(prev => ({ ...prev, [key]: value }));
-        setLastSync(new Date());
-      }
       return result;
     } finally {
       setSaving(false);
     }
   }, []);
 
-  // Helper: add audit log
+  // Helper: add audit log (non-blocking)
   const addAuditLog = useCallback(async (userId, username, action, module, detail) => {
     const newLog = {
       id: `log-${Date.now()}`,
       timestamp: new Date().toISOString(),
       userId, username, action, module, detail,
     };
-    const updated = [newLog, ...data.auditLogs].slice(0, 200); // keep last 200
-    await updateData('audit_logs', updated);
+    const currentLogs = Array.isArray(data.auditLogs) ? data.auditLogs : [];
+    const updated = [newLog, ...currentLogs].slice(0, 200); // keep last 200
+    return updateData('audit_logs', updated);
   }, [data.auditLogs, updateData]);
 
   return (

@@ -152,16 +152,25 @@ export default function ContentManager() {
       updated = items.map(i => i.id === editing.id ? editing : i);
     }
     await dataCtx.updateData(type, updated);
-    await dataCtx.addAuditLog(user.id, user.username, isNew ? 'CREATE' : 'UPDATE', type, `${isNew ? 'Created' : 'Updated'} ${type}: ${editing.title || editing.name || editing.id}`);
     setEditing(null);
     setIsNew(false);
+
+    try {
+      if (dataCtx.addAuditLog) {
+        dataCtx.addAuditLog(user?.id || 'admin', user?.username || 'admin', isNew ? 'CREATE' : 'UPDATE', type, `${isNew ? 'Created' : 'Updated'} ${type}: ${editing.title || editing.name || editing.id}`).catch(() => {});
+      }
+    } catch {}
   };
 
   const handleDelete = async (item) => {
     if (!confirm(`Hapus "${item.title || item.name}"?`)) return;
     const updated = items.filter(i => i.id !== item.id);
     await dataCtx.updateData(type, updated);
-    await dataCtx.addAuditLog(user.id, user.username, 'DELETE', type, `Deleted ${type}: ${item.title || item.name}`);
+    try {
+      if (dataCtx.addAuditLog) {
+        dataCtx.addAuditLog(user?.id || 'admin', user?.username || 'admin', 'DELETE', type, `Deleted ${type}: ${item.title || item.name}`).catch(() => {});
+      }
+    } catch {}
   };
 
   return (
