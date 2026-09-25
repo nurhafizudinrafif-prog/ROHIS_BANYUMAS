@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import ImageUploadField from '../components/ImageUploadField';
 import { InstagramIcon } from '../components/SocialIcons';
+import { getDirectImageUrl } from '../utils/media';
 
 export default function TeamManager() {
   const { team, updateData, addAuditLog } = useData();
@@ -329,19 +330,24 @@ export default function TeamManager() {
               {/* Avatar + Info */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '0.85rem' }}>
                 <div style={{
-                  width: 52,
-                  height: 52,
-                  borderRadius: '50%',
+                  width: 56,
+                  height: 68,
+                  borderRadius: '14px',
                   background: 'linear-gradient(135deg, rgba(16,185,129,0.2), rgba(181,141,79,0.2))',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   overflow: 'hidden',
                   flexShrink: 0,
-                  border: '2px solid rgba(255,255,255,0.1)',
+                  border: '1.5px solid rgba(255,255,255,0.12)',
                 }}>
                   {member.photo ? (
-                    <img src={member.photo} alt={member.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img
+                      src={getDirectImageUrl(member.photo)}
+                      alt={member.name}
+                      referrerPolicy="no-referrer"
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }}
+                    />
                   ) : (
                     <User size={26} color="var(--emerald)" />
                   )}

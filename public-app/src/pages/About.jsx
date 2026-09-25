@@ -247,6 +247,9 @@ function MemberCard({ member, index }) {
         .toUpperCase()
     : 'RO';
 
+  const [imgError, setImgError] = useState(false);
+  const hasPhoto = Boolean(member.photo && typeof member.photo === 'string' && member.photo.trim().length > 0 && !imgError);
+
   return (
     <div
       className="member-card animate-fade-in-up"
@@ -254,16 +257,21 @@ function MemberCard({ member, index }) {
         animationDelay: `${(index % 12) * 50}ms`,
       }}
     >
-      {/* Avatar with Initials or Photo */}
+      {/* Kotak Foto dengan Tepi Halus (Portrait Rounded Rectangle / Squircle) */}
       <div className={`member-card-avatar ${isLeadership ? 'leadership' : ''}`}>
-        {member.photo ? (
+        {hasPhoto ? (
           <img
-            src={parseImageUrl(member.photo)} referrerPolicy="no-referrer"
+            src={parseImageUrl(member.photo)}
+            referrerPolicy="no-referrer"
             alt={member.name}
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            onError={() => setImgError(true)}
+            className="member-card-photo"
+            loading="lazy"
           />
         ) : (
-          <span>{initials}</span>
+          <div className="member-card-initials-wrapper">
+            <span className="member-card-initials-text">{initials}</span>
+          </div>
         )}
       </div>
 
