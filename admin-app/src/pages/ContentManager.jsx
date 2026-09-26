@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
-import { Plus, Edit3, Trash2, Save, X, Search, Sparkles, Video as VideoIcon, Image as ImageIcon, ExternalLink, HelpCircle, FileText } from 'lucide-react';
+import { Plus, Edit3, Trash2, Save, X, Search, Sparkles, Video as VideoIcon, Image as ImageIcon, ExternalLink, HelpCircle, FileText, Calendar, MapPin, School, Phone, Users, Clock } from 'lucide-react';
 import { parseMediaItem } from '@shared/services/mediaHelper.js';
 import { getDirectImageUrl, extractGoogleDriveId } from '../utils/media';
 import AdminHomeCMS from '../components/AdminHomeCMS';
@@ -367,35 +367,35 @@ export default function ContentManager() {
         </div>
       )}
 
-      {/* Data Table */}
-      <div className="glass-card table-responsive">
+      {/* Desktop Data Table */}
+      <div className="admin-desktop-table glass-card table-responsive">
         <table className="data-table" style={{ minWidth: type === 'gallery' ? 640 : (type === 'articles' ? 680 : 540) }}>
           <thead>
             {type === 'gallery' ? (
               <tr>
-                <th>#</th>
-                <th>Preview</th>
+                <th style={{ width: 40, textAlign: 'center' }}>#</th>
+                <th style={{ width: 80 }}>Preview</th>
                 <th>Judul Dokumentasi</th>
-                <th>Tipe</th>
-                <th>Kategori</th>
-                <th>Tanggal</th>
-                <th style={{ textAlign: 'right' }}>Aksi</th>
+                <th style={{ width: 90 }}>Tipe</th>
+                <th style={{ width: 110 }}>Kategori</th>
+                <th style={{ width: 110 }}>Tanggal</th>
+                <th style={{ textAlign: 'right', width: 100 }}>Aksi</th>
               </tr>
             ) : type === 'articles' ? (
               <tr>
-                <th>#</th>
-                <th>Sampul Foto</th>
+                <th style={{ width: 40, textAlign: 'center' }}>#</th>
+                <th style={{ width: 80 }}>Sampul Foto</th>
                 <th>Judul Artikel</th>
-                <th>Kategori</th>
-                <th>Penulis</th>
-                <th>Tanggal Terbit</th>
-                <th style={{ textAlign: 'right' }}>Aksi</th>
+                <th style={{ width: 110 }}>Kategori</th>
+                <th style={{ width: 130 }}>Penulis</th>
+                <th style={{ width: 120 }}>Tanggal Terbit</th>
+                <th style={{ textAlign: 'right', width: 100 }}>Aksi</th>
               </tr>
             ) : (
               <tr>
-                <th>#</th>
+                <th style={{ width: 40, textAlign: 'center' }}>#</th>
                 {schema.fields.filter(f => f.type !== 'textarea').slice(0, 4).map(f => <th key={f.key}>{f.label}</th>)}
-                <th style={{ textAlign: 'right' }}>Aksi</th>
+                <th style={{ textAlign: 'right', width: 100 }}>Aksi</th>
               </tr>
             )}
           </thead>
@@ -406,7 +406,7 @@ export default function ContentManager() {
                 const isVideo = media.mediaType === 'video';
                 return (
                   <tr key={item.id}>
-                    <td style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>{i + 1}</td>
+                    <td style={{ color: 'var(--text-muted)', fontSize: '0.78rem', textAlign: 'center' }}>{i + 1}</td>
                     <td style={{ width: 80 }}>
                       <div style={{
                         width: 64,
@@ -492,7 +492,7 @@ export default function ContentManager() {
                 const driveId = extractGoogleDriveId(item.image);
                 return (
                   <tr key={item.id}>
-                    <td style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>{i + 1}</td>
+                    <td style={{ color: 'var(--text-muted)', fontSize: '0.78rem', textAlign: 'center' }}>{i + 1}</td>
                     <td style={{ width: 80 }}>
                       <div style={{
                         width: 64,
@@ -557,7 +557,7 @@ export default function ContentManager() {
 
               return (
                 <tr key={item.id}>
-                  <td style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>{i + 1}</td>
+                  <td style={{ color: 'var(--text-muted)', fontSize: '0.78rem', textAlign: 'center' }}>{i + 1}</td>
                   {schema.fields.filter(f => f.type !== 'textarea').slice(0, 4).map(f => (
                     <td key={f.key} style={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {item[f.key]}
@@ -574,10 +574,255 @@ export default function ContentManager() {
                 </tr>
               );
             }) : (
-              <tr><td colSpan={99} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>Tidak ada data</td></tr>
+              <tr><td colSpan={99} style={{ textAlign: 'center', padding: '2.5rem 1rem', color: 'var(--text-muted)' }}>Tidak ada data {schema.label.toLowerCase()} yang sesuai.</td></tr>
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Card List (Touch-Optimized for HP) */}
+      <div className="admin-mobile-cards">
+        {filtered.length > 0 ? (
+          filtered.map((item, i) => {
+            if (type === 'articles') {
+              const imgUrl = item.image ? getDirectImageUrl(item.image) : '';
+              const driveId = extractGoogleDriveId(item.image);
+              return (
+                <div key={item.id} className="admin-mobile-card">
+                  <div style={{ display: 'flex', gap: '0.85rem', alignItems: 'flex-start' }}>
+                    <div style={{
+                      width: 76,
+                      height: 56,
+                      borderRadius: '10px',
+                      overflow: 'hidden',
+                      background: '#0D2B22',
+                      flexShrink: 0,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                    }}>
+                      {imgUrl ? (
+                        <img
+                          src={imgUrl}
+                          alt=""
+                          referrerPolicy="no-referrer"
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          onError={(e) => {
+                            if (driveId && !e.currentTarget.src.includes('thumbnail?id=')) {
+                              e.currentTarget.src = `https://drive.google.com/thumbnail?id=${driveId}&sz=w600`;
+                            } else {
+                              e.currentTarget.style.display = 'none';
+                            }
+                          }}
+                        />
+                      ) : (
+                        <FileText size={22} color="var(--emerald)" />
+                      )}
+                    </div>
+
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.4rem', marginBottom: '0.25rem' }}>
+                        <span className="badge badge-emerald" style={{ fontSize: '0.68rem', padding: '0.15rem 0.5rem' }}>
+                          {item.category || 'Dakwah'}
+                        </span>
+                        <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>#{i + 1}</span>
+                      </div>
+                      <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.35rem', flexWrap: 'wrap' }}>
+                        <span>{item.author || 'ROKABA'}</span>
+                        <span>•</span>
+                        <span>{item.date || (item.publishedAt ? new Date(item.publishedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '-')}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 style={{ fontSize: '0.98rem', fontWeight: 700, color: 'var(--text-primary)', margin: '0.25rem 0 0.2rem', lineHeight: 1.4 }}>
+                      {item.title}
+                    </h3>
+                    {item.slug && (
+                      <div style={{ fontSize: '0.72rem', color: 'var(--emerald-light)', fontFamily: 'monospace' }}>
+                        /{item.slug}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="admin-mobile-card-actions">
+                    <button
+                      onClick={() => { setEditing({ ...item }); setIsNew(false); }}
+                      className="btn btn-primary"
+                      title="Edit Artikel"
+                    >
+                      <Edit3 size={15} /> Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(item)}
+                      className="btn btn-secondary"
+                      style={{ color: '#F87171', borderColor: 'rgba(239, 68, 68, 0.35)' }}
+                      title="Hapus Artikel"
+                    >
+                      <Trash2 size={15} /> Hapus
+                    </button>
+                  </div>
+                </div>
+              );
+            }
+
+            if (type === 'events') {
+              const isUpcoming = (item.status || 'upcoming') === 'upcoming';
+              return (
+                <div key={item.id} className="admin-mobile-card">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
+                      <span className={`badge ${isUpcoming ? 'badge-emerald' : 'badge-brass'}`} style={{ fontSize: '0.68rem', padding: '0.15rem 0.5rem' }}>
+                        {isUpcoming ? 'Mendatang' : 'Selesai'}
+                      </span>
+                      <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>#{i + 1}</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.76rem', color: 'var(--text-muted)' }}>
+                      <Calendar size={13} />
+                      <span>{item.date || '-'}</span>
+                      {item.time && <span>• {item.time}</span>}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', margin: '0.2rem 0 0.35rem', lineHeight: 1.35 }}>
+                      {item.title}
+                    </h3>
+                    {item.location && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.78rem', color: 'var(--antique-brass-light)', marginBottom: '0.35rem' }}>
+                        <MapPin size={13} style={{ flexShrink: 0 }} />
+                        <span>{item.location}</span>
+                      </div>
+                    )}
+                    {item.description && (
+                      <p style={{
+                        fontSize: '0.78rem', color: 'var(--text-secondary)', margin: 0,
+                        display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: 1.45
+                      }}>
+                        {item.description}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="admin-mobile-card-actions">
+                    <button
+                      onClick={() => { setEditing({ ...item }); setIsNew(false); }}
+                      className="btn btn-primary"
+                      title="Edit Agenda"
+                    >
+                      <Edit3 size={15} /> Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(item)}
+                      className="btn btn-secondary"
+                      style={{ color: '#F87171', borderColor: 'rgba(239, 68, 68, 0.35)' }}
+                      title="Hapus Agenda"
+                    >
+                      <Trash2 size={15} /> Hapus
+                    </button>
+                  </div>
+                </div>
+              );
+            }
+
+            if (type === 'schools') {
+              return (
+                <div key={item.id} className="admin-mobile-card">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
+                      <span className="badge badge-emerald" style={{ fontSize: '0.68rem', padding: '0.15rem 0.5rem' }}>
+                        {item.type || 'SMA'}
+                      </span>
+                      <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>#{i + 1}</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.74rem', color: 'var(--antique-brass-light)', fontWeight: 600 }}>
+                      <School size={13} />
+                      <span>{item.memberCount || (item.members?.length || 0)} Anggota</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 style={{ fontSize: '1.02rem', fontWeight: 700, color: 'var(--text-primary)', margin: '0.2rem 0 0.35rem', lineHeight: 1.35 }}>
+                      {item.name || item.school}
+                    </h3>
+                    {item.pembina && (
+                      <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: '0.2rem' }}>
+                        Pembina: <strong style={{ color: 'var(--text-primary)' }}>{item.pembina}</strong>
+                      </div>
+                    )}
+                    {item.address && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.76rem', color: 'var(--text-muted)', marginBottom: '0.2rem' }}>
+                        <MapPin size={13} style={{ flexShrink: 0 }} />
+                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.address}</span>
+                      </div>
+                    )}
+                    {item.contact && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.76rem', color: 'var(--emerald-light)' }}>
+                        <Phone size={13} />
+                        <span>{item.contact}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="admin-mobile-card-actions">
+                    <button
+                      onClick={() => { setEditing({ ...item }); setIsNew(false); }}
+                      className="btn btn-primary"
+                      title="Edit Sekolah"
+                    >
+                      <Edit3 size={15} /> Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(item)}
+                      className="btn btn-secondary"
+                      style={{ color: '#F87171', borderColor: 'rgba(239, 68, 68, 0.35)' }}
+                      title="Hapus Sekolah"
+                    >
+                      <Trash2 size={15} /> Hapus
+                    </button>
+                  </div>
+                </div>
+              );
+            }
+
+            // Generic Schema Fallback
+            return (
+              <div key={item.id} className="admin-mobile-card">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>#{i + 1}</span>
+                  <span className="badge badge-emerald" style={{ fontSize: '0.7rem' }}>{schema.label}</span>
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.4rem' }}>
+                    {item.title || item.name || item.id}
+                  </h3>
+                  {schema.fields.filter(f => f.type !== 'textarea').slice(0, 3).map(f => (
+                    <div key={f.key} style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginBottom: '0.2rem' }}>
+                      <span style={{ color: 'var(--text-muted)' }}>{f.label}:</span> {item[f.key] || '-'}
+                    </div>
+                  ))}
+                </div>
+                <div className="admin-mobile-card-actions">
+                  <button onClick={() => { setEditing({ ...item }); setIsNew(false); }} className="btn btn-primary">
+                    <Edit3 size={15} /> Edit
+                  </button>
+                  <button onClick={() => handleDelete(item)} className="btn btn-secondary" style={{ color: '#F87171', borderColor: 'rgba(239, 68, 68, 0.35)' }}>
+                    <Trash2 size={15} /> Hapus
+                  </button>
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <div className="admin-mobile-card" style={{ textAlign: 'center', padding: '2.5rem 1rem', color: 'var(--text-muted)' }}>
+            <p style={{ margin: '0 0 1rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Tidak ada data {schema.label.toLowerCase()} yang sesuai.</p>
+            <button onClick={handleNew} className="btn btn-primary btn-sm" style={{ margin: '0 auto', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+              <Plus size={14} /> Tambah {schema.label} Baru
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

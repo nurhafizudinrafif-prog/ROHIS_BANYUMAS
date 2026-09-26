@@ -194,8 +194,8 @@ export default function LibraryManager() {
         </div>
       </div>
 
-      {/* Main Data Table */}
-      <div className="glass-card table-responsive" style={{ overflow: 'hidden', padding: 0 }}>
+      {/* Desktop Main Data Table */}
+      <div className="admin-desktop-table glass-card table-responsive" style={{ overflow: 'hidden', padding: 0 }}>
         <div style={{ overflowX: 'auto' }}>
           <table className="data-table" style={{ minWidth: 640 }}>
             <thead>
@@ -369,6 +369,111 @@ export default function LibraryManager() {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Mobile Card List (Touch-Optimized for HP) */}
+      <div className="admin-mobile-cards">
+        {filtered.length > 0 ? (
+          filtered.map((item, index) => {
+            const conf = formatConfig[item.type] || formatConfig.pdf;
+            const Icon = conf.icon;
+            return (
+              <div key={item.id} className="admin-mobile-card">
+                {/* Top Badges */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+                    <div style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      padding: '0.22rem 0.55rem',
+                      borderRadius: '6px',
+                      background: conf.bg,
+                      color: conf.color,
+                      fontWeight: 700,
+                      fontSize: '0.72rem',
+                      letterSpacing: '0.04em'
+                    }}>
+                      <Icon size={13} />
+                      <span>{conf.label}</span>
+                    </div>
+                    <span className="badge badge-emerald" style={{ fontSize: '0.7rem' }}>
+                      {item.category || 'Ibadah'}
+                    </span>
+                  </div>
+                  <span style={{ fontSize: '0.76rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+                    {item.size || '1.0 MB'}
+                  </span>
+                </div>
+
+                {/* Title & Metadata */}
+                <div>
+                  <h3 style={{ fontSize: '0.98rem', fontWeight: 700, color: 'var(--text-primary)', margin: '0.2rem 0 0.35rem', lineHeight: 1.4 }}>
+                    {item.title}
+                  </h3>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                    ID: <code style={{ color: 'var(--emerald-light)' }}>{item.id}</code>
+                    {item.uploadedAt && (
+                      <span> • Ditambahkan: {new Date(item.uploadedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Direct Link Button */}
+                {item.fileUrl && item.fileUrl !== '#' && (
+                  <a
+                    href={item.fileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-secondary"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.45rem',
+                      padding: '0.5rem 0.85rem',
+                      fontSize: '0.8rem',
+                      color: 'var(--emerald-light)',
+                      textDecoration: 'none',
+                      borderRadius: 'var(--radius-md)',
+                      border: '1px solid rgba(16, 185, 129, 0.25)',
+                      background: 'rgba(16, 185, 129, 0.08)'
+                    }}
+                  >
+                    <ExternalLink size={14} /> Buka / Unduh Berkas ↗
+                  </a>
+                )}
+
+                {/* Actions */}
+                <div className="admin-mobile-card-actions">
+                  <button
+                    onClick={() => { setEditing({ ...item }); setIsNew(false); }}
+                    className="btn btn-primary"
+                    title="Edit Materi"
+                  >
+                    <Edit3 size={15} /> Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(item)}
+                    className="btn btn-secondary"
+                    style={{ color: '#F87171', borderColor: 'rgba(239, 68, 68, 0.35)' }}
+                    title="Hapus Materi"
+                  >
+                    <Trash2 size={15} /> Hapus
+                  </button>
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <div className="admin-mobile-card" style={{ textAlign: 'center', padding: '2.5rem 1rem', color: 'var(--text-muted)' }}>
+            <BookOpen size={36} style={{ opacity: 0.35, margin: '0 auto 0.65rem', display: 'block' }} />
+            <p style={{ margin: '0 0 1rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Tidak ada materi E-Library yang sesuai pencarian.</p>
+            <button onClick={handleNew} className="btn btn-primary btn-sm" style={{ margin: '0 auto', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+              <Plus size={14} /> Tambah Materi Pertama
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Modal Add / Edit */}

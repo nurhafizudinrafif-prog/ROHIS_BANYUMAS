@@ -37,7 +37,7 @@ export default function UserManager() {
         <button onClick={handleNew} className="btn btn-primary"><Plus size={16} /> Tambah User</button>
       </div>
 
-      <div className="glass-card table-responsive">
+      <div className="admin-desktop-table glass-card table-responsive">
         <table className="data-table" style={{ minWidth: 540 }}>
           <thead>
             <tr><th>Username</th><th>Role</th><th>Sekolah</th><th>Login Terakhir</th><th style={{ textAlign: 'right' }}>Aksi</th></tr>
@@ -60,6 +60,43 @@ export default function UserManager() {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Card List */}
+      <div className="admin-mobile-cards">
+        {users.length > 0 ? (
+          users.map(u => (
+            <div key={u.id} className="admin-mobile-card">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontWeight: 700, fontSize: '0.98rem', color: 'var(--text-primary)' }}>{u.username}</span>
+                <span className={`badge ${u.role === 'superadmin' ? 'badge-emerald' : 'badge-brass'}`} style={{ fontSize: '0.68rem' }}>
+                  {u.role}
+                </span>
+              </div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+                Sekolah: <strong style={{ color: 'var(--text-primary)' }}>{u.schoolId ? (schools.find(s => s.id === u.schoolId)?.name || u.schoolId) : '—'}</strong>
+              </div>
+              <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
+                Login Terakhir: {u.lastLogin ? new Date(u.lastLogin).toLocaleDateString('id-ID') : 'Belum pernah login'}
+              </div>
+              <div className="admin-mobile-card-actions">
+                <button onClick={() => { setEditing({ ...u }); setIsNew(false); }} className="btn btn-primary">
+                  <Edit3 size={15} /> Edit User
+                </button>
+                <button onClick={() => handleDelete(u)} className="btn btn-secondary" style={{ color: '#F87171', borderColor: 'rgba(239, 68, 68, 0.35)' }}>
+                  <Trash2 size={15} /> Hapus
+                </button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="admin-mobile-card" style={{ textAlign: 'center', padding: '2rem 1rem', color: 'var(--text-muted)' }}>
+            <p style={{ margin: '0 0 1rem', fontWeight: 600 }}>Tidak ada user terdaftar.</p>
+            <button onClick={handleNew} className="btn btn-primary btn-sm" style={{ margin: '0 auto', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+              <Plus size={14} /> Tambah User Baru
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Edit Modal */}

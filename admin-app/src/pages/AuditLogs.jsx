@@ -80,7 +80,7 @@ export default function AuditLogs() {
           value={search} onChange={e => setSearch(e.target.value)} />
       </div>
 
-      <div className="glass-card table-responsive">
+      <div className="admin-desktop-table glass-card table-responsive">
         <table className="data-table" style={{ minWidth: 540 }}>
           <thead>
             <tr><th>Waktu</th><th>User</th><th>Aksi</th><th>Modul</th><th>Detail</th></tr>
@@ -113,6 +113,40 @@ export default function AuditLogs() {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Card List */}
+      <div className="admin-mobile-cards">
+        {filtered.length > 0 ? (
+          filtered.map(log => (
+            <div key={log.id} className="admin-mobile-card">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span className="badge" style={{
+                  background: `${actionColors[log.action] || 'var(--emerald)'}15`,
+                  color: actionColors[log.action] || 'var(--emerald)',
+                  fontSize: '0.7rem',
+                  fontWeight: 700,
+                }}>
+                  {log.action} • {log.module}
+                </span>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                  {new Date(log.timestamp).toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                </span>
+              </div>
+              <div style={{ fontSize: '0.88rem', color: 'var(--text-primary)', fontWeight: 500 }}>
+                {log.detail}
+              </div>
+              <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
+                Oleh: <strong style={{ color: 'var(--text-secondary)' }}>{log.username}</strong>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="admin-mobile-card" style={{ textAlign: 'center', padding: '2rem 1rem', color: 'var(--text-muted)' }}>
+            <ClipboardList size={32} style={{ opacity: 0.3, margin: '0 auto 0.5rem', display: 'block' }} />
+            <p style={{ margin: 0, fontWeight: 600 }}>Tidak ada log ditemukan.</p>
+          </div>
+        )}
       </div>
     </div>
   );
