@@ -49,10 +49,10 @@ export default function HeroSection() {
                 <span>{hero.btnPrimaryText || 'Kenali ROHIS Lebih Dekat'}</span>
                 <ArrowRight size={17} />
               </Link>
-              <a href={hero.btnSecondaryLink || '#program'} className="btn btn-outline btn-lg">
-                <Compass size={17} />
-                <span>{hero.btnSecondaryText || '5 Pilar Gerakan'}</span>
-              </a>
+              <Link to={hero.btnSecondaryLink || '/schools'} className="btn btn-primary btn-lg">
+                <span>{hero.btnSecondaryText || 'Anggota ROHIS'}</span>
+                <ArrowRight size={17} />
+              </Link>
             </div>
 
             {/* Publication / Organization Meta Bar */}

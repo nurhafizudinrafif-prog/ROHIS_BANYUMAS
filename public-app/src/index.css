@@ -220,6 +220,72 @@ img, video, iframe, canvas, svg {
   background: var(--emerald-glass);
 }
 
+.btn-glass {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--warm-alabaster) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  text-decoration: none;
+}
+
+.btn-glass:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: #FFFFFF !important;
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.28);
+}
+
+.btn-glass:active {
+  transform: translateY(0);
+}
+
+.btn-emerald {
+  background: linear-gradient(135deg, var(--emerald), var(--emerald-dark));
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 18px rgba(16, 185, 129, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  text-decoration: none;
+}
+
+.btn-emerald:hover {
+  background: linear-gradient(135deg, #10B981, #047857);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(16, 185, 129, 0.5);
+  color: #FFFFFF !important;
+}
+
+.btn-outline {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--warm-alabaster) !important;
+  border: 1.5px solid rgba(245, 242, 237, 0.32);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  text-decoration: none;
+}
+
+.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.65);
+  color: #FFFFFF !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
 .btn-sm {
   padding: 0.5rem 1.25rem;
   font-size: 0.8rem;
@@ -245,18 +311,27 @@ img, video, iframe, canvas, svg {
 }
 
 .badge-emerald {
-  background: var(--emerald-glass);
-  color: #047857;
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--emerald-light);
+  border: 1px solid rgba(16, 185, 129, 0.25);
 }
 
 .badge-brass {
   background: rgba(181, 141, 79, 0.15);
-  color: #926A2E;
+  color: var(--antique-brass-light);
+  border: 1px solid rgba(181, 141, 79, 0.25);
+}
+
+.badge-gold {
+  background: rgba(200, 168, 91, 0.15);
+  color: var(--antique-brass-light, #DFBF73);
+  border: 1px solid rgba(200, 168, 91, 0.35);
 }
 
 .badge-pine {
-  background: rgba(13, 43, 34, 0.1);
-  color: var(--deep-pine);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--warm-alabaster);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 /* Card Editorial Badge & Overlay (Ultra Clear on any Image) */

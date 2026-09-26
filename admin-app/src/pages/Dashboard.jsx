@@ -3,13 +3,17 @@ import { useAuth } from '../context/AuthContext';
 import { FileText, Calendar, School, MessageCircle, Library, Users, TrendingUp, Clock, Download, Upload, Image as ImageIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-function StatCard({ icon: Icon, value, label, color, link }) {
+function StatCard({ icon: Icon, value, label, color, link, index = 0 }) {
   return (
-    <Link to={link} className="glass-card" style={{
-      padding: '1.15rem 1rem', textDecoration: 'none',
-      display: 'flex', alignItems: 'center', gap: '0.85rem',
-      minWidth: 0,
-    }}>
+    <Link
+      to={link}
+      className={`glass-card reveal-scale delay-${Math.min((index + 1) * 50, 400)}`}
+      style={{
+        padding: '1.15rem 1rem', textDecoration: 'none',
+        display: 'flex', alignItems: 'center', gap: '0.85rem',
+        minWidth: 0,
+      }}
+    >
       <div style={{
         width: 42, height: 42, borderRadius: '12px',
         background: `${color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
@@ -48,7 +52,7 @@ export default function Dashboard() {
 
   return (
     <div>
-      <div style={{ marginBottom: '1.5rem' }}>
+      <div className="reveal-on-scroll" style={{ marginBottom: '1.5rem' }}>
         <h1 style={{ fontSize: 'clamp(1.35rem, 4vw, 1.75rem)', fontWeight: 800, marginBottom: '0.35rem' }}>
           Selamat Datang, <span style={{ color: 'var(--emerald)' }}>{user?.username}</span>
         </h1>
@@ -61,19 +65,19 @@ export default function Dashboard() {
       <div style={{
         display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(150px, 100%), 1fr))', gap: '0.85rem', marginBottom: '1.75rem',
       }}>
-        <StatCard icon={FileText} value={articles.length} label="Artikel" color="var(--emerald)" link="/content/articles" />
-        <StatCard icon={Calendar} value={upcomingEvents} label="Agenda Mendatang" color="var(--antique-brass)" link="/content/events" />
-        <StatCard icon={ImageIcon} value={(gallery || []).length} label="Album Galeri" color="#06B6D4" link="/content/gallery" />
-        <StatCard icon={School} value={schools.length} label="Sekolah" color="#7C3AED" link="/content/schools" />
-        <StatCard icon={MessageCircle} value={pendingQA} label="Q&A Menunggu" color="#F59E0B" link="/qa" />
-        <StatCard icon={Library} value={library.length} label="Materi Library" color="#3B82F6" link="/library" />
-        <StatCard icon={Users} value={totalPengurus} label="Pengurus" color="#EC4899" link="/content/team" />
+        <StatCard icon={FileText} value={articles.length} label="Artikel" color="var(--emerald)" link="/content/articles" index={0} />
+        <StatCard icon={Calendar} value={upcomingEvents} label="Agenda Mendatang" color="var(--antique-brass)" link="/content/events" index={1} />
+        <StatCard icon={ImageIcon} value={(gallery || []).length} label="Album Galeri" color="#06B6D4" link="/content/gallery" index={2} />
+        <StatCard icon={School} value={schools.length} label="Sekolah" color="#7C3AED" link="/content/schools" index={3} />
+        <StatCard icon={MessageCircle} value={pendingQA} label="Q&A Menunggu" color="#F59E0B" link="/qa" index={4} />
+        <StatCard icon={Library} value={library.length} label="Materi Library" color="#3B82F6" link="/library" index={5} />
+        <StatCard icon={Users} value={totalPengurus} label="Pengurus" color="#EC4899" link="/content/team" index={6} />
       </div>
 
       {/* Quick Actions & Recent Logs */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(270px, 100%), 1fr))', gap: '1.25rem' }}>
         {/* Quick Actions */}
-        <div className="glass-card" style={{ padding: '1.5rem' }}>
+        <div className="glass-card reveal-left delay-100" style={{ padding: '1.5rem' }}>
           <h3 style={{ fontSize: '1.05rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <TrendingUp size={18} style={{ color: 'var(--emerald)' }} /> Aksi Cepat
           </h3>
@@ -97,7 +101,7 @@ export default function Dashboard() {
         </div>
 
         {/* Recent Audit Logs */}
-        <div className="glass-card" style={{ padding: '1.5rem' }}>
+        <div className="glass-card reveal-right delay-200" style={{ padding: '1.5rem' }}>
           <h3 style={{ fontSize: '1.05rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Clock size={18} style={{ color: 'var(--antique-brass)' }} /> Aktivitas Terbaru
           </h3>

@@ -462,7 +462,7 @@ export default function AdminHomeCMS({
                   className="form-input"
                   value={formData.hero?.btnSecondaryText || ''}
                   onChange={(e) => updateHero('btnSecondaryText', e.target.value)}
-                  placeholder="5 Pilar Gerakan"
+                  placeholder="Anggota ROHIS"
                 />
               </div>
               <div className="form-group">
@@ -472,7 +472,7 @@ export default function AdminHomeCMS({
                   className="form-input"
                   value={formData.hero?.btnSecondaryLink || ''}
                   onChange={(e) => updateHero('btnSecondaryLink', e.target.value)}
-                  placeholder="#program"
+                  placeholder="/schools"
                 />
               </div>
             </div>

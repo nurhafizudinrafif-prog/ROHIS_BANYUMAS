@@ -175,13 +175,13 @@ export default function ContentManager() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+      <div className="reveal-on-scroll" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <h1 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.5rem)', fontWeight: 800 }}>Kelola {schema.label}</h1>
         <button onClick={handleNew} className="btn btn-primary"><Plus size={16} /> Tambah {schema.label}</button>
       </div>
 
       {/* Search */}
-      <div style={{ position: 'relative', marginBottom: '1.25rem' }}>
+      <div className="reveal-on-scroll delay-100" style={{ position: 'relative', marginBottom: '1.25rem' }}>
         <Search size={16} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
         <input type="text" className="form-input" placeholder={`Cari ${schema.label.toLowerCase()}...`}
           style={{ paddingLeft: '2.5rem', maxWidth: 400, width: '100%' }} value={search} onChange={e => setSearch(e.target.value)} />
@@ -394,7 +394,7 @@ export default function ContentManager() {
       )}
 
       {/* Desktop Data Table */}
-      <div className="admin-desktop-table glass-card table-responsive">
+      <div className="admin-desktop-table glass-card table-responsive reveal-scale delay-150">
         <table className="data-table" style={{ minWidth: type === 'gallery' ? 640 : (type === 'articles' ? 680 : 540) }}>
           <thead>
             {type === 'gallery' ? (

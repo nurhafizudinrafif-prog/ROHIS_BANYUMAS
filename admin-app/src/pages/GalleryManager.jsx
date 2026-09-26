@@ -162,7 +162,7 @@ export default function GalleryManager() {
   return (
     <div style={{ maxWidth: 1200, margin: '0 auto', paddingBottom: '4rem' }}>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+      <div className="reveal-on-scroll" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.75rem)', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
             <ImageIcon size={26} color="var(--emerald)" /> Kelola Galeri & Dokumentasi Kegiatan
@@ -182,7 +182,7 @@ export default function GalleryManager() {
       </div>
 
       {/* Filter Categories */}
-      <div style={{
+      <div className="reveal-on-scroll delay-100" style={{
         display: 'flex',
         gap: '0.5rem',
         overflowX: 'auto',
@@ -207,7 +207,7 @@ export default function GalleryManager() {
       </div>
 
       {/* Search Input */}
-      <div style={{ position: 'relative', marginBottom: '1.5rem' }}>
+      <div className="reveal-on-scroll delay-150" style={{ position: 'relative', marginBottom: '1.5rem' }}>
         <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>
           <Search size={18} />
         </span>
@@ -227,14 +227,14 @@ export default function GalleryManager() {
         gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))',
         gap: '1.25rem',
       }}>
-        {filteredAlbums.map(album => {
+        {filteredAlbums.map((album, idx) => {
           const summary = getMediaSummary(album);
           const cover = getCoverMedia(album);
 
           return (
             <div
               key={album.id}
-              className="glass-card"
+              className={`glass-card reveal-scale delay-${Math.min((idx % 6 + 1) * 75, 400)}`}
               style={{
                 overflow: 'hidden',
                 display: 'flex',

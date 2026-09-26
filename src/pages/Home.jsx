@@ -372,8 +372,8 @@ export default function Home() {
       'Wadah silaturahmi, kaderisasi kepemimpinan, dan sinergi dakwah pelajar Islam lintas SMA, SMK, dan MA se-Kabupaten Banyumas. Berakar pada akhlak, bergerak dalam karya nyata untuk generasi muda.',
     btnPrimaryText: 'Kenali ROHIS Lebih Dekat',
     btnPrimaryLink: '/about',
-    btnSecondaryText: '5 Pilar Gerakan',
-    btnSecondaryLink: '#program',
+    btnSecondaryText: 'Anggota ROHIS',
+    btnSecondaryLink: '/schools',
     photoUrl: 'https://images.unsplash.com/photo-1542816417-0983c9c9ad53?auto=format&fit=crop&w=1200&q=80',
     photoStamp: 'ARCHIVE REF #01',
     photoLoc: 'MASJID AGUNG BAITUSSALAM',
@@ -604,13 +604,19 @@ export default function Home() {
                 <Link to={hero.btnPrimaryLink || '/about'} className="btn btn-primary btn-lg">
                   {hero.btnPrimaryText || 'Kenali ROHIS Lebih Dekat'} <ArrowRight size={18} />
                 </Link>
-                {hero.btnSecondaryLink && hero.btnSecondaryLink.startsWith('#') ? (
-                  <a href={hero.btnSecondaryLink} className="btn btn-glass btn-lg">
-                    {hero.btnSecondaryText || '5 Pilar Gerakan'}
+                {hero.btnSecondaryLink && (hero.btnSecondaryLink.startsWith('http') || hero.btnSecondaryLink.startsWith('#')) ? (
+                  <a
+                    href={hero.btnSecondaryLink}
+                    className="btn btn-primary btn-lg"
+                  >
+                    {hero.btnSecondaryText || 'Anggota ROHIS'} <ArrowRight size={18} />
                   </a>
                 ) : (
-                  <Link to={hero.btnSecondaryLink || '/programs'} className="btn btn-glass btn-lg">
-                    {hero.btnSecondaryText || '5 Pilar Gerakan'}
+                  <Link
+                    to={hero.btnSecondaryLink || '/schools'}
+                    className="btn btn-primary btn-lg"
+                  >
+                    {hero.btnSecondaryText || 'Anggota ROHIS'} <ArrowRight size={18} />
                   </Link>
                 )}
               </div>
@@ -1414,7 +1420,20 @@ export default function Home() {
         <div className="reveal-scale delay-100" style={{ position: 'relative', zIndex: 1, maxWidth: 680, margin: '0 auto' }}>
           <span
             className="badge badge-emerald"
-            style={{ marginBottom: '1.25rem', padding: '0.35rem 0.9rem', display: 'inline-flex' }}
+            style={{
+              marginBottom: '1.25rem',
+              padding: '0.4rem 1.1rem',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              background: 'rgba(16, 185, 129, 0.16)',
+              color: '#34D399',
+              border: '1px solid rgba(16, 185, 129, 0.35)',
+              borderRadius: '9999px',
+              fontWeight: 600,
+              fontSize: '0.78rem',
+              letterSpacing: '0.04em',
+            }}
           >
             <Heart size={14} /> {closing.tag || 'MARI BERGABUNG'}
           </span>
@@ -1444,8 +1463,40 @@ export default function Home() {
             <Link to={closing.btnPrimaryLink || '/contact'} className="btn btn-primary btn-lg">
               {closing.btnPrimaryText || 'Daftar Menjadi Bagian ROKABA'} <ArrowRight size={18} />
             </Link>
-            <Link to={closing.btnSecondaryLink || '/contact'} className="btn btn-glass btn-lg">
-              {closing.btnSecondaryText || 'Hubungi Pengurus'}
+            <Link
+              to={closing.btnSecondaryLink || '/contact'}
+              className="btn btn-glass btn-lg"
+              style={{
+                background: 'rgba(255, 255, 255, 0.1)',
+                color: '#F5F2ED',
+                border: '1.5px solid rgba(255, 255, 255, 0.35)',
+                borderRadius: '9999px',
+                padding: '1rem 2.25rem',
+                fontSize: '1rem',
+                fontWeight: 600,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.6rem',
+                textDecoration: 'none',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.25)',
+                transition: 'all 0.3s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.65)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 8px 28px rgba(0, 0, 0, 0.35)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.35)';
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.25)';
+              }}
+            >
+              <MessageCircle size={18} /> {closing.btnSecondaryText || 'Hubungi Pengurus'}
             </Link>
           </div>
         </div>

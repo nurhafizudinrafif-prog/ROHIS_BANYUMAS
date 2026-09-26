@@ -204,9 +204,223 @@ select.form-input {
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideIn { from { opacity: 0; transform: translateX(-16px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes popInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
 
 .animate-fade-in-up { animation: fadeInUp 0.4s ease forwards; }
 .animate-fade-in { animation: fadeIn 0.3s ease forwards; }
+
+/* ═══════════════════════════════════════════
+   ROKABA Admin — Scroll Animations & Reveal System
+   ═══════════════════════════════════════════ */
+
+/* Stagger Delays for Sequential Scroll Reveals */
+.delay-50  { transition-delay: 50ms !important;  animation-delay: 50ms !important; }
+.delay-100 { transition-delay: 100ms !important; animation-delay: 100ms !important; }
+.delay-150 { transition-delay: 150ms !important; animation-delay: 150ms !important; }
+.delay-200 { transition-delay: 200ms !important; animation-delay: 200ms !important; }
+.delay-250 { transition-delay: 250ms !important; animation-delay: 250ms !important; }
+.delay-300 { transition-delay: 300ms !important; animation-delay: 300ms !important; }
+.delay-350 { transition-delay: 350ms !important; animation-delay: 350ms !important; }
+.delay-400 { transition-delay: 400ms !important; animation-delay: 400ms !important; }
+.delay-500 { transition-delay: 500ms !important; animation-delay: 500ms !important; }
+
+/* 1. Standard Scroll Reveal (Fade & Slide Up) */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 2. Scroll Reveal Scale (Subtle Zoom & Float) */
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.95) translateY(18px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-scale.is-revealed {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+/* 3. Scroll Reveal Left (Slide from Left) */
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-28px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-left.is-revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* 4. Scroll Reveal Right (Slide from Right) */
+.reveal-right {
+  opacity: 0;
+  transform: translateX(28px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-right.is-revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* 5. Scroll Reveal Fade (Smooth Dissolve) */
+.reveal-fade {
+  opacity: 0;
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity;
+}
+
+.reveal-fade.is-revealed {
+  opacity: 1;
+}
+
+/* 6. Scroll Reveal Flip (Subtle 3D Perspective) */
+.reveal-flip {
+  opacity: 0;
+  transform: perspective(1000px) rotateX(10deg) translateY(18px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-flip.is-revealed {
+  opacity: 1;
+  transform: perspective(1000px) rotateX(0deg) translateY(0);
+}
+
+/* Glowing Neon Scroll Progress Bar at the top of admin */
+.admin-scroll-progress-track {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.admin-scroll-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #10B981 0%, #00F0CF 60%, #38BDF8 100%);
+  position: relative;
+  transition: width 0.1s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-shadow: 0 0 10px rgba(0, 240, 207, 0.8), 0 0 4px rgba(16, 185, 129, 0.9);
+}
+
+.admin-scroll-progress-glow {
+  position: absolute;
+  right: -3px;
+  top: -2.5px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  box-shadow: 0 0 12px #00F0CF, 0 0 20px #00F0CF, 0 0 6px #FFFFFF;
+}
+
+/* Floating Scroll-to-Top Button */
+.admin-scroll-top-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 900;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(4, 19, 21, 0.90);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(0, 255, 200, 0.45);
+  color: #00F0CF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.65),
+    0 0 16px rgba(0, 255, 200, 0.25);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: popInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.admin-scroll-top-btn:hover {
+  background: rgba(0, 255, 200, 0.22);
+  border-color: #00F0CF;
+  color: #FFFFFF;
+  transform: translateY(-4px) scale(1.1);
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.75),
+    0 0 24px rgba(0, 255, 200, 0.5);
+}
+
+.admin-scroll-top-btn:active {
+  transform: translateY(-1px) scale(0.96);
+}
+
+@media (max-width: 680px) {
+  .admin-scroll-top-btn {
+    bottom: 1.25rem;
+    right: 1.25rem;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Topbar Scroll Reactivity */
+.admin-topbar.is-scrolled {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 255, 200, 0.08) 0%,
+    rgba(2, 9, 12, 0.96) 100%
+  ) !important;
+  border-bottom-color: rgba(0, 255, 200, 0.32) !important;
+  box-shadow:
+    0 12px 36px rgba(0, 0, 0, 0.85),
+    0 0 20px rgba(0, 240, 207, 0.15),
+    inset 0 -1px 0 rgba(0, 255, 180, 0.25) !important;
+}
+
+/* Respect user's reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-on-scroll,
+  .reveal-scale,
+  .reveal-left,
+  .reveal-right,
+  .reveal-fade,
+  .reveal-flip {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
 
 /* ═══════ Scrollbar ═══════ */
 ::-webkit-scrollbar { width: 6px; height: 6px; }

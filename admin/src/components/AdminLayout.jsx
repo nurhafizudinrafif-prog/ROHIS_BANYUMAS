@@ -5,16 +5,20 @@ import {
   LayoutDashboard, FileText, Calendar, School, Image, Users,
   MessageCircle, Shield, ClipboardList, LogOut, BookOpen,
   RefreshCw, Home, Settings, ExternalLink, CheckCircle2,
-  Menu, X
+  Menu, X, ChevronUp
 } from 'lucide-react';
 import { useState, useMemo, useEffect } from 'react';
 import RohisLogo from './RohisLogo';
 import DynamicBackground from './DynamicBackground';
+import useScrollReveal from '../hooks/useScrollReveal';
 import './AdminLayout.css';
 
 export default function AdminLayout() {
   const { user, logout } = useAuth();
   const location = useLocation();
+
+  // Activate ubiquitous scroll reveal animations across all routes
+  useScrollReveal();
   const {
     articles = [],
     events = [],
@@ -31,6 +35,9 @@ export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
+  const [scrollPercent, setScrollPercent] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   // Auto-close sidebar on route change
   useEffect(() => {
@@ -48,6 +55,55 @@ export default function AdminLayout() {
       document.body.style.overflow = '';
     };
   }, [sidebarOpen]);
+
+  // Track scroll position live for progress bar, topbar elevation, and scroll-to-top button
+  useEffect(() => {
+    const mainContent = document.querySelector('.admin-main-content');
+
+    const handleScrollTracking = () => {
+      const winScroll = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+      const winMax = (document.documentElement.scrollHeight || document.body.scrollHeight) - window.innerHeight;
+
+      const contentScroll = mainContent ? mainContent.scrollTop : 0;
+      const contentMax = mainContent ? (mainContent.scrollHeight - mainContent.clientHeight) : 0;
+
+      let currentScroll = winScroll;
+      let maxScroll = winMax;
+
+      if (contentMax > 20 && contentScroll > 0) {
+        currentScroll = contentScroll;
+        maxScroll = contentMax;
+      }
+
+      const pct = maxScroll > 0 ? Math.min(100, Math.max(0, (currentScroll / maxScroll) * 100)) : 0;
+      setScrollPercent(pct);
+      setIsScrolled(currentScroll > 15);
+      setShowScrollTop(currentScroll > 260);
+    };
+
+    window.addEventListener('scroll', handleScrollTracking, { passive: true });
+    document.addEventListener('scroll', handleScrollTracking, { passive: true, capture: true });
+    if (mainContent) {
+      mainContent.addEventListener('scroll', handleScrollTracking, { passive: true });
+    }
+    handleScrollTracking();
+
+    return () => {
+      window.removeEventListener('scroll', handleScrollTracking);
+      document.removeEventListener('scroll', handleScrollTracking, { capture: true });
+      if (mainContent) {
+        mainContent.removeEventListener('scroll', handleScrollTracking);
+      }
+    };
+  }, [location.pathname]);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const mainContent = document.querySelector('.admin-main-content');
+    if (mainContent) {
+      mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   // Total team count
   const totalPengurus = useMemo(() => {
@@ -73,8 +129,27 @@ export default function AdminLayout() {
 
   return (
     <div className="admin-layout-wrapper">
+      {/* Sleek Glowing Scroll Progress Bar */}
+      <div className="admin-scroll-progress-track" aria-hidden="true">
+        <div className="admin-scroll-progress-bar" style={{ width: `${scrollPercent}%` }}>
+          <div className="admin-scroll-progress-glow" />
+        </div>
+      </div>
+
       {/* Dynamic Animated Islamic Sacred Girih Background */}
       <DynamicBackground />
+
+      {/* Floating Scroll-to-Top Button */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="admin-scroll-top-btn"
+          title="Kembali ke atas"
+          aria-label="Kembali ke atas"
+        >
+          <ChevronUp size={22} />
+        </button>
+      )}
 
       {/* Floating Toast Notification */}
       {toastMessage && (
@@ -85,7 +160,7 @@ export default function AdminLayout() {
       )}
 
       {/* ══════════ TOPBAR (Identical to reference screenshot, Responsive on HP) ══════════ */}
-      <header className="admin-topbar">
+      <header className={`admin-topbar ${isScrolled ? 'is-scrolled' : ''}`}>
         <div className="admin-topbar-left">
           {/* Mobile Hamburger Drawer Toggle */}
           <button

@@ -231,7 +231,7 @@ export default function TeamManager() {
   return (
     <div style={{ maxWidth: 1200, margin: '0 auto', paddingBottom: '4rem' }}>
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+      <div className="reveal-on-scroll" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.75rem)', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
             <Users size={26} color="var(--emerald)" /> Struktur Kepengurusan ROKABA
@@ -251,7 +251,7 @@ export default function TeamManager() {
       </div>
 
       {/* Tabs */}
-      <div style={{
+      <div className="reveal-on-scroll delay-100" style={{
         display: 'flex',
         gap: '0.5rem',
         overflowX: 'auto',
@@ -294,7 +294,7 @@ export default function TeamManager() {
       </div>
 
       {/* Search Input */}
-      <div style={{ position: 'relative', marginBottom: '1.5rem' }}>
+      <div className="reveal-on-scroll delay-150" style={{ position: 'relative', marginBottom: '1.5rem' }}>
         <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>
           <Search size={18} />
         </span>
@@ -314,10 +314,10 @@ export default function TeamManager() {
         gridTemplateColumns: 'repeat(auto-fill, minmax(min(260px, 100%), 1fr))',
         gap: '1rem',
       }}>
-        {filteredMembers.map(member => (
+        {filteredMembers.map((member, idx) => (
           <div
             key={member.id}
-            className="glass-card"
+            className={`glass-card reveal-on-scroll delay-${Math.min((idx % 8 + 1) * 50, 400)}`}
             style={{
               padding: '1.25rem',
               display: 'flex',

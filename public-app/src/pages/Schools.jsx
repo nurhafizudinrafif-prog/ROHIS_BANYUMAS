@@ -463,15 +463,36 @@ export default function Schools() {
           <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.75rem', flexWrap: 'wrap' }}>
             <a
               href="#pengurus"
-              className="btn btn-emerald"
-              style={{ fontSize: '0.86rem', padding: '0.65rem 1.35rem' }}
+              className="btn btn-primary"
+              style={{
+                fontSize: '0.86rem',
+                padding: '0.65rem 1.35rem',
+                background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                color: '#FFFFFF',
+                borderRadius: '9999px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+                boxShadow: '0 4px 18px rgba(16, 185, 129, 0.35)',
+              }}
             >
               <Users size={15} /> Lihat Pengurus ROKABA
             </a>
             <a
               href="#sekolah"
-              className="btn btn-outline"
-              style={{ fontSize: '0.86rem', padding: '0.65rem 1.35rem', borderColor: 'rgba(245,242,237,0.25)', color: 'var(--warm-alabaster)' }}
+              className="btn btn-glass"
+              style={{
+                fontSize: '0.86rem',
+                padding: '0.65rem 1.35rem',
+                background: 'rgba(255, 255, 255, 0.08)',
+                border: '1.5px solid rgba(245, 242, 237, 0.32)',
+                color: 'var(--warm-alabaster)',
+                borderRadius: '9999px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+                backdropFilter: 'blur(10px)',
+              }}
             >
               <School size={15} /> Direktori Sekolah Anggota <ArrowDown size={14} />
             </a>
@@ -786,8 +807,15 @@ export default function Schools() {
                   setSearchMember('');
                   setSelectedDivision('ALL');
                 }}
-                className="btn btn-emerald"
-                style={{ fontSize: '0.85rem', padding: '0.6rem 1.4rem' }}
+                className="btn btn-primary"
+                style={{
+                  fontSize: '0.85rem',
+                  padding: '0.6rem 1.4rem',
+                  background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                  color: '#FFFFFF',
+                  borderRadius: '9999px',
+                  boxShadow: '0 4px 16px rgba(16, 185, 129, 0.3)',
+                }}
               >
                 Lihat Semua Pengurus
               </button>

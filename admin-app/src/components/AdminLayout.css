@@ -33,6 +33,7 @@
   position: sticky;
   top: 0;
   z-index: 50;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .admin-topbar-left {
@@ -177,7 +178,10 @@
   flex-direction: column;
   justify-content: space-between;
   flex-shrink: 0;
-  min-height: calc(100vh - 60px);
+  position: sticky;
+  top: 59px;
+  height: calc(100vh - 59px);
+  overflow-y: auto;
 }
 
 .admin-nav {

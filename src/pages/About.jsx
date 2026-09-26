@@ -769,81 +769,131 @@ export default function About() {
         <div className="container" style={{ maxWidth: 1050, margin: '0 auto' }}>
           <div
             style={{
-              background: 'linear-gradient(135deg, var(--deep-pine) 0%, #153a2f 100%)',
+              background: 'linear-gradient(135deg, #07140E 0%, #0D2319 50%, #132D21 100%)',
               borderRadius: '24px',
-              padding: 'clamp(2rem, 5vw, 3.5rem) clamp(1.25rem, 4vw, 2.5rem)',
+              padding: 'clamp(2.5rem, 5vw, 3.75rem) clamp(1.5rem, 4vw, 3rem)',
               color: 'var(--warm-alabaster)',
-              boxShadow: 'var(--shadow-xl)',
-              border: '1px solid rgba(181,141,79,0.3)',
+              boxShadow: '0 20px 48px -12px rgba(7, 20, 14, 0.45), 0 0 0 1px rgba(200, 168, 91, 0.22)',
               position: 'relative',
               overflow: 'hidden',
               textAlign: 'center',
             }}
           >
-            {/* Background Accent */}
+            {/* Ambient Background Accents */}
             <div
               style={{
                 position: 'absolute',
-                top: 0,
-                right: 0,
-                width: 320,
-                height: 320,
-                background: 'radial-gradient(circle, rgba(16,185,129,0.15) 0%, transparent 70%)',
+                top: '-20%',
+                right: '-10%',
+                width: 380,
+                height: 380,
+                background: 'radial-gradient(circle, rgba(16,185,129,0.2) 0%, transparent 68%)',
+                pointerEvents: 'none',
+              }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                bottom: '-25%',
+                left: '-10%',
+                width: 340,
+                height: 340,
+                background: 'radial-gradient(circle, rgba(200,168,91,0.14) 0%, transparent 65%)',
                 pointerEvents: 'none',
               }}
             />
 
-            <span className="badge badge-gold" style={{ marginBottom: '1.25rem' }}>
-              <Users size={14} /> Fungsionaris & Basis Rohis
-            </span>
-            <h2
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'clamp(1.75rem, 4vw, 2.35rem)',
-                fontWeight: 800,
-                color: 'var(--warm-alabaster)',
-                marginBottom: '1rem',
-                lineHeight: 1.25,
-              }}
-            >
-              Kenali Fungsionaris & Pangkalan Sekolah Anggota
-            </h2>
-            <p
-              style={{
-                color: 'rgba(245,242,237,0.78)',
-                maxWidth: 660,
-                margin: '0 auto 2.25rem',
-                fontSize: '0.98rem',
-                lineHeight: 1.7,
-              }}
-            >
-              Struktur fungsionaris Badan Pengurus Harian (BPH), Divisi SDM, Dakwah, HUMAS, Jurnalistik, DANUS, serta direktori pangkalan ROHIS SMA, SMK, dan MA se-Kabupaten Banyumas dapat Anda telusuri secara lengkap pada halaman <strong>Anggota</strong>.
-            </p>
+            <div style={{ position: 'relative', zIndex: 1 }}>
+              <span
+                className="badge badge-gold"
+                style={{
+                  marginBottom: '1.25rem',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.45rem',
+                  background: 'rgba(200, 168, 91, 0.15)',
+                  color: '#DFBF73',
+                  border: '1px solid rgba(200, 168, 91, 0.35)',
+                  borderRadius: '9999px',
+                  padding: '0.35rem 1rem',
+                  fontSize: '0.82rem',
+                  fontWeight: 600,
+                  letterSpacing: '0.03em',
+                }}
+              >
+                <Users size={14} /> Fungsionaris & Basis Rohis
+              </span>
+              <h2
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontSize: 'clamp(1.75rem, 4vw, 2.35rem)',
+                  fontWeight: 800,
+                  color: '#F7F5F0',
+                  marginBottom: '1rem',
+                  lineHeight: 1.25,
+                  letterSpacing: '-0.015em',
+                }}
+              >
+                Kenali Fungsionaris & Pangkalan Sekolah Anggota
+              </h2>
+              <p
+                style={{
+                  color: 'rgba(245, 242, 237, 0.82)',
+                  maxWidth: 680,
+                  margin: '0 auto 2.25rem',
+                  fontSize: 'clamp(0.94rem, 1.8vw, 1.05rem)',
+                  lineHeight: 1.75,
+                }}
+              >
+                Struktur fungsionaris Badan Pengurus Harian (BPH), Divisi SDM, Dakwah, HUMAS, Jurnalistik, DANUS, serta direktori pangkalan ROHIS SMA, SMK, dan MA se-Kabupaten Banyumas dapat Anda telusuri secara lengkap pada halaman <strong style={{ color: '#DFBF73', fontWeight: 700 }}>Anggota</strong>.
+              </p>
 
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-              <Link
-                to="/schools#pengurus"
-                className="btn btn-emerald"
-                style={{
-                  fontSize: '0.95rem',
-                  padding: '0.85rem 1.85rem',
-                  boxShadow: '0 8px 24px rgba(16,185,129,0.35)',
-                }}
-              >
-                <Users size={18} /> Struktur Pengurus ROKABA
-              </Link>
-              <Link
-                to="/schools#sekolah"
-                className="btn btn-outline"
-                style={{
-                  fontSize: '0.95rem',
-                  padding: '0.85rem 1.85rem',
-                  borderColor: 'rgba(245,242,237,0.3)',
-                  color: 'var(--warm-alabaster)',
-                }}
-              >
-                <School size={18} /> Direktori Sekolah Anggota
-              </Link>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                <Link
+                  to="/schools#pengurus"
+                  className="btn btn-primary btn-lg"
+                  style={{
+                    background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                    color: '#FFFFFF',
+                    border: '1px solid rgba(255, 255, 255, 0.25)',
+                    borderRadius: '9999px',
+                    padding: '0.85rem 2rem',
+                    fontSize: '0.98rem',
+                    fontWeight: 600,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.6rem',
+                    boxShadow: '0 8px 25px rgba(16, 185, 129, 0.38)',
+                    textDecoration: 'none',
+                    transition: 'all 0.25s ease',
+                  }}
+                >
+                  <Users size={18} /> Struktur Pengurus ROKABA
+                </Link>
+                <Link
+                  to="/schools#sekolah"
+                  className="btn btn-glass btn-lg"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    color: '#F5F2ED',
+                    border: '1.5px solid rgba(255, 255, 255, 0.35)',
+                    borderRadius: '9999px',
+                    padding: '0.85rem 2rem',
+                    fontSize: '0.98rem',
+                    fontWeight: 600,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.6rem',
+                    textDecoration: 'none',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
+                    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+                    transition: 'all 0.25s ease',
+                  }}
+                >
+                  <School size={18} /> Direktori Sekolah Anggota
+                </Link>
+              </div>
             </div>
           </div>
         </div>

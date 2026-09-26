@@ -98,7 +98,7 @@ export default function LibraryManager() {
   return (
     <div>
       {/* Header Section */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+      <div className="reveal-on-scroll" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.5rem)', fontWeight: 800, color: 'var(--text-primary)' }}>
             Kelola E-Library (Perpustakaan Digital)
@@ -117,7 +117,7 @@ export default function LibraryManager() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div style={{
+      <div className="reveal-on-scroll delay-100" style={{
         background: 'var(--glass-bg)',
         border: '1px solid var(--border-glass)',
         borderRadius: 'var(--radius-lg)',
@@ -195,7 +195,7 @@ export default function LibraryManager() {
       </div>
 
       {/* Desktop Main Data Table */}
-      <div className="admin-desktop-table glass-card table-responsive" style={{ overflow: 'hidden', padding: 0 }}>
+      <div className="admin-desktop-table glass-card table-responsive reveal-scale delay-150" style={{ overflow: 'hidden', padding: 0 }}>
         <div style={{ overflowX: 'auto' }}>
           <table className="data-table" style={{ minWidth: 640 }}>
             <thead>

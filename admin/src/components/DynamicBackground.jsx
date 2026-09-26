@@ -96,23 +96,29 @@ export default function DynamicBackground() {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
 
       rafRef.current = requestAnimationFrame(() => {
-        const scrollY = window.scrollY || window.pageYOffset;
-        const maxScroll = Math.max(
-          1,
-          document.documentElement.scrollHeight - window.innerHeight
-        );
-        const progress = Math.min(1, Math.max(0, scrollY / maxScroll));
+        const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+        const mainContent = document.querySelector('.admin-main-content');
+        const contentScroll = mainContent ? mainContent.scrollTop : 0;
+        const actualScroll = Math.max(scrollY, contentScroll);
+
+        const maxWin = (document.documentElement.scrollHeight || document.body.scrollHeight) - window.innerHeight;
+        const maxContent = mainContent ? (mainContent.scrollHeight - mainContent.clientHeight) : 0;
+        const maxScroll = Math.max(1, Math.max(maxWin, maxContent));
+
+        const progress = Math.min(1, Math.max(0, actualScroll / maxScroll));
         setScrollProgress(progress);
         // Subtle parallax on Islamic geometric pattern (slow drift)
-        setParallaxY(-(scrollY * 0.09) % 120);
+        setParallaxY(-(actualScroll * 0.08) % 120);
       });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    document.addEventListener('scroll', handleScroll, { passive: true, capture: true });
     handleScroll();
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('scroll', handleScroll, { capture: true });
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
