@@ -426,7 +426,7 @@ export default function TeamManager() {
 
       {/* Modal Add / Edit */}
       {modalOpen && (
-        <div className="modal-overlay-responsive">
+        <div className="modal-overlay-responsive" onClick={(e) => { if (e.target === e.currentTarget) setModalOpen(false); }}>
           <div className="glass-card modal-card-responsive" style={{
             maxWidth: 540,
             padding: '1.75rem',

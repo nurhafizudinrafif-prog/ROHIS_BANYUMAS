@@ -189,16 +189,26 @@ export default function ContentManager() {
 
       {/* Edit Modal */}
       {editing && (
-        <div className="modal-overlay-responsive">
-          <div className="glass-card modal-card-responsive animate-fade-in-up" style={{
-            maxWidth: 600, padding: '1.75rem',
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-              <h2 style={{ fontSize: '1.15rem' }}>{isNew ? 'Tambah' : 'Edit'} {schema.label}</h2>
-              <button onClick={() => { setEditing(null); setIsNew(false); }} style={{
-                background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: '0.25rem',
-              }}><X size={20} /></button>
+        <div className="modal-overlay-responsive" onClick={(e) => { if (e.target === e.currentTarget) { setEditing(null); setIsNew(false); } }}>
+          <div className="glass-card modal-card-responsive animate-fade-in-up" style={{ maxWidth: 600 }}>
+            {/* Modal Header */}
+            <div className="modal-header-responsive">
+              <h2 style={{ fontSize: '1.15rem', margin: 0, fontWeight: 700 }}>{isNew ? 'Tambah' : 'Edit'} {schema.label}</h2>
+              <button
+                type="button"
+                onClick={() => { setEditing(null); setIsNew(false); }}
+                style={{
+                  background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)',
+                  padding: '0.4rem', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                }}
+                aria-label="Tutup Modal"
+              >
+                <X size={20} />
+              </button>
             </div>
+
+            {/* Modal Scrollable Body */}
+            <div className="modal-body-responsive">
             {schema.fields.map(f => {
               if (f.key === 'image' || f.key === 'coverImage') {
                 return (
@@ -358,10 +368,26 @@ export default function ContentManager() {
       </div>
     );
   })()}
+            </div>
 
-            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.25rem' }}>
-              <button onClick={handleSave} className="btn btn-primary" style={{ flex: 1 }}><Save size={16} /> Simpan</button>
-              <button onClick={() => { setEditing(null); setIsNew(false); }} className="btn btn-secondary">Batal</button>
+            {/* Modal Sticky Footer */}
+            <div className="modal-footer-responsive">
+              <button
+                type="button"
+                onClick={handleSave}
+                className="btn btn-primary"
+                style={{ flex: 1, padding: '0.75rem 1rem', fontWeight: 700, fontSize: '0.95rem' }}
+              >
+                <Save size={18} /> Simpan {schema.label}
+              </button>
+              <button
+                type="button"
+                onClick={() => { setEditing(null); setIsNew(false); }}
+                className="btn btn-secondary"
+                style={{ padding: '0.75rem 1.25rem' }}
+              >
+                Batal
+              </button>
             </div>
           </div>
         </div>

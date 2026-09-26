@@ -101,35 +101,44 @@ export default function UserManager() {
 
       {/* Edit Modal */}
       {editing && (
-        <div className="modal-overlay-responsive">
-          <div className="glass-card modal-card-responsive animate-fade-in-up" style={{ maxWidth: 450, padding: '1.75rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-              <h2 style={{ fontSize: '1.15rem' }}>{isNew ? 'Tambah' : 'Edit'} User</h2>
-              <button onClick={() => { setEditing(null); setIsNew(false); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}><X size={20} /></button>
+        <div className="modal-overlay-responsive" onClick={(e) => { if (e.target === e.currentTarget) { setEditing(null); setIsNew(false); } }}>
+          <div className="glass-card modal-card-responsive animate-fade-in-up" style={{ maxWidth: 450 }}>
+            <div className="modal-header-responsive">
+              <h2 style={{ fontSize: '1.15rem', margin: 0, fontWeight: 700 }}>{isNew ? 'Tambah' : 'Edit'} User</h2>
+              <button
+                type="button"
+                onClick={() => { setEditing(null); setIsNew(false); }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: '0.4rem', display: 'flex', alignItems: 'center' }}
+                aria-label="Tutup"
+              >
+                <X size={20} />
+              </button>
             </div>
-            <div className="form-group">
-              <label className="form-label">Username</label>
-              <input type="text" className="form-input" value={editing.username} onChange={e => setEditing({ ...editing, username: e.target.value })} />
-            </div>
-            <div className="form-group">
-              <label className="form-label">Role</label>
-              <select className="form-input" value={editing.role} onChange={e => setEditing({ ...editing, role: e.target.value })}>
-                <option value="superadmin">Super Admin</option>
-                <option value="editor_sekolah">Editor Sekolah</option>
-              </select>
-            </div>
-            {editing.role === 'editor_sekolah' && (
+            <div className="modal-body-responsive">
               <div className="form-group">
-                <label className="form-label">Sekolah</label>
-                <select className="form-input" value={editing.schoolId || ''} onChange={e => setEditing({ ...editing, schoolId: e.target.value })}>
-                  <option value="">Pilih sekolah...</option>
-                  {schools.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                <label className="form-label">Username</label>
+                <input type="text" className="form-input" value={editing.username} onChange={e => setEditing({ ...editing, username: e.target.value })} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Role</label>
+                <select className="form-input" value={editing.role} onChange={e => setEditing({ ...editing, role: e.target.value })}>
+                  <option value="superadmin">Super Admin</option>
+                  <option value="editor_sekolah">Editor Sekolah</option>
                 </select>
               </div>
-            )}
-            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
-              <button onClick={handleSave} className="btn btn-primary" style={{ flex: 1 }}><Save size={16} /> Simpan</button>
-              <button onClick={() => { setEditing(null); setIsNew(false); }} className="btn btn-secondary">Batal</button>
+              {editing.role === 'editor_sekolah' && (
+                <div className="form-group">
+                  <label className="form-label">Sekolah</label>
+                  <select className="form-input" value={editing.schoolId || ''} onChange={e => setEditing({ ...editing, schoolId: e.target.value })}>
+                    <option value="">Pilih sekolah...</option>
+                    {schools.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                  </select>
+                </div>
+              )}
+            </div>
+            <div className="modal-footer-responsive">
+              <button type="button" onClick={handleSave} className="btn btn-primary" style={{ flex: 1, padding: '0.75rem 1rem', fontWeight: 700 }}><Save size={16} /> Simpan</button>
+              <button type="button" onClick={() => { setEditing(null); setIsNew(false); }} className="btn btn-secondary" style={{ padding: '0.75rem 1.25rem' }}>Batal</button>
             </div>
           </div>
         </div>

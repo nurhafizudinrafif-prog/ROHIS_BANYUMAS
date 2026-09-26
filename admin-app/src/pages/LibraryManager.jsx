@@ -478,22 +478,23 @@ export default function LibraryManager() {
 
       {/* Modal Add / Edit */}
       {editing && (
-        <div className="modal-overlay-responsive">
-          <div className="glass-card modal-card-responsive animate-fade-in-up" style={{
-            maxWidth: 560,
-            padding: '1.75rem',
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+        <div className="modal-overlay-responsive" onClick={(e) => { if (e.target === e.currentTarget) { setEditing(null); setIsNew(false); } }}>
+          <div className="glass-card modal-card-responsive animate-fade-in-up" style={{ maxWidth: 560 }}>
+            <div className="modal-header-responsive">
+              <h2 style={{ fontSize: '1.2rem', margin: 0, fontWeight: 700, color: 'var(--text-primary)' }}>
                 {isNew ? 'Tambah' : 'Edit'} Materi E-Library
               </h2>
               <button 
+                type="button"
                 onClick={() => { setEditing(null); setIsNew(false); }} 
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: '0.25rem' }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: '0.4rem', display: 'flex', alignItems: 'center' }}
+                aria-label="Tutup"
               >
                 <X size={20} />
               </button>
             </div>
+
+            <div className="modal-body-responsive">
 
             <div className="form-group" style={{ marginBottom: '1rem' }}>
               <label className="form-label">Judul Materi / Dokumen *</label>
@@ -628,12 +629,14 @@ export default function LibraryManager() {
               </div>
             )}
 
-            {/* Action Buttons */}
-            <div style={{ display: 'flex', gap: '0.75rem' }}>
-              <button onClick={handleSave} className="btn btn-primary" style={{ flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-                <Save size={16} /> Simpan Materi
+            </div>
+
+            {/* Sticky Action Footer */}
+            <div className="modal-footer-responsive">
+              <button type="button" onClick={handleSave} className="btn btn-primary" style={{ flex: 1, padding: '0.75rem 1rem', fontWeight: 700, fontSize: '0.95rem' }}>
+                <Save size={18} /> Simpan Materi
               </button>
-              <button onClick={() => { setEditing(null); setIsNew(false); }} className="btn btn-secondary">
+              <button type="button" onClick={() => { setEditing(null); setIsNew(false); }} className="btn btn-secondary" style={{ padding: '0.75rem 1.25rem' }}>
                 Batal
               </button>
             </div>

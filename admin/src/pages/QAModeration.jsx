@@ -115,7 +115,7 @@ export default function QAModeration() {
 
       {/* Answer Modal */}
       {answerModal && (
-        <div className="modal-overlay-responsive">
+        <div className="modal-overlay-responsive" onClick={(e) => { if (e.target === e.currentTarget) { setAnswerModal(null); setAnswer(''); } }}>
           <div className="glass-card modal-card-responsive animate-fade-in-up" style={{ maxWidth: 550, padding: '1.75rem' }}>
             <h2 style={{ fontSize: '1.15rem', marginBottom: '1rem' }}>Jawab Pertanyaan</h2>
             <div style={{
