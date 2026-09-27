@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import { useScrollReveal } from '../hooks/useScrollReveal';
@@ -614,6 +614,26 @@ export default function Home() {
 
   // Attach scroll reveal observer whenever dependencies update
   useScrollReveal([home, news, articles, events, loading]);
+
+  // Keyboard navigation (ArrowLeft & ArrowRight) for desktop coverflow
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
+      if (e.key === 'ArrowLeft') {
+        setActiveNewsIdx((prev) => {
+          const len = (Array.isArray(news) && news.length > 0) ? Math.min(news.length, 4) : 4;
+          return (prev - 1 + len) % len;
+        });
+      } else if (e.key === 'ArrowRight') {
+        setActiveNewsIdx((prev) => {
+          const len = (Array.isArray(news) && news.length > 0) ? Math.min(news.length, 4) : 4;
+          return (prev + 1 + len) % len;
+        });
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [news]);
 
   if (loading && !home) {
     return (
@@ -1338,19 +1358,12 @@ export default function Home() {
             </p>
           </div>
 
-          {/* ═══ DESKTOP NEWS FEED (Vertical on Laptop/PC > 768px) ═══ */}
-          <div className="desktop-news-feed">
-            {latestNews.map((item, i) => (
-              <NewsCard key={item.id} item={item} index={i} />
-            ))}
-          </div>
-
-          {/* ═══ MOBILE 3D COVERFLOW (Symmetrical & Infinite Loop on Mobile <= 768px) ═══ */}
-          <div className="mobile-news-coverflow-wrapper">
-            {/* Mobile Swipe Hint */}
+          {/* ═══ 3D SYMMETRICAL COVERFLOW (Responsive on Mobile & PC) ═══ */}
+          <div className="news-coverflow-wrapper">
+            {/* Interactive Hint */}
             <div className="news-swipe-hint">
               <Sparkles size={13} style={{ color: 'var(--antique-brass-light)' }} />
-              <span>Geser atau sentuh kartu untuk berita lain</span>
+              <span>Klik kartu samping atau gunakan tombol panah untuk berita lain</span>
               <ChevronRight size={14} className="news-swipe-arrow" style={{ color: 'var(--emerald-light)' }} />
             </div>
 
