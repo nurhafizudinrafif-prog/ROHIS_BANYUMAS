@@ -965,13 +965,13 @@ export default function AdminHomeCMS({
 
             <div className="form-grid-2">
               <div className="form-group">
-                <label className="form-label">Teks Tombol Utama</label>
+                <label className="form-label">Teks Tombol Utama (Opsional)</label>
                 <input
                   type="text"
                   className="form-input"
                   value={formData.closing?.btnPrimaryText || ''}
                   onChange={(e) => updateClosing('btnPrimaryText', e.target.value)}
-                  placeholder="Daftar Menjadi Bagian ROKABA"
+                  placeholder="Kosongkan jika hanya tombol Hubungi Pengurus"
                 />
               </div>
               <div className="form-group">

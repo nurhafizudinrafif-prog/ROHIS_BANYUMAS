@@ -768,8 +768,8 @@ export default function Home() {
     tag: 'MARI BERGABUNG',
     headline: 'Mari Tumbuh Bersama.',
     lead: "Pintu selalu terbuka bagi pelajar yang ingin belajar, mengasah kepemimpinan, dan bersama-sama menghidupkan dakwah Islam rahmatan lil 'alamin di Kabupaten Banyumas.",
-    btnPrimaryText: 'Daftar Menjadi Bagian ROKABA',
-    btnPrimaryLink: '/contact',
+    btnPrimaryText: '',
+    btnPrimaryLink: '',
     btnSecondaryText: 'Hubungi Pengurus',
     btnSecondaryLink: '/contact',
   };
@@ -1676,77 +1676,145 @@ export default function Home() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))',
               gap: '1.5rem',
             }}
           >
             {[
               {
-                icon: MessageCircle,
-                title: 'Konsultasi & Tanya Jawab',
-                desc: 'Ruang tanya jawab keislaman dan problematika remaja bersama asatidz.',
-                link: '/consultation',
+                icon: Compass,
+                tag: 'Profil & Sejarah',
+                title: 'Tentang ROKABA',
+                desc: 'Mengenal visi, sejarah perjalanan, dan struktur kepengurusan ROHIS Kabupaten Banyumas.',
+                link: '/about',
                 color: 'var(--emerald)',
               },
               {
-                icon: Library,
-                title: 'E-Library & Modul',
-                desc: 'Unduh modul kaderisasi, slide materi kajian, dan kurikulum pembinaan gratis.',
-                link: '/library',
+                icon: Newspaper,
+                tag: 'Warta Dakwah',
+                title: 'Berita Terkini',
+                desc: 'Informasi resmi dan warta dokumentasi kegiatan dakwah pelajar se-Kabupaten Banyumas.',
+                link: '/berita',
+                color: '#3B82F6',
+              },
+              {
+                icon: FileText,
+                tag: 'Literasi Islami',
+                title: 'Artikel & Opini',
+                desc: 'Bacaan kajian Islam moderat berkualitas untuk memperluas wawasan dan karakter pemuda.',
+                link: '/articles',
                 color: 'var(--antique-brass)',
               },
               {
+                icon: Calendar,
+                tag: 'Jadwal & Event',
+                title: 'Agenda Mendatang',
+                desc: 'Ikuti beragam kajian akbar, latihan kepemimpinan, dan temu ukhuwah kader pelajar.',
+                link: '/events',
+                color: '#F59E0B',
+              },
+              {
                 icon: School,
-                title: 'Direktori ROHIS Sekolah',
-                desc: 'Database sekolah anggota SMA/SMK/MA terdaftar se-Kabupaten Banyumas.',
+                tag: 'Jaringan Sekolah',
+                title: 'Anggota Sekolah',
+                desc: 'Database sekolah anggota SMA/SMK/MA terdaftar dan aktif di seluruh Kabupaten Banyumas.',
                 link: '/schools',
-                color: '#7C3AED',
+                color: '#8B5CF6',
+              },
+              {
+                icon: Library,
+                tag: 'Pustaka Digital',
+                title: 'E-Library & Modul',
+                desc: 'Unduh kurikulum pembinaan LKRO, modul kaderisasi, dan materi kajian dakwah gratis.',
+                link: '/library',
+                color: '#059669',
+              },
+              {
+                icon: Camera,
+                tag: 'Dokumentasi Visual',
+                title: 'Galeri Dokumentasi',
+                desc: 'Kumpulan foto dan video momen kebersamaan, musyawarah, dan syiar pelajar Banyumas.',
+                link: '/gallery',
+                color: '#06B6D4',
               },
             ].map((srv, i) => (
               <Link
                 key={i}
                 to={srv.link}
-                className={`reveal-scale delay-${(i + 1) * 100}`}
+                className={`reveal-scale delay-${Math.min((i + 1) * 80, 500)}`}
                 style={{
                   background: 'white',
                   borderRadius: 'var(--radius-xl)',
-                  padding: '2rem',
+                  padding: '1.75rem',
                   textDecoration: 'none',
                   border: '1px solid rgba(13,43,34,0.06)',
                   boxShadow: 'var(--shadow-sm)',
                   transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
-                  display: 'block',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-4px)';
                   e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
+                  e.currentTarget.style.borderColor = `${srv.color}35`;
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'translateY(0)';
                   e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                  e.currentTarget.style.borderColor = 'rgba(13,43,34,0.06)';
                 }}
               >
-                <div
-                  style={{
-                    width: 52,
-                    height: 52,
-                    borderRadius: '14px',
-                    background: `${srv.color}15`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginBottom: '1.25rem',
-                  }}
-                >
-                  <srv.icon size={24} style={{ color: srv.color }} />
+                <div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      marginBottom: '1.25rem',
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: 48,
+                        height: 48,
+                        borderRadius: '14px',
+                        background: `${srv.color}15`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <srv.icon size={22} style={{ color: srv.color }} />
+                    </div>
+                    <span
+                      style={{
+                        fontSize: '0.72rem',
+                        fontWeight: 700,
+                        letterSpacing: '0.04em',
+                        textTransform: 'uppercase',
+                        color: srv.color,
+                        background: `${srv.color}10`,
+                        padding: '0.2rem 0.65rem',
+                        borderRadius: '9999px',
+                        border: `1px solid ${srv.color}25`,
+                      }}
+                    >
+                      {srv.tag}
+                    </span>
+                  </div>
+                  <h3 style={{ fontSize: '1.15rem', marginBottom: '0.5rem', color: 'var(--deep-pine)', fontWeight: 700 }}>
+                    {srv.title}
+                  </h3>
+                  <p style={{ fontSize: '0.88rem', color: 'rgba(13,43,34,0.65)', lineHeight: 1.6, margin: 0 }}>
+                    {srv.desc}
+                  </p>
                 </div>
-                <h3 style={{ fontSize: '1.15rem', marginBottom: '0.5rem', color: 'var(--deep-pine)' }}>
-                  {srv.title}
-                </h3>
-                <p style={{ fontSize: '0.9rem', color: 'rgba(13,43,34,0.6)', lineHeight: 1.6 }}>{srv.desc}</p>
                 <div
                   style={{
-                    marginTop: '1rem',
+                    marginTop: '1.25rem',
+                    paddingTop: '0.9rem',
+                    borderTop: '1px solid rgba(13,43,34,0.06)',
                     color: srv.color,
                     fontSize: '0.85rem',
                     fontWeight: 600,
@@ -1755,7 +1823,7 @@ export default function Home() {
                     gap: '0.35rem',
                   }}
                 >
-                  Akses Fitur <ArrowRight size={15} />
+                  Buka Halaman <ArrowRight size={15} />
                 </div>
               </Link>
             ))}
@@ -1827,44 +1895,65 @@ export default function Home() {
             {closing.lead}
           </p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link to={closing.btnPrimaryLink || '/contact'} className="btn btn-primary btn-lg">
-              {closing.btnPrimaryText || 'Daftar Menjadi Bagian ROKABA'} <ArrowRight size={18} />
-            </Link>
-            <Link
-              to={closing.btnSecondaryLink || '/contact'}
-              className="btn btn-glass btn-lg"
-              style={{
-                background: 'rgba(255, 255, 255, 0.1)',
-                color: '#F5F2ED',
-                border: '1.5px solid rgba(255, 255, 255, 0.35)',
-                borderRadius: '9999px',
-                padding: '1rem 2.25rem',
-                fontSize: '1rem',
-                fontWeight: 600,
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.6rem',
-                textDecoration: 'none',
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.25)',
-                transition: 'all 0.3s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.65)';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 8px 28px rgba(0, 0, 0, 0.35)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.35)';
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.25)';
-              }}
-            >
-              <MessageCircle size={18} /> {closing.btnSecondaryText || 'Hubungi Pengurus'}
-            </Link>
+            {closing.btnPrimaryText ? (
+              <>
+                <Link to={closing.btnPrimaryLink || '/contact'} className="btn btn-primary btn-lg">
+                  {closing.btnPrimaryText} <ArrowRight size={18} />
+                </Link>
+                <Link
+                  to={closing.btnSecondaryLink || '/contact'}
+                  className="btn btn-glass btn-lg"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    color: '#F5F2ED',
+                    border: '1.5px solid rgba(255, 255, 255, 0.35)',
+                    borderRadius: '9999px',
+                    padding: '1rem 2.25rem',
+                    fontSize: '1rem',
+                    fontWeight: 600,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.6rem',
+                    textDecoration: 'none',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.25)',
+                    transition: 'all 0.3s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.65)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 8px 28px rgba(0, 0, 0, 0.35)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.35)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.25)';
+                  }}
+                >
+                  <MessageCircle size={18} /> {closing.btnSecondaryText || 'Hubungi Pengurus'}
+                </Link>
+              </>
+            ) : (
+              <Link
+                to={closing.btnSecondaryLink || '/contact'}
+                className="btn btn-primary btn-lg"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.6rem',
+                  padding: '1rem 2.25rem',
+                  fontSize: '1rem',
+                  fontWeight: 600,
+                  borderRadius: '9999px',
+                  textDecoration: 'none',
+                }}
+              >
+                <MessageCircle size={18} /> {closing.btnSecondaryText || 'Hubungi Pengurus'}
+              </Link>
+            )}
           </div>
         </div>
       </section>

@@ -111,8 +111,8 @@ export const fallbackData = {
       "tag": "MARI BERGABUNG",
       "headline": "Mari Tumbuh Bersama.",
       "lead": "Pintu selalu terbuka bagi pelajar yang ingin belajar, mengasah kepemimpinan, dan bersama-sama menghidupkan dakwah Islam rahmatan lil 'alamin di Kabupaten Banyumas.",
-      "btnPrimaryText": "Daftar Menjadi Bagian ROKABA",
-      "btnPrimaryLink": "/pendaftaran",
+      "btnPrimaryText": "",
+      "btnPrimaryLink": "",
       "btnSecondaryText": "Hubungi Pengurus",
       "btnSecondaryLink": "/kontak"
     },
@@ -2422,8 +2422,8 @@ export const fallbackData = {
         "tag": "MARI BERGABUNG",
         "headline": "Mari Tumbuh Bersama.",
         "lead": "Pintu selalu terbuka bagi pelajar yang ingin belajar, mengasah kepemimpinan, dan bersama-sama menghidupkan dakwah Islam rahmatan lil 'alamin di Kabupaten Banyumas.",
-        "btnPrimaryText": "Daftar Menjadi Bagian ROKABA",
-        "btnPrimaryLink": "/pendaftaran",
+        "btnPrimaryText": "",
+        "btnPrimaryLink": "",
         "btnSecondaryText": "Hubungi Pengurus",
         "btnSecondaryLink": "/kontak"
       }

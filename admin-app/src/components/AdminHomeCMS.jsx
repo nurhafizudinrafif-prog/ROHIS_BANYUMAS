@@ -1051,13 +1051,13 @@ export default function AdminHomeCMS({
 
             <div className="form-grid-2">
               <div className="form-group">
-                <label className="form-label">Teks Tombol Utama</label>
+                <label className="form-label">Teks Tombol Utama (Opsional)</label>
                 <input
                   type="text"
                   className="form-input"
                   value={formData.closing?.btnPrimaryText || ''}
                   onChange={(e) => updateClosing('btnPrimaryText', e.target.value)}
-                  placeholder="Daftar Menjadi Bagian ROKABA"
+                  placeholder="Kosongkan jika hanya tombol Hubungi Pengurus"
                 />
               </div>
               <div className="form-group">
@@ -1295,7 +1295,7 @@ export default function AdminHomeCMS({
               🏛️ 3. Bagian Layanan & Direktori (Homepage Services)
             </h4>
             <p className="text-muted" style={{ fontSize: '0.85rem', marginBottom: '1.25rem' }}>
-              Teks pengantar untuk 3 kartu layanan unggulan (Konsultasi, E-Library, Direktori ROHIS Sekolah).
+              Teks pengantar untuk kartu direktori & layanan fitur (Tentang, Berita, Artikel, Agenda, Anggota, E-Library, Galeri).
             </p>
 
             <div className="cms-form-grid">
