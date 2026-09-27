@@ -6,7 +6,7 @@ const footerLinks = [
   { label: 'Beranda', path: '/' },
   { label: 'Tentang', path: '/about' },
   { label: 'Program', path: '/programs' },
-  { label: 'Artikel', path: '/articles' },
+  { label: 'Berita', path: '/articles' },
   { label: 'Agenda', path: '/events' },
   { label: 'Anggota', path: '/schools' },
   { label: 'Galeri', path: '/gallery' },

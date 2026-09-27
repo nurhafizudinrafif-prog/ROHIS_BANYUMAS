@@ -115,10 +115,10 @@
     },
     "sections": {
       "articles": {
-        "tag": "Artikel Terbaru",
-        "title": "Literasi Dakwah Moderat",
-        "desc": "Bacaan Islami berkualitas untuk memperluas wawasan dan memperkuat iman pemuda.",
-        "btnText": "Lihat Semua Artikel"
+        "tag": "Berita Terkini",
+        "title": "Berita Terkini",
+        "desc": "Informasi, warta, dan kabar terbaru seputar kegiatan dakwah dan kepemudaan ROHIS se-Banyumas.",
+        "btnText": "Lihat Semua Berita"
       },
       "events": {
         "tag": "Agenda Mendatang",

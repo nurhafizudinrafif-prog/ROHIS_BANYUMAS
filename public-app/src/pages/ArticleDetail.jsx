@@ -11,8 +11,8 @@ export default function ArticleDetail() {
   if (!article) {
     return (
       <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', paddingTop: '5rem' }}>
-        <h2 style={{ marginBottom: '1rem' }}>Artikel Tidak Ditemukan</h2>
-        <Link to="/articles" className="btn btn-primary"><ArrowLeft size={16} /> Kembali ke Artikel</Link>
+        <h2 style={{ marginBottom: '1rem' }}>Berita Tidak Ditemukan</h2>
+        <Link to="/articles" className="btn btn-primary"><ArrowLeft size={16} /> Kembali ke Berita</Link>
       </div>
     );
   }
@@ -32,7 +32,7 @@ export default function ArticleDetail() {
             display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
             color: 'rgba(245,242,237,0.5)', fontSize: '0.85rem', marginBottom: '1.5rem', textDecoration: 'none',
           }}>
-            <ArrowLeft size={16} /> Kembali ke Artikel
+            <ArrowLeft size={16} /> Kembali ke Berita
           </Link>
           <span className="badge badge-emerald animate-fade-in-up delay-100" style={{ display: 'inline-flex', marginBottom: '1rem' }}>
             <Tag size={12} /> {article.category}
@@ -84,7 +84,7 @@ export default function ArticleDetail() {
           {/* Related Articles */}
           {relatedArticles.length > 0 && (
             <div style={{ marginTop: '3rem' }}>
-              <h3 style={{ marginBottom: '1.5rem', fontSize: '1.25rem' }}>Artikel Terkait</h3>
+              <h3 style={{ marginBottom: '1.5rem', fontSize: '1.25rem' }}>Berita Terkait</h3>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 240px), 1fr))', gap: '1rem' }}>
                 {relatedArticles.map(a => (
                   <Link to={`/articles/${a.slug}`} key={a.id} style={{

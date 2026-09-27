@@ -7,7 +7,7 @@ const navLinks = [
   { path: '/', label: 'Beranda' },
   { path: '/about', label: 'Tentang' },
   { path: '/programs', label: 'Program' },
-  { path: '/articles', label: 'Artikel' },
+  { path: '/articles', label: 'Berita' },
   { path: '/events', label: 'Agenda' },
   { path: '/schools', label: 'Anggota' },
   { path: '/consultation', label: 'Konsultasi' },

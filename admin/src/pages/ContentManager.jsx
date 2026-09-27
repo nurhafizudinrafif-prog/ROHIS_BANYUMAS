@@ -10,7 +10,7 @@ import ImageUploadField from '../components/ImageUploadField';
 
 const schemas = {
   articles: {
-    label: 'Artikel',
+    label: 'Berita',
     fields: [
       { key: 'title', label: 'Judul', type: 'text', required: true },
       { key: 'slug', label: 'Slug', type: 'text', required: true },
@@ -411,7 +411,7 @@ export default function ContentManager() {
               <tr>
                 <th style={{ width: 40, textAlign: 'center' }}>#</th>
                 <th style={{ width: 80 }}>Sampul Foto</th>
-                <th>Judul Artikel</th>
+                <th>Judul Berita</th>
                 <th style={{ width: 110 }}>Kategori</th>
                 <th style={{ width: 130 }}>Penulis</th>
                 <th style={{ width: 120 }}>Tanggal Terbit</th>
@@ -570,10 +570,10 @@ export default function ContentManager() {
                       {item.date || (item.publishedAt ? new Date(item.publishedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '-')}
                     </td>
                     <td style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
-                      <button onClick={() => { setEditing({ ...item }); setIsNew(false); }} className="btn btn-sm btn-ghost" style={{ color: 'var(--emerald)' }} title="Edit Artikel">
+                      <button onClick={() => { setEditing({ ...item }); setIsNew(false); }} className="btn btn-sm btn-ghost" style={{ color: 'var(--emerald)' }} title="Edit Berita">
                         <Edit3 size={14} />
                       </button>
-                      <button onClick={() => handleDelete(item)} className="btn btn-sm btn-ghost" style={{ color: '#F87171' }} title="Hapus Artikel">
+                      <button onClick={() => handleDelete(item)} className="btn btn-sm btn-ghost" style={{ color: '#F87171' }} title="Hapus Berita">
                         <Trash2 size={14} />
                       </button>
                     </td>
@@ -677,7 +677,7 @@ export default function ContentManager() {
                     <button
                       onClick={() => { setEditing({ ...item }); setIsNew(false); }}
                       className="btn btn-primary"
-                      title="Edit Artikel"
+                      title="Edit Berita"
                     >
                       <Edit3 size={15} /> Edit
                     </button>
@@ -685,7 +685,7 @@ export default function ContentManager() {
                       onClick={() => handleDelete(item)}
                       className="btn btn-secondary"
                       style={{ color: '#F87171', borderColor: 'rgba(239, 68, 68, 0.35)' }}
-                      title="Hapus Artikel"
+                      title="Hapus Berita"
                     >
                       <Trash2 size={15} /> Hapus
                     </button>

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import { useScrollReveal } from '../hooks/useScrollReveal';
-import { BookOpen, Search, Filter, Clock, User, ChevronRight, FileText } from 'lucide-react';
+import { BookOpen, Newspaper, Search, Filter, Clock, User, ChevronRight, FileText } from 'lucide-react';
 
 export default function Articles() {
   const { articles } = useData();
@@ -30,18 +30,18 @@ export default function Articles() {
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 50%, rgba(16,185,129,0.06) 0%, transparent 60%)', pointerEvents: 'none' }} />
         <div className="container" style={{ maxWidth: 1200, margin: '0 auto', position: 'relative' }}>
           <span className="badge badge-emerald animate-fade-in-up" style={{ marginBottom: '1rem' }}>
-            <BookOpen size={14} /> Artikel & Literasi
+            <Newspaper size={14} /> Berita Terkini
           </span>
           <h1 className="animate-fade-in-up delay-100" style={{
             fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4.5vw, 2.8rem)',
             fontWeight: 800, color: 'var(--warm-alabaster)', marginBottom: '0.75rem',
           }}>
-            Literasi Dakwah Moderat
+            Berita Terkini
           </h1>
           <p className="animate-fade-in-up delay-200" style={{
             color: 'rgba(245,242,237,0.55)', maxWidth: 500, fontSize: '1rem',
           }}>
-            Bacaan Islami berkualitas untuk memperluas wawasan dan memperkuat iman.
+            Informasi, warta, dan kabar terbaru seputar kegiatan dakwah dan kepemudaan ROHIS se-Kabupaten Banyumas.
           </p>
         </div>
       </section>
@@ -56,7 +56,7 @@ export default function Articles() {
             <div style={{ position: 'relative', flex: '1 1 240px' }}>
               <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'rgba(13,43,34,0.3)' }} />
               <input
-                type="text" placeholder="Cari artikel..." value={search}
+                type="text" placeholder="Cari berita..." value={search}
                 onChange={e => setSearch(e.target.value)}
                 className="form-input"
                 style={{ paddingLeft: '2.75rem' }}
@@ -120,8 +120,8 @@ export default function Articles() {
             </div>
           ) : (
             <div style={{ textAlign: 'center', padding: '4rem', color: 'rgba(13,43,34,0.35)' }}>
-              <BookOpen size={48} style={{ marginBottom: '1rem', opacity: 0.3 }} />
-              <p style={{ fontSize: '1.05rem' }}>Tidak ada artikel ditemukan</p>
+              <Newspaper size={48} style={{ marginBottom: '1rem', opacity: 0.3 }} />
+              <p style={{ fontSize: '1.05rem' }}>Tidak ada berita ditemukan</p>
               <p style={{ fontSize: '0.85rem', marginTop: '0.5rem' }}>Coba ubah kata kunci atau filter kategori</p>
             </div>
           )}

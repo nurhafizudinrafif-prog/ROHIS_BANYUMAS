@@ -269,7 +269,7 @@ export default function AdminLayout() {
 
             <NavLink to="/content/articles" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
               <FileText size={18} />
-              <span>Artikel Dakwah</span>
+              <span>Berita Terkini</span>
               <span className="nav-counter">{articles.length}</span>
             </NavLink>
 

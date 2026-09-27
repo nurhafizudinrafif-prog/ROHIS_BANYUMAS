@@ -357,7 +357,7 @@ export default function AdminHomeCMS({
           onClick={() => setActiveSubTab('sections')}
         >
           <Sparkles size={16} />
-          <span>7. Pengantar Artikel, Agenda & Layanan</span>
+          <span>7. Pengantar Berita, Agenda & Layanan</span>
         </button>
       </div>
 
@@ -1102,19 +1102,19 @@ export default function AdminHomeCMS({
             <div>
               <h3>Pengaturan Pengantar Bagian Beranda</h3>
               <p className="text-muted">
-                Atur judul, badge, deskripsi pengantar, dan teks tombol untuk bagian Artikel Dakwah, Agenda & Kajian, serta Layanan & Direktori di halaman beranda.
+                Atur judul, badge, deskripsi pengantar, dan teks tombol untuk bagian Berita Terkini, Agenda & Kajian, serta Layanan & Direktori di halaman beranda.
               </p>
             </div>
             <span className="badge badge-primary">Beranda Dinamis</span>
           </div>
 
-          {/* 1. Pengantar Bagian Artikel */}
+          {/* 1. Pengantar Bagian Berita */}
           <div style={{ marginBottom: '2.5rem', paddingBottom: '2rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
             <h4 style={{ color: 'var(--accent-gold, #E6C587)', fontSize: '1.05rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              📚 1. Bagian Artikel Pilihan (Homepage Articles)
+              📰 1. Bagian Berita Terkini (Homepage News)
             </h4>
             <p className="text-muted" style={{ fontSize: '0.85rem', marginBottom: '1.25rem' }}>
-              Teks pengantar yang tampil di atas grid 3 artikel dakwah terbaru.
+              Teks pengantar yang tampil di atas grid 3 berita terbaru.
             </p>
 
             <div className="cms-form-grid">
@@ -1125,18 +1125,18 @@ export default function AdminHomeCMS({
                   className="form-input"
                   value={formData.sections?.articles?.tag || ''}
                   onChange={(e) => updateSection('articles', 'tag', e.target.value)}
-                  placeholder="LITERASI DAKWAH DIGITAL"
+                  placeholder="BERITA TERKINI"
                 />
               </div>
 
               <div className="form-group">
-                <label className="form-label">Judul Utama Bagian Artikel</label>
+                <label className="form-label">Judul Utama Bagian Berita</label>
                 <input
                   type="text"
                   className="form-input"
                   value={formData.sections?.articles?.title || ''}
                   onChange={(e) => updateSection('articles', 'title', e.target.value)}
-                  placeholder="Kajian & Artikel Pilihan Pelajar"
+                  placeholder="Berita Terkini"
                 />
               </div>
 
@@ -1147,18 +1147,18 @@ export default function AdminHomeCMS({
                   className="form-input"
                   value={formData.sections?.articles?.btnText || ''}
                   onChange={(e) => updateSection('articles', 'btnText', e.target.value)}
-                  placeholder="Buka Seluruh Artikel"
+                  placeholder="Lihat Semua Berita"
                 />
               </div>
 
               <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-                <label className="form-label">Deskripsi Pengantar Artikel</label>
+                <label className="form-label">Deskripsi Pengantar Berita</label>
                 <textarea
                   className="form-textarea"
                   rows={2}
                   value={formData.sections?.articles?.desc || ''}
                   onChange={(e) => updateSection('articles', 'desc', e.target.value)}
-                  placeholder="Perluas cakrawala keislaman, wawasan kontemporer, dan inspirasi akhlak lewat karya tulis kader dakwah sekolah se-Banyumas."
+                  placeholder="Informasi, warta, dan kabar terbaru seputar kegiatan dakwah dan kepemudaan ROHIS se-Banyumas."
                 />
               </div>
             </div>

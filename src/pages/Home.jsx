@@ -7,6 +7,7 @@ import {
   Sparkles,
   ArrowRight,
   BookOpen,
+  Newspaper,
   CheckCircle,
   ChevronRight,
   Quote,
@@ -1225,17 +1226,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ 5. ARTIKEL TERBARU ═══ */}
+      {/* ═══ 5. BERITA TERKINI ═══ */}
       <section className="section" style={{ background: '#F8F6F0', padding: '5rem 0' }}>
         <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
           <div className="section-header reveal-on-scroll delay-100">
             <span className="badge badge-emerald" style={{ marginBottom: '0.75rem', display: 'inline-flex' }}>
-              <BookOpen size={14} /> {home?.sections?.articles?.tag || 'Artikel Terbaru'}
+              <Newspaper size={14} /> {home?.sections?.articles?.tag || 'Berita Terkini'}
             </span>
-            <h2 style={{ color: 'var(--deep-pine)' }}>{home?.sections?.articles?.title || 'Literasi Dakwah Moderat'}</h2>
+            <h2 style={{ color: 'var(--deep-pine)' }}>{home?.sections?.articles?.title || 'Berita Terkini'}</h2>
             <div className="section-divider" />
             <p style={{ color: 'rgba(13,43,34,0.6)' }}>
-              {home?.sections?.articles?.desc || 'Bacaan Islami berkualitas untuk memperluas wawasan dan memperkuat iman pemuda.'}
+              {home?.sections?.articles?.desc || 'Informasi, warta, dan kabar terbaru seputar kegiatan dakwah dan kepemudaan ROHIS se-Banyumas.'}
             </p>
           </div>
 
@@ -1253,7 +1254,7 @@ export default function Home() {
 
           <div className="reveal-on-scroll delay-200" style={{ textAlign: 'center', marginTop: '2.5rem' }}>
             <Link to="/articles" className="btn btn-secondary">
-              {home?.sections?.articles?.btnText || 'Lihat Semua Artikel'} <ChevronRight size={18} />
+              {home?.sections?.articles?.btnText || 'Lihat Semua Berita'} <ChevronRight size={18} />
             </Link>
           </div>
         </div>

@@ -65,7 +65,7 @@ export default function Dashboard() {
       <div style={{
         display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(150px, 100%), 1fr))', gap: '0.85rem', marginBottom: '1.75rem',
       }}>
-        <StatCard icon={FileText} value={articles.length} label="Artikel" color="var(--emerald)" link="/content/articles" index={0} />
+        <StatCard icon={FileText} value={articles.length} label="Berita" color="var(--emerald)" link="/content/articles" index={0} />
         <StatCard icon={Calendar} value={upcomingEvents} label="Agenda Mendatang" color="var(--antique-brass)" link="/content/events" index={1} />
         <StatCard icon={ImageIcon} value={(gallery || []).length} label="Album Galeri" color="#06B6D4" link="/content/gallery" index={2} />
         <StatCard icon={School} value={schools.length} label="Sekolah" color="#7C3AED" link="/content/schools" index={3} />
@@ -83,7 +83,7 @@ export default function Dashboard() {
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
             <Link to="/content/articles" className="btn btn-secondary" style={{ justifyContent: 'flex-start' }}>
-              <FileText size={16} /> Tambah Artikel Baru
+              <FileText size={16} /> Tambah Berita Baru
             </Link>
             <Link to="/content/events" className="btn btn-secondary" style={{ justifyContent: 'flex-start' }}>
               <Calendar size={16} /> Tambah Agenda Baru
