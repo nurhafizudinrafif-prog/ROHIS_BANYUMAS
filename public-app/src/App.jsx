@@ -5,6 +5,8 @@ import Footer from './components/layout/Footer';
 import ScrollProgressBar from './components/layout/ScrollProgressBar';
 import Home from './pages/Home';
 import About from './pages/About';
+import News from './pages/News';
+import NewsDetail from './pages/NewsDetail';
 import Articles from './pages/Articles';
 import ArticleDetail from './pages/ArticleDetail';
 import Events from './pages/Events';
@@ -28,6 +30,8 @@ export default function App() {
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
               <Route path="/programs" element={<Programs />} />
+              <Route path="/berita" element={<News />} />
+              <Route path="/berita/:slug" element={<NewsDetail />} />
               <Route path="/articles" element={<Articles />} />
               <Route path="/articles/:slug" element={<ArticleDetail />} />
               <Route path="/events" element={<Events />} />
@@ -38,6 +42,7 @@ export default function App() {
               <Route path="/library" element={<Library />} />
 
               {/* Backward-Compatible Indonesian URL Aliases */}
+              <Route path="/news" element={<Navigate to="/berita" replace />} />
               <Route path="/tentang" element={<Navigate to="/about" replace />} />
               <Route path="/program" element={<Programs />} />
               <Route path="/agenda" element={<Events />} />

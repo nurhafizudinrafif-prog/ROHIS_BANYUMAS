@@ -82,6 +82,137 @@ function StatCard({ value, suffix = '+', label, delay = 0 }) {
   );
 }
 
+function NewsCard({ item, index }) {
+  const imgUrl = parseImageUrl(item.image || item.coverImage);
+
+  return (
+    <Link
+      to={`/berita/${item.slug || item.id}`}
+      className={`card-editorial reveal-scale delay-${Math.min((index + 1) * 100, 500)}`}
+      style={{
+        textDecoration: 'none',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        background: 'white',
+        borderRadius: 'var(--radius-xl)',
+        overflow: 'hidden',
+        boxShadow: '0 10px 30px rgba(0,0,0,0.18)',
+        transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
+        border: '1px solid rgba(255,255,255,0.12)',
+      }}
+    >
+      <div
+        style={{
+          height: 190,
+          background: `linear-gradient(135deg, var(--deep-pine) 0%, var(--deep-pine-light) 100%)`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        {imgUrl ? (
+          <img
+            src={imgUrl}
+            alt={item.title}
+            referrerPolicy="no-referrer"
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            onError={(e) => {
+              const driveId = extractDriveId(item.image || item.coverImage);
+              if (driveId && !e.currentTarget.src.includes('lh3.googleusercontent.com')) {
+                e.currentTarget.src = `https://lh3.googleusercontent.com/d/${driveId}`;
+              } else {
+                e.currentTarget.style.display = 'none';
+              }
+            }}
+          />
+        ) : (
+          <FileText size={40} style={{ color: 'rgba(245,242,237,0.2)' }} />
+        )}
+        <span
+          className="badge"
+          style={{
+            position: 'absolute',
+            top: '0.85rem',
+            left: '0.85rem',
+            background: 'rgba(13,43,34,0.85)',
+            backdropFilter: 'blur(8px)',
+            color: 'var(--warm-alabaster)',
+            fontSize: '0.72rem',
+            padding: '0.2rem 0.65rem',
+            borderRadius: 'var(--radius-full)',
+            border: '1px solid rgba(255,255,255,0.15)',
+            fontWeight: 600,
+          }}
+        >
+          {item.category || 'Berita'}
+        </span>
+      </div>
+      <div
+        className="card-body"
+        style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          padding: '1.25rem',
+        }}
+      >
+        <div>
+          <h3
+            style={{
+              color: 'var(--deep-pine)',
+              fontSize: '1.08rem',
+              lineHeight: 1.4,
+              marginBottom: '0.5rem',
+              fontWeight: 700,
+            }}
+          >
+            {item.title}
+          </h3>
+          {item.excerpt && (
+            <p
+              style={{
+                color: 'rgba(13,43,34,0.65)',
+                fontSize: '0.84rem',
+                lineHeight: 1.55,
+                margin: '0 0 1rem',
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+              }}
+            >
+              {item.excerpt}
+            </p>
+          )}
+        </div>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingTop: '0.75rem',
+            borderTop: '1px solid rgba(13,43,34,0.06)',
+            fontSize: '0.78rem',
+            color: 'rgba(13,43,34,0.5)',
+          }}
+        >
+          <span>{item.author || 'Humas ROKABA'}</span>
+          <span>
+            {new Date(item.publishedAt || item.date || Date.now()).toLocaleDateString(
+              'id-ID',
+              { day: 'numeric', month: 'short', year: 'numeric' }
+            )}
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 function ArticleCard({ article, index }) {
   const categoryColors = {
     Edukasi: 'var(--emerald)',
@@ -155,7 +286,7 @@ function ArticleCard({ article, index }) {
             border: '1px solid rgba(255,255,255,0.15)',
           }}
         >
-          {article.category || 'Berita'}
+          {article.category || 'Artikel'}
         </span>
       </div>
       <div
@@ -370,10 +501,10 @@ const divisionCards = [
 ];
 
 export default function Home() {
-  const { home, articles, events, loading } = useData();
+  const { home, news, articles, events, loading } = useData();
 
   // Attach scroll reveal observer whenever dependencies update
-  useScrollReveal([home, articles, events, loading]);
+  useScrollReveal([home, news, articles, events, loading]);
 
   if (loading && !home) {
     return (
@@ -513,6 +644,11 @@ export default function Home() {
     btnSecondaryText: 'Hubungi Pengurus',
     btnSecondaryLink: '/contact',
   };
+
+  const newsList = Array.isArray(news) && news.length > 0 ? news : [];
+  const latestNews = [...newsList]
+    .sort((a, b) => new Date(b.publishedAt || b.date || 0) - new Date(a.publishedAt || a.date || 0))
+    .slice(0, 3);
 
   const latestArticles = [...articles]
     .sort((a, b) => new Date(b.publishedAt || b.date) - new Date(a.publishedAt || a.date))
@@ -1025,12 +1161,12 @@ export default function Home() {
               className="badge"
               style={{ background: 'rgba(16,185,129,0.15)', color: 'var(--emerald-light)', marginBottom: '0.75rem' }}
             >
-              <Newspaper size={14} /> {home?.sections?.articles?.tag || 'Berita Terkini'}
+              <Newspaper size={14} /> {home?.sections?.news?.tag || 'Berita Terkini'}
             </span>
-            <h2 style={{ color: 'var(--warm-alabaster)' }}>{home?.sections?.articles?.title || 'Berita Terkini'}</h2>
+            <h2 style={{ color: 'var(--warm-alabaster)' }}>{home?.sections?.news?.title || 'Berita Terkini'}</h2>
             <div className="section-divider" />
             <p style={{ color: 'rgba(245,242,237,0.6)' }}>
-              {home?.sections?.articles?.desc || 'Informasi, warta, dan kabar terbaru seputar kegiatan dakwah, pembinaan, dan karya nyata pelajar se-Banyumas.'}
+              {home?.sections?.news?.desc || 'Informasi, warta, dan kabar terbaru seputar kegiatan dakwah dan kepemudaan ROHIS se-Banyumas.'}
             </p>
           </div>
 
@@ -1041,14 +1177,14 @@ export default function Home() {
               gap: '1.5rem',
             }}
           >
-            {latestArticles.map((article, i) => (
-              <ArticleCard key={article.id} article={article} index={i} />
+            {latestNews.map((item, i) => (
+              <NewsCard key={item.id} item={item} index={i} />
             ))}
           </div>
 
           <div className="reveal-on-scroll delay-200" style={{ textAlign: 'center', marginTop: '2.5rem' }}>
-            <Link to="/articles" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
-              {home?.sections?.articles?.btnText || 'Lihat Semua Berita'} <ChevronRight size={18} />
+            <Link to="/berita" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+              {home?.sections?.news?.btnText || 'Lihat Semua Berita'} <ChevronRight size={18} />
             </Link>
           </div>
         </div>
@@ -1202,7 +1338,41 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ 6. LAYANAN & DIREKTORI ═══ */}
+      {/* ═══ 6. ARTIKEL & LITERASI DAKWAH ═══ */}
+      <section id="artikel" className="section" style={{ background: 'var(--warm-alabaster)', padding: '5.5rem 0', borderTop: '1px solid rgba(13,43,34,0.06)' }}>
+        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
+          <div className="section-header reveal-on-scroll delay-100">
+            <span className="badge badge-emerald" style={{ marginBottom: '0.75rem', display: 'inline-flex' }}>
+              <BookOpen size={14} /> {home?.sections?.articles?.tag || 'Literasi & Kajian'}
+            </span>
+            <h2 style={{ color: 'var(--deep-pine)' }}>{home?.sections?.articles?.title || 'Artikel Dakwah'}</h2>
+            <div className="section-divider" />
+            <p style={{ color: 'rgba(13,43,34,0.6)' }}>
+              {home?.sections?.articles?.desc || 'Kumpulan artikel inspiratif, kajian Islam kontemporer, dan wawasan dakwah karya pembina dan pelajar.'}
+            </p>
+          </div>
+
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
+              gap: '1.5rem',
+            }}
+          >
+            {latestArticles.map((article, i) => (
+              <ArticleCard key={article.id} article={article} index={i} />
+            ))}
+          </div>
+
+          <div className="reveal-on-scroll delay-200" style={{ textAlign: 'center', marginTop: '2.5rem' }}>
+            <Link to="/articles" className="btn btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+              {home?.sections?.articles?.btnText || 'Lihat Semua Artikel'} <ChevronRight size={18} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ 7. LAYANAN & DIREKTORI ═══ */}
       <section className="section" style={{ padding: '5rem 0', background: 'var(--warm-alabaster)' }}>
         <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
           <div className="section-header reveal-on-scroll delay-100">

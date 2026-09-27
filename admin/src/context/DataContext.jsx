@@ -5,7 +5,7 @@ const DataContext = createContext(null);
 
 export function DataProvider({ children }) {
   const [data, setData] = useState({
-    home: null, articles: [], events: [], schools: [], gallery: [],
+    home: null, news: [], articles: [], events: [], schools: [], gallery: [],
     questions: [], library: [], team: { bph: [], divisions: [] },
     programs: [], settings: null, users: [], auditLogs: [],
   });
@@ -19,6 +19,7 @@ export function DataProvider({ children }) {
       const all = await fetchAllData();
       setData({
         home: all['rokaba:home'],
+        news: all['rokaba:news'] || [],
         articles: all['rokaba:articles'] || [],
         events: all['rokaba:events'] || [],
         schools: all['rokaba:schools'] || [],

@@ -7,6 +7,7 @@ const DataContext = createContext(null);
 export function DataProvider({ children }) {
   const [data, setData] = useState({
     home: null,
+    news: [],
     articles: [],
     events: [],
     schools: [],
@@ -29,6 +30,7 @@ export function DataProvider({ children }) {
       const allData = await fetchAllData();
       setData({
         home: allData['rokaba:home'],
+        news: allData['rokaba:news'] || [],
         articles: allData['rokaba:articles'] || [],
         events: allData['rokaba:events'] || [],
         schools: allData['rokaba:schools'] || [],

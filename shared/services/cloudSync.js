@@ -165,6 +165,7 @@ export async function deleteData(key) {
 export async function fetchAllData() {
   const keys = [
     'rokaba:home',
+    'rokaba:news',
     'rokaba:articles',
     'rokaba:events',
     'rokaba:schools',

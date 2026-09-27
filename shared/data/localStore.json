@@ -114,11 +114,17 @@
       "btnSecondaryLink": "/kontak"
     },
     "sections": {
-      "articles": {
+      "news": {
         "tag": "Berita Terkini",
         "title": "Berita Terkini",
-        "desc": "Informasi, warta, dan kabar terbaru seputar kegiatan dakwah dan kepemudaan ROHIS se-Banyumas.",
+        "desc": "Informasi, dokumentasi, dan warta kegiatan dakwah pelajar ROHIS se-Kabupaten Banyumas.",
         "btnText": "Lihat Semua Berita"
+      },
+      "articles": {
+        "tag": "Artikel & Opini",
+        "title": "Literasi Dakwah Moderat",
+        "desc": "Bacaan Islami berkualitas untuk memperluas wawasan dan memperkuat iman pemuda.",
+        "btnText": "Buka Semua Artikel"
       },
       "events": {
         "tag": "Agenda Mendatang",
@@ -132,6 +138,60 @@
       }
     }
   },
+  "rokaba:news": [
+    {
+      "id": 1,
+      "title": "Musyawarah Kerja Daerah (MUSKERDA) ROHIS Banyumas 2026: Sinergi Kuat Pelajar se-Kabupaten",
+      "slug": "muskerda-rohis-banyumas-2026",
+      "category": "Organisasi",
+      "date": "2026-09-25",
+      "author": "Humas ROKABA",
+      "location": "Aula SMA N 2 Purwokerto",
+      "excerpt": "Perwakilan pengurus ROHIS SMA/SMK/MA se-Kabupaten Banyumas sukses menyepakati agenda strategis dakwah dan konsolidasi kader tahun 2026/2027.",
+      "content": "Purwokerto — ROHIS Kabupaten Banyumas (ROKABA) sukses menggelar Musyawarah Kerja Daerah (MUSKERDA) 2026 yang berlangsung khidmat dan penuh semangat ukhuwah di Aula SMA N 2 Purwokerto pada akhir pekan kemarin.\n\nKegiatan ini dihadiri oleh puluhan delegasi pengurus ROHIS dari berbagai SMA, SMK, dan MA se-Kabupaten Banyumas serta para pembina. Agenda utama pertemuan akbar ini difokuskan pada perumusan program kerja tahunan, penguatan kemandirian organisasi, standarisasi modul kaderisasi pelajar, dan penguatan literasi digital moderat.\n\nKetua Umum ROHIS Banyumas menyampaikan bahwa MUSKERDA bukan sekadar forum rapat formal, melainkan ruang mempererat silaturahmi dan menyatukan visi dakwah sekolah agar semakin ramah, inklusif, dan berdampak nyata bagi lingkungan pelajar.",
+      "image": "https://drive.google.com/file/d/1PUOOkf_OLutx7LItdz6_7U7cNRtd1XrB/view?usp=sharing",
+      "publishedAt": "2026-09-25T09:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "title": "Kajian Akbar Pelajar se-Banyumas di Masjid Agung Baitussalam Dihadiri Ratusan Kader",
+      "slug": "kajian-akbar-pelajar-banyumas-baitussalam",
+      "category": "Kajian",
+      "date": "2026-09-18",
+      "author": "Divisi Syiar & Dakwah",
+      "location": "Masjid Agung Baitussalam Purwokerto",
+      "excerpt": "Kajian gabungan bertajuk 'Menjaga Karakter Pemuda di Era Digital' membakar semangat ratusan pelajar Muslim Banyumas untuk terus istiqomah.",
+      "content": "Purwokerto — Suasana haru dan antusiasme tinggi mewarnai serambi Masjid Agung Baitussalam Purwokerto saat ratusan pelajar Muslim se-Kabupaten Banyumas berkumpul dalam gelaran Kajian Akbar Pelajar.\n\nDalam kajian yang diisi oleh asatidz pembina ROKABA, peserta diajak untuk merefleksikan peran generasi muda sebagai teladan akhlak dan pionir kebaikan. Tidak hanya mendengarkan tausiyah, forum ini juga menjadi wadah diskusi interaktif seputar problematika remaja masa kini.",
+      "image": "https://drive.google.com/file/d/1D26IYfzW_4GuBuTxbiELEyPbE8z6CGoV/view?usp=sharing",
+      "publishedAt": "2026-09-18T08:30:00.000Z"
+    },
+    {
+      "id": 3,
+      "title": "Aksi Sosial ROKABA Peduli: Distribusi Paket Perlengkapan Sekolah untuk Pelajar Dhuafa",
+      "slug": "aksi-sosial-rokaba-peduli-pelajar-dhuafa",
+      "category": "Sosial",
+      "date": "2026-09-10",
+      "author": "Divisi Sosial & Humas",
+      "location": "Kabupaten Banyumas",
+      "excerpt": "Penyaluran puluhan paket alat tulis dan beasiswa santunan kepada siswa-siswi berprestasi dari keluarga prasejahtera di pelosok Banyumas.",
+      "content": "Banyumas — Melalui inisiatif 'ROKABA Peduli', kader-kader ROHIS Kabupaten Banyumas menyalurkan puluhan paket bantuan perlengkapan belajar bagi pelajar yang membutuhkan.\n\nDana program ini dihimpun secara gotong royong dari infak kas pelajar rohis sekolah serta para donatur pembina. Aksi kepedulian ini membuktikan bahwa dakwah Islamiyah bukan hanya tentang mimbar kajian, melainkan karya nyata yang menyentuh langsung kebutuhan sesama saudara.",
+      "image": "https://drive.google.com/file/d/12Hg2mUTC7wH-Tse3oAjONPAyRljJ87CJ/view?usp=sharing",
+      "publishedAt": "2026-09-10T10:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "title": "Workshop Desain Dakwah Digital & Jurnalistik Pelajar: Cetak Kreator Konten Positif",
+      "slug": "workshop-desain-dakwah-digital-jurnalistik",
+      "category": "Pelatihan",
+      "date": "2026-09-02",
+      "author": "Divisi Media & Kreatif",
+      "location": "Purwokerto",
+      "excerpt": "Pelatihan intensif pembuatan infografis islami, video editing pendek, dan teknik penulisan berita untuk pegiat media rohis sekolah.",
+      "content": "Purwokerto — Menjawab tantangan syiar di ruang digital, ROHIS Kabupaten Banyumas menggelar pelatihan kreatif bagi tim media rohis sekolah se-Banyumas.\n\nPeserta dilatih langsung oleh praktisi desain grafis dan konten kreator Muslim dalam mengemas nilai-nilai Islam menjadi konten visual yang estetis, menarik, dan ramah bagi generasi muda.",
+      "image": "https://drive.google.com/file/d/1HdH8cv2QHiUo8UByGHFFm3ASIDh5-2JU/view?usp=sharing",
+      "publishedAt": "2026-09-02T13:00:00.000Z"
+    }
+  ],
   "rokaba:articles": [
     {
       "id": 1,

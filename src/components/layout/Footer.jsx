@@ -5,8 +5,9 @@ import { BookOpen, Mail, Phone, MapPin, Camera, Play, MessageCircle } from 'luci
 const footerLinks = [
   { label: 'Beranda', path: '/' },
   { label: 'Tentang', path: '/about' },
+  { label: 'Berita', path: '/berita' },
+  { label: 'Artikel', path: '/articles' },
   { label: 'Program', path: '/programs' },
-  { label: 'Berita', path: '/articles' },
   { label: 'Agenda', path: '/events' },
   { label: 'Anggota', path: '/schools' },
   { label: 'Galeri', path: '/gallery' },

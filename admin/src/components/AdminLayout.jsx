@@ -5,7 +5,7 @@ import {
   LayoutDashboard, FileText, Calendar, School, Image, Users,
   MessageCircle, Shield, ClipboardList, LogOut, BookOpen,
   RefreshCw, Home, Settings, ExternalLink, CheckCircle2,
-  Menu, X, ChevronUp
+  Menu, X, ChevronUp, Newspaper
 } from 'lucide-react';
 import { useState, useMemo, useEffect } from 'react';
 import RohisLogo from './RohisLogo';
@@ -20,6 +20,7 @@ export default function AdminLayout() {
   // Activate ubiquitous scroll reveal animations across all routes
   useScrollReveal();
   const {
+    news = [],
     articles = [],
     events = [],
     schools = [],
@@ -267,9 +268,15 @@ export default function AdminLayout() {
               <span className="nav-badge-cms">CMS</span>
             </NavLink>
 
+            <NavLink to="/content/news" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
+              <Newspaper size={18} />
+              <span>Berita Terkini</span>
+              <span className="nav-counter">{news.length}</span>
+            </NavLink>
+
             <NavLink to="/content/articles" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
               <FileText size={18} />
-              <span>Berita Terkini</span>
+              <span>Artikel Dakwah</span>
               <span className="nav-counter">{articles.length}</span>
             </NavLink>
 

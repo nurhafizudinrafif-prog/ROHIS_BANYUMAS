@@ -9,11 +9,25 @@ import AdminHomeCMS from '../components/AdminHomeCMS';
 import ImageUploadField from '../components/ImageUploadField';
 
 const schemas = {
-  articles: {
-    label: 'Berita',
+  news: {
+    label: 'Berita Terkini',
     fields: [
-      { key: 'title', label: 'Judul', type: 'text', required: true },
-      { key: 'slug', label: 'Slug', type: 'text', required: true },
+      { key: 'title', label: 'Judul Berita', type: 'text', required: true },
+      { key: 'slug', label: 'Slug URL', type: 'text', required: true },
+      { key: 'category', label: 'Kategori', type: 'select', options: ['Warta Rohis', 'Liputan Acara', 'Aksi Sosial', 'Pelatihan', 'Agenda'] },
+      { key: 'author', label: 'Wartawan / Penulis', type: 'text' },
+      { key: 'location', label: 'Lokasi Kegiatan', type: 'text' },
+      { key: 'excerpt', label: 'Ringkasan Berita', type: 'textarea' },
+      { key: 'content', label: 'Isi Lengkap Berita (HTML)', type: 'textarea' },
+      { key: 'image', label: 'URL Foto Dokumentasi', type: 'text' },
+    ],
+    defaults: { id: '', title: '', slug: '', excerpt: '', content: '', author: 'Humas ROKABA', category: 'Warta Rohis', location: 'Banyumas', image: '', publishedAt: '', updatedAt: '' },
+  },
+  articles: {
+    label: 'Artikel Dakwah',
+    fields: [
+      { key: 'title', label: 'Judul Artikel', type: 'text', required: true },
+      { key: 'slug', label: 'Slug URL', type: 'text', required: true },
       { key: 'category', label: 'Kategori', type: 'select', options: ['Edukasi', 'Dakwah', 'Ibadah', 'Motivasi', 'Akhlak'] },
       { key: 'author', label: 'Penulis', type: 'text' },
       { key: 'content', label: 'Konten (HTML)', type: 'textarea' },
@@ -407,11 +421,11 @@ export default function ContentManager() {
                 <th style={{ width: 110 }}>Tanggal</th>
                 <th style={{ textAlign: 'right', width: 100 }}>Aksi</th>
               </tr>
-            ) : type === 'articles' ? (
+            ) : (type === 'articles' || type === 'news') ? (
               <tr>
                 <th style={{ width: 40, textAlign: 'center' }}>#</th>
                 <th style={{ width: 80 }}>Sampul Foto</th>
-                <th>Judul Berita</th>
+                <th>{type === 'news' ? 'Judul Berita' : 'Judul Artikel'}</th>
                 <th style={{ width: 110 }}>Kategori</th>
                 <th style={{ width: 130 }}>Penulis</th>
                 <th style={{ width: 120 }}>Tanggal Terbit</th>
@@ -513,9 +527,10 @@ export default function ContentManager() {
                 );
               }
 
-              if (type === 'articles') {
+              if (type === 'articles' || type === 'news') {
                 const imgUrl = item.image ? getDirectImageUrl(item.image) : '';
                 const driveId = extractGoogleDriveId(item.image);
+                const isNews = type === 'news';
                 return (
                   <tr key={item.id}>
                     <td style={{ color: 'var(--text-muted)', fontSize: '0.78rem', textAlign: 'center' }}>{i + 1}</td>
@@ -560,20 +575,20 @@ export default function ContentManager() {
                     </td>
                     <td>
                       <span className="badge badge-emerald" style={{ fontSize: '0.7rem' }}>
-                        {item.category || 'Dakwah'}
+                        {item.category || (isNews ? 'Warta' : 'Dakwah')}
                       </span>
                     </td>
                     <td style={{ color: 'var(--text-muted)', fontSize: '0.82rem' }}>
-                      {item.author || 'ROKABA'}
+                      {item.author || (isNews ? 'Humas ROKABA' : 'ROKABA')}
                     </td>
                     <td style={{ color: 'var(--text-muted)', fontSize: '0.78rem', whiteSpace: 'nowrap' }}>
                       {item.date || (item.publishedAt ? new Date(item.publishedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '-')}
                     </td>
                     <td style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
-                      <button onClick={() => { setEditing({ ...item }); setIsNew(false); }} className="btn btn-sm btn-ghost" style={{ color: 'var(--emerald)' }} title="Edit Berita">
+                      <button onClick={() => { setEditing({ ...item }); setIsNew(false); }} className="btn btn-sm btn-ghost" style={{ color: 'var(--emerald)' }} title={isNews ? "Edit Berita" : "Edit Artikel"}>
                         <Edit3 size={14} />
                       </button>
-                      <button onClick={() => handleDelete(item)} className="btn btn-sm btn-ghost" style={{ color: '#F87171' }} title="Hapus Berita">
+                      <button onClick={() => handleDelete(item)} className="btn btn-sm btn-ghost" style={{ color: '#F87171' }} title={isNews ? "Hapus Berita" : "Hapus Artikel"}>
                         <Trash2 size={14} />
                       </button>
                     </td>

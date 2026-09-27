@@ -6,8 +6,9 @@ import { Menu, X, BookOpen, Moon, Sun } from 'lucide-react';
 const navLinks = [
   { path: '/', label: 'Beranda' },
   { path: '/about', label: 'Tentang' },
+  { path: '/berita', label: 'Berita' },
+  { path: '/articles', label: 'Artikel' },
   { path: '/programs', label: 'Program' },
-  { path: '/articles', label: 'Berita' },
   { path: '/events', label: 'Agenda' },
   { path: '/schools', label: 'Anggota' },
   { path: '/consultation', label: 'Konsultasi' },

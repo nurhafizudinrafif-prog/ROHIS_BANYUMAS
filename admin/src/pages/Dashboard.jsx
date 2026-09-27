@@ -1,6 +1,6 @@
 import { useData } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
-import { FileText, Calendar, School, MessageCircle, Library, Users, TrendingUp, Clock, Download, Upload, Image as ImageIcon } from 'lucide-react';
+import { FileText, Calendar, School, MessageCircle, Library, Users, TrendingUp, Clock, Download, Upload, Image as ImageIcon, Newspaper } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 function StatCard({ icon: Icon, value, label, color, link, index = 0 }) {
@@ -29,7 +29,7 @@ function StatCard({ icon: Icon, value, label, color, link, index = 0 }) {
 }
 
 export default function Dashboard() {
-  const { articles, events, schools, gallery, questions, library, auditLogs, team, users } = useData();
+  const { news = [], articles = [], events, schools, gallery, questions, library, auditLogs, team, users } = useData();
   const { user } = useAuth();
 
   const pendingQA = questions.filter(q => q.status === 'pending').length;
@@ -40,7 +40,7 @@ export default function Dashboard() {
 
   // Backup handler
   const handleBackup = () => {
-    const backupData = { articles, events, schools, gallery, questions, library, team, users, auditLogs };
+    const backupData = { news, articles, events, schools, gallery, questions, library, team, users, auditLogs };
     const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -65,13 +65,14 @@ export default function Dashboard() {
       <div style={{
         display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(150px, 100%), 1fr))', gap: '0.85rem', marginBottom: '1.75rem',
       }}>
-        <StatCard icon={FileText} value={articles.length} label="Berita" color="var(--emerald)" link="/content/articles" index={0} />
-        <StatCard icon={Calendar} value={upcomingEvents} label="Agenda Mendatang" color="var(--antique-brass)" link="/content/events" index={1} />
-        <StatCard icon={ImageIcon} value={(gallery || []).length} label="Album Galeri" color="#06B6D4" link="/content/gallery" index={2} />
-        <StatCard icon={School} value={schools.length} label="Sekolah" color="#7C3AED" link="/content/schools" index={3} />
-        <StatCard icon={MessageCircle} value={pendingQA} label="Q&A Menunggu" color="#F59E0B" link="/qa" index={4} />
-        <StatCard icon={Library} value={library.length} label="Materi Library" color="#3B82F6" link="/library" index={5} />
-        <StatCard icon={Users} value={totalPengurus} label="Pengurus" color="#EC4899" link="/content/team" index={6} />
+        <StatCard icon={Newspaper} value={news.length} label="Berita Terkini" color="var(--emerald)" link="/content/news" index={0} />
+        <StatCard icon={FileText} value={articles.length} label="Artikel Dakwah" color="#059669" link="/content/articles" index={1} />
+        <StatCard icon={Calendar} value={upcomingEvents} label="Agenda Mendatang" color="var(--antique-brass)" link="/content/events" index={2} />
+        <StatCard icon={ImageIcon} value={(gallery || []).length} label="Album Galeri" color="#06B6D4" link="/content/gallery" index={3} />
+        <StatCard icon={School} value={schools.length} label="Sekolah" color="#7C3AED" link="/content/schools" index={4} />
+        <StatCard icon={MessageCircle} value={pendingQA} label="Q&A Menunggu" color="#F59E0B" link="/qa" index={5} />
+        <StatCard icon={Library} value={library.length} label="Materi Library" color="#3B82F6" link="/library" index={6} />
+        <StatCard icon={Users} value={totalPengurus} label="Pengurus" color="#EC4899" link="/content/team" index={7} />
       </div>
 
       {/* Quick Actions & Recent Logs */}
@@ -82,8 +83,11 @@ export default function Dashboard() {
             <TrendingUp size={18} style={{ color: 'var(--emerald)' }} /> Aksi Cepat
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+            <Link to="/content/news" className="btn btn-secondary" style={{ justifyContent: 'flex-start' }}>
+              <Newspaper size={16} /> Tulis Berita Baru
+            </Link>
             <Link to="/content/articles" className="btn btn-secondary" style={{ justifyContent: 'flex-start' }}>
-              <FileText size={16} /> Tambah Berita Baru
+              <FileText size={16} /> Tulis Artikel Dakwah
             </Link>
             <Link to="/content/events" className="btn btn-secondary" style={{ justifyContent: 'flex-start' }}>
               <Calendar size={16} /> Tambah Agenda Baru
