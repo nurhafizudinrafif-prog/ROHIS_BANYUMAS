@@ -382,7 +382,11 @@ img, video, iframe, canvas, svg {
   color: var(--warm-alabaster);
 }
 
-.section-pine h1, .section-pine h2, .section-pine h3 {
+.section-pine .section-header h1,
+.section-pine .section-header h2,
+.section-pine .section-header h3,
+.section-pine > .container > h2,
+.section-pine > .container > h1 {
   color: var(--warm-alabaster);
 }
 
@@ -978,19 +982,29 @@ textarea.form-input {
   background: #FFFFFF;
 }
 
-.news-card-vertical-title {
-  color: var(--deep-pine);
+.news-card-vertical-title,
+.section-pine .news-card-vertical-title,
+.news-card-vertical h3,
+.section-pine .news-card-vertical h3 {
+  color: #B58D4F !important; /* Warna emas / Antique Brass */
   font-family: var(--font-heading);
   font-size: clamp(1.15rem, 1.8vw, 1.38rem);
   font-weight: 800;
   line-height: 1.35;
   margin: 0.6rem 0;
-  transition: color 0.25s ease;
+  transition: color 0.25s cubic-bezier(0.25, 1, 0.5, 1);
   letter-spacing: -0.015em;
 }
 
-.news-card-vertical:hover .news-card-vertical-title {
-  color: var(--emerald-dark);
+.news-card-vertical:hover .news-card-vertical-title,
+.news-card-vertical:active .news-card-vertical-title,
+.news-card-vertical:focus .news-card-vertical-title,
+.section-pine .news-card-vertical:hover .news-card-vertical-title,
+.section-pine .news-card-vertical:active .news-card-vertical-title,
+.section-pine .news-card-vertical:focus .news-card-vertical-title,
+.section-pine .news-card-vertical:hover h3,
+.section-pine .news-card-vertical:active h3 {
+  color: #059669 !important; /* Warna hijau zamrud saat di-hover / di-klik / di-pencet */
 }
 
 .news-card-vertical-cta {

@@ -12,16 +12,17 @@ const schemas = {
   news: {
     label: 'Berita Terkini',
     fields: [
-      { key: 'title', label: 'Judul Berita', type: 'text', required: true },
-      { key: 'slug', label: 'Slug URL', type: 'text', required: true },
-      { key: 'category', label: 'Kategori', type: 'select', options: ['Warta Rohis', 'Liputan Acara', 'Aksi Sosial', 'Pelatihan', 'Agenda'] },
-      { key: 'author', label: 'Wartawan / Penulis', type: 'text' },
-      { key: 'location', label: 'Lokasi Kegiatan', type: 'text' },
-      { key: 'excerpt', label: 'Ringkasan Berita', type: 'textarea' },
-      { key: 'content', label: 'Isi Lengkap Berita (HTML)', type: 'textarea' },
-      { key: 'image', label: 'URL Foto Dokumentasi', type: 'text' },
+      { key: 'title', label: 'Judul Berita', type: 'text', required: true, placeholder: 'Contoh: Musyawarah Kerja Daerah (MUSKERDA) ROHIS Banyumas 2026...' },
+      { key: 'slug', label: 'Slug URL (Tautan Web)', type: 'text', required: true, placeholder: 'muskerda-rohis-banyumas-2026' },
+      { key: 'category', label: 'Kategori Berita', type: 'select', options: ['Warta Rohis', 'Organisasi', 'Kajian', 'Sosial', 'Pelatihan', 'Liputan Acara', 'Aksi Sosial', 'Agenda'] },
+      { key: 'date', label: 'Tanggal Berita / Pelaksanaan', type: 'date', required: true },
+      { key: 'author', label: 'Wartawan / Penulis', type: 'text', placeholder: 'Humas ROKABA' },
+      { key: 'location', label: 'Lokasi Kegiatan', type: 'text', placeholder: 'Contoh: Aula SMA N 2 Purwokerto / Banyumas' },
+      { key: 'excerpt', label: 'Ringkasan Berita (Lead / Cuplikan)', type: 'textarea', placeholder: 'Tulis ringkasan singkat 1-2 kalimat yang tampil di kartu depan...' },
+      { key: 'content', label: 'Isi Lengkap Berita (Paragraf Teks / HTML)', type: 'textarea', placeholder: 'Tuliskan teks lengkap berita kegiatan dakwah di sini. Tekan Enter untuk membuat paragraf baru...' },
+      { key: 'image', label: 'Foto Dokumentasi Berita', type: 'text' },
     ],
-    defaults: { id: '', title: '', slug: '', excerpt: '', content: '', author: 'Humas ROKABA', category: 'Warta Rohis', location: 'Banyumas', image: '', publishedAt: '', updatedAt: '' },
+    defaults: { id: '', title: '', slug: '', excerpt: '', content: '', author: 'Humas ROKABA', category: 'Warta Rohis', location: 'Kabupaten Banyumas', date: new Date().toISOString().split('T')[0], image: '', publishedAt: '', updatedAt: '' },
   },
   articles: {
     label: 'Artikel Dakwah',
@@ -148,10 +149,20 @@ export default function ContentManager() {
   });
 
   const handleNew = () => {
-    const newItem = { ...schema.defaults, id: `${type.slice(0, 3)}-${Date.now()}` };
-    if (type === 'articles') {
-      newItem.publishedAt = new Date().toISOString();
-      newItem.updatedAt = new Date().toISOString();
+    const today = new Date().toISOString().split('T')[0];
+    const nowIso = new Date().toISOString();
+    const newItem = {
+      ...schema.defaults,
+      id: `${type.slice(0, 3)}-${Date.now()}`,
+    };
+    if (type === 'news') {
+      newItem.date = today;
+      newItem.publishedAt = nowIso;
+      newItem.updatedAt = nowIso;
+    } else if (type === 'articles') {
+      newItem.date = today;
+      newItem.publishedAt = nowIso;
+      newItem.updatedAt = nowIso;
     }
     setEditing(newItem);
     setIsNew(true);
@@ -159,11 +170,35 @@ export default function ContentManager() {
 
   const handleSave = async () => {
     if (!editing) return;
+    let itemToSave = { ...editing };
+
+    // Auto-generate slug if missing
+    if ((type === 'news' || type === 'articles') && !itemToSave.slug && itemToSave.title) {
+      itemToSave.slug = itemToSave.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)+/g, '');
+    }
+
+    if (type === 'news') {
+      itemToSave.updatedAt = new Date().toISOString();
+      if (!itemToSave.date && itemToSave.publishedAt) {
+        itemToSave.date = itemToSave.publishedAt.split('T')[0];
+      } else if (itemToSave.date && !itemToSave.publishedAt) {
+        itemToSave.publishedAt = new Date(itemToSave.date).toISOString();
+      }
+    } else if (type === 'articles') {
+      itemToSave.updatedAt = new Date().toISOString();
+      if (!itemToSave.publishedAt) {
+        itemToSave.publishedAt = new Date().toISOString();
+      }
+    }
+
     let updated;
     if (isNew) {
-      updated = [...items, editing];
+      updated = [itemToSave, ...items];
     } else {
-      updated = items.map(i => i.id === editing.id ? editing : i);
+      updated = items.map(i => String(i.id) === String(itemToSave.id) ? itemToSave : i);
     }
     await dataCtx.updateData(type, updated);
     setEditing(null);
@@ -171,18 +206,30 @@ export default function ContentManager() {
 
     try {
       if (dataCtx.addAuditLog) {
-        dataCtx.addAuditLog(user?.id || 'admin', user?.username || 'admin', isNew ? 'CREATE' : 'UPDATE', type, `${isNew ? 'Created' : 'Updated'} ${type}: ${editing.title || editing.name || editing.id}`).catch(() => {});
+        dataCtx.addAuditLog(
+          user?.id || 'admin',
+          user?.username || 'admin',
+          isNew ? 'CREATE' : 'UPDATE',
+          type,
+          `${isNew ? 'Created' : 'Updated'} ${type}: ${itemToSave.title || itemToSave.name || itemToSave.id}`
+        ).catch(() => {});
       }
     } catch {}
   };
 
   const handleDelete = async (item) => {
-    if (!confirm(`Hapus "${item.title || item.name}"?`)) return;
-    const updated = items.filter(i => i.id !== item.id);
+    if (!confirm(`Hapus ${schema.label.toLowerCase()} "${item.title || item.name}"?`)) return;
+    const updated = items.filter(i => String(i.id) !== String(item.id));
     await dataCtx.updateData(type, updated);
     try {
       if (dataCtx.addAuditLog) {
-        dataCtx.addAuditLog(user?.id || 'admin', user?.username || 'admin', 'DELETE', type, `Deleted ${type}: ${item.title || item.name}`).catch(() => {});
+        dataCtx.addAuditLog(
+          user?.id || 'admin',
+          user?.username || 'admin',
+          'DELETE',
+          type,
+          `Deleted ${type}: ${item.title || item.name}`
+        ).catch(() => {});
       }
     } catch {}
   };
@@ -241,7 +288,18 @@ export default function ContentManager() {
               <div className="form-group" key={f.key}>
                 <label className="form-label">{f.label} {f.required && <span style={{ color: '#F87171' }}>*</span>}</label>
                 {f.type === 'textarea' ? (
-                  <textarea className="form-input" value={editing[f.key] || ''} onChange={e => setEditing({ ...editing, [f.key]: e.target.value })} />
+                  <textarea
+                    className="form-input"
+                    style={{
+                      minHeight: f.key === 'content' ? 180 : (f.key === 'excerpt' ? 80 : 90),
+                      lineHeight: 1.6,
+                      fontSize: '0.88rem',
+                    }}
+                    rows={f.key === 'content' ? 8 : (f.key === 'excerpt' ? 3 : 4)}
+                    placeholder={f.placeholder || ''}
+                    value={editing[f.key] || ''}
+                    onChange={e => setEditing({ ...editing, [f.key]: e.target.value })}
+                  />
                 ) : f.type === 'select' ? (
                   <select className="form-input" value={editing[f.key] || ''} onChange={e => setEditing({ ...editing, [f.key]: e.target.value })}>
                     {f.options.map(o => <option key={o} value={o}>{o}</option>)}
@@ -251,16 +309,18 @@ export default function ContentManager() {
                     type={f.type || 'text'}
                     className="form-input"
                     value={editing[f.key] || ''}
-                    placeholder={type === 'gallery' && f.key === 'driveId' ? 'Tempel link Google Drive / YouTube / TikTok / Instagram / URL...' : ''}
+                    placeholder={f.placeholder || (type === 'gallery' && f.key === 'driveId' ? 'Tempel link Google Drive / YouTube / TikTok / Instagram / URL...' : '')}
                     onChange={e => {
                       const val = f.type === 'number' ? Number(e.target.value) : e.target.value;
-                      // Auto-detect video type if URL indicates video
                       const next = { ...editing, [f.key]: val };
+                      if ((type === 'news' || type === 'articles') && f.key === 'title' && (!editing.slug || isNew)) {
+                        next.slug = String(val).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+                      }
                       if (type === 'gallery' && f.key === 'driveId' && typeof val === 'string') {
-    const isVid = val.includes('.mp4') || val.includes('.mov') || val.includes('youtube') || val.includes('youtu.be') || val.includes('tiktok') || val.includes('instagram.com/reel') || val.includes('instagram.com/p');
-    if (isVid) next.mediaType = 'video';
-  }
-  setEditing(next);
+                        const isVid = val.includes('.mp4') || val.includes('.mov') || val.includes('youtube') || val.includes('youtu.be') || val.includes('tiktok') || val.includes('instagram.com/reel') || val.includes('instagram.com/p');
+                        if (isVid) next.mediaType = 'video';
+                      }
+                      setEditing(next);
                     }}
                   />
                 )}
@@ -427,7 +487,7 @@ export default function ContentManager() {
                 <th style={{ width: 80 }}>Sampul Foto</th>
                 <th>{type === 'news' ? 'Judul Berita' : 'Judul Artikel'}</th>
                 <th style={{ width: 110 }}>Kategori</th>
-                <th style={{ width: 130 }}>Penulis</th>
+                <th style={{ width: 140 }}>{type === 'news' ? 'Penulis & Lokasi' : 'Penulis'}</th>
                 <th style={{ width: 120 }}>Tanggal Terbit</th>
                 <th style={{ textAlign: 'right', width: 100 }}>Aksi</th>
               </tr>
@@ -565,31 +625,36 @@ export default function ContentManager() {
                         )}
                       </div>
                     </td>
-                    <td style={{ fontWeight: 600, color: 'var(--text-primary)', maxWidth: 260 }}>
-                      {item.title}
+                    <td style={{ fontWeight: 600, color: 'var(--text-primary)', maxWidth: 280 }}>
+                      <div style={{ lineHeight: 1.35 }}>{item.title}</div>
                       {item.slug && (
-                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        <div style={{ fontSize: '0.74rem', color: 'var(--emerald-light)', marginTop: '0.2rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           /{item.slug}
                         </div>
                       )}
                     </td>
                     <td>
                       <span className="badge badge-emerald" style={{ fontSize: '0.7rem' }}>
-                        {item.category || (isNews ? 'Warta' : 'Dakwah')}
+                        {item.category || (isNews ? 'Warta Rohis' : 'Dakwah')}
                       </span>
                     </td>
                     <td style={{ color: 'var(--text-muted)', fontSize: '0.82rem' }}>
-                      {item.author || (isNews ? 'Humas ROKABA' : 'ROKABA')}
+                      <div style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{item.author || (isNews ? 'Humas ROKABA' : 'ROKABA')}</div>
+                      {isNews && item.location && (
+                        <div style={{ fontSize: '0.72rem', color: 'var(--antique-brass-light)' }}>
+                          📍 {item.location}
+                        </div>
+                      )}
                     </td>
                     <td style={{ color: 'var(--text-muted)', fontSize: '0.78rem', whiteSpace: 'nowrap' }}>
                       {item.date || (item.publishedAt ? new Date(item.publishedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '-')}
                     </td>
                     <td style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
                       <button onClick={() => { setEditing({ ...item }); setIsNew(false); }} className="btn btn-sm btn-ghost" style={{ color: 'var(--emerald)' }} title={isNews ? "Edit Berita" : "Edit Artikel"}>
-                        <Edit3 size={14} />
+                        <Edit3 size={15} />
                       </button>
                       <button onClick={() => handleDelete(item)} className="btn btn-sm btn-ghost" style={{ color: '#F87171' }} title={isNews ? "Hapus Berita" : "Hapus Artikel"}>
-                        <Trash2 size={14} />
+                        <Trash2 size={15} />
                       </button>
                     </td>
                   </tr>
@@ -665,12 +730,18 @@ export default function ContentManager() {
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.4rem', marginBottom: '0.25rem' }}>
                         <span className="badge badge-emerald" style={{ fontSize: '0.68rem', padding: '0.15rem 0.5rem' }}>
-                          {item.category || 'Dakwah'}
+                          {item.category || (type === 'news' ? 'Warta Rohis' : 'Dakwah')}
                         </span>
                         <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>#{i + 1}</span>
                       </div>
                       <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.35rem', flexWrap: 'wrap' }}>
-                        <span>{item.author || 'ROKABA'}</span>
+                        <span>{item.author || (type === 'news' ? 'Humas ROKABA' : 'ROKABA')}</span>
+                        {type === 'news' && item.location && (
+                          <>
+                            <span>•</span>
+                            <span>📍 {item.location}</span>
+                          </>
+                        )}
                         <span>•</span>
                         <span>{item.date || (item.publishedAt ? new Date(item.publishedAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '-')}</span>
                       </div>
@@ -692,7 +763,7 @@ export default function ContentManager() {
                     <button
                       onClick={() => { setEditing({ ...item }); setIsNew(false); }}
                       className="btn btn-primary"
-                      title="Edit Berita"
+                      title={type === 'news' ? "Edit Berita" : "Edit Artikel"}
                     >
                       <Edit3 size={15} /> Edit
                     </button>
@@ -700,7 +771,7 @@ export default function ContentManager() {
                       onClick={() => handleDelete(item)}
                       className="btn btn-secondary"
                       style={{ color: '#F87171', borderColor: 'rgba(239, 68, 68, 0.35)' }}
-                      title="Hapus Berita"
+                      title={type === 'news' ? "Hapus Berita" : "Hapus Artikel"}
                     >
                       <Trash2 size={15} /> Hapus
                     </button>

@@ -1,5 +1,6 @@
 import './AdminHomeCMS.css';
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Save,
   RotateCcw,
@@ -16,6 +17,8 @@ import {
   ExternalLink,
   ChevronDown,
   ChevronUp,
+  Newspaper,
+  FileText,
 } from 'lucide-react';
 import ImageUploadField from './ImageUploadField';
 import { fallbackData } from '@shared/data/fallback.js';
