@@ -1,3 +1,4 @@
+import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import { useScrollReveal } from '../hooks/useScrollReveal';
@@ -667,7 +668,40 @@ export default function Home() {
   const newsList = Array.isArray(news) && news.length > 0 ? news : [];
   const latestNews = [...newsList]
     .sort((a, b) => new Date(b.publishedAt || b.date || 0) - new Date(a.publishedAt || a.date || 0))
-    .slice(0, 3);
+    .slice(0, 4);
+
+  const [activeNewsIdx, setActiveNewsIdx] = useState(0);
+  const newsScrollRef = useRef(null);
+
+  const handleNewsScroll = () => {
+    if (!newsScrollRef.current) return;
+    const container = newsScrollRef.current;
+    const firstCard = container.querySelector('.news-card-vertical');
+    if (!firstCard) return;
+    const cardWidth = firstCard.offsetWidth + 18;
+    const idx = Math.round(container.scrollLeft / cardWidth);
+    setActiveNewsIdx(Math.min(Math.max(idx, 0), latestNews.length - 1));
+  };
+
+  const scrollNewsTo = (idx) => {
+    if (!newsScrollRef.current) return;
+    const container = newsScrollRef.current;
+    const cards = container.querySelectorAll('.news-card-vertical');
+    if (cards && cards[idx]) {
+      cards[idx].scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+        block: 'nearest',
+      });
+    } else {
+      const cardWidth = container.clientWidth * 0.85 + 18;
+      container.scrollTo({
+        left: idx * cardWidth,
+        behavior: 'smooth',
+      });
+    }
+    setActiveNewsIdx(idx);
+  };
 
   const latestArticles = [...articles]
     .sort((a, b) => new Date(b.publishedAt || b.date) - new Date(a.publishedAt || a.date))
@@ -1189,19 +1223,38 @@ export default function Home() {
             </p>
           </div>
 
+          {/* Mobile Swipe Hint */}
+          <div className="news-swipe-hint">
+            <Sparkles size={13} style={{ color: 'var(--antique-brass-light)' }} />
+            <span>Geser ke samping untuk berita lain</span>
+            <ChevronRight size={14} className="news-swipe-arrow" style={{ color: 'var(--emerald-light)' }} />
+          </div>
+
+          {/* News Feed Container (Vertical on Desktop, Horizontal Swipe on Mobile) */}
           <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '1.5rem',
-              maxWidth: 960,
-              margin: '0 auto',
-            }}
+            ref={newsScrollRef}
+            onScroll={handleNewsScroll}
+            className="news-feed-container"
           >
             {latestNews.map((item, i) => (
               <NewsCard key={item.id} item={item} index={i} />
             ))}
           </div>
+
+          {/* Mobile Pagination Indicator Dots */}
+          {latestNews.length > 1 && (
+            <div className="news-carousel-dots">
+              {latestNews.map((_, dotIdx) => (
+                <button
+                  key={dotIdx}
+                  type="button"
+                  onClick={() => scrollNewsTo(dotIdx)}
+                  aria-label={`Lihat berita ke-${dotIdx + 1}`}
+                  className={`news-carousel-dot ${activeNewsIdx === dotIdx ? 'active' : ''}`}
+                />
+              ))}
+            </div>
+          )}
 
           <div className="reveal-on-scroll delay-200" style={{ textAlign: 'center', marginTop: '2.5rem' }}>
             <Link to="/berita" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
