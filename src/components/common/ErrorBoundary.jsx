@@ -73,6 +73,14 @@ export default class ErrorBoundary extends React.Component {
             }}>
               Sistem mendeteksi kendala pada cache peramban atau data sementara. Silakan segarkan halaman untuk melanjutkan.
             </p>
+            {this.state.error && (
+              <details style={{ textAlign: 'left', marginBottom: '1.5rem', fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', background: 'rgba(0,0,0,0.25)', padding: '0.6rem 0.8rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.08)' }}>
+                <summary style={{ cursor: 'pointer', fontWeight: 600, color: 'var(--antique-brass-light)' }}>Informasi Masalah (Debug)</summary>
+                <div style={{ marginTop: '0.4rem', fontFamily: 'monospace', wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>
+                  {this.state.error?.message || String(this.state.error)}
+                </div>
+              </details>
+            )}
             <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
               <button
                 type="button"

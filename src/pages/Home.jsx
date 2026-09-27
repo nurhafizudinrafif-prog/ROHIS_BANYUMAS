@@ -246,6 +246,19 @@ function NewsCard({ item, index, isActive = true, onSelect }) {
 function SquareNewsCard({ item, isActive }) {
   const imgUrl = parseImageUrl(item.image || item.coverImage);
 
+  let formattedDate = 'Terbaru';
+  try {
+    const rawDate = item.publishedAt || item.date;
+    if (rawDate) {
+      const d = new Date(rawDate);
+      if (!isNaN(d.getTime())) {
+        formattedDate = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+      }
+    }
+  } catch (e) {
+    formattedDate = 'Terbaru';
+  }
+
   return (
     <Link
       to={`/berita/${item.slug || item.id}`}
@@ -260,7 +273,7 @@ function SquareNewsCard({ item, isActive }) {
         {imgUrl ? (
           <img
             src={imgUrl}
-            alt={item.title}
+            alt={item.title || 'Berita ROKABA'}
             referrerPolicy="no-referrer"
             onError={(e) => {
               const driveId = extractDriveId(item.image || item.coverImage);
@@ -286,10 +299,7 @@ function SquareNewsCard({ item, isActive }) {
           <div className="square-news-meta">
             <span className="square-news-date">
               <Calendar size={11} />
-              {new Date(item.publishedAt || item.date || Date.now()).toLocaleDateString(
-                'id-ID',
-                { day: 'numeric', month: 'short', year: 'numeric' }
-              )}
+              {formattedDate}
             </span>
           </div>
 
@@ -599,6 +609,7 @@ export default function Home() {
   const { home, news, articles, events, loading } = useData();
   const [activeNewsIdx, setActiveNewsIdx] = useState(0);
   const newsScrollRef = useRef(null);
+  const touchStartRef = useRef({ x: 0, y: 0, isHorizontal: false });
 
   // Attach scroll reveal observer whenever dependencies update
   useScrollReveal([home, news, articles, events, loading]);
@@ -746,8 +757,6 @@ export default function Home() {
   const latestNews = [...newsList]
     .sort((a, b) => new Date(b.publishedAt || b.date || 0) - new Date(a.publishedAt || a.date || 0))
     .slice(0, 4);
-
-  const touchStartRef = useRef({ x: 0, y: 0, isHorizontal: false });
 
   const handleTouchStart = (e) => {
     touchStartRef.current = {
@@ -1347,18 +1356,23 @@ export default function Home() {
               <div className="coverflow-track">
                 {latestNews.map((item, idx) => {
                   const count = latestNews.length;
-                  let diff = (idx - activeNewsIdx) % count;
-                  if (diff > count / 2) diff -= count;
-                  if (diff < -count / 2) diff += count;
+                  if (count === 0) return null;
 
-                  let slot = 'hidden';
-                  if (diff === 0) slot = 'center';
-                  else if (diff === -1 || (count === 2 && diff === 1 && activeNewsIdx === 1)) slot = 'left';
-                  else if (diff === 1) slot = 'right';
+                  let slot = 'center';
+                  if (count > 1) {
+                    let diff = (idx - activeNewsIdx) % count;
+                    if (diff > count / 2) diff -= count;
+                    if (diff < -count / 2) diff += count;
+
+                    if (diff === 0) slot = 'center';
+                    else if (diff === -1 || (count === 2 && diff === 1 && activeNewsIdx === 1)) slot = 'left';
+                    else if (diff === 1) slot = 'right';
+                    else slot = 'hidden';
+                  }
 
                   return (
                     <div
-                      key={item.id}
+                      key={item.id || idx}
                       className={`coverflow-card-slot slot-${slot}`}
                       onClick={() => {
                         if (slot === 'left') rotateNews(-1);
