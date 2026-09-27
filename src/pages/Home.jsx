@@ -243,6 +243,71 @@ function NewsCard({ item, index, isActive = true, onSelect }) {
   );
 }
 
+function SquareNewsCard({ item, isActive }) {
+  const imgUrl = parseImageUrl(item.image || item.coverImage);
+
+  return (
+    <Link
+      to={`/berita/${item.slug || item.id}`}
+      className={`square-news-card ${isActive ? 'is-active' : 'is-inactive'}`}
+      onClick={(e) => {
+        if (!isActive) {
+          e.preventDefault();
+        }
+      }}
+    >
+      <div className="square-news-img">
+        {imgUrl ? (
+          <img
+            src={imgUrl}
+            alt={item.title}
+            referrerPolicy="no-referrer"
+            onError={(e) => {
+              const driveId = extractDriveId(item.image || item.coverImage);
+              if (driveId && !e.currentTarget.src.includes('lh3.googleusercontent.com')) {
+                e.currentTarget.src = `https://lh3.googleusercontent.com/d/${driveId}`;
+              } else {
+                e.currentTarget.style.display = 'none';
+              }
+            }}
+          />
+        ) : (
+          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--deep-pine)' }}>
+            <FileText size={36} style={{ color: 'rgba(245,242,237,0.3)' }} />
+          </div>
+        )}
+        <span className="square-news-badge">
+          {item.category || 'Berita'}
+        </span>
+      </div>
+
+      <div className="square-news-body">
+        <div>
+          <div className="square-news-meta">
+            <span className="square-news-date">
+              <Calendar size={11} />
+              {new Date(item.publishedAt || item.date || Date.now()).toLocaleDateString(
+                'id-ID',
+                { day: 'numeric', month: 'short', year: 'numeric' }
+              )}
+            </span>
+          </div>
+
+          <h3 className="square-news-title">
+            {item.title}
+          </h3>
+        </div>
+
+        <div className="square-news-footer">
+          <span className="square-news-cta">
+            Baca Berita <ArrowRight size={13} />
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 function ArticleCard({ article, index }) {
   const categoryColors = {
     Edukasi: 'var(--emerald)',
@@ -682,52 +747,47 @@ export default function Home() {
     .sort((a, b) => new Date(b.publishedAt || b.date || 0) - new Date(a.publishedAt || a.date || 0))
     .slice(0, 4);
 
-  const handleNewsScroll = () => {
-    if (!newsScrollRef.current) return;
-    const container = newsScrollRef.current;
-    const cards = container.querySelectorAll('.news-card-vertical');
-    if (!cards || cards.length === 0) return;
+  const touchStartRef = useRef({ x: 0, y: 0, isHorizontal: false });
 
-    // Calculate viewport center in container coordinates
-    const containerCenter = container.scrollLeft + container.clientWidth / 2;
-    let closestIdx = 0;
-    let minDistance = Infinity;
+  const handleTouchStart = (e) => {
+    touchStartRef.current = {
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY,
+      isHorizontal: false,
+    };
+  };
 
-    cards.forEach((card, idx) => {
-      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-      const distance = Math.abs(containerCenter - cardCenter);
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestIdx = idx;
+  const handleTouchMove = (e) => {
+    const deltaX = e.touches[0].clientX - touchStartRef.current.x;
+    const deltaY = e.touches[0].clientY - touchStartRef.current.y;
+    if (Math.abs(deltaX) > Math.abs(deltaY) + 6 && Math.abs(deltaX) > 10) {
+      touchStartRef.current.isHorizontal = true;
+    }
+  };
+
+  const handleTouchEnd = (e) => {
+    const deltaX = e.changedTouches[0].clientX - touchStartRef.current.x;
+    const deltaY = e.changedTouches[0].clientY - touchStartRef.current.y;
+    if (touchStartRef.current.isHorizontal || Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (deltaX < -30) {
+        rotateNews(1);
+      } else if (deltaX > 30) {
+        rotateNews(-1);
       }
-    });
+    }
+  };
 
-    setActiveNewsIdx(closestIdx);
+  const rotateNews = (dir) => {
+    if (!latestNews || latestNews.length === 0) return;
+    setActiveNewsIdx((prev) => (prev + dir + latestNews.length) % latestNews.length);
   };
 
   const scrollNewsTo = (idx) => {
-    if (!newsScrollRef.current) return;
-    const container = newsScrollRef.current;
-    const cards = container.querySelectorAll('.news-card-vertical');
-    const targetIdx = Math.min(Math.max(idx, 0), latestNews.length - 1);
-    if (cards && cards[targetIdx]) {
-      cards[targetIdx].scrollIntoView({
-        behavior: 'smooth',
-        inline: 'center',
-        block: 'nearest',
-      });
-    } else {
-      const cardWidth = container.clientWidth * 0.73 + 14;
-      container.scrollTo({
-        left: targetIdx * cardWidth,
-        behavior: 'smooth',
-      });
-    }
-    setActiveNewsIdx(targetIdx);
+    setActiveNewsIdx(idx);
   };
 
   const scrollNewsByDirection = (dir) => {
-    scrollNewsTo(activeNewsIdx + dir);
+    rotateNews(dir);
   };
 
   const latestArticles = [...articles]
@@ -1250,91 +1310,116 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Mobile Swipe Hint */}
-          <div className="news-swipe-hint">
-            <Sparkles size={13} style={{ color: 'var(--antique-brass-light)' }} />
-            <span>Geser ke samping untuk berita lain</span>
-            <ChevronRight size={14} className="news-swipe-arrow" style={{ color: 'var(--emerald-light)' }} />
+          {/* ═══ DESKTOP NEWS FEED (Vertical on Laptop/PC > 768px) ═══ */}
+          <div className="desktop-news-feed">
+            {latestNews.map((item, i) => (
+              <NewsCard key={item.id} item={item} index={i} />
+            ))}
           </div>
 
-          {/* News Carousel Wrapper with Floating Modern Nav Arrows */}
-          <div className="news-carousel-wrapper">
-            {/* Floating Left Arrow */}
-            <button
-              type="button"
-              onClick={() => scrollNewsByDirection(-1)}
-              disabled={activeNewsIdx === 0}
-              aria-label="Berita sebelumnya"
-              className={`news-nav-arrow news-nav-arrow-left ${activeNewsIdx === 0 ? 'disabled' : ''}`}
-            >
-              <ChevronLeft size={18} />
-            </button>
-
-            {/* News Feed Container (Vertical on Desktop, Horizontal Swipe on Mobile) */}
-            <div
-              ref={newsScrollRef}
-              onScroll={handleNewsScroll}
-              className="news-feed-container"
-            >
-              {latestNews.map((item, i) => (
-                <NewsCard
-                  key={item.id}
-                  item={item}
-                  index={i}
-                  isActive={activeNewsIdx === i}
-                  onSelect={() => scrollNewsTo(i)}
-                />
-              ))}
+          {/* ═══ MOBILE 3D COVERFLOW (Symmetrical & Infinite Loop on Mobile <= 768px) ═══ */}
+          <div className="mobile-news-coverflow-wrapper">
+            {/* Mobile Swipe Hint */}
+            <div className="news-swipe-hint">
+              <Sparkles size={13} style={{ color: 'var(--antique-brass-light)' }} />
+              <span>Geser atau sentuh kartu untuk berita lain</span>
+              <ChevronRight size={14} className="news-swipe-arrow" style={{ color: 'var(--emerald-light)' }} />
             </div>
 
-            {/* Floating Right Arrow */}
-            <button
-              type="button"
-              onClick={() => scrollNewsByDirection(1)}
-              disabled={activeNewsIdx >= latestNews.length - 1}
-              aria-label="Berita selanjutnya"
-              className={`news-nav-arrow news-nav-arrow-right ${activeNewsIdx >= latestNews.length - 1 ? 'disabled' : ''}`}
+            {/* Coverflow Stage */}
+            <div
+              className="coverflow-stage"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
             >
-              <ChevronRight size={18} />
-            </button>
-          </div>
-
-          {/* Mobile Carousel Controls (Flanking arrows + Dots) */}
-          {latestNews.length > 1 && (
-            <div className="news-carousel-controls">
+              {/* Floating Left Arrow */}
               <button
                 type="button"
-                onClick={() => scrollNewsByDirection(-1)}
-                disabled={activeNewsIdx === 0}
+                onClick={() => rotateNews(-1)}
                 aria-label="Berita sebelumnya"
-                className={`news-ctrl-arrow ${activeNewsIdx === 0 ? 'disabled' : ''}`}
+                className="coverflow-nav-arrow coverflow-nav-arrow-left"
               >
-                <ChevronLeft size={16} />
+                <ChevronLeft size={18} />
               </button>
 
-              <div className="news-carousel-dots">
-                {latestNews.map((_, dotIdx) => (
-                  <button
-                    key={dotIdx}
-                    type="button"
-                    onClick={() => scrollNewsTo(dotIdx)}
-                    aria-label={`Lihat berita ke-${dotIdx + 1}`}
-                    className={`news-carousel-dot ${activeNewsIdx === dotIdx ? 'active' : ''}`}
-                  />
-                ))}
+              {/* Cards Track */}
+              <div className="coverflow-track">
+                {latestNews.map((item, idx) => {
+                  const count = latestNews.length;
+                  let diff = (idx - activeNewsIdx) % count;
+                  if (diff > count / 2) diff -= count;
+                  if (diff < -count / 2) diff += count;
+
+                  let slot = 'hidden';
+                  if (diff === 0) slot = 'center';
+                  else if (diff === -1 || (count === 2 && diff === 1 && activeNewsIdx === 1)) slot = 'left';
+                  else if (diff === 1) slot = 'right';
+
+                  return (
+                    <div
+                      key={item.id}
+                      className={`coverflow-card-slot slot-${slot}`}
+                      onClick={() => {
+                        if (slot === 'left') rotateNews(-1);
+                        else if (slot === 'right') rotateNews(1);
+                      }}
+                    >
+                      <SquareNewsCard
+                        item={item}
+                        isActive={slot === 'center'}
+                      />
+                    </div>
+                  );
+                })}
               </div>
 
+              {/* Floating Right Arrow */}
               <button
                 type="button"
-                onClick={() => scrollNewsByDirection(1)}
-                disabled={activeNewsIdx >= latestNews.length - 1}
+                onClick={() => rotateNews(1)}
                 aria-label="Berita selanjutnya"
-                className={`news-ctrl-arrow ${activeNewsIdx >= latestNews.length - 1 ? 'disabled' : ''}`}
+                className="coverflow-nav-arrow coverflow-nav-arrow-right"
               >
-                <ChevronRight size={16} />
+                <ChevronRight size={18} />
               </button>
             </div>
-          )}
+
+            {/* Mobile Carousel Controls (Flanking arrows + Dots) */}
+            {latestNews.length > 1 && (
+              <div className="news-carousel-controls">
+                <button
+                  type="button"
+                  onClick={() => rotateNews(-1)}
+                  aria-label="Berita sebelumnya"
+                  className="news-ctrl-arrow"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+
+                <div className="news-carousel-dots">
+                  {latestNews.map((_, dotIdx) => (
+                    <button
+                      key={dotIdx}
+                      type="button"
+                      onClick={() => setActiveNewsIdx(dotIdx)}
+                      aria-label={`Lihat berita ke-${dotIdx + 1}`}
+                      className={`news-carousel-dot ${activeNewsIdx === dotIdx ? 'active' : ''}`}
+                    />
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => rotateNews(1)}
+                  aria-label="Berita selanjutnya"
+                  className="news-ctrl-arrow"
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            )}
+          </div>
 
           <div className="reveal-on-scroll delay-200" style={{ textAlign: 'center', marginTop: '2.5rem' }}>
             <Link to="/berita" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
