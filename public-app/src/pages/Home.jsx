@@ -10,6 +10,7 @@ import {
   BookOpen,
   Newspaper,
   CheckCircle,
+  ChevronLeft,
   ChevronRight,
   Quote,
   Compass,
@@ -676,31 +677,45 @@ export default function Home() {
   const handleNewsScroll = () => {
     if (!newsScrollRef.current) return;
     const container = newsScrollRef.current;
-    const firstCard = container.querySelector('.news-card-vertical');
-    if (!firstCard) return;
-    const cardWidth = firstCard.offsetWidth + 18;
-    const idx = Math.round(container.scrollLeft / cardWidth);
-    setActiveNewsIdx(Math.min(Math.max(idx, 0), latestNews.length - 1));
+    const cards = container.querySelectorAll('.news-card-vertical');
+    if (!cards || cards.length === 0) return;
+
+    const scrollLeft = container.scrollLeft;
+    let closestIdx = 0;
+    let minDiff = Infinity;
+    cards.forEach((card, idx) => {
+      const diff = Math.abs(card.offsetLeft - container.offsetLeft - scrollLeft);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestIdx = idx;
+      }
+    });
+    setActiveNewsIdx(closestIdx);
   };
 
   const scrollNewsTo = (idx) => {
     if (!newsScrollRef.current) return;
     const container = newsScrollRef.current;
     const cards = container.querySelectorAll('.news-card-vertical');
-    if (cards && cards[idx]) {
-      cards[idx].scrollIntoView({
+    const targetIdx = Math.min(Math.max(idx, 0), latestNews.length - 1);
+    if (cards && cards[targetIdx]) {
+      cards[targetIdx].scrollIntoView({
         behavior: 'smooth',
-        inline: 'center',
+        inline: 'start',
         block: 'nearest',
       });
     } else {
-      const cardWidth = container.clientWidth * 0.85 + 18;
+      const cardWidth = container.clientWidth * 0.76 + 16;
       container.scrollTo({
-        left: idx * cardWidth,
+        left: targetIdx * cardWidth,
         behavior: 'smooth',
       });
     }
-    setActiveNewsIdx(idx);
+    setActiveNewsIdx(targetIdx);
+  };
+
+  const scrollNewsByDirection = (dir) => {
+    scrollNewsTo(activeNewsIdx + dir);
   };
 
   const latestArticles = [...articles]
@@ -1230,15 +1245,40 @@ export default function Home() {
             <ChevronRight size={14} className="news-swipe-arrow" style={{ color: 'var(--emerald-light)' }} />
           </div>
 
-          {/* News Feed Container (Vertical on Desktop, Horizontal Swipe on Mobile) */}
-          <div
-            ref={newsScrollRef}
-            onScroll={handleNewsScroll}
-            className="news-feed-container"
-          >
-            {latestNews.map((item, i) => (
-              <NewsCard key={item.id} item={item} index={i} />
-            ))}
+          {/* News Carousel Wrapper with Floating Modern Nav Arrows */}
+          <div className="news-carousel-wrapper">
+            {/* Floating Left Arrow */}
+            <button
+              type="button"
+              onClick={() => scrollNewsByDirection(-1)}
+              disabled={activeNewsIdx === 0}
+              aria-label="Berita sebelumnya"
+              className={`news-nav-arrow news-nav-arrow-left ${activeNewsIdx === 0 ? 'disabled' : ''}`}
+            >
+              <ChevronLeft size={18} />
+            </button>
+
+            {/* News Feed Container (Vertical on Desktop, Horizontal Swipe on Mobile) */}
+            <div
+              ref={newsScrollRef}
+              onScroll={handleNewsScroll}
+              className="news-feed-container"
+            >
+              {latestNews.map((item, i) => (
+                <NewsCard key={item.id} item={item} index={i} />
+              ))}
+            </div>
+
+            {/* Floating Right Arrow */}
+            <button
+              type="button"
+              onClick={() => scrollNewsByDirection(1)}
+              disabled={activeNewsIdx >= latestNews.length - 1}
+              aria-label="Berita selanjutnya"
+              className={`news-nav-arrow news-nav-arrow-right ${activeNewsIdx >= latestNews.length - 1 ? 'disabled' : ''}`}
+            >
+              <ChevronRight size={18} />
+            </button>
           </div>
 
           {/* Mobile Pagination Indicator Dots */}

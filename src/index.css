@@ -1047,7 +1047,78 @@ textarea.form-input {
   margin: 0 auto;
 }
 
+.news-carousel-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.news-nav-arrow {
+  position: absolute;
+  top: 48%;
+  transform: translateY(-50%);
+  z-index: 25;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(13, 43, 34, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(181, 141, 79, 0.55);
+  color: #E6C587;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 10px rgba(181, 141, 79, 0.25);
+  cursor: pointer;
+  transition: all 0.28s cubic-bezier(0.25, 1, 0.5, 1);
+  touch-action: manipulation;
+  padding: 0;
+}
+
+.news-nav-arrow-left {
+  left: 0.5rem;
+}
+
+.news-nav-arrow-right {
+  right: 0.5rem;
+}
+
+.news-nav-arrow:hover,
+.news-nav-arrow:active {
+  background: rgba(16, 185, 129, 0.95);
+  border-color: #10B981;
+  color: #FFFFFF;
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.5);
+}
+
+.news-nav-arrow.disabled,
+.news-nav-arrow:disabled {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  cursor: default !important;
+  transform: translateY(-50%) scale(0.65) !important;
+  box-shadow: none !important;
+}
+
+@keyframes arrowGlowPulse {
+  0%, 100% {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4), 0 0 6px rgba(181, 141, 79, 0.3);
+  }
+  50% {
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.55), 0 0 16px rgba(181, 141, 79, 0.6);
+  }
+}
+
+.news-nav-arrow:not(.disabled) {
+  animation: arrowGlowPulse 2.5s ease-in-out infinite;
+}
+
 @media (max-width: 768px) {
+  .news-carousel-wrapper {
+    margin: 0 -1.5rem !important;
+  }
+
   .news-feed-container {
     flex-direction: row !important;
     overflow-x: auto !important;
@@ -1057,9 +1128,11 @@ textarea.form-input {
     -webkit-overflow-scrolling: touch !important;
     overscroll-behavior-x: contain !important;
     overscroll-behavior-y: auto !important;
-    gap: 1.15rem !important;
-    padding: 0.5rem 1.25rem 1.35rem !important;
-    margin: 0 -1.5rem !important;
+    gap: 1rem !important;
+    padding: 0.5rem 1.25rem 1.25rem !important;
+    margin: 0 !important;
+    scroll-padding-left: 1.25rem !important;
+    scroll-padding-right: 1.25rem !important;
     scrollbar-width: none !important;
     touch-action: pan-y pinch-zoom !important;
   }
@@ -1069,15 +1142,15 @@ textarea.form-input {
   }
 
   .news-feed-container .news-card-vertical {
-    flex: 0 0 85% !important;
-    max-width: 325px !important;
-    min-width: 275px !important;
-    scroll-snap-align: center !important;
+    flex: 0 0 76% !important;
+    max-width: 290px !important;
+    min-width: 245px !important;
+    scroll-snap-align: start !important;
     scroll-snap-stop: normal !important;
     flex-direction: column !important;
-    border-radius: var(--radius-xl) !important;
+    border-radius: var(--radius-lg) !important;
     background: #FFFFFF !important;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28) !important;
     touch-action: pan-y pinch-zoom !important;
     transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.25s ease !important;
     opacity: 1 !important;
@@ -1094,11 +1167,24 @@ textarea.form-input {
   .news-feed-container .news-card-vertical-img {
     flex: none !important;
     width: 100% !important;
-    height: 180px !important;
+    height: 155px !important;
   }
 
   .news-feed-container .news-card-vertical-body {
-    padding: 1.15rem 1.15rem 1.35rem !important;
+    padding: 1rem 1rem 1.15rem !important;
+  }
+
+  .news-feed-container .news-card-vertical-title,
+  .news-feed-container .news-card-vertical h3 {
+    font-size: 1.08rem !important;
+    line-height: 1.32 !important;
+    margin: 0.4rem 0 !important;
+  }
+
+  .news-feed-container .news-card-vertical p {
+    font-size: 0.82rem !important;
+    line-height: 1.45 !important;
+    margin: 0 0 0.7rem !important;
   }
 }
 
@@ -1156,6 +1242,7 @@ textarea.form-input {
 }
 
 @media (min-width: 769px) {
+  .news-nav-arrow,
   .news-swipe-hint,
   .news-carousel-dots,
   .hide-desktop {
