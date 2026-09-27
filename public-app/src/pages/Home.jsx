@@ -101,6 +101,12 @@ function ArticleCard({ article, index }) {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
+        background: 'white',
+        borderRadius: 'var(--radius-xl)',
+        overflow: 'hidden',
+        boxShadow: '0 10px 30px rgba(0,0,0,0.18)',
+        transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
+        border: '1px solid rgba(255,255,255,0.12)',
       }}
     >
       <div
@@ -134,6 +140,23 @@ function ArticleCard({ article, index }) {
         ) : (
           <FileText size={40} style={{ color: 'rgba(245,242,237,0.2)' }} />
         )}
+        <span
+          className="badge"
+          style={{
+            position: 'absolute',
+            top: '0.85rem',
+            left: '0.85rem',
+            background: 'rgba(13,43,34,0.78)',
+            backdropFilter: 'blur(8px)',
+            color: 'var(--warm-alabaster)',
+            fontSize: '0.72rem',
+            padding: '0.2rem 0.6rem',
+            borderRadius: 'var(--radius-full)',
+            border: '1px solid rgba(255,255,255,0.15)',
+          }}
+        >
+          {article.category || 'Berita'}
+        </span>
       </div>
       <div
         className="card-body"
@@ -145,27 +168,47 @@ function ArticleCard({ article, index }) {
           padding: '1.25rem',
         }}
       >
-        <h3
-          style={{
-            color: 'var(--deep-pine)',
-            fontSize: '1.05rem',
-            lineHeight: 1.4,
-            marginBottom: '0.5rem',
-          }}
-        >
-          {article.title}
-        </h3>
+        <div>
+          <h3
+            style={{
+              color: 'var(--deep-pine)',
+              fontSize: '1.08rem',
+              lineHeight: 1.4,
+              marginBottom: '0.5rem',
+              fontWeight: 700,
+            }}
+          >
+            {article.title}
+          </h3>
+          {article.excerpt && (
+            <p
+              style={{
+                color: 'rgba(13,43,34,0.65)',
+                fontSize: '0.84rem',
+                lineHeight: 1.55,
+                margin: '0 0 1rem',
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+              }}
+            >
+              {article.excerpt}
+            </p>
+          )}
+        </div>
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '0.6rem',
+            justifyContent: 'space-between',
+            paddingTop: '0.75rem',
+            borderTop: '1px solid rgba(13,43,34,0.06)',
             fontSize: '0.78rem',
             color: 'rgba(13,43,34,0.5)',
           }}
         >
           <span>{article.author || 'Tim ROKABA'}</span>
-          <span>•</span>
           <span>
             {new Date(article.publishedAt || article.date || Date.now()).toLocaleDateString(
               'id-ID',
@@ -974,142 +1017,38 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ 3. 5 PILAR GERAKAN ═══ */}
-      <section id="program" className="section section-pine" style={{ padding: '5.5rem 0' }}>
+      {/* ═══ 3. BERITA TERKINI ═══ */}
+      <section id="berita" className="section section-pine" style={{ padding: '5.5rem 0' }}>
         <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
           <div className="section-header reveal-on-scroll delay-100">
             <span
               className="badge"
               style={{ background: 'rgba(16,185,129,0.15)', color: 'var(--emerald-light)', marginBottom: '0.75rem' }}
             >
-              <Compass size={14} /> Struktur Gerakan
+              <Newspaper size={14} /> {home?.sections?.articles?.tag || 'Berita Terkini'}
             </span>
-            <h2 style={{ color: 'var(--warm-alabaster)' }}>5 Pilar Divisi & Program Kerja</h2>
+            <h2 style={{ color: 'var(--warm-alabaster)' }}>{home?.sections?.articles?.title || 'Berita Terkini'}</h2>
             <div className="section-divider" />
             <p style={{ color: 'rgba(245,242,237,0.6)' }}>
-              Struktur fungsional organisasi yang menggerakkan roda dakwah, pembinaan, dan karya nyata pelajar se-Banyumas.
+              {home?.sections?.articles?.desc || 'Informasi, warta, dan kabar terbaru seputar kegiatan dakwah, pembinaan, dan karya nyata pelajar se-Banyumas.'}
             </p>
           </div>
 
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
               gap: '1.5rem',
             }}
           >
-            {divisionCards.map((div, i) => {
-              const Icon = div.icon;
-              return (
-                <div
-                  key={div.id}
-                  className={`card-editorial reveal-scale delay-${(i + 1) * 80}`}
-                  style={{
-                    background: 'rgba(255,255,255,0.05)',
-                    backdropFilter: 'blur(16px)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    borderRadius: 'var(--radius-xl)',
-                    padding: '2rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-4px)';
-                    e.currentTarget.style.borderColor = 'rgba(16,185,129,0.4)';
-                    e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
-                    e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
-                  }}
-                >
-                  <div>
-                    <div
-                      style={{
-                        width: 48,
-                        height: 48,
-                        borderRadius: '12px',
-                        background: 'rgba(16,185,129,0.15)',
-                        border: '1px solid rgba(16,185,129,0.3)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginBottom: '1.25rem',
-                      }}
-                    >
-                      <Icon size={22} style={{ color: 'var(--emerald-light)' }} />
-                    </div>
-                    <span
-                      className="badge badge-gold"
-                      style={{ fontSize: '0.68rem', padding: '0.15rem 0.6rem', marginBottom: '0.5rem' }}
-                    >
-                      {div.division}
-                    </span>
-                    <h3 style={{ color: 'var(--warm-alabaster)', fontSize: '1.15rem', margin: '0.4rem 0 0.75rem', lineHeight: 1.3 }}>
-                      <Link to={`/about?div=${div.division}#program-divisi`} style={{ color: 'inherit', textDecoration: 'none' }}>
-                        {div.title}
-                      </Link>
-                    </h3>
-                    <p style={{ color: 'rgba(245,242,237,0.65)', fontSize: '0.86rem', lineHeight: 1.6, marginBottom: '1.25rem' }}>
-                      {div.desc}
-                    </p>
-                    <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '1rem' }}>
-                      <div
-                        style={{
-                          fontSize: '0.74rem',
-                          color: 'var(--antique-brass)',
-                          fontWeight: 700,
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.06em',
-                          marginBottom: '0.5rem',
-                        }}
-                      >
-                        Program Kerja Unggulan:
-                      </div>
-                      <ul
-                        style={{
-                          margin: 0,
-                          paddingLeft: '1.2rem',
-                          color: 'rgba(245,242,237,0.7)',
-                          fontSize: '0.82rem',
-                          lineHeight: 1.6,
-                        }}
-                      >
-                        {div.programs.map((prog, pIdx) => (
-                          <li key={pIdx} style={{ marginBottom: '0.25rem' }}>
-                            {prog}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                  <div style={{ marginTop: '1.5rem', textAlign: 'right' }}>
-                    <Link
-                      to={`/about?div=${div.division}#program-divisi`}
-                      style={{
-                        color: 'var(--emerald-light)',
-                        fontSize: '0.82rem',
-                        fontWeight: 600,
-                        textDecoration: 'none',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '0.3rem',
-                      }}
-                    >
-                      Detail Divisi <ArrowRight size={14} />
-                    </Link>
-                  </div>
-                </div>
-              );
-            })}
+            {latestArticles.map((article, i) => (
+              <ArticleCard key={article.id} article={article} index={i} />
+            ))}
           </div>
 
           <div className="reveal-on-scroll delay-200" style={{ textAlign: 'center', marginTop: '2.5rem' }}>
-            <Link to="/about#program-divisi" className="btn btn-primary">
-              Pelajari Detail 5 Pilar Divisi <ChevronRight size={18} />
+            <Link to="/articles" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+              {home?.sections?.articles?.btnText || 'Lihat Semua Berita'} <ChevronRight size={18} />
             </Link>
           </div>
         </div>
@@ -1226,41 +1165,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ 5. BERITA TERKINI ═══ */}
-      <section className="section" style={{ background: '#F8F6F0', padding: '5rem 0' }}>
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
-          <div className="section-header reveal-on-scroll delay-100">
-            <span className="badge badge-emerald" style={{ marginBottom: '0.75rem', display: 'inline-flex' }}>
-              <Newspaper size={14} /> {home?.sections?.articles?.tag || 'Berita Terkini'}
-            </span>
-            <h2 style={{ color: 'var(--deep-pine)' }}>{home?.sections?.articles?.title || 'Berita Terkini'}</h2>
-            <div className="section-divider" />
-            <p style={{ color: 'rgba(13,43,34,0.6)' }}>
-              {home?.sections?.articles?.desc || 'Informasi, warta, dan kabar terbaru seputar kegiatan dakwah dan kepemudaan ROHIS se-Banyumas.'}
-            </p>
-          </div>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
-              gap: '1.5rem',
-            }}
-          >
-            {latestArticles.map((article, i) => (
-              <ArticleCard key={article.id} article={article} index={i} />
-            ))}
-          </div>
-
-          <div className="reveal-on-scroll delay-200" style={{ textAlign: 'center', marginTop: '2.5rem' }}>
-            <Link to="/articles" className="btn btn-secondary">
-              {home?.sections?.articles?.btnText || 'Lihat Semua Berita'} <ChevronRight size={18} />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ 6. AGENDA MENDATANG ═══ */}
+      {/* ═══ 5. AGENDA MENDATANG ═══ */}
       <section className="section section-pine" style={{ padding: '5rem 0' }}>
         <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
           <div className="section-header reveal-on-scroll delay-100">
@@ -1296,7 +1202,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ 7. LAYANAN & DIREKTORI ═══ */}
+      {/* ═══ 6. LAYANAN & DIREKTORI ═══ */}
       <section className="section" style={{ padding: '5rem 0', background: 'var(--warm-alabaster)' }}>
         <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
           <div className="section-header reveal-on-scroll delay-100">
@@ -1397,7 +1303,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ 8. CLOSING CTA BANNER ═══ */}
+      {/* ═══ 7. CLOSING CTA BANNER ═══ */}
       <section
         style={{
           background: 'linear-gradient(135deg, var(--deep-pine) 0%, var(--deep-pine-light) 100%)',
