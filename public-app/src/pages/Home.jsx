@@ -612,6 +612,10 @@ export default function Home() {
   const touchStartRef = useRef({ x: 0, y: 0, time: 0, isHorizontal: false });
   const isTransitioningRef = useRef(false);
 
+  const [activeServiceIdx, setActiveServiceIdx] = useState(0);
+  const serviceTouchStartRef = useRef({ x: 0, y: 0, time: 0, isHorizontal: false });
+  const isServiceTransitioningRef = useRef(false);
+
   // Attach scroll reveal observer whenever dependencies update
   useScrollReveal([home, news, articles, events, loading]);
 
@@ -851,10 +855,6 @@ export default function Home() {
 
   const heroPhoto = parseImageUrl(hero.photoUrl);
   const aboutPhoto = parseImageUrl(about.photoUrl);
-
-  const [activeServiceIdx, setActiveServiceIdx] = useState(0);
-  const serviceTouchStartRef = useRef({ x: 0, y: 0, time: 0, isHorizontal: false });
-  const isServiceTransitioningRef = useRef(false);
 
   const serviceCards = [
     {
