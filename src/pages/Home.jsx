@@ -1303,7 +1303,7 @@ export default function Home() {
       </section>
 
       {/* ═══ 3. BERITA TERKINI ═══ */}
-      <section id="berita" className="section section-pine" style={{ padding: '5.5rem 0' }}>
+      <section id="berita" className="section section-pine" style={{ padding: '5.5rem 0', overflow: 'hidden' }}>
         <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
           <div className="section-header reveal-on-scroll delay-100">
             <span
