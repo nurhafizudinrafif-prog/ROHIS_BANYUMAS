@@ -852,6 +852,121 @@ export default function Home() {
   const heroPhoto = parseImageUrl(hero.photoUrl);
   const aboutPhoto = parseImageUrl(about.photoUrl);
 
+  const [activeServiceIdx, setActiveServiceIdx] = useState(0);
+  const serviceTouchStartRef = useRef({ x: 0, y: 0, time: 0, isHorizontal: false });
+  const isServiceTransitioningRef = useRef(false);
+
+  const serviceCards = [
+    {
+      id: 'srv-about',
+      icon: Compass,
+      tag: 'Profil & Sejarah',
+      title: 'Tentang ROKABA',
+      desc: 'Mengenal visi, sejarah perjalanan, nilai perjuangan, dan struktur pengurus ROHIS Kabupaten Banyumas.',
+      link: '/about',
+      color: 'var(--emerald)',
+    },
+    {
+      id: 'srv-berita',
+      icon: Newspaper,
+      tag: 'Warta Dakwah',
+      title: 'Berita Terkini',
+      desc: 'Informasi resmi, warta kegiatan, dan dokumentasi syiar aktif pelajar se-Kabupaten Banyumas.',
+      link: '/berita',
+      color: '#3B82F6',
+    },
+    {
+      id: 'srv-artikel',
+      icon: FileText,
+      tag: 'Literasi Islami',
+      title: 'Artikel & Opini',
+      desc: 'Kumpulan kajian Islam moderat berkualitas untuk memperluas wawasan dan karakter pemuda.',
+      link: '/articles',
+      color: 'var(--antique-brass)',
+    },
+    {
+      id: 'srv-events',
+      icon: Calendar,
+      tag: 'Jadwal & Event',
+      title: 'Agenda Mendatang',
+      desc: 'Ikuti beragam kajian akbar, latihan kepemimpinan, dan temu ukhuwah kader pelajar.',
+      link: '/events',
+      color: '#F59E0B',
+    },
+    {
+      id: 'srv-schools',
+      icon: School,
+      tag: 'Jaringan Sekolah',
+      title: 'Anggota Sekolah',
+      desc: 'Database sekolah anggota SMA/SMK/MA terdaftar dan aktif di seluruh Kabupaten Banyumas.',
+      link: '/schools',
+      color: '#8B5CF6',
+    },
+    {
+      id: 'srv-library',
+      icon: Library,
+      tag: 'Pustaka Digital',
+      title: 'E-Library & Modul',
+      desc: 'Unduh kurikulum pembinaan LKRO, modul kaderisasi, dan materi kajian dakwah gratis.',
+      link: '/library',
+      color: '#059669',
+    },
+    {
+      id: 'srv-gallery',
+      icon: Camera,
+      tag: 'Dokumentasi Visual',
+      title: 'Galeri Dokumentasi',
+      desc: 'Kumpulan foto dan video momen kebersamaan, musyawarah, dan syiar pelajar Banyumas.',
+      link: '/gallery',
+      color: '#06B6D4',
+    },
+  ];
+
+  const rotateService = (dir) => {
+    if (isServiceTransitioningRef.current) return;
+    isServiceTransitioningRef.current = true;
+    setActiveServiceIdx((prev) => (prev + dir + serviceCards.length) % serviceCards.length);
+    setTimeout(() => {
+      isServiceTransitioningRef.current = false;
+    }, 480);
+  };
+
+  const handleServiceTouchStart = (e) => {
+    serviceTouchStartRef.current = {
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY,
+      time: Date.now(),
+      isHorizontal: false,
+    };
+  };
+
+  const handleServiceTouchMove = (e) => {
+    const deltaX = e.touches[0].clientX - serviceTouchStartRef.current.x;
+    const deltaY = e.touches[0].clientY - serviceTouchStartRef.current.y;
+    if (Math.abs(deltaX) > Math.abs(deltaY) + 4 && Math.abs(deltaX) > 8) {
+      serviceTouchStartRef.current.isHorizontal = true;
+    }
+  };
+
+  const handleServiceTouchEnd = (e) => {
+    const deltaX = e.changedTouches[0].clientX - serviceTouchStartRef.current.x;
+    const deltaY = e.changedTouches[0].clientY - serviceTouchStartRef.current.y;
+    const elapsed = Date.now() - (serviceTouchStartRef.current.time || 0);
+
+    const isFlick = elapsed < 350 && Math.abs(deltaX) > 22;
+    const isDrag = Math.abs(deltaX) > 38;
+
+    if (serviceTouchStartRef.current.isHorizontal || Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (isFlick || isDrag) {
+        if (deltaX < 0) {
+          rotateService(1);
+        } else {
+          rotateService(-1);
+        }
+      }
+    }
+  };
+
   return (
     <div style={{ overflowX: 'clip', width: '100%' }}>
       {/* ═══ 1. HERO SECTION ═══ */}
@@ -1663,170 +1778,209 @@ export default function Home() {
       </section>
 
       {/* ═══ 7. LAYANAN & DIREKTORI ═══ */}
-      <section className="section" style={{ padding: '5rem 0', background: 'var(--warm-alabaster)' }}>
+      <section className="section" style={{ padding: '5.5rem 0', background: 'var(--warm-alabaster)', overflow: 'hidden' }}>
         <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
           <div className="section-header reveal-on-scroll delay-100">
+            <span
+              className="badge"
+              style={{
+                background: 'rgba(13,43,34,0.06)',
+                color: 'var(--deep-pine)',
+                border: '1px solid rgba(13,43,34,0.12)',
+                marginBottom: '0.75rem',
+              }}
+            >
+              • JELAJAHI FITUR
+            </span>
             <h2 style={{ color: 'var(--deep-pine)' }}>{home?.sections?.services?.title || 'Layanan & Direktori Dakwah'}</h2>
             <div className="section-divider" />
-            <p style={{ color: 'rgba(13,43,34,0.6)' }}>
+            <p style={{ color: 'rgba(13,43,34,0.65)' }}>
               {home?.sections?.services?.desc || 'Berbagai fasilitas terpadu untuk mendukung syiar dan komunikasi antar sekolah.'}
             </p>
           </div>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))',
-              gap: '1.5rem',
-            }}
-          >
-            {[
-              {
-                icon: Compass,
-                tag: 'Profil & Sejarah',
-                title: 'Tentang ROKABA',
-                desc: 'Mengenal visi, sejarah perjalanan, dan struktur kepengurusan ROHIS Kabupaten Banyumas.',
-                link: '/about',
-                color: 'var(--emerald)',
-              },
-              {
-                icon: Newspaper,
-                tag: 'Warta Dakwah',
-                title: 'Berita Terkini',
-                desc: 'Informasi resmi dan warta dokumentasi kegiatan dakwah pelajar se-Kabupaten Banyumas.',
-                link: '/berita',
-                color: '#3B82F6',
-              },
-              {
-                icon: FileText,
-                tag: 'Literasi Islami',
-                title: 'Artikel & Opini',
-                desc: 'Bacaan kajian Islam moderat berkualitas untuk memperluas wawasan dan karakter pemuda.',
-                link: '/articles',
-                color: 'var(--antique-brass)',
-              },
-              {
-                icon: Calendar,
-                tag: 'Jadwal & Event',
-                title: 'Agenda Mendatang',
-                desc: 'Ikuti beragam kajian akbar, latihan kepemimpinan, dan temu ukhuwah kader pelajar.',
-                link: '/events',
-                color: '#F59E0B',
-              },
-              {
-                icon: School,
-                tag: 'Jaringan Sekolah',
-                title: 'Anggota Sekolah',
-                desc: 'Database sekolah anggota SMA/SMK/MA terdaftar dan aktif di seluruh Kabupaten Banyumas.',
-                link: '/schools',
-                color: '#8B5CF6',
-              },
-              {
-                icon: Library,
-                tag: 'Pustaka Digital',
-                title: 'E-Library & Modul',
-                desc: 'Unduh kurikulum pembinaan LKRO, modul kaderisasi, dan materi kajian dakwah gratis.',
-                link: '/library',
-                color: '#059669',
-              },
-              {
-                icon: Camera,
-                tag: 'Dokumentasi Visual',
-                title: 'Galeri Dokumentasi',
-                desc: 'Kumpulan foto dan video momen kebersamaan, musyawarah, dan syiar pelajar Banyumas.',
-                link: '/gallery',
-                color: '#06B6D4',
-              },
-            ].map((srv, i) => (
-              <Link
-                key={i}
-                to={srv.link}
-                className={`reveal-scale delay-${Math.min((i + 1) * 80, 500)}`}
+          {/* ═══ 3D SYMMETRICAL COVERFLOW (Responsive on Mobile & PC) ═══ */}
+          <div className="service-coverflow-wrapper">
+            {/* Interactive Hint */}
+            <div className="service-swipe-hint">
+              <Sparkles size={13} style={{ color: 'var(--antique-brass)' }} />
+              <span>Geser atau klik kartu samping / panah untuk melihat menu lain</span>
+              <ChevronRight size={14} style={{ color: 'var(--emerald)' }} />
+            </div>
+
+            {/* Coverflow Stage */}
+            <div
+              className="service-coverflow-stage"
+              onTouchStart={handleServiceTouchStart}
+              onTouchMove={handleServiceTouchMove}
+              onTouchEnd={handleServiceTouchEnd}
+            >
+              {/* Floating Left Arrow */}
+              <button
+                type="button"
+                onClick={() => rotateService(-1)}
+                aria-label="Layanan sebelumnya"
+                className="coverflow-nav-arrow coverflow-nav-arrow-left"
                 style={{
                   background: 'white',
-                  borderRadius: 'var(--radius-xl)',
-                  padding: '1.75rem',
-                  textDecoration: 'none',
-                  border: '1px solid rgba(13,43,34,0.06)',
-                  boxShadow: 'var(--shadow-sm)',
-                  transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-4px)';
-                  e.currentTarget.style.boxShadow = 'var(--shadow-lg)';
-                  e.currentTarget.style.borderColor = `${srv.color}35`;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
-                  e.currentTarget.style.borderColor = 'rgba(13,43,34,0.06)';
+                  color: 'var(--deep-pine)',
+                  border: '1px solid rgba(13,43,34,0.12)',
+                  boxShadow: '0 4px 16px rgba(13,43,34,0.12)',
                 }}
               >
-                <div>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      marginBottom: '1.25rem',
-                    }}
-                  >
+                <ChevronLeft size={18} />
+              </button>
+
+              {/* Cards Track */}
+              <div className="service-coverflow-track">
+                {serviceCards.map((srv, idx) => {
+                  const count = serviceCards.length;
+                  let diff = (idx - activeServiceIdx) % count;
+                  if (diff > count / 2) diff -= count;
+                  if (diff < -count / 2) diff += count;
+
+                  let slot = 'center';
+                  if (diff === 0) slot = 'center';
+                  else if (diff === -1) slot = 'left';
+                  else if (diff === 1) slot = 'right';
+                  else slot = 'hidden';
+
+                  const isCenter = slot === 'center';
+
+                  return (
                     <div
-                      style={{
-                        width: 48,
-                        height: 48,
-                        borderRadius: '14px',
-                        background: `${srv.color}15`,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
+                      key={srv.id}
+                      className={`service-card-slot slot-${slot}`}
+                      onClick={() => {
+                        if (slot === 'left') rotateService(-1);
+                        else if (slot === 'right') rotateService(1);
                       }}
                     >
-                      <srv.icon size={22} style={{ color: srv.color }} />
+                      <Link
+                        to={srv.link}
+                        onClick={(e) => {
+                          if (!isCenter) {
+                            e.preventDefault();
+                          }
+                        }}
+                        className="service-coverflow-card"
+                        tabIndex={isCenter ? 0 : -1}
+                      >
+                        <div>
+                          <div
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              marginBottom: '1rem',
+                            }}
+                          >
+                            <div
+                              style={{
+                                width: 48,
+                                height: 48,
+                                borderRadius: '14px',
+                                background: `${srv.color}15`,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                              }}
+                            >
+                              <srv.icon size={22} style={{ color: srv.color }} />
+                            </div>
+                            <span
+                              style={{
+                                fontSize: '0.72rem',
+                                fontWeight: 700,
+                                letterSpacing: '0.04em',
+                                textTransform: 'uppercase',
+                                color: srv.color,
+                                background: `${srv.color}10`,
+                                padding: '0.2rem 0.65rem',
+                                borderRadius: '9999px',
+                                border: `1px solid ${srv.color}25`,
+                              }}
+                            >
+                              {srv.tag}
+                            </span>
+                          </div>
+                          <h3 style={{ fontSize: '1.15rem', marginBottom: '0.45rem', color: 'var(--deep-pine)', fontWeight: 700 }}>
+                            {srv.title}
+                          </h3>
+                          <p style={{ fontSize: '0.88rem', color: 'rgba(13,43,34,0.65)', lineHeight: 1.6, margin: 0 }}>
+                            {srv.desc}
+                          </p>
+                        </div>
+                        <div
+                          style={{
+                            marginTop: '1rem',
+                            paddingTop: '0.8rem',
+                            borderTop: '1px solid rgba(13,43,34,0.06)',
+                            color: srv.color,
+                            fontSize: '0.85rem',
+                            fontWeight: 600,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.35rem',
+                          }}
+                        >
+                          Buka Halaman <ArrowRight size={15} />
+                        </div>
+                      </Link>
                     </div>
-                    <span
-                      style={{
-                        fontSize: '0.72rem',
-                        fontWeight: 700,
-                        letterSpacing: '0.04em',
-                        textTransform: 'uppercase',
-                        color: srv.color,
-                        background: `${srv.color}10`,
-                        padding: '0.2rem 0.65rem',
-                        borderRadius: '9999px',
-                        border: `1px solid ${srv.color}25`,
-                      }}
-                    >
-                      {srv.tag}
-                    </span>
-                  </div>
-                  <h3 style={{ fontSize: '1.15rem', marginBottom: '0.5rem', color: 'var(--deep-pine)', fontWeight: 700 }}>
-                    {srv.title}
-                  </h3>
-                  <p style={{ fontSize: '0.88rem', color: 'rgba(13,43,34,0.65)', lineHeight: 1.6, margin: 0 }}>
-                    {srv.desc}
-                  </p>
-                </div>
-                <div
-                  style={{
-                    marginTop: '1.25rem',
-                    paddingTop: '0.9rem',
-                    borderTop: '1px solid rgba(13,43,34,0.06)',
-                    color: srv.color,
-                    fontSize: '0.85rem',
-                    fontWeight: 600,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.35rem',
-                  }}
-                >
-                  Buka Halaman <ArrowRight size={15} />
-                </div>
-              </Link>
-            ))}
+                  );
+                })}
+              </div>
+
+              {/* Floating Right Arrow */}
+              <button
+                type="button"
+                onClick={() => rotateService(1)}
+                aria-label="Layanan selanjutnya"
+                className="coverflow-nav-arrow coverflow-nav-arrow-right"
+                style={{
+                  background: 'white',
+                  color: 'var(--deep-pine)',
+                  border: '1px solid rgba(13,43,34,0.12)',
+                  boxShadow: '0 4px 16px rgba(13,43,34,0.12)',
+                }}
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
+
+            {/* Carousel Controls (Dots + Nav Buttons) */}
+            <div className="service-carousel-controls">
+              <button
+                type="button"
+                onClick={() => rotateService(-1)}
+                aria-label="Layanan sebelumnya"
+                className="service-ctrl-arrow"
+              >
+                <ChevronLeft size={16} />
+              </button>
+
+              <div className="service-carousel-dots">
+                {serviceCards.map((_, dotIdx) => (
+                  <button
+                    key={dotIdx}
+                    type="button"
+                    onClick={() => setActiveServiceIdx(dotIdx)}
+                    aria-label={`Lihat layanan ke-${dotIdx + 1}`}
+                    className={`service-carousel-dot ${activeServiceIdx === dotIdx ? 'active' : ''}`}
+                  />
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => rotateService(1)}
+                aria-label="Layanan selanjutnya"
+                className="service-ctrl-arrow"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
           </div>
         </div>
       </section>
