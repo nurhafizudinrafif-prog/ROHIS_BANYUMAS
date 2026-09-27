@@ -532,6 +532,8 @@ const divisionCards = [
 
 export default function Home() {
   const { home, news, articles, events, loading } = useData();
+  const [activeNewsIdx, setActiveNewsIdx] = useState(0);
+  const newsScrollRef = useRef(null);
 
   // Attach scroll reveal observer whenever dependencies update
   useScrollReveal([home, news, articles, events, loading]);
@@ -679,9 +681,6 @@ export default function Home() {
   const latestNews = [...newsList]
     .sort((a, b) => new Date(b.publishedAt || b.date || 0) - new Date(a.publishedAt || a.date || 0))
     .slice(0, 4);
-
-  const [activeNewsIdx, setActiveNewsIdx] = useState(0);
-  const newsScrollRef = useRef(null);
 
   const handleNewsScroll = () => {
     if (!newsScrollRef.current) return;

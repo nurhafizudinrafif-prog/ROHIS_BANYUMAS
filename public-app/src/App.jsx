@@ -16,13 +16,15 @@ import Contact from './pages/Contact';
 import Consultation from './pages/Consultation';
 import Library from './pages/Library';
 import Programs from './pages/Programs';
+import ErrorBoundary from './components/common/ErrorBoundary';
 
 export default function App() {
   return (
-    <DataProvider>
-      <Router>
-        <ScrollProgressBar />
-        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', width: '100%', maxWidth: '100vw', overflowX: 'clip' }}>
+    <ErrorBoundary>
+      <DataProvider>
+        <Router>
+          <ScrollProgressBar />
+          <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', width: '100%', maxWidth: '100vw', overflowX: 'clip' }}>
           <Navbar />
           <main style={{ flex: 1, width: '100%', maxWidth: '100vw', overflowX: 'clip' }}>
             <Routes>
@@ -60,5 +62,6 @@ export default function App() {
         </div>
       </Router>
     </DataProvider>
+    </ErrorBoundary>
   );
 }
