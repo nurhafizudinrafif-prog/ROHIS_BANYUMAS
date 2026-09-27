@@ -609,7 +609,8 @@ export default function Home() {
   const { home, news, articles, events, loading } = useData();
   const [activeNewsIdx, setActiveNewsIdx] = useState(0);
   const newsScrollRef = useRef(null);
-  const touchStartRef = useRef({ x: 0, y: 0, isHorizontal: false });
+  const touchStartRef = useRef({ x: 0, y: 0, time: 0, isHorizontal: false });
+  const isTransitioningRef = useRef(false);
 
   // Attach scroll reveal observer whenever dependencies update
   useScrollReveal([home, news, articles, events, loading]);
@@ -762,6 +763,7 @@ export default function Home() {
     touchStartRef.current = {
       x: e.touches[0].clientX,
       y: e.touches[0].clientY,
+      time: Date.now(),
       isHorizontal: false,
     };
   };
@@ -769,7 +771,7 @@ export default function Home() {
   const handleTouchMove = (e) => {
     const deltaX = e.touches[0].clientX - touchStartRef.current.x;
     const deltaY = e.touches[0].clientY - touchStartRef.current.y;
-    if (Math.abs(deltaX) > Math.abs(deltaY) + 6 && Math.abs(deltaX) > 10) {
+    if (Math.abs(deltaX) > Math.abs(deltaY) + 4 && Math.abs(deltaX) > 8) {
       touchStartRef.current.isHorizontal = true;
     }
   };
@@ -777,22 +779,39 @@ export default function Home() {
   const handleTouchEnd = (e) => {
     const deltaX = e.changedTouches[0].clientX - touchStartRef.current.x;
     const deltaY = e.changedTouches[0].clientY - touchStartRef.current.y;
+    const elapsed = Date.now() - (touchStartRef.current.time || 0);
+
+    const isFlick = elapsed < 350 && Math.abs(deltaX) > 22;
+    const isDrag = Math.abs(deltaX) > 38;
+
     if (touchStartRef.current.isHorizontal || Math.abs(deltaX) > Math.abs(deltaY)) {
-      if (deltaX < -30) {
-        rotateNews(1);
-      } else if (deltaX > 30) {
-        rotateNews(-1);
+      if (isFlick || isDrag) {
+        if (deltaX < 0) {
+          rotateNews(1);
+        } else {
+          rotateNews(-1);
+        }
       }
     }
   };
 
   const rotateNews = (dir) => {
     if (!latestNews || latestNews.length === 0) return;
+    if (isTransitioningRef.current) return;
+    isTransitioningRef.current = true;
     setActiveNewsIdx((prev) => (prev + dir + latestNews.length) % latestNews.length);
+    setTimeout(() => {
+      isTransitioningRef.current = false;
+    }, 480);
   };
 
   const scrollNewsTo = (idx) => {
+    if (isTransitioningRef.current) return;
+    isTransitioningRef.current = true;
     setActiveNewsIdx(idx);
+    setTimeout(() => {
+      isTransitioningRef.current = false;
+    }, 480);
   };
 
   const scrollNewsByDirection = (dir) => {

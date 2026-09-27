@@ -1076,36 +1076,42 @@ textarea.form-input {
   touch-action: pan-y pinch-zoom !important;
   user-select: none;
   -webkit-user-select: none;
-  perspective: 1000px;
-  /* Smooth feathering on screen edges so peeking preview cards fade seamlessly */
-  mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    rgba(0, 0, 0, 0.35) 3%,
-    rgba(0, 0, 0, 0.95) 12%,
-    #000000 20%,
-    #000000 80%,
-    rgba(0, 0, 0, 0.95) 88%,
-    rgba(0, 0, 0, 0.35) 97%,
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    rgba(0, 0, 0, 0.35) 3%,
-    rgba(0, 0, 0, 0.95) 12%,
-    #000000 20%,
-    #000000 80%,
-    rgba(0, 0, 0, 0.95) 88%,
-    rgba(0, 0, 0, 0.35) 97%,
-    transparent 100%
-  );
+  perspective: 1200px;
+  -webkit-perspective: 1200px;
+  transform-style: preserve-3d;
+  overflow: hidden;
+}
+
+/* Left & Right Soft Edge Fades (Silk-smooth fade to deep-pine without expensive CSS masks) */
+.coverflow-stage::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 48px;
+  height: 100%;
+  background: linear-gradient(to right, var(--deep-pine) 0%, rgba(13, 43, 34, 0.75) 50%, transparent 100%);
+  z-index: 20;
+  pointer-events: none;
+}
+
+.coverflow-stage::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 48px;
+  height: 100%;
+  background: linear-gradient(to left, var(--deep-pine) 0%, rgba(13, 43, 34, 0.75) 50%, transparent 100%);
+  z-index: 20;
+  pointer-events: none;
 }
 
 .coverflow-track {
   position: relative;
   width: 100%;
   height: 100%;
+  transform-style: preserve-3d;
 }
 
 .coverflow-card-slot {
@@ -1116,28 +1122,28 @@ textarea.form-input {
   height: 265px;
   margin-top: -132.5px;
   margin-left: -125px;
-  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.55s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, opacity, filter;
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
   border-radius: 24px;
 }
 
 /* Center Card: Active, Full Scale, Glowing, Pristine Sharp */
 .coverflow-card-slot.slot-center {
-  transform: translateX(0) scale(1);
+  transform: translate3d(0, 0, 0) scale(1);
   opacity: 1;
-  filter: none;
   z-index: 10;
   pointer-events: auto;
 }
 
 /* Left Card: Symmetrically Peeking on Left, Softly Scaled & Feathered */
 .coverflow-card-slot.slot-left {
-  transform: translateX(-180px) scale(0.82);
+  transform: translate3d(-180px, 0, 0) scale(0.82);
   opacity: 0.52;
-  filter: brightness(0.82) contrast(0.95) blur(0.25px);
   z-index: 5;
   cursor: pointer;
   pointer-events: auto;
@@ -1145,9 +1151,8 @@ textarea.form-input {
 
 /* Right Card: Symmetrically Peeking on Right, Softly Scaled & Feathered */
 .coverflow-card-slot.slot-right {
-  transform: translateX(180px) scale(0.82);
+  transform: translate3d(180px, 0, 0) scale(0.82);
   opacity: 0.52;
-  filter: brightness(0.82) contrast(0.95) blur(0.25px);
   z-index: 5;
   cursor: pointer;
   pointer-events: auto;
@@ -1155,9 +1160,8 @@ textarea.form-input {
 
 /* Hidden Cards in Loop */
 .coverflow-card-slot.slot-hidden {
-  transform: translateX(0) scale(0.5);
+  transform: translate3d(0, 0, 0) scale(0.48);
   opacity: 0;
-  filter: brightness(0.7);
   pointer-events: none;
   z-index: 1;
 }
@@ -1166,6 +1170,7 @@ textarea.form-input {
    Square News Card (Kotak dengan Tepi Halus)
    ═══════════════════════════════════════════ */
 .square-news-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 250px;
@@ -1176,12 +1181,31 @@ textarea.form-input {
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.38);
   text-decoration: none;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  transition: box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.45s ease,
-              transform 0.35s ease;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  transition: box-shadow 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.5s ease;
   user-select: none;
   -webkit-user-select: none;
   touch-action: pan-y pinch-zoom !important;
+}
+
+/* Subtle GPU-accelerated veil for side peek cards */
+.square-news-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  background: rgba(8, 28, 22, 0.16);
+  opacity: 0;
+  transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.square-news-card.is-inactive::after {
+  opacity: 1;
 }
 
 .square-news-card.is-active {
@@ -1401,7 +1425,9 @@ textarea.form-input {
   border: none;
   padding: 0;
   cursor: pointer;
-  transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+  transition: width 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+              background 0.45s ease,
+              box-shadow 0.45s ease;
 }
 
 .news-carousel-dot.active {
