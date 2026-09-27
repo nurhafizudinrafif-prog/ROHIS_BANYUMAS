@@ -85,13 +85,22 @@ function StatCard({ value, suffix = '+', label, delay = 0 }) {
   );
 }
 
-function NewsCard({ item, index }) {
+function NewsCard({ item, index, isActive = true, onSelect }) {
   const imgUrl = parseImageUrl(item.image || item.coverImage);
+
+  const handleClick = (e) => {
+    // If clicking an inactive side-peek card on mobile, bring it to center instead of opening link
+    if (!isActive && typeof window !== 'undefined' && window.innerWidth <= 768) {
+      e.preventDefault();
+      if (onSelect) onSelect();
+    }
+  };
 
   return (
     <Link
       to={`/berita/${item.slug || item.id}`}
-      className={`news-card-vertical reveal-scale delay-${Math.min((index + 1) * 80, 450)}`}
+      onClick={handleClick}
+      className={`news-card-vertical ${isActive ? 'is-active' : 'is-inactive'} reveal-scale delay-${Math.min((index + 1) * 80, 450)}`}
     >
       <div className="news-card-vertical-img">
         {imgUrl ? (
@@ -680,16 +689,20 @@ export default function Home() {
     const cards = container.querySelectorAll('.news-card-vertical');
     if (!cards || cards.length === 0) return;
 
-    const scrollLeft = container.scrollLeft;
+    // Calculate viewport center in container coordinates
+    const containerCenter = container.scrollLeft + container.clientWidth / 2;
     let closestIdx = 0;
-    let minDiff = Infinity;
+    let minDistance = Infinity;
+
     cards.forEach((card, idx) => {
-      const diff = Math.abs(card.offsetLeft - container.offsetLeft - scrollLeft);
-      if (diff < minDiff) {
-        minDiff = diff;
+      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+      const distance = Math.abs(containerCenter - cardCenter);
+      if (distance < minDistance) {
+        minDistance = distance;
         closestIdx = idx;
       }
     });
+
     setActiveNewsIdx(closestIdx);
   };
 
@@ -701,11 +714,11 @@ export default function Home() {
     if (cards && cards[targetIdx]) {
       cards[targetIdx].scrollIntoView({
         behavior: 'smooth',
-        inline: 'start',
+        inline: 'center',
         block: 'nearest',
       });
     } else {
-      const cardWidth = container.clientWidth * 0.76 + 16;
+      const cardWidth = container.clientWidth * 0.73 + 14;
       container.scrollTo({
         left: targetIdx * cardWidth,
         behavior: 'smooth',
@@ -1265,7 +1278,13 @@ export default function Home() {
               className="news-feed-container"
             >
               {latestNews.map((item, i) => (
-                <NewsCard key={item.id} item={item} index={i} />
+                <NewsCard
+                  key={item.id}
+                  item={item}
+                  index={i}
+                  isActive={activeNewsIdx === i}
+                  onSelect={() => scrollNewsTo(i)}
+                />
               ))}
             </div>
 
@@ -1281,18 +1300,40 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Mobile Pagination Indicator Dots */}
+          {/* Mobile Carousel Controls (Flanking arrows + Dots) */}
           {latestNews.length > 1 && (
-            <div className="news-carousel-dots">
-              {latestNews.map((_, dotIdx) => (
-                <button
-                  key={dotIdx}
-                  type="button"
-                  onClick={() => scrollNewsTo(dotIdx)}
-                  aria-label={`Lihat berita ke-${dotIdx + 1}`}
-                  className={`news-carousel-dot ${activeNewsIdx === dotIdx ? 'active' : ''}`}
-                />
-              ))}
+            <div className="news-carousel-controls">
+              <button
+                type="button"
+                onClick={() => scrollNewsByDirection(-1)}
+                disabled={activeNewsIdx === 0}
+                aria-label="Berita sebelumnya"
+                className={`news-ctrl-arrow ${activeNewsIdx === 0 ? 'disabled' : ''}`}
+              >
+                <ChevronLeft size={16} />
+              </button>
+
+              <div className="news-carousel-dots">
+                {latestNews.map((_, dotIdx) => (
+                  <button
+                    key={dotIdx}
+                    type="button"
+                    onClick={() => scrollNewsTo(dotIdx)}
+                    aria-label={`Lihat berita ke-${dotIdx + 1}`}
+                    className={`news-carousel-dot ${activeNewsIdx === dotIdx ? 'active' : ''}`}
+                  />
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => scrollNewsByDirection(1)}
+                disabled={activeNewsIdx >= latestNews.length - 1}
+                aria-label="Berita selanjutnya"
+                className={`news-ctrl-arrow ${activeNewsIdx >= latestNews.length - 1 ? 'disabled' : ''}`}
+              >
+                <ChevronRight size={16} />
+              </button>
             </div>
           )}
 

@@ -1037,7 +1037,7 @@ textarea.form-input {
 }
 
 /* ═══════════════════════════════════════════
-   Vertical on Desktop / Horizontal Swipe on Mobile (ROKABA)
+   Vertical on Desktop / Symmetrical 3D Coverflow on Mobile (ROKABA)
    ═══════════════════════════════════════════ */
 .news-feed-container {
   display: flex;
@@ -1052,23 +1052,24 @@ textarea.form-input {
   width: 100%;
 }
 
+/* Floating Nav Arrows over Photo Header */
 .news-nav-arrow {
   position: absolute;
-  top: 48%;
+  top: 78px;
   transform: translateY(-50%);
   z-index: 25;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(13, 43, 34, 0.88);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1.5px solid rgba(181, 141, 79, 0.55);
   color: #E6C587;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 10px rgba(181, 141, 79, 0.25);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45), 0 0 10px rgba(181, 141, 79, 0.25);
   cursor: pointer;
   transition: all 0.28s cubic-bezier(0.25, 1, 0.5, 1);
   touch-action: manipulation;
@@ -1076,11 +1077,11 @@ textarea.form-input {
 }
 
 .news-nav-arrow-left {
-  left: 0.5rem;
+  left: 0.35rem;
 }
 
 .news-nav-arrow-right {
-  right: 0.5rem;
+  right: 0.35rem;
 }
 
 .news-nav-arrow:hover,
@@ -1128,11 +1129,9 @@ textarea.form-input {
     -webkit-overflow-scrolling: touch !important;
     overscroll-behavior-x: contain !important;
     overscroll-behavior-y: auto !important;
-    gap: 1rem !important;
-    padding: 0.5rem 1.25rem 1.25rem !important;
+    gap: 0.85rem !important;
+    padding: 0.85rem 13.5% 1.5rem !important;
     margin: 0 !important;
-    scroll-padding-left: 1.25rem !important;
-    scroll-padding-right: 1.25rem !important;
     scrollbar-width: none !important;
     touch-action: pan-y pinch-zoom !important;
   }
@@ -1142,18 +1141,38 @@ textarea.form-input {
   }
 
   .news-feed-container .news-card-vertical {
-    flex: 0 0 76% !important;
-    max-width: 290px !important;
-    min-width: 245px !important;
-    scroll-snap-align: start !important;
+    flex: 0 0 73% !important;
+    max-width: 280px !important;
+    min-width: 235px !important;
+    scroll-snap-align: center !important;
     scroll-snap-stop: normal !important;
     flex-direction: column !important;
     border-radius: var(--radius-lg) !important;
     background: #FFFFFF !important;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28) !important;
     touch-action: pan-y pinch-zoom !important;
-    transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.25s ease !important;
+    transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.38s ease,
+                box-shadow 0.38s ease,
+                filter 0.38s ease !important;
+    will-change: transform, opacity;
+  }
+
+  /* Inactive side-peek cards: scaled down & dimmed */
+  .news-feed-container .news-card-vertical.is-inactive {
+    transform: scale(0.88) !important;
+    opacity: 0.58 !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18) !important;
+    filter: brightness(0.92) contrast(0.95) !important;
+    cursor: pointer !important;
+  }
+
+  /* Active center card: full size & glowing */
+  .news-feed-container .news-card-vertical.is-active {
+    transform: scale(1) !important;
     opacity: 1 !important;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.42), 0 0 0 1.5px rgba(181, 141, 79, 0.4) !important;
+    filter: brightness(1) contrast(1) !important;
+    z-index: 5 !important;
   }
 
   .news-feed-container .news-card-vertical * {
@@ -1161,7 +1180,7 @@ textarea.form-input {
   }
 
   .news-feed-container .news-card-vertical:active {
-    transform: scale(0.985) !important;
+    transform: scale(0.975) !important;
   }
 
   .news-feed-container .news-card-vertical-img {
@@ -1171,21 +1190,61 @@ textarea.form-input {
   }
 
   .news-feed-container .news-card-vertical-body {
-    padding: 1rem 1rem 1.15rem !important;
+    padding: 0.95rem 0.95rem 1.15rem !important;
   }
 
   .news-feed-container .news-card-vertical-title,
   .news-feed-container .news-card-vertical h3 {
-    font-size: 1.08rem !important;
+    font-size: 1.05rem !important;
     line-height: 1.32 !important;
-    margin: 0.4rem 0 !important;
+    margin: 0.35rem 0 !important;
   }
 
   .news-feed-container .news-card-vertical p {
     font-size: 0.82rem !important;
-    line-height: 1.45 !important;
-    margin: 0 0 0.7rem !important;
+    line-height: 1.42 !important;
+    margin: 0 0 0.65rem !important;
   }
+}
+
+/* Bottom Controls with Flanking Arrows & Dots */
+.news-carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.news-ctrl-arrow {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(181, 141, 79, 0.35);
+  color: var(--antique-brass-light, #DFBF73);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  padding: 0;
+  touch-action: manipulation;
+}
+
+.news-ctrl-arrow:hover,
+.news-ctrl-arrow:active {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: var(--emerald-light);
+  color: #FFFFFF;
+  transform: scale(1.08);
+}
+
+.news-ctrl-arrow.disabled,
+.news-ctrl-arrow:disabled {
+  opacity: 0.25 !important;
+  pointer-events: none !important;
+  cursor: default !important;
 }
 
 .news-carousel-dots {
@@ -1193,7 +1252,6 @@ textarea.form-input {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  margin-top: 1.25rem;
 }
 
 .news-carousel-dot {
@@ -1243,10 +1301,18 @@ textarea.form-input {
 
 @media (min-width: 769px) {
   .news-nav-arrow,
+  .news-carousel-controls,
   .news-swipe-hint,
   .news-carousel-dots,
   .hide-desktop {
     display: none !important;
+  }
+
+  .news-feed-container .news-card-vertical.is-inactive,
+  .news-feed-container .news-card-vertical.is-active {
+    transform: none !important;
+    opacity: 1 !important;
+    filter: none !important;
   }
 }
 
