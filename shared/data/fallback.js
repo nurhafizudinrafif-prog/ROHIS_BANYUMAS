@@ -144,6 +144,7 @@ export const fallbackData = {
   "rokaba:news": [
     {
       "id": 1,
+      "order": 1,
       "title": "Musyawarah Kerja Daerah (MUSKERDA) ROHIS Banyumas 2026: Sinergi Kuat Pelajar se-Kabupaten",
       "slug": "muskerda-rohis-banyumas-2026",
       "category": "Organisasi",
@@ -157,6 +158,7 @@ export const fallbackData = {
     },
     {
       "id": 2,
+      "order": 2,
       "title": "Kajian Akbar Pelajar se-Banyumas di Masjid Agung Baitussalam Dihadiri Ratusan Kader",
       "slug": "kajian-akbar-pelajar-banyumas-baitussalam",
       "category": "Kajian",
@@ -170,6 +172,7 @@ export const fallbackData = {
     },
     {
       "id": 3,
+      "order": 3,
       "title": "Aksi Sosial ROKABA Peduli: Distribusi Paket Perlengkapan Sekolah untuk Pelajar Dhuafa",
       "slug": "aksi-sosial-rokaba-peduli-pelajar-dhuafa",
       "category": "Sosial",
@@ -183,6 +186,7 @@ export const fallbackData = {
     },
     {
       "id": 4,
+      "order": 4,
       "title": "Workshop Desain Dakwah Digital & Jurnalistik Pelajar: Cetak Kreator Konten Positif",
       "slug": "workshop-desain-dakwah-digital-jurnalistik",
       "category": "Pelatihan",

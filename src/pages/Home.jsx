@@ -776,7 +776,12 @@ export default function Home() {
 
   const newsList = Array.isArray(news) && news.length > 0 ? news : [];
   const latestNews = [...newsList]
-    .sort((a, b) => new Date(b.publishedAt || b.date || 0) - new Date(a.publishedAt || a.date || 0))
+    .sort((a, b) => {
+      const ordA = (a.order !== undefined && a.order !== null && a.order !== '') ? Number(a.order) : 999999;
+      const ordB = (b.order !== undefined && b.order !== null && b.order !== '') ? Number(b.order) : 999999;
+      if (ordA !== ordB) return ordA - ordB;
+      return new Date(b.publishedAt || b.date || 0) - new Date(a.publishedAt || a.date || 0);
+    })
     .slice(0, 4);
 
   const handleTouchStart = (e) => {

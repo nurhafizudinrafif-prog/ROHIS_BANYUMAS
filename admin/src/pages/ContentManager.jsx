@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
-import { Plus, Edit3, Trash2, Save, X, Search, Sparkles, Video as VideoIcon, Image as ImageIcon, ExternalLink, HelpCircle, FileText, Calendar, MapPin, School, Phone, Users, Clock } from 'lucide-react';
+import { Plus, Edit3, Trash2, Save, X, Search, Sparkles, Video as VideoIcon, Image as ImageIcon, ExternalLink, HelpCircle, FileText, Calendar, MapPin, School, Phone, Users, Clock, ChevronUp, ChevronDown } from 'lucide-react';
 import { parseMediaItem } from '@shared/services/mediaHelper.js';
 import { getDirectImageUrl, extractGoogleDriveId } from '../utils/media';
 import AdminHomeCMS from '../components/AdminHomeCMS';
@@ -12,6 +12,7 @@ const schemas = {
   news: {
     label: 'Berita Terkini',
     fields: [
+      { key: 'order', label: 'Nomor Urutan Tampil (1 = Berita Utama / Paling Awal)', type: 'number', placeholder: '1' },
       { key: 'title', label: 'Judul Berita', type: 'text', required: true, placeholder: 'Contoh: Musyawarah Kerja Daerah (MUSKERDA) ROHIS Banyumas 2026...' },
       { key: 'slug', label: 'Slug URL (Tautan Web)', type: 'text', required: true, placeholder: 'muskerda-rohis-banyumas-2026' },
       { key: 'category', label: 'Kategori Berita', type: 'select', options: ['Warta Rohis', 'Organisasi', 'Kajian', 'Sosial', 'Pelatihan', 'Liputan Acara', 'Aksi Sosial', 'Agenda'] },
@@ -22,7 +23,7 @@ const schemas = {
       { key: 'content', label: 'Isi Lengkap Berita (Paragraf Teks / HTML)', type: 'textarea', placeholder: 'Tuliskan teks lengkap berita kegiatan dakwah di sini. Tekan Enter untuk membuat paragraf baru...' },
       { key: 'image', label: 'Foto Dokumentasi Berita', type: 'text' },
     ],
-    defaults: { id: '', title: '', slug: '', excerpt: '', content: '', author: 'Humas ROKABA', category: 'Warta Rohis', location: 'Kabupaten Banyumas', date: new Date().toISOString().split('T')[0], image: '', publishedAt: '', updatedAt: '' },
+    defaults: { id: '', order: 1, title: '', slug: '', excerpt: '', content: '', author: 'Humas ROKABA', category: 'Warta Rohis', location: 'Kabupaten Banyumas', date: new Date().toISOString().split('T')[0], image: '', publishedAt: '', updatedAt: '' },
   },
   articles: {
     label: 'Artikel Dakwah',
@@ -110,8 +111,22 @@ export default function ContentManager() {
   const { user } = useAuth();
   const schema = schemas[type];
 
-  const items = type === 'home' ? null : (dataCtx[type] || []);
+  const rawItems = type === 'home' ? null : (dataCtx[type] || []);
   const homeData = type === 'home' ? (dataCtx.home || {}) : null;
+
+  // Urutkan berita berdasarkan order (1, 2, 3...) lalu tanggal terbaru
+  const items = useMemo(() => {
+    if (!rawItems) return [];
+    if (type === 'news') {
+      return [...rawItems].sort((a, b) => {
+        const ordA = (a.order !== undefined && a.order !== null && a.order !== '') ? Number(a.order) : 999999;
+        const ordB = (b.order !== undefined && b.order !== null && b.order !== '') ? Number(b.order) : 999999;
+        if (ordA !== ordB) return ordA - ordB;
+        return new Date(b.publishedAt || b.date || 0) - new Date(a.publishedAt || a.date || 0);
+      });
+    }
+    return rawItems;
+  }, [rawItems, type]);
 
   const [editing, setEditing] = useState(null); // null or item object
   const [isNew, setIsNew] = useState(false);
@@ -142,6 +157,38 @@ export default function ContentManager() {
     );
   }
 
+  // ═══ REORDER HANDLER FOR NEWS ═══
+  const handleMoveOrder = async (item, direction) => {
+    if (type !== 'news') return;
+    const currentIndex = items.findIndex(i => String(i.id) === String(item.id));
+    if (currentIndex === -1) return;
+    const targetIndex = currentIndex + direction;
+    if (targetIndex < 0 || targetIndex >= items.length) return;
+
+    const newOrderList = [...items];
+    const [moved] = newOrderList.splice(currentIndex, 1);
+    newOrderList.splice(targetIndex, 0, moved);
+
+    // Reassign clean 1-based order to all items
+    const updated = newOrderList.map((it, idx) => ({
+      ...it,
+      order: idx + 1,
+    }));
+
+    await dataCtx.updateData(type, updated);
+    try {
+      if (dataCtx.addAuditLog) {
+        dataCtx.addAuditLog(
+          user?.id || 'admin',
+          user?.username || 'admin',
+          'UPDATE',
+          type,
+          `Mengubah urutan berita: "${item.title || item.id}" ke posisi #${targetIndex + 1}`
+        ).catch(() => {});
+      }
+    } catch {}
+  };
+
   // ═══ LIST CRUD ═══
   const filtered = items.filter(item => {
     const text = JSON.stringify(item).toLowerCase();
@@ -159,6 +206,7 @@ export default function ContentManager() {
       newItem.date = today;
       newItem.publishedAt = nowIso;
       newItem.updatedAt = nowIso;
+      newItem.order = (items?.length || 0) + 1;
     } else if (type === 'articles') {
       newItem.date = today;
       newItem.publishedAt = nowIso;
@@ -187,6 +235,11 @@ export default function ContentManager() {
       } else if (itemToSave.date && !itemToSave.publishedAt) {
         itemToSave.publishedAt = new Date(itemToSave.date).toISOString();
       }
+      if (itemToSave.order !== undefined && itemToSave.order !== null && itemToSave.order !== '') {
+        itemToSave.order = Number(itemToSave.order);
+      } else {
+        itemToSave.order = isNew ? 1 : 999999;
+      }
     } else if (type === 'articles') {
       itemToSave.updatedAt = new Date().toISOString();
       if (!itemToSave.publishedAt) {
@@ -200,6 +253,19 @@ export default function ContentManager() {
     } else {
       updated = items.map(i => String(i.id) === String(itemToSave.id) ? itemToSave : i);
     }
+
+    if (type === 'news') {
+      updated = [...updated].sort((a, b) => {
+        const ordA = (a.order !== undefined && a.order !== null && a.order !== '') ? Number(a.order) : 999999;
+        const ordB = (b.order !== undefined && b.order !== null && b.order !== '') ? Number(b.order) : 999999;
+        if (ordA !== ordB) return ordA - ordB;
+        return new Date(b.publishedAt || b.date || 0) - new Date(a.publishedAt || a.date || 0);
+      }).map((it, idx) => ({
+        ...it,
+        order: idx + 1,
+      }));
+    }
+
     await dataCtx.updateData(type, updated);
     setEditing(null);
     setIsNew(false);
@@ -219,7 +285,10 @@ export default function ContentManager() {
 
   const handleDelete = async (item) => {
     if (!confirm(`Hapus ${schema.label.toLowerCase()} "${item.title || item.name}"?`)) return;
-    const updated = items.filter(i => String(i.id) !== String(item.id));
+    let updated = items.filter(i => String(i.id) !== String(item.id));
+    if (type === 'news') {
+      updated = updated.map((it, idx) => ({ ...it, order: idx + 1 }));
+    }
     await dataCtx.updateData(type, updated);
     try {
       if (dataCtx.addAuditLog) {
@@ -240,6 +309,28 @@ export default function ContentManager() {
         <h1 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.5rem)', fontWeight: 800 }}>Kelola {schema.label}</h1>
         <button onClick={handleNew} className="btn btn-primary"><Plus size={16} /> Tambah {schema.label}</button>
       </div>
+
+      {/* Informative Banner for News Reordering */}
+      {type === 'news' && (
+        <div className="reveal-on-scroll" style={{
+          padding: '0.85rem 1.15rem',
+          background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(217, 119, 6, 0.08))',
+          border: '1px solid rgba(16, 185, 129, 0.28)',
+          borderRadius: 'var(--radius-md)',
+          marginBottom: '1.25rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.75rem',
+          fontSize: '0.82rem',
+          color: 'var(--warm-alabaster)',
+          lineHeight: 1.5,
+        }}>
+          <Sparkles size={18} style={{ color: 'var(--antique-brass-light)', flexShrink: 0 }} />
+          <div>
+            <strong style={{ color: 'var(--emerald-light)' }}>Pengaturan Urutan Berita Aktif:</strong> Anda dapat mengatur posisi berita dengan menekan tombol panah naik (▲) atau turun (▼) pada kolom Urutan, atau mengubah nomor urutan di form edit. <strong>Urutan 1 sampai 4</strong> otomatis menjadi <strong>4 Berita Pilihan di Coverflow 3D Beranda Web</strong> (posisi <strong>#1</strong> berada di tengah aktif).
+          </div>
+        </div>
+      )}
 
       {/* Search */}
       <div className="reveal-on-scroll delay-100" style={{ position: 'relative', marginBottom: '1.25rem' }}>
@@ -323,6 +414,22 @@ export default function ContentManager() {
                       setEditing(next);
                     }}
                   />
+                )}
+
+                {/* Helpful instructions for News Order */}
+                {type === 'news' && f.key === 'order' && (
+                  <div style={{
+                    marginTop: '0.45rem',
+                    padding: '0.6rem 0.85rem',
+                    borderRadius: 'var(--radius-sm)',
+                    background: 'rgba(16, 185, 129, 0.08)',
+                    border: '1px solid rgba(16, 185, 129, 0.25)',
+                    fontSize: '0.76rem',
+                    color: 'var(--warm-alabaster)',
+                    lineHeight: 1.45,
+                  }}>
+                    💡 <strong>Prioritas Beranda:</strong> Urutan <strong>1 sampai 4</strong> otomatis tampil sebagai 4 Berita Utama di Coverflow 3D Beranda web (Urutan <strong>1</strong> berada di posisi tengah aktif). Anda juga bisa mengatur urutan dengan tombol panah ▲/▼ langsung pada daftar tabel.
+                  </div>
                 )}
 
                 {/* Helpful instructions for Google Drive, TikTok, IG, YouTube */}
@@ -469,7 +576,7 @@ export default function ContentManager() {
 
       {/* Desktop Data Table */}
       <div className="admin-desktop-table glass-card table-responsive reveal-scale delay-150">
-        <table className="data-table" style={{ minWidth: type === 'gallery' ? 640 : (type === 'articles' ? 680 : 540) }}>
+        <table className="data-table" style={{ minWidth: type === 'gallery' ? 640 : (type === 'articles' ? 680 : (type === 'news' ? 760 : 540)) }}>
           <thead>
             {type === 'gallery' ? (
               <tr>
@@ -484,6 +591,7 @@ export default function ContentManager() {
             ) : (type === 'articles' || type === 'news') ? (
               <tr>
                 <th style={{ width: 40, textAlign: 'center' }}>#</th>
+                {type === 'news' && <th style={{ width: 120, textAlign: 'center' }}>Urutan Tampil</th>}
                 <th style={{ width: 80 }}>Sampul Foto</th>
                 <th>{type === 'news' ? 'Judul Berita' : 'Judul Artikel'}</th>
                 <th style={{ width: 110 }}>Kategori</th>
@@ -594,6 +702,74 @@ export default function ContentManager() {
                 return (
                   <tr key={item.id}>
                     <td style={{ color: 'var(--text-muted)', fontSize: '0.78rem', textAlign: 'center' }}>{i + 1}</td>
+                    {isNews && (
+                      <td style={{ textAlign: 'center', whiteSpace: 'nowrap' }}>
+                        <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                            <button
+                              type="button"
+                              onClick={() => handleMoveOrder(item, -1)}
+                              disabled={i === 0}
+                              className="btn btn-sm btn-ghost"
+                              style={{
+                                padding: '0.25rem 0.4rem',
+                                height: 'auto',
+                                borderRadius: '5px',
+                                background: i === 0 ? 'transparent' : 'rgba(255,255,255,0.08)',
+                                opacity: i === 0 ? 0.25 : 1,
+                                cursor: i === 0 ? 'not-allowed' : 'pointer',
+                                color: 'var(--warm-alabaster)',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                              }}
+                              title="Naikkan urutan (geser ke atas)"
+                            >
+                              <ChevronUp size={14} />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleMoveOrder(item, 1)}
+                              disabled={i === items.length - 1}
+                              className="btn btn-sm btn-ghost"
+                              style={{
+                                padding: '0.25rem 0.4rem',
+                                height: 'auto',
+                                borderRadius: '5px',
+                                background: i === items.length - 1 ? 'transparent' : 'rgba(255,255,255,0.08)',
+                                opacity: i === items.length - 1 ? 0.25 : 1,
+                                cursor: i === items.length - 1 ? 'not-allowed' : 'pointer',
+                                color: 'var(--warm-alabaster)',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                              }}
+                              title="Turunkan urutan (geser ke bawah)"
+                            >
+                              <ChevronDown size={14} />
+                            </button>
+                          </div>
+                          <div>
+                            {i === 0 ? (
+                              <span className="badge" style={{
+                                background: 'linear-gradient(135deg, #F59E0B, #D97706)',
+                                color: '#111827',
+                                fontWeight: 800,
+                                fontSize: '0.66rem',
+                                padding: '0.12rem 0.45rem',
+                                boxShadow: '0 2px 6px rgba(245, 158, 11, 0.35)',
+                              }}>
+                                ⭐ #1 Utama
+                              </span>
+                            ) : i < 4 ? (
+                              <span className="badge badge-emerald" style={{ fontSize: '0.66rem', padding: '0.12rem 0.45rem' }}>
+                                #{i + 1} Beranda
+                              </span>
+                            ) : (
+                              <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+                                #{i + 1}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                    )}
                     <td style={{ width: 80 }}>
                       <div style={{
                         width: 64,
@@ -690,7 +866,7 @@ export default function ContentManager() {
       <div className="admin-mobile-cards">
         {filtered.length > 0 ? (
           filtered.map((item, i) => {
-            if (type === 'articles') {
+            if (type === 'articles' || type === 'news') {
               const imgUrl = item.image ? getDirectImageUrl(item.image) : '';
               const driveId = extractGoogleDriveId(item.image);
               return (
@@ -729,10 +905,76 @@ export default function ContentManager() {
 
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.4rem', marginBottom: '0.25rem' }}>
-                        <span className="badge badge-emerald" style={{ fontSize: '0.68rem', padding: '0.15rem 0.5rem' }}>
-                          {item.category || (type === 'news' ? 'Warta Rohis' : 'Dakwah')}
-                        </span>
-                        <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>#{i + 1}</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flexWrap: 'wrap' }}>
+                          <span className="badge badge-emerald" style={{ fontSize: '0.68rem', padding: '0.15rem 0.5rem' }}>
+                            {item.category || (type === 'news' ? 'Warta Rohis' : 'Dakwah')}
+                          </span>
+                          {type === 'news' && (
+                            i === 0 ? (
+                              <span className="badge" style={{
+                                background: 'linear-gradient(135deg, #F59E0B, #D97706)',
+                                color: '#111827',
+                                fontWeight: 800,
+                                fontSize: '0.66rem',
+                                padding: '0.12rem 0.45rem',
+                              }}>
+                                ⭐ #1 Utama
+                              </span>
+                            ) : i < 4 ? (
+                              <span className="badge badge-emerald" style={{ fontSize: '0.66rem', padding: '0.12rem 0.45rem' }}>
+                                #{i + 1} Beranda
+                              </span>
+                            ) : (
+                              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+                                #{i + 1}
+                              </span>
+                            )
+                          )}
+                          {type !== 'news' && (
+                            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>#{i + 1}</span>
+                          )}
+                        </div>
+
+                        {type === 'news' && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                            <button
+                              type="button"
+                              onClick={() => handleMoveOrder(item, -1)}
+                              disabled={i === 0}
+                              className="btn btn-sm btn-ghost"
+                              style={{
+                                padding: '0.25rem 0.45rem',
+                                borderRadius: '6px',
+                                background: i === 0 ? 'transparent' : 'rgba(255,255,255,0.08)',
+                                opacity: i === 0 ? 0.25 : 1,
+                                cursor: i === 0 ? 'not-allowed' : 'pointer',
+                                color: 'var(--warm-alabaster)',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                              }}
+                              title="Naikkan Urutan (ke atas)"
+                            >
+                              <ChevronUp size={15} />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleMoveOrder(item, 1)}
+                              disabled={i === items.length - 1}
+                              className="btn btn-sm btn-ghost"
+                              style={{
+                                padding: '0.25rem 0.45rem',
+                                borderRadius: '6px',
+                                background: i === items.length - 1 ? 'transparent' : 'rgba(255,255,255,0.08)',
+                                opacity: i === items.length - 1 ? 0.25 : 1,
+                                cursor: i === items.length - 1 ? 'not-allowed' : 'pointer',
+                                color: 'var(--warm-alabaster)',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                              }}
+                              title="Turunkan Urutan (ke bawah)"
+                            >
+                              <ChevronDown size={15} />
+                            </button>
+                          </div>
+                        )}
                       </div>
                       <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '0.35rem', flexWrap: 'wrap' }}>
                         <span>{item.author || (type === 'news' ? 'Humas ROKABA' : 'ROKABA')}</span>

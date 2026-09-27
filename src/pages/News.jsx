@@ -18,7 +18,12 @@ export default function News() {
     .filter(a => (a.title || '').toLowerCase().includes(search.toLowerCase()) || 
                  (a.author || '').toLowerCase().includes(search.toLowerCase()) ||
                  (a.location || '').toLowerCase().includes(search.toLowerCase()))
-    .sort((a, b) => new Date(b.publishedAt || b.date || 0) - new Date(a.publishedAt || a.date || 0));
+    .sort((a, b) => {
+      const ordA = (a.order !== undefined && a.order !== null && a.order !== '') ? Number(a.order) : 999999;
+      const ordB = (b.order !== undefined && b.order !== null && b.order !== '') ? Number(b.order) : 999999;
+      if (ordA !== ordB) return ordA - ordB;
+      return new Date(b.publishedAt || b.date || 0) - new Date(a.publishedAt || a.date || 0);
+    });
 
   useScrollReveal([filtered, category, search]);
 
