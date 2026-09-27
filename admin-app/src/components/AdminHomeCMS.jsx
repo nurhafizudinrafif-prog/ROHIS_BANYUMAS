@@ -1,5 +1,6 @@
 import './AdminHomeCMS.css';
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Save,
   RotateCcw,
@@ -16,6 +17,8 @@ import {
   ExternalLink,
   ChevronDown,
   ChevronUp,
+  Newspaper,
+  FileText,
 } from 'lucide-react';
 import ImageUploadField from './ImageUploadField';
 import { fallbackData } from '@shared/data/fallback.js';
@@ -1110,11 +1113,77 @@ export default function AdminHomeCMS({
 
           {/* 1. Pengantar Bagian Berita */}
           <div style={{ marginBottom: '2.5rem', paddingBottom: '2rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-            <h4 style={{ color: 'var(--accent-gold, #E6C587)', fontSize: '1.05rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              📰 1. Bagian Berita Terkini (Homepage News)
-            </h4>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '0.5rem' }}>
+              <h4 style={{ color: 'var(--accent-gold, #E6C587)', fontSize: '1.05rem', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                📰 1. Bagian Berita Terkini (Homepage News)
+              </h4>
+              <Link to="/content/news" className="btn btn-outline btn-sm" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: 'var(--emerald)' }}>
+                <Newspaper size={14} /> Kelola Daftar Berita Terkini (CRUD) →
+              </Link>
+            </div>
             <p className="text-muted" style={{ fontSize: '0.85rem', marginBottom: '1.25rem' }}>
-              Teks pengantar yang tampil di atas grid 3 berita terbaru.
+              Teks pengantar yang tampil di atas deretan kartu berita terbaru di halaman beranda.
+            </p>
+
+            <div className="cms-form-grid">
+              <div className="form-group">
+                <label className="form-label">Badge / Tagline Kecil</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={formData.sections?.news?.tag || ''}
+                  onChange={(e) => updateSection('news', 'tag', e.target.value)}
+                  placeholder="Berita Terkini"
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Judul Utama Bagian Berita</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={formData.sections?.news?.title || ''}
+                  onChange={(e) => updateSection('news', 'title', e.target.value)}
+                  placeholder="Berita Terkini"
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Teks Tombol Aksi</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={formData.sections?.news?.btnText || ''}
+                  onChange={(e) => updateSection('news', 'btnText', e.target.value)}
+                  placeholder="Lihat Semua Berita"
+                />
+              </div>
+
+              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                <label className="form-label">Deskripsi Pengantar Berita</label>
+                <textarea
+                  className="form-textarea"
+                  rows={2}
+                  value={formData.sections?.news?.desc || ''}
+                  onChange={(e) => updateSection('news', 'desc', e.target.value)}
+                  placeholder="Informasi, warta, dan kabar terbaru seputar kegiatan dakwah dan kepemudaan ROHIS se-Banyumas."
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* 2. Pengantar Bagian Artikel Dakwah */}
+          <div style={{ marginBottom: '2.5rem', paddingBottom: '2rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '0.5rem' }}>
+              <h4 style={{ color: 'var(--accent-gold, #E6C587)', fontSize: '1.05rem', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                📖 2. Bagian Artikel Dakwah (Homepage Articles)
+              </h4>
+              <Link to="/content/articles" className="btn btn-outline btn-sm" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: 'var(--antique-brass-light)' }}>
+                <FileText size={14} /> Kelola Daftar Artikel Dakwah (CRUD) →
+              </Link>
+            </div>
+            <p className="text-muted" style={{ fontSize: '0.85rem', marginBottom: '1.25rem' }}>
+              Teks pengantar yang tampil di atas grid 3 artikel dakwah terbaru di halaman beranda.
             </p>
 
             <div className="cms-form-grid">
@@ -1125,18 +1194,18 @@ export default function AdminHomeCMS({
                   className="form-input"
                   value={formData.sections?.articles?.tag || ''}
                   onChange={(e) => updateSection('articles', 'tag', e.target.value)}
-                  placeholder="BERITA TERKINI"
+                  placeholder="Artikel & Opini"
                 />
               </div>
 
               <div className="form-group">
-                <label className="form-label">Judul Utama Bagian Berita</label>
+                <label className="form-label">Judul Utama Bagian Artikel</label>
                 <input
                   type="text"
                   className="form-input"
                   value={formData.sections?.articles?.title || ''}
                   onChange={(e) => updateSection('articles', 'title', e.target.value)}
-                  placeholder="Berita Terkini"
+                  placeholder="Literasi Dakwah Moderat"
                 />
               </div>
 
@@ -1147,27 +1216,27 @@ export default function AdminHomeCMS({
                   className="form-input"
                   value={formData.sections?.articles?.btnText || ''}
                   onChange={(e) => updateSection('articles', 'btnText', e.target.value)}
-                  placeholder="Lihat Semua Berita"
+                  placeholder="Buka Semua Artikel"
                 />
               </div>
 
               <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-                <label className="form-label">Deskripsi Pengantar Berita</label>
+                <label className="form-label">Deskripsi Pengantar Artikel</label>
                 <textarea
                   className="form-textarea"
                   rows={2}
                   value={formData.sections?.articles?.desc || ''}
                   onChange={(e) => updateSection('articles', 'desc', e.target.value)}
-                  placeholder="Informasi, warta, dan kabar terbaru seputar kegiatan dakwah dan kepemudaan ROHIS se-Banyumas."
+                  placeholder="Bacaan Islami berkualitas untuk memperluas wawasan dan memperkuat iman pemuda."
                 />
               </div>
             </div>
           </div>
 
-          {/* 2. Pengantar Bagian Agenda */}
+          {/* 3. Pengantar Bagian Agenda */}
           <div style={{ marginBottom: '2.5rem', paddingBottom: '2rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
             <h4 style={{ color: 'var(--accent-gold, #E6C587)', fontSize: '1.05rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              📅 2. Bagian Agenda & Kajian (Homepage Events)
+              📅 3. Bagian Agenda & Kajian (Homepage Events)
             </h4>
             <p className="text-muted" style={{ fontSize: '0.85rem', marginBottom: '1.25rem' }}>
               Teks pengantar yang tampil di atas daftar agenda kegiatan rohis mendatang.

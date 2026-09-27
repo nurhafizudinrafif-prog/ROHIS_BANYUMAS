@@ -7,7 +7,7 @@ export default function NewsDetail() {
   const { slug } = useParams();
   const { news } = useData();
   const newsList = news && news.length > 0 ? news : [];
-  const currentNews = newsList.find(n => n.slug === slug);
+  const currentNews = newsList.find(n => n.slug === slug || String(n.id) === String(slug));
 
   if (!currentNews) {
     return (
@@ -19,7 +19,7 @@ export default function NewsDetail() {
     );
   }
 
-  const relatedNews = newsList.filter(n => (n.category === currentNews.category || !n.category) && n.id !== currentNews.id).slice(0, 3);
+  const relatedNews = newsList.filter(n => (n.category === currentNews.category || !n.category) && String(n.id) !== String(currentNews.id)).slice(0, 3);
 
   const handleShare = () => {
     if (navigator.share) {
@@ -124,7 +124,13 @@ export default function NewsDetail() {
               style={{
                 fontSize: '1.05rem', lineHeight: 1.9, color: 'rgba(13,43,34,0.85)',
               }}
-              dangerouslySetInnerHTML={{ __html: currentNews.content || currentNews.excerpt || '' }}
+              dangerouslySetInnerHTML={{
+                __html: currentNews.content
+                  ? (currentNews.content.includes('<p>')
+                      ? currentNews.content
+                      : currentNews.content.split('\n\n').map(p => `<p style="margin-bottom: 1.25rem;">${p.replace(/\n/g, '<br/>')}</p>`).join(''))
+                  : `<p>${currentNews.excerpt || ''}</p>`
+              }}
             />
           </article>
 
