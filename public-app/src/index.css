@@ -924,3 +924,100 @@ textarea.form-input {
 .btn-instagram:hover svg {
   stroke: white;
 }
+
+/* ═══════════════════════════════════════════
+   Vertical News Editorial Card Design (ROKABA)
+   ═══════════════════════════════════════════ */
+.news-card-vertical {
+  display: flex;
+  flex-direction: row;
+  background: #FFFFFF;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+  text-decoration: none;
+  position: relative;
+  min-height: 220px;
+}
+
+.news-card-vertical:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(16, 185, 129, 0.3);
+}
+
+.news-card-vertical-img {
+  flex: 0 0 340px;
+  width: 340px;
+  min-height: 220px;
+  position: relative;
+  overflow: hidden;
+  background: var(--deep-pine);
+}
+
+.news-card-vertical-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.news-card-vertical:hover .news-card-vertical-img img {
+  transform: scale(1.06);
+}
+
+.news-card-vertical-body {
+  flex: 1;
+  padding: 1.75rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justifyContent: space-between;
+  min-width: 0;
+  background: #FFFFFF;
+}
+
+.news-card-vertical-title {
+  color: var(--deep-pine);
+  font-family: var(--font-heading);
+  font-size: clamp(1.15rem, 1.8vw, 1.38rem);
+  font-weight: 800;
+  line-height: 1.35;
+  margin: 0.6rem 0;
+  transition: color 0.25s ease;
+  letter-spacing: -0.015em;
+}
+
+.news-card-vertical:hover .news-card-vertical-title {
+  color: var(--emerald-dark);
+}
+
+.news-card-vertical-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--emerald-dark);
+  transition: gap 0.2s ease, color 0.2s ease;
+}
+
+.news-card-vertical:hover .news-card-vertical-cta {
+  gap: 0.65rem;
+  color: var(--emerald);
+}
+
+@media (max-width: 860px) {
+  .news-card-vertical {
+    flex-direction: column;
+  }
+  .news-card-vertical-img {
+    flex: none;
+    width: 100%;
+    height: 220px;
+  }
+  .news-card-vertical-body {
+    padding: 1.35rem 1.35rem 1.6rem;
+  }
+}

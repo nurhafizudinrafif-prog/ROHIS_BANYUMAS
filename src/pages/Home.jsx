@@ -16,6 +16,7 @@ import {
   Calendar,
   Heart,
   MapPin,
+  User,
   Users,
   Camera,
   Share2,
@@ -88,37 +89,14 @@ function NewsCard({ item, index }) {
   return (
     <Link
       to={`/berita/${item.slug || item.id}`}
-      className={`card-editorial reveal-scale delay-${Math.min((index + 1) * 100, 500)}`}
-      style={{
-        textDecoration: 'none',
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        background: 'white',
-        borderRadius: 'var(--radius-xl)',
-        overflow: 'hidden',
-        boxShadow: '0 10px 30px rgba(0,0,0,0.18)',
-        transition: 'all 0.35s cubic-bezier(0.25, 1, 0.5, 1)',
-        border: '1px solid rgba(255,255,255,0.12)',
-      }}
+      className={`news-card-vertical reveal-scale delay-${Math.min((index + 1) * 80, 450)}`}
     >
-      <div
-        style={{
-          height: 190,
-          background: `linear-gradient(135deg, var(--deep-pine) 0%, var(--deep-pine-light) 100%)`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
+      <div className="news-card-vertical-img">
         {imgUrl ? (
           <img
             src={imgUrl}
             alt={item.title}
             referrerPolicy="no-referrer"
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             onError={(e) => {
               const driveId = extractDriveId(item.image || item.coverImage);
               if (driveId && !e.currentTarget.src.includes('lh3.googleusercontent.com')) {
@@ -129,7 +107,9 @@ function NewsCard({ item, index }) {
             }}
           />
         ) : (
-          <FileText size={40} style={{ color: 'rgba(245,242,237,0.2)' }} />
+          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <FileText size={44} style={{ color: 'rgba(245,242,237,0.2)' }} />
+          </div>
         )}
         <span
           className="badge"
@@ -141,43 +121,82 @@ function NewsCard({ item, index }) {
             backdropFilter: 'blur(8px)',
             color: 'var(--warm-alabaster)',
             fontSize: '0.72rem',
-            padding: '0.2rem 0.65rem',
+            padding: '0.25rem 0.75rem',
             borderRadius: 'var(--radius-full)',
-            border: '1px solid rgba(255,255,255,0.15)',
+            border: '1px solid rgba(255,255,255,0.18)',
             fontWeight: 600,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.3rem',
+            zIndex: 2,
           }}
         >
-          {item.category || 'Berita'}
+          {item.category || 'Warta Rohis'}
         </span>
-      </div>
-      <div
-        className="card-body"
-        style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          padding: '1.25rem',
-        }}
-      >
-        <div>
-          <h3
+        {index === 0 && (
+          <span
             style={{
-              color: 'var(--deep-pine)',
-              fontSize: '1.08rem',
-              lineHeight: 1.4,
-              marginBottom: '0.5rem',
-              fontWeight: 700,
+              position: 'absolute',
+              top: '0.85rem',
+              right: '0.85rem',
+              background: 'linear-gradient(135deg, #DFBF73 0%, #C8A85B 100%)',
+              color: '#07140E',
+              fontSize: '0.68rem',
+              padding: '0.25rem 0.65rem',
+              borderRadius: 'var(--radius-full)',
+              fontWeight: 800,
+              letterSpacing: '0.04em',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.25rem',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+              zIndex: 2,
             }}
           >
+            <Sparkles size={11} /> TERBARU
+          </span>
+        )}
+      </div>
+
+      <div className="news-card-vertical-body">
+        <div>
+          {/* Metadata Row */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem',
+              fontSize: '0.78rem',
+              color: 'rgba(13,43,34,0.55)',
+              flexWrap: 'wrap',
+              marginBottom: '0.35rem',
+            }}
+          >
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontWeight: 600, color: 'var(--antique-brass)' }}>
+              <Calendar size={13} />
+              {new Date(item.publishedAt || item.date || Date.now()).toLocaleDateString(
+                'id-ID',
+                { day: 'numeric', month: 'long', year: 'numeric' }
+              )}
+            </span>
+            {item.location && (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                <MapPin size={13} style={{ color: 'var(--emerald)' }} />
+                {item.location}
+              </span>
+            )}
+          </div>
+
+          <h3 className="news-card-vertical-title">
             {item.title}
           </h3>
+
           {item.excerpt && (
             <p
               style={{
-                color: 'rgba(13,43,34,0.65)',
-                fontSize: '0.84rem',
-                lineHeight: 1.55,
+                color: 'rgba(13,43,34,0.68)',
+                fontSize: '0.88rem',
+                lineHeight: 1.6,
                 margin: '0 0 1rem',
                 display: '-webkit-box',
                 WebkitLineClamp: 2,
@@ -189,23 +208,23 @@ function NewsCard({ item, index }) {
             </p>
           )}
         </div>
+
+        {/* Footer Row */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            paddingTop: '0.75rem',
-            borderTop: '1px solid rgba(13,43,34,0.06)',
-            fontSize: '0.78rem',
-            color: 'rgba(13,43,34,0.5)',
+            paddingTop: '0.85rem',
+            borderTop: '1px solid rgba(13,43,34,0.07)',
+            fontSize: '0.8rem',
           }}
         >
-          <span>{item.author || 'Humas ROKABA'}</span>
-          <span>
-            {new Date(item.publishedAt || item.date || Date.now()).toLocaleDateString(
-              'id-ID',
-              { day: 'numeric', month: 'short', year: 'numeric' }
-            )}
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', color: 'rgba(13,43,34,0.55)' }}>
+            <User size={13} /> {item.author || 'Humas ROKABA'}
+          </span>
+          <span className="news-card-vertical-cta">
+            Baca Berita <ArrowRight size={15} />
           </span>
         </div>
       </div>
@@ -1172,9 +1191,11 @@ export default function Home() {
 
           <div
             style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
+              display: 'flex',
+              flexDirection: 'column',
               gap: '1.5rem',
+              maxWidth: 960,
+              margin: '0 auto',
             }}
           >
             {latestNews.map((item, i) => (
