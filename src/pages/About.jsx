@@ -172,9 +172,9 @@ export default function About() {
   const closeCardExpansion = () => {
     if (morphPhase !== 'expanded') return;
 
-    // Reset card internal scroll to top instantly so the header returns cleanly to the card position
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = 0;
+    // Reset card internal scroll smoothly so the header returns cleanly without an abrupt jump
+    if (scrollRef.current && scrollRef.current.scrollTop > 0) {
+      scrollRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // Refresh current target rect in case of any slight layout adjustment
