@@ -118,7 +118,7 @@ function NewsCard({ item, index, isActive = true, onSelect }) {
             }}
           />
         ) : (
-          <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--deep-pine)' }}>
             <FileText size={44} style={{ color: 'rgba(245,242,237,0.2)' }} />
           </div>
         )}

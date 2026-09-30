@@ -182,7 +182,7 @@ export default function About() {
       setMorphPhase('idle');
       setExpandedIdx(null);
       setOriginRect(null);
-    }, 520);
+    }, 500);
   };
 
   const switchDivision = (nextIdx) => {
