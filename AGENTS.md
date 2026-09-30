@@ -21,3 +21,7 @@
   2. `modal-body-responsive` (scrollable body dengan padding lega dan layout 2 kolom responsif untuk field berpasangan).
   3. `modal-footer-responsive` (sticky footer dengan backdrop blur untuk tombol Batal & Simpan agar tidak pernah terpotong di resolusi layar berapa pun).
 - Terapkan palet warna resmi Modern Islamic: kanvas Deep Pine (`#07140E`, `#0D2319`), aksen Antique Brass (`#C8A85B`, `#DFBF73`), dan teks Warm Alabaster (`#F7F5F0`).
+
+## 4. PRINSIP KOMUNIKASI & EKSPLORASI IDE KREATIF (MINDSET UTAMA)
+- **Tanya Dulu Jika Belum Paham**: Jangan pernah sok tahu atau berasumsi sendiri jika ada maksud user atau spesifikasi yang belum jelas/ambigu. Langsung tanyakan ke user untuk menyamakan persepsi.
+- **Proaktif & Eksplorasi Ide Liar**: Bebas kembangkan dan ajukan ide-ide kreatif seliar mungkin yang dapat mengangkat kualitas website ROHIS Banyumas (baik dari segi estetika visual kelas dunia, animasi interaktif, fitur dakwah modern, gamifikasi pelajar, audio/suasana islami yang tenang, dsb.). Ide yang berani dan visioner sangat diapresiasi!

@@ -127,10 +127,25 @@ const DIVISION_SHOWCASE = [
 export default function About() {
   // Division Detail Modal State (null when closed, index 0..4 when opened)
   const [modalDivisionIdx, setModalDivisionIdx] = useState(null);
+  const [isClosing, setIsClosing] = useState(false);
 
   const activeModalItem =
     modalDivisionIdx !== null ? DIVISION_SHOWCASE[modalDivisionIdx] || null : null;
   const ActiveModalIcon = activeModalItem ? activeModalItem.icon : null;
+
+  const openModal = (idx) => {
+    setIsClosing(false);
+    setModalDivisionIdx(idx);
+  };
+
+  const closeModal = () => {
+    if (isClosing || modalDivisionIdx === null) return;
+    setIsClosing(true);
+    setTimeout(() => {
+      setModalDivisionIdx(null);
+      setIsClosing(false);
+    }, 300);
+  };
 
   // Handle ESC key, arrow key navigation, and lock body scroll when modal is open
   useEffect(() => {
@@ -138,7 +153,7 @@ export default function About() {
 
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
-        setModalDivisionIdx(null);
+        closeModal();
       } else if (e.key === 'ArrowLeft') {
         setModalDivisionIdx((prev) => (prev > 0 ? prev - 1 : DIVISION_SHOWCASE.length - 1));
       } else if (e.key === 'ArrowRight') {
@@ -154,7 +169,7 @@ export default function About() {
       document.body.style.overflow = originalOverflow;
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [modalDivisionIdx]);
+  }, [modalDivisionIdx, isClosing]);
 
   return (
     <div style={{ overflowX: 'clip', width: '100%' }}>
@@ -528,13 +543,13 @@ export default function About() {
               return (
                 <div
                   key={item.num}
-                  onClick={() => setModalDivisionIdx(idx)}
+                  onClick={() => openModal(idx)}
                   role="button"
                   tabIndex={0}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
-                      setModalDivisionIdx(idx);
+                      openModal(idx);
                     }
                   }}
                   style={{
@@ -545,11 +560,23 @@ export default function About() {
                     display: 'flex',
                     flexDirection: 'column',
                     cursor: 'pointer',
-                    transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                    transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
                     boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25)',
                     position: 'relative',
                     overflow: 'hidden',
                     boxSizing: 'border-box',
+                  }}
+                  onMouseDown={(e) => {
+                    e.currentTarget.style.transform = 'scale(0.97)';
+                  }}
+                  onMouseUp={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                  }}
+                  onTouchStart={(e) => {
+                    e.currentTarget.style.transform = 'scale(0.97)';
+                  }}
+                  onTouchEnd={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'translateY(-4px)';
@@ -722,17 +749,17 @@ export default function About() {
           </div>
         </div>
 
-        {/* ── MODAL POPUP DETAIL DIVISI (Smooth Animated Modal) ── */}
+        {/* ── MODAL POPUP DETAIL DIVISI (Cinematic Smooth Zoom & Approach) ── */}
         {activeModalItem && (
           <div
-            onClick={() => setModalDivisionIdx(null)}
-            className="animate-modal-backdrop"
+            onClick={closeModal}
+            className={isClosing ? 'animate-modal-backdrop-out' : 'animate-modal-backdrop-in'}
             style={{
               position: 'fixed',
               inset: 0,
               background: 'rgba(5, 18, 14, 0.88)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
+              backdropFilter: 'blur(18px)',
+              WebkitBackdropFilter: 'blur(18px)',
               zIndex: 99999,
               display: 'flex',
               alignItems: 'center',
@@ -743,7 +770,7 @@ export default function About() {
           >
             <div
               onClick={(e) => e.stopPropagation()}
-              className="animate-modal-pop"
+              className={isClosing ? 'animate-modal-zoom-out' : 'animate-modal-zoom-in'}
               style={{
                 width: '100%',
                 maxWidth: '720px',
@@ -752,190 +779,193 @@ export default function About() {
                 background: 'linear-gradient(165deg, #0D2319 0%, #07140E 100%)',
                 border: '1px solid rgba(200, 168, 91, 0.35)',
                 borderRadius: '24px',
-                boxShadow: '0 25px 60px -12px rgba(0, 0, 0, 0.85), 0 0 35px rgba(16, 185, 129, 0.15)',
+                boxShadow: '0 25px 70px -12px rgba(0, 0, 0, 0.9), 0 0 45px rgba(16, 185, 129, 0.18)',
                 position: 'relative',
                 display: 'flex',
                 flexDirection: 'column',
                 margin: 'auto',
               }}
             >
-              {/* Modal Header */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  justifyContent: 'space-between',
-                  gap: '1rem',
-                  padding: 'clamp(1.25rem, 3vw, 1.75rem) clamp(1.25rem, 3vw, 2rem)',
-                  borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                  background: 'rgba(255, 255, 255, 0.02)',
-                  position: 'relative',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                  <div
+              {/* Inner animated content container for smooth division switching */}
+              <div key={activeModalItem.num} className="animate-modal-content-switch">
+                {/* Modal Header */}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    justifyContent: 'space-between',
+                    gap: '1rem',
+                    padding: 'clamp(1.25rem, 3vw, 1.75rem) clamp(1.25rem, 3vw, 2rem)',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                    background: 'rgba(255, 255, 255, 0.02)',
+                    position: 'relative',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <div
+                      style={{
+                        width: 58,
+                        height: 58,
+                        borderRadius: '18px',
+                        background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(200, 168, 91, 0.15) 100%)',
+                        border: '1px solid rgba(200, 168, 91, 0.35)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#DFBF73',
+                        boxShadow: '0 8px 20px rgba(0,0,0,0.3)',
+                        flexShrink: 0,
+                      }}
+                    >
+                      {ActiveModalIcon && <ActiveModalIcon size={28} />}
+                    </div>
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
+                        <span
+                          style={{
+                            fontFamily: 'var(--font-heading)',
+                            fontSize: '0.82rem',
+                            fontWeight: 800,
+                            color: '#E6C587',
+                            background: 'rgba(200, 168, 91, 0.15)',
+                            border: '1px solid rgba(200, 168, 91, 0.35)',
+                            padding: '0.15rem 0.6rem',
+                            borderRadius: '9999px',
+                          }}
+                        >
+                          Pilar {activeModalItem.num}
+                        </span>
+                        <span
+                          style={{
+                            fontSize: '0.75rem',
+                            color: 'rgba(247, 245, 240, 0.65)',
+                            fontWeight: 600,
+                            letterSpacing: '0.05em',
+                            textTransform: 'uppercase',
+                          }}
+                        >
+                          {activeModalItem.tag}
+                        </span>
+                      </div>
+                      <h3
+                        style={{
+                          fontFamily: 'var(--font-heading)',
+                          fontSize: 'clamp(1.3rem, 3.5vw, 1.65rem)',
+                          fontWeight: 800,
+                          color: 'var(--warm-alabaster)',
+                          margin: 0,
+                          lineHeight: 1.2,
+                        }}
+                      >
+                        {activeModalItem.detailTitle}
+                      </h3>
+                    </div>
+                  </div>
+
+                  {/* Close Button */}
+                  <button
+                    type="button"
+                    onClick={closeModal}
+                    aria-label="Tutup detail divisi"
                     style={{
-                      width: 58,
-                      height: 58,
-                      borderRadius: '18px',
-                      background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(200, 168, 91, 0.15) 100%)',
-                      border: '1px solid rgba(200, 168, 91, 0.35)',
+                      width: 38,
+                      height: 38,
+                      borderRadius: '50%',
+                      background: 'rgba(255, 255, 255, 0.08)',
+                      border: '1px solid rgba(255, 255, 255, 0.12)',
+                      color: '#BACEC3',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      color: '#DFBF73',
-                      boxShadow: '0 8px 20px rgba(0,0,0,0.3)',
+                      cursor: 'pointer',
                       flexShrink: 0,
+                      transition: 'all 0.2s',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)';
+                      e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+                      e.currentTarget.style.color = '#EF4444';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                      e.currentTarget.style.color = '#BACEC3';
                     }}
                   >
-                    {ActiveModalIcon && <ActiveModalIcon size={28} />}
-                  </div>
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
-                      <span
-                        style={{
-                          fontFamily: 'var(--font-heading)',
-                          fontSize: '0.82rem',
-                          fontWeight: 800,
-                          color: '#E6C587',
-                          background: 'rgba(200, 168, 91, 0.15)',
-                          border: '1px solid rgba(200, 168, 91, 0.35)',
-                          padding: '0.15rem 0.6rem',
-                          borderRadius: '9999px',
-                        }}
-                      >
-                        Pilar {activeModalItem.num}
-                      </span>
-                      <span
-                        style={{
-                          fontSize: '0.75rem',
-                          color: 'rgba(247, 245, 240, 0.65)',
-                          fontWeight: 600,
-                          letterSpacing: '0.05em',
-                          textTransform: 'uppercase',
-                        }}
-                      >
-                        {activeModalItem.tag}
-                      </span>
-                    </div>
-                    <h3
-                      style={{
-                        fontFamily: 'var(--font-heading)',
-                        fontSize: 'clamp(1.3rem, 3.5vw, 1.65rem)',
-                        fontWeight: 800,
-                        color: 'var(--warm-alabaster)',
-                        margin: 0,
-                        lineHeight: 1.2,
-                      }}
-                    >
-                      {activeModalItem.detailTitle}
-                    </h3>
-                  </div>
+                    <X size={18} />
+                  </button>
                 </div>
 
-                {/* Close Button */}
-                <button
-                  type="button"
-                  onClick={() => setModalDivisionIdx(null)}
-                  aria-label="Tutup detail divisi"
-                  style={{
-                    width: 38,
-                    height: 38,
-                    borderRadius: '50%',
-                    background: 'rgba(255, 255, 255, 0.08)',
-                    border: '1px solid rgba(255, 255, 255, 0.12)',
-                    color: '#BACEC3',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    flexShrink: 0,
-                    transition: 'all 0.2s',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)';
-                    e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.5)';
-                    e.currentTarget.style.color = '#EF4444';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
-                    e.currentTarget.style.color = '#BACEC3';
-                  }}
-                >
-                  <X size={18} />
-                </button>
-              </div>
-
-              {/* Modal Body */}
-              <div style={{ padding: 'clamp(1.25rem, 3vw, 2rem)' }}>
-                {/* Detailed Description */}
-                <p
-                  style={{
-                    color: 'rgba(247, 245, 240, 0.85)',
-                    fontSize: 'clamp(0.9rem, 2vw, 0.98rem)',
-                    lineHeight: 1.75,
-                    marginBottom: '1.75rem',
-                  }}
-                >
-                  {activeModalItem.detailDesc}
-                </p>
-
-                {/* Agenda & Fokus Utama Box */}
-                <div
-                  style={{
-                    background: 'rgba(10, 30, 22, 0.75)',
-                    border: '1px solid rgba(200, 168, 91, 0.2)',
-                    borderRadius: '18px',
-                    padding: 'clamp(1rem, 2.5vw, 1.5rem)',
-                  }}
-                >
-                  <div
+                {/* Modal Body */}
+                <div style={{ padding: 'clamp(1.25rem, 3vw, 2rem)' }}>
+                  {/* Detailed Description */}
+                  <p
                     style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      color: '#DFBF73',
-                      fontSize: '0.78rem',
-                      fontWeight: 800,
-                      letterSpacing: '0.08em',
-                      textTransform: 'uppercase',
-                      marginBottom: '1rem',
+                      color: 'rgba(247, 245, 240, 0.85)',
+                      fontSize: 'clamp(0.9rem, 2vw, 0.98rem)',
+                      lineHeight: 1.75,
+                      marginBottom: '1.75rem',
                     }}
                   >
-                    <Sparkles size={14} style={{ color: '#DFBF73' }} /> AGENDA & FOKUS PROGRAM KERJA:
-                  </div>
+                    {activeModalItem.detailDesc}
+                  </p>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    {activeModalItem.agendas.map((agenda, i) => (
-                      <div
-                        key={i}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'flex-start',
-                          gap: '0.75rem',
-                          padding: '0.5rem 0.65rem',
-                          borderRadius: '10px',
-                          background: 'rgba(255, 255, 255, 0.02)',
-                          border: '1px solid rgba(255, 255, 255, 0.04)',
-                        }}
-                      >
-                        <CheckCircle2
-                          size={18}
-                          style={{ color: 'var(--emerald)', flexShrink: 0, marginTop: '2px' }}
-                        />
-                        <span
+                  {/* Agenda & Fokus Utama Box */}
+                  <div
+                    style={{
+                      background: 'rgba(10, 30, 22, 0.75)',
+                      border: '1px solid rgba(200, 168, 91, 0.2)',
+                      borderRadius: '18px',
+                      padding: 'clamp(1rem, 2.5vw, 1.5rem)',
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        color: '#DFBF73',
+                        fontSize: '0.78rem',
+                        fontWeight: 800,
+                        letterSpacing: '0.08em',
+                        textTransform: 'uppercase',
+                        marginBottom: '1rem',
+                      }}
+                    >
+                      <Sparkles size={14} style={{ color: '#DFBF73' }} /> AGENDA & FOKUS PROGRAM KERJA:
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                      {activeModalItem.agendas.map((agenda, i) => (
+                        <div
+                          key={i}
                           style={{
-                            fontSize: '0.88rem',
-                            color: '#F7F5F0',
-                            lineHeight: 1.55,
-                            fontWeight: 500,
+                            display: 'flex',
+                            alignItems: 'flex-start',
+                            gap: '0.75rem',
+                            padding: '0.5rem 0.65rem',
+                            borderRadius: '10px',
+                            background: 'rgba(255, 255, 255, 0.02)',
+                            border: '1px solid rgba(255, 255, 255, 0.04)',
                           }}
                         >
-                          {agenda}
-                        </span>
-                      </div>
-                    ))}
+                          <CheckCircle2
+                            size={18}
+                            style={{ color: 'var(--emerald)', flexShrink: 0, marginTop: '2px' }}
+                          />
+                          <span
+                            style={{
+                              fontSize: '0.88rem',
+                              color: '#F7F5F0',
+                              lineHeight: 1.55,
+                              fontWeight: 500,
+                            }}
+                          >
+                            {agenda}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1007,7 +1037,7 @@ export default function About() {
                 {/* Link ke Halaman Anggota */}
                 <Link
                   to="/schools#pengurus"
-                  onClick={() => setModalDivisionIdx(null)}
+                  onClick={closeModal}
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',

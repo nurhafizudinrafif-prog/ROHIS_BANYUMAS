@@ -19,3 +19,7 @@ description: Aturan mutlak untuk selalu melakukan git commit dan git push ke ori
 
 3. **Verifikasi Build**:
    - Selalu jalankan `npm --prefix admin run build` sebelum push untuk memastikan tidak ada error kompilasi.
+
+4. **Komunikasi & Eksplorasi Ide Liar**:
+   - Jika belum paham maksud user: **Tanyakan langsung**, jangan berasumsi sendiri atau sok tahu.
+   - Jangan ragu mengajukan ide-ide berani, inovatif, dan seliar mungkin untuk kemajuan dan keindahan website ROHIS Banyumas.

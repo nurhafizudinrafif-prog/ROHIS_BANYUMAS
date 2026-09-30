@@ -96,10 +96,25 @@ const DIVISION_SHOWCASE = [
 export default function Programs() {
   // Division Detail Modal State (null when closed, index 0..4 when opened)
   const [modalDivisionIdx, setModalDivisionIdx] = useState(null);
+  const [isClosing, setIsClosing] = useState(false);
 
   const activeModalItem =
     modalDivisionIdx !== null ? DIVISION_SHOWCASE[modalDivisionIdx] || null : null;
   const ActiveModalIcon = activeModalItem ? activeModalItem.icon : null;
+
+  const openModal = (idx) => {
+    setIsClosing(false);
+    setModalDivisionIdx(idx);
+  };
+
+  const closeModal = () => {
+    if (isClosing || modalDivisionIdx === null) return;
+    setIsClosing(true);
+    setTimeout(() => {
+      setModalDivisionIdx(null);
+      setIsClosing(false);
+    }, 300);
+  };
 
   // Handle ESC key, arrow key navigation, and lock body scroll when modal is open
   useEffect(() => {
@@ -107,7 +122,7 @@ export default function Programs() {
 
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
-        setModalDivisionIdx(null);
+        closeModal();
       } else if (e.key === 'ArrowLeft') {
         setModalDivisionIdx((prev) => (prev > 0 ? prev - 1 : DIVISION_SHOWCASE.length - 1));
       } else if (e.key === 'ArrowRight') {
@@ -123,7 +138,7 @@ export default function Programs() {
       document.body.style.overflow = originalOverflow;
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [modalDivisionIdx]);
+  }, [modalDivisionIdx, isClosing]);
 
   return (
     <div style={{ overflowX: 'clip', width: '100%' }}>
