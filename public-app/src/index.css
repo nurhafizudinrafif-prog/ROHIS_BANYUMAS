@@ -737,10 +737,10 @@ textarea.form-input {
 /* Backdrop smooth fade-out during collapse */
 .morph-backdrop.is-collapsing-backdrop {
   opacity: 0;
-  transition: opacity 0.44s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Card Sheet: Animates exact physical dimensions */
+/* Card Sheet: Pure CSS transition only — NO keyframe animations */
 .morph-card-sheet {
   position: fixed;
   z-index: 100000;
@@ -752,9 +752,9 @@ textarea.form-input {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  opacity: 1;
+  filter: blur(0px);
   will-change: top, left, width, height, border-radius;
-  /* NO filter/opacity transition here — only geometry. This prevents
-     animation vs transition fights that cause blink */
   transition:
     top 0.48s cubic-bezier(0.16, 1, 0.3, 1),
     left 0.48s cubic-bezier(0.16, 1, 0.3, 1),
@@ -764,19 +764,20 @@ textarea.form-input {
     box-shadow 0.48s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Collapsing: fade + blur via TRANSITION only (no animation = no fight) */
 .morph-card-sheet.is-collapsing {
   pointer-events: none;
-  /* Collapse animation: blur + fade the entire card */
-  animation: cardCollapseBlur 0.46s cubic-bezier(0.4, 0, 0.2, 1) both;
-  /* Geometry collapses slightly faster (0.42s) so card shrinks 
-     BEFORE the animation finishes — no "visible snap at origin" */
+  opacity: 0;
+  filter: blur(6px);
   transition:
-    top 0.42s cubic-bezier(0.4, 0, 0.2, 1),
-    left 0.42s cubic-bezier(0.4, 0, 0.2, 1),
-    width 0.42s cubic-bezier(0.4, 0, 0.2, 1),
-    height 0.42s cubic-bezier(0.4, 0, 0.2, 1),
-    border-radius 0.42s cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+    top 0.44s cubic-bezier(0.4, 0, 0.2, 1),
+    left 0.44s cubic-bezier(0.4, 0, 0.2, 1),
+    width 0.44s cubic-bezier(0.4, 0, 0.2, 1),
+    height 0.44s cubic-bezier(0.4, 0, 0.2, 1),
+    border-radius 0.44s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.44s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.36s cubic-bezier(0.4, 0, 0.2, 1),
+    filter 0.36s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Close button: centered grid & smooth scaling */
@@ -819,7 +820,7 @@ textarea.form-input {
 .morph-card-sheet.is-collapsing .morph-close-btn {
   opacity: 0 !important;
   transform: scale(0.65) !important;
-  transition: opacity 0.18s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.18s cubic-bezier(0.25, 0.1, 0.25, 1) !important;
+  transition: opacity 0.15s ease-out, transform 0.15s ease-out !important;
   pointer-events: none;
 }
 
@@ -850,27 +851,19 @@ textarea.form-input {
   scrollbar-color: rgba(200, 168, 91, 0.3) transparent;
 }
 
-/* Dual-Layer Cross-Fade Architecture (Seamless Text & Content Morph) */
+/* Body wrapper — NO animation, just container */
 .morph-body-wrapper {
   position: relative;
   width: 100%;
 }
 
-.morph-card-sheet.is-expanded .morph-body-wrapper {
-  animation: contentMotionBlurExpand 0.48s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.morph-card-sheet.is-collapsing .morph-body-wrapper {
-  animation: contentMotionBlurCollapse 0.42s cubic-bezier(0.4, 0, 0.2, 1) both;
-}
-
-/* Detail content: Pure symmetric, natural open & close */
+/* Detail content: simple fade in on expand */
 .morph-detail-content {
   opacity: 0;
-  transform: translateY(14px);
+  transform: translateY(12px);
   transition:
-    opacity 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.1s,
-    transform 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+    opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.08s,
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.08s;
 }
 
 .morph-card-sheet.is-expanded .morph-detail-content {
@@ -882,12 +875,12 @@ textarea.form-input {
   opacity: 0 !important;
   transform: translateY(6px) !important;
   transition:
-    opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    opacity 0.18s ease-out,
+    transform 0.18s ease-out !important;
   pointer-events: none;
 }
 
-/* Summary content: Returns seamlessly during collapse */
+/* Summary content: visible when idle, hidden when expanded */
 .morph-summary-content {
   position: absolute;
   top: 0;
@@ -898,95 +891,21 @@ textarea.form-input {
   transform: translateY(0);
 }
 
-/* Initial frame of expand */
 .morph-card-sheet:not(.is-expanded):not(.is-collapsing) .morph-summary-content {
   opacity: 1;
 }
 
-/* Expanded state: summary is hidden */
 .morph-card-sheet.is-expanded .morph-summary-content {
   opacity: 0 !important;
   pointer-events: none;
 }
 
-/* Collapsing state: summary content fades IN seamlessly to welcome the return */
+/* Collapsing: summary fades back in */
 .morph-card-sheet.is-collapsing .morph-summary-content {
   opacity: 1 !important;
   transform: translateY(0) !important;
-  transition:
-    opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1) 0.05s !important;
+  transition: opacity 0.25s ease-out 0.05s !important;
   pointer-events: none;
-}
-
-/* ═══════════════════════════════════════════
-   Motion Blur Keyframes — iOS-style smooth morph
-   ═══════════════════════════════════════════ */
-
-/* Card expand: gentle blur sweep only — NO opacity reduction 
-   (detail-content already has its own fade-in, doubling up = blink) */
-@keyframes contentMotionBlurExpand {
-  0% {
-    filter: blur(1.5px);
-  }
-  50% {
-    filter: blur(0.5px);
-  }
-  100% {
-    filter: blur(0px);
-  }
-}
-
-/* Body wrapper collapse: blur content quickly, fully gone before card finishes */
-@keyframes contentMotionBlurCollapse {
-  0% {
-    filter: blur(0px);
-    opacity: 1;
-  }
-  15% {
-    filter: blur(1.5px);
-    opacity: 0.85;
-  }
-  40% {
-    filter: blur(4px);
-    opacity: 0.5;
-  }
-  65% {
-    filter: blur(6px);
-    opacity: 0.15;
-  }
-  100% {
-    filter: blur(8px);
-    opacity: 0;
-  }
-}
-
-/* Card container collapse: blur + fade the ENTIRE sheet so the 
-   "landing" into the grid is fully masked. Card is invisible by 80%. */
-@keyframes cardCollapseBlur {
-  0% {
-    filter: blur(0px);
-    opacity: 1;
-  }
-  10% {
-    filter: blur(0.5px);
-    opacity: 0.95;
-  }
-  30% {
-    filter: blur(2px);
-    opacity: 0.8;
-  }
-  55% {
-    filter: blur(4px);
-    opacity: 0.5;
-  }
-  80% {
-    filter: blur(6px);
-    opacity: 0.1;
-  }
-  100% {
-    filter: blur(8px);
-    opacity: 0;
-  }
 }
 
 
