@@ -359,20 +359,20 @@ export default function GalleryManager() {
       {/* Modal Add / Edit Album */}
       {modalOpen && (
         <div className="modal-overlay-responsive" onClick={(e) => { if (e.target === e.currentTarget) setModalOpen(false); }}>
-          <div className="glass-card modal-card-responsive" style={{
-            maxWidth: 720,
-            padding: '1.75rem',
+          <div className="glass-card modal-card-responsive animate-fade-in-up" style={{
+            maxWidth: 760,
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-              <h3 style={{ fontSize: '1.3rem', fontWeight: 800 }}>
+            <div className="modal-header-responsive">
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0 }}>
                 {editingAlbum ? 'Kelola Album Dokumentasi' : 'Buat Album Baru'}
               </h3>
-              <button onClick={() => setModalOpen(false)} className="btn btn-outline btn-xs">
+              <button onClick={() => setModalOpen(false)} className="btn btn-outline btn-xs" aria-label="Tutup">
                 <X size={16} />
               </button>
             </div>
 
             <form onSubmit={handleSaveAlbum}>
+              <div className="modal-body-responsive" style={{ padding: '1.5rem 1.75rem' }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(260px, 100%), 1fr))', gap: '1rem', marginBottom: '1rem' }}>
                 <div className="form-group">
                   <label className="form-label">Judul Album / Kegiatan</label>
@@ -556,13 +556,14 @@ export default function GalleryManager() {
                   })}
                 </div>
               </div>
+              </div>
 
               {/* Submit Buttons */}
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
-                <button type="button" onClick={() => setModalOpen(false)} className="btn btn-outline">
+              <div className="modal-footer-responsive">
+                <button type="button" onClick={() => setModalOpen(false)} className="btn btn-outline" style={{ minWidth: 100 }}>
                   Batal
                 </button>
-                <button type="submit" className="btn btn-primary">
+                <button type="submit" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700 }}>
                   <Save size={16} /> Simpan Seluruh Album
                 </button>
               </div>

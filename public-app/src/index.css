@@ -583,6 +583,34 @@ textarea.form-input {
   animation: slideInLeft 0.6s ease forwards;
 }
 
+@keyframes modalPopIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.93) translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes modalBackdropFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-modal-pop {
+  animation: modalPopIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-modal-backdrop {
+  animation: modalBackdropFadeIn 0.25s ease forwards;
+}
+
 .animate-slide-right {
   animation: slideInRight 0.6s ease forwards;
 }

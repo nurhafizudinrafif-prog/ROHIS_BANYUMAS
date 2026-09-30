@@ -74,7 +74,8 @@ function localSyncPlugin() {
 export default defineConfig({
   plugins: [react(), tailwindcss(), localSyncPlugin()],
   server: {
-    port: 3001,
+    port: 5174,
+    host: true,
     fs: {
       allow: ['..'],
     },

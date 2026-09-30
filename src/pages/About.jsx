@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Users, Target, Heart, Award, BookOpen, Star,
   GraduationCap, ExternalLink, ShieldCheck,
   Flame, Megaphone, Newspaper, Coins, Sparkles,
-  ArrowRight, CheckCircle2, School
+  ArrowRight, CheckCircle2, School, X, ChevronLeft, ChevronRight
 } from 'lucide-react';
 
 /**
@@ -125,11 +125,36 @@ const DIVISION_SHOWCASE = [
 
 
 export default function About() {
-  // Showcase Active Division Index (0: SDM, 1: Dakwah, 2: Jurnalistik, 3: HUMAS, 4: DANUS)
-  const [activeShowcaseIdx, setActiveShowcaseIdx] = useState(1); // Default to Divisi Dakwah
+  // Division Detail Modal State (null when closed, index 0..4 when opened)
+  const [modalDivisionIdx, setModalDivisionIdx] = useState(null);
 
-  const currentShowcase = DIVISION_SHOWCASE[activeShowcaseIdx] || DIVISION_SHOWCASE[0];
-  const ShowcaseIcon = currentShowcase.icon;
+  const activeModalItem =
+    modalDivisionIdx !== null ? DIVISION_SHOWCASE[modalDivisionIdx] || null : null;
+  const ActiveModalIcon = activeModalItem ? activeModalItem.icon : null;
+
+  // Handle ESC key, arrow key navigation, and lock body scroll when modal is open
+  useEffect(() => {
+    if (modalDivisionIdx === null) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setModalDivisionIdx(null);
+      } else if (e.key === 'ArrowLeft') {
+        setModalDivisionIdx((prev) => (prev > 0 ? prev - 1 : DIVISION_SHOWCASE.length - 1));
+      } else if (e.key === 'ArrowRight') {
+        setModalDivisionIdx((prev) => (prev < DIVISION_SHOWCASE.length - 1 ? prev + 1 : 0));
+      }
+    };
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [modalDivisionIdx]);
 
   return (
     <div style={{ overflowX: 'clip', width: '100%' }}>
@@ -459,7 +484,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* ═══ 5 DIVISI PROGRAM KERJA INTERAKTIF (Exact Match to Screenshot 1) ═══ */}
+      {/* ═══ 5 DIVISI PROGRAM KERJA DENGAN MODAL DETAIL INTERAKTIF ═══ */}
       <section
         className="section"
         id="program-divisi"
@@ -487,279 +512,531 @@ export default function About() {
             </p>
           </div>
 
-          {/* Interactive 2-Column Explorer */}
+          {/* 5 Cards Grid */}
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
-              gap: '1.5rem',
-              alignItems: 'start',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))',
+              gap: '1.25rem',
               width: '100%',
-              maxWidth: '100%',
               boxSizing: 'border-box',
             }}
           >
-            {/* Left: 01 to 05 List Cards */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}>
-              {DIVISION_SHOWCASE.map((item, idx) => {
-                const isActive = activeShowcaseIdx === idx;
+            {DIVISION_SHOWCASE.map((item, idx) => {
+              const ItemIcon = item.icon;
 
-                return (
+              return (
+                <div
+                  key={item.num}
+                  onClick={() => setModalDivisionIdx(idx)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setModalDivisionIdx(idx);
+                    }
+                  }}
+                  style={{
+                    background: 'linear-gradient(145deg, rgba(13, 35, 25, 0.85) 0%, rgba(7, 20, 14, 0.92) 100%)',
+                    border: '1px solid rgba(200, 168, 91, 0.22)',
+                    borderRadius: '20px',
+                    padding: 'clamp(1.2rem, 3vw, 1.6rem)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25)',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    boxSizing: 'border-box',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.borderColor = 'rgba(200, 168, 91, 0.65)';
+                    e.currentTarget.style.boxShadow =
+                      '0 16px 36px rgba(0, 0, 0, 0.4), 0 0 24px rgba(200, 168, 91, 0.15)';
+                    e.currentTarget.style.background =
+                      'linear-gradient(145deg, rgba(18, 48, 35, 0.95) 0%, rgba(10, 28, 20, 0.98) 100%)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.borderColor = 'rgba(200, 168, 91, 0.22)';
+                    e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.25)';
+                    e.currentTarget.style.background =
+                      'linear-gradient(145deg, rgba(13, 35, 25, 0.85) 0%, rgba(7, 20, 14, 0.92) 100%)';
+                  }}
+                >
+                  {/* Top Bar: Number, Tag, & Icon */}
                   <div
-                    key={item.num}
-                    onClick={() => setActiveShowcaseIdx(idx)}
                     style={{
-                      background: isActive ? 'rgba(20, 56, 44, 0.9)' : 'rgba(10, 32, 24, 0.65)',
-                      border: isActive ? '1px solid rgba(181, 141, 79, 0.75)' : '1px solid rgba(255, 255, 255, 0.08)',
-                      borderRadius: '16px',
-                      padding: 'clamp(0.85rem, 3vw, 1.15rem)',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: 'clamp(0.6rem, 2vw, 1rem)',
-                      cursor: 'pointer',
-                      transition: 'all 0.3s ease',
-                      boxShadow: isActive ? '0 0 24px rgba(181, 141, 79, 0.16)' : 'none',
-                      width: '100%',
-                      maxWidth: '100%',
-                      boxSizing: 'border-box',
-                    }}
-                    onMouseEnter={e => {
-                      if (!isActive) {
-                        e.currentTarget.style.borderColor = 'rgba(16, 185, 129, 0.4)';
-                        e.currentTarget.style.background = 'rgba(15, 46, 36, 0.8)';
-                      }
-                    }}
-                    onMouseLeave={e => {
-                      if (!isActive) {
-                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
-                        e.currentTarget.style.background = 'rgba(10, 32, 24, 0.65)';
-                      }
+                      justifyContent: 'space-between',
+                      marginBottom: '1rem',
                     }}
                   >
-                    {/* Number (01, 02, etc.) */}
-                    <div
-                      style={{
-                        fontFamily: 'var(--font-heading)',
-                        fontSize: '1.65rem',
-                        fontWeight: 800,
-                        color: isActive ? '#E6C587' : 'rgba(181, 141, 79, 0.75)',
-                        minWidth: '2.2rem',
-                        flexShrink: 0,
-                        lineHeight: 1,
-                      }}
-                    >
-                      {item.num}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                      <span
+                        style={{
+                          fontFamily: 'var(--font-heading)',
+                          fontSize: '1.75rem',
+                          fontWeight: 800,
+                          color: '#DFBF73',
+                          lineHeight: 1,
+                        }}
+                      >
+                        {item.num}
+                      </span>
+                      <span
+                        style={{
+                          fontSize: '0.72rem',
+                          color: '#E6C587',
+                          fontWeight: 700,
+                          letterSpacing: '0.05em',
+                          textTransform: 'uppercase',
+                          background: 'rgba(200, 168, 91, 0.12)',
+                          padding: '0.2rem 0.55rem',
+                          borderRadius: '6px',
+                          border: '1px solid rgba(200, 168, 91, 0.25)',
+                        }}
+                      >
+                        {item.tag}
+                      </span>
                     </div>
 
-                    {/* Middle Text */}
-                    <div style={{ flex: 1, minWidth: 0 }}>
+                    <div
+                      style={{
+                        width: 44,
+                        height: 44,
+                        borderRadius: '14px',
+                        background: 'rgba(16, 185, 129, 0.12)',
+                        border: '1px solid rgba(16, 185, 129, 0.25)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'var(--emerald-light)',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <ItemIcon size={22} />
+                    </div>
+                  </div>
+
+                  {/* Division Title */}
+                  <h3
+                    style={{
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: '1.12rem',
+                      fontWeight: 700,
+                      color: 'var(--warm-alabaster)',
+                      margin: '0 0 0.5rem 0',
+                      lineHeight: 1.35,
+                    }}
+                  >
+                    {item.detailTitle}
+                  </h3>
+
+                  {/* Short Description */}
+                  <p
+                    style={{
+                      fontSize: '0.85rem',
+                      color: 'rgba(247, 245, 240, 0.68)',
+                      lineHeight: 1.6,
+                      margin: '0 0 1rem 0',
+                      flexGrow: 1,
+                    }}
+                  >
+                    {item.desc}
+                  </p>
+
+                  {/* Highlights (Preview 2 items) */}
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.4rem',
+                      marginBottom: '1.25rem',
+                      padding: '0.65rem 0.85rem',
+                      borderRadius: '12px',
+                      background: 'rgba(0, 0, 0, 0.2)',
+                      border: '1px solid rgba(255, 255, 255, 0.05)',
+                    }}
+                  >
+                    {item.agendas.slice(0, 2).map((agenda, i) => (
                       <div
+                        key={i}
                         style={{
                           display: 'flex',
                           alignItems: 'center',
-                          justifyContent: 'space-between',
                           gap: '0.5rem',
-                          flexWrap: 'wrap',
+                          fontSize: '0.78rem',
+                          color: 'rgba(247, 245, 240, 0.82)',
                         }}
                       >
-                        <h4
-                          style={{
-                            fontSize: '0.92rem',
-                            fontWeight: 700,
-                            color: 'var(--warm-alabaster)',
-                            letterSpacing: '0.02em',
-                            margin: 0,
-                            wordBreak: 'break-word',
-                          }}
-                        >
-                          {item.title}
-                        </h4>
-                        <span
-                          style={{
-                            fontSize: '0.72rem',
-                            color: '#E6C587',
-                            fontWeight: 600,
-                            letterSpacing: '0.04em',
-                            textTransform: 'uppercase',
-                            flexShrink: 0,
-                          }}
-                        >
-                          {item.tag}
+                        <CheckCircle2 size={13} style={{ color: 'var(--emerald)', flexShrink: 0 }} />
+                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {agenda}
                         </span>
                       </div>
-                      <p
-                        style={{
-                          fontSize: '0.82rem',
-                          color: 'rgba(245, 242, 237, 0.62)',
-                          lineHeight: 1.55,
-                          marginTop: '0.35rem',
-                          margin: '0.35rem 0 0',
-                          wordBreak: 'break-word',
-                        }}
-                      >
-                        {item.desc}
-                      </p>
-                    </div>
+                    ))}
+                    {item.agendas.length > 2 && (
+                      <span style={{ fontSize: '0.72rem', color: '#DFBF73', fontWeight: 600, paddingLeft: '1.3rem' }}>
+                        +{item.agendas.length - 2} program lainnya...
+                      </span>
+                    )}
+                  </div>
 
-                    {/* Arrow Icon */}
-                    <div style={{ flexShrink: 0, color: isActive ? '#E6C587' : 'rgba(255, 255, 255, 0.25)' }}>
-                      <ArrowRight size={18} />
+                  {/* Interactive Action Prompt */}
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      paddingTop: '0.85rem',
+                      borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+                      color: '#DFBF73',
+                      fontSize: '0.82rem',
+                      fontWeight: 600,
+                    }}
+                  >
+                    <span>Buka Detail & Program</span>
+                    <div
+                      style={{
+                        width: 28,
+                        height: 28,
+                        borderRadius: '50%',
+                        background: 'rgba(200, 168, 91, 0.15)',
+                        border: '1px solid rgba(200, 168, 91, 0.3)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <ArrowRight size={14} />
                     </div>
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
 
-            {/* Right: Active Division Detail Panel */}
+        {/* ── MODAL POPUP DETAIL DIVISI (Smooth Animated Modal) ── */}
+        {activeModalItem && (
+          <div
+            onClick={() => setModalDivisionIdx(null)}
+            className="animate-modal-backdrop"
+            style={{
+              position: 'fixed',
+              inset: 0,
+              background: 'rgba(5, 18, 14, 0.88)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              zIndex: 99999,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: 'clamp(0.75rem, 3vw, 1.5rem)',
+              overflowY: 'auto',
+            }}
+          >
             <div
+              onClick={(e) => e.stopPropagation()}
+              className="animate-modal-pop"
               style={{
-                background: 'rgba(10, 32, 24, 0.8)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                borderRadius: '24px',
-                padding: 'clamp(1.5rem, 4vw, 2.25rem) clamp(1.15rem, 3vw, 1.75rem)',
-                boxShadow: '0 16px 40px rgba(0, 0, 0, 0.3)',
-                position: 'sticky',
-                top: '5.5rem',
                 width: '100%',
-                maxWidth: '100%',
-                boxSizing: 'border-box',
+                maxWidth: '720px',
+                maxHeight: '90vh',
+                overflowY: 'auto',
+                background: 'linear-gradient(165deg, #0D2319 0%, #07140E 100%)',
+                border: '1px solid rgba(200, 168, 91, 0.35)',
+                borderRadius: '24px',
+                boxShadow: '0 25px 60px -12px rgba(0, 0, 0, 0.85), 0 0 35px rgba(16, 185, 129, 0.15)',
+                position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
+                margin: 'auto',
               }}
             >
-              {/* Badge & Title Header */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
-                <div
+              {/* Modal Header */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  justifyContent: 'space-between',
+                  gap: '1rem',
+                  padding: 'clamp(1.25rem, 3vw, 1.75rem) clamp(1.25rem, 3vw, 2rem)',
+                  borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                  background: 'rgba(255, 255, 255, 0.02)',
+                  position: 'relative',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <div
+                    style={{
+                      width: 58,
+                      height: 58,
+                      borderRadius: '18px',
+                      background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(200, 168, 91, 0.15) 100%)',
+                      border: '1px solid rgba(200, 168, 91, 0.35)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#DFBF73',
+                      boxShadow: '0 8px 20px rgba(0,0,0,0.3)',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {ActiveModalIcon && <ActiveModalIcon size={28} />}
+                  </div>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
+                      <span
+                        style={{
+                          fontFamily: 'var(--font-heading)',
+                          fontSize: '0.82rem',
+                          fontWeight: 800,
+                          color: '#E6C587',
+                          background: 'rgba(200, 168, 91, 0.15)',
+                          border: '1px solid rgba(200, 168, 91, 0.35)',
+                          padding: '0.15rem 0.6rem',
+                          borderRadius: '9999px',
+                        }}
+                      >
+                        Pilar {activeModalItem.num}
+                      </span>
+                      <span
+                        style={{
+                          fontSize: '0.75rem',
+                          color: 'rgba(247, 245, 240, 0.65)',
+                          fontWeight: 600,
+                          letterSpacing: '0.05em',
+                          textTransform: 'uppercase',
+                        }}
+                      >
+                        {activeModalItem.tag}
+                      </span>
+                    </div>
+                    <h3
+                      style={{
+                        fontFamily: 'var(--font-heading)',
+                        fontSize: 'clamp(1.3rem, 3.5vw, 1.65rem)',
+                        fontWeight: 800,
+                        color: 'var(--warm-alabaster)',
+                        margin: 0,
+                        lineHeight: 1.2,
+                      }}
+                    >
+                      {activeModalItem.detailTitle}
+                    </h3>
+                  </div>
+                </div>
+
+                {/* Close Button */}
+                <button
+                  type="button"
+                  onClick={() => setModalDivisionIdx(null)}
+                  aria-label="Tutup detail divisi"
                   style={{
-                    width: 52,
-                    height: 52,
-                    borderRadius: '16px',
-                    background: 'rgba(16, 185, 129, 0.15)',
-                    border: '1px solid rgba(16, 185, 129, 0.3)',
+                    width: 38,
+                    height: 38,
+                    borderRadius: '50%',
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                    color: '#BACEC3',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: 'var(--emerald-light)',
+                    cursor: 'pointer',
                     flexShrink: 0,
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)';
+                    e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.5)';
+                    e.currentTarget.style.color = '#EF4444';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                    e.currentTarget.style.color = '#BACEC3';
                   }}
                 >
-                  <ShowcaseIcon size={26} />
-                </div>
-                <div>
-                  <div
-                    style={{
-                      color: '#E6C587',
-                      fontSize: '0.78rem',
-                      fontWeight: 700,
-                      letterSpacing: '0.06em',
-                      textTransform: 'uppercase',
-                    }}
-                  >
-                    {currentShowcase.tag}
-                  </div>
-                  <h3
-                    style={{
-                      fontSize: '1.6rem',
-                      fontWeight: 800,
-                      color: 'var(--warm-alabaster)',
-                      lineHeight: 1.15,
-                    }}
-                  >
-                    {currentShowcase.detailTitle}
-                  </h3>
-                </div>
+                  <X size={18} />
+                </button>
               </div>
 
-              {/* Main Desc */}
-              <p
-                style={{
-                  color: 'rgba(245, 242, 237, 0.72)',
-                  fontSize: '0.88rem',
-                  lineHeight: 1.7,
-                  marginBottom: '1.75rem',
-                }}
-              >
-                {currentShowcase.detailDesc}
-              </p>
+              {/* Modal Body */}
+              <div style={{ padding: 'clamp(1.25rem, 3vw, 2rem)' }}>
+                {/* Detailed Description */}
+                <p
+                  style={{
+                    color: 'rgba(247, 245, 240, 0.85)',
+                    fontSize: 'clamp(0.9rem, 2vw, 0.98rem)',
+                    lineHeight: 1.75,
+                    marginBottom: '1.75rem',
+                  }}
+                >
+                  {activeModalItem.detailDesc}
+                </p>
 
-              {/* Agenda & Fokus Utama */}
-              <div
-                style={{
-                  fontSize: '0.75rem',
-                  fontWeight: 800,
-                  color: '#E6C587',
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  marginBottom: '1rem',
-                }}
-              >
-                AGENDA & FOKUS UTAMA:
-              </div>
-
-              {/* Checklists */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-                {currentShowcase.agendas.map((agenda, i) => (
+                {/* Agenda & Fokus Utama Box */}
+                <div
+                  style={{
+                    background: 'rgba(10, 30, 22, 0.75)',
+                    border: '1px solid rgba(200, 168, 91, 0.2)',
+                    borderRadius: '18px',
+                    padding: 'clamp(1rem, 2.5vw, 1.5rem)',
+                  }}
+                >
                   <div
-                    key={i}
                     style={{
                       display: 'flex',
-                      alignItems: 'flex-start',
-                      gap: '0.65rem',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      color: '#DFBF73',
+                      fontSize: '0.78rem',
+                      fontWeight: 800,
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                      marginBottom: '1rem',
                     }}
                   >
-                    <CheckCircle2
-                      size={17}
-                      style={{ color: 'var(--emerald)', flexShrink: 0, marginTop: '2px' }}
-                    />
-                    <span
-                      style={{
-                        fontSize: '0.86rem',
-                        color: 'rgba(245, 242, 237, 0.85)',
-                        lineHeight: 1.5,
-                      }}
-                    >
-                      {agenda}
-                    </span>
+                    <Sparkles size={14} style={{ color: '#DFBF73' }} /> AGENDA & FOKUS PROGRAM KERJA:
                   </div>
-                ))}
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    {activeModalItem.agendas.map((agenda, i) => (
+                      <div
+                        key={i}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          gap: '0.75rem',
+                          padding: '0.5rem 0.65rem',
+                          borderRadius: '10px',
+                          background: 'rgba(255, 255, 255, 0.02)',
+                          border: '1px solid rgba(255, 255, 255, 0.04)',
+                        }}
+                      >
+                        <CheckCircle2
+                          size={18}
+                          style={{ color: 'var(--emerald)', flexShrink: 0, marginTop: '2px' }}
+                        />
+                        <span
+                          style={{
+                            fontSize: '0.88rem',
+                            color: '#F7F5F0',
+                            lineHeight: 1.55,
+                            fontWeight: 500,
+                          }}
+                        >
+                          {agenda}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
 
-              {/* Action Button: Link ke Halaman Anggota */}
-              <Link
-                to="/schools#pengurus"
+              {/* Modal Footer */}
+              <div
                 style={{
-                  marginTop: '2rem',
-                  display: 'inline-flex',
+                  display: 'flex',
                   alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '0.8rem 1.5rem',
-                  borderRadius: '9999px',
-                  background: 'rgba(16, 185, 129, 0.22)',
-                  border: '1px solid var(--emerald)',
-                  color: 'var(--warm-alabaster)',
-                  fontSize: '0.88rem',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  width: '100%',
-                  justifyContent: 'center',
-                  textDecoration: 'none',
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background = 'var(--emerald)';
-                  e.currentTarget.style.color = 'white';
-                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(16, 185, 129, 0.4)';
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background = 'rgba(16, 185, 129, 0.22)';
-                  e.currentTarget.style.color = 'var(--warm-alabaster)';
-                  e.currentTarget.style.boxShadow = 'none';
+                  justifyContent: 'space-between',
+                  gap: '1rem',
+                  padding: '1.25rem clamp(1.25rem, 3vw, 2rem)',
+                  borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                  background: 'rgba(5, 18, 14, 0.5)',
+                  flexWrap: 'wrap',
                 }}
               >
-                Lihat Pengurus & Anggota Divisi Ini <ArrowRight size={16} />
-              </Link>
+                {/* Division Switcher */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setModalDivisionIdx((prev) =>
+                        prev > 0 ? prev - 1 : DIVISION_SHOWCASE.length - 1
+                      )
+                    }
+                    className="btn btn-outline"
+                    style={{
+                      padding: '0.5rem 0.85rem',
+                      fontSize: '0.8rem',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      borderRadius: '9999px',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      color: 'var(--warm-alabaster)',
+                      background: 'rgba(255, 255, 255, 0.04)',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <ChevronLeft size={16} /> Sebelumnya
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setModalDivisionIdx((prev) =>
+                        prev < DIVISION_SHOWCASE.length - 1 ? prev + 1 : 0
+                      )
+                    }
+                    className="btn btn-outline"
+                    style={{
+                      padding: '0.5rem 0.85rem',
+                      fontSize: '0.8rem',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      borderRadius: '9999px',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      color: 'var(--warm-alabaster)',
+                      background: 'rgba(255, 255, 255, 0.04)',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Berikutnya <ChevronRight size={16} />
+                  </button>
+                </div>
+
+                {/* Link ke Halaman Anggota */}
+                <Link
+                  to="/schools#pengurus"
+                  onClick={() => setModalDivisionIdx(null)}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.55rem',
+                    padding: '0.75rem 1.4rem',
+                    borderRadius: '9999px',
+                    background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                    color: 'white',
+                    fontSize: '0.88rem',
+                    fontWeight: 700,
+                    textDecoration: 'none',
+                    boxShadow: '0 4px 16px rgba(16, 185, 129, 0.35)',
+                    transition: 'all 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 6px 20px rgba(16, 185, 129, 0.5)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 4px 16px rgba(16, 185, 129, 0.35)';
+                  }}
+                >
+                  Lihat Pengurus & Anggota Divisi Ini <ArrowRight size={16} />
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </section>
 
       {/* ═══════════════════════════════════════════

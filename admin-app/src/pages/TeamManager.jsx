@@ -426,98 +426,194 @@ export default function TeamManager() {
 
       {/* Modal Add / Edit */}
       {modalOpen && (
-        <div className="modal-overlay-responsive" onClick={(e) => { if (e.target === e.currentTarget) setModalOpen(false); }}>
-          <div className="glass-card modal-card-responsive" style={{
-            maxWidth: 540,
-            padding: '1.75rem',
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 800 }}>
-                {editingMember ? 'Edit Data Pengurus' : 'Tambah Pengurus Baru'}
-              </h3>
-              <button onClick={() => setModalOpen(false)} className="btn btn-outline btn-xs">
-                <X size={16} />
+        <div 
+          className="modal-overlay-responsive" 
+          onClick={(e) => { if (e.target === e.currentTarget) setModalOpen(false); }}
+        >
+          <div 
+            className="glass-card modal-card-responsive animate-fade-in-up" 
+            style={{ maxWidth: 700 }}
+          >
+            {/* Modal Header */}
+            <div className="modal-header-responsive">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                <div style={{
+                  width: 42,
+                  height: 42,
+                  borderRadius: '12px',
+                  background: 'rgba(200, 168, 91, 0.12)',
+                  border: '1px solid rgba(200, 168, 91, 0.28)',
+                  color: 'var(--antique-brass)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}>
+                  <Users size={22} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0, color: 'var(--text-primary)', letterSpacing: '-0.015em' }}>
+                    {editingMember ? 'Edit Data Pengurus' : 'Tambah Pengurus Baru'}
+                  </h3>
+                  <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                    {editingMember ? 'Perbarui informasi profil dan amanah kepengurusan' : 'Tambahkan personalia pengurus ke dalam struktur resmi'}
+                  </p>
+                </div>
+              </div>
+              <button 
+                type="button"
+                onClick={() => setModalOpen(false)} 
+                className="btn btn-outline btn-xs"
+                style={{
+                  width: 34,
+                  height: 34,
+                  padding: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '10px',
+                  borderColor: 'rgba(255, 255, 255, 0.12)',
+                  color: 'var(--text-muted)',
+                }}
+                aria-label="Tutup Modal"
+              >
+                <X size={18} />
               </button>
             </div>
 
             <form onSubmit={handleSave}>
-              <div className="form-group" style={{ marginBottom: '1rem' }}>
-                <label className="form-label">Divisi / Bagian</label>
-                <select
-                  className="form-input"
-                  value={targetGroup}
-                  onChange={e => setTargetGroup(e.target.value)}
-                  required
-                >
-                  <option value="bph">Badan Pengurus Harian (BPH)</option>
-                  {divisionsList.map(d => (
-                    <option key={d.id} value={d.shortName || d.id}>
-                      {d.name} ({d.shortName})
-                    </option>
-                  ))}
-                </select>
+              <div className="modal-body-responsive" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                {/* 2 Kolom: Divisi & Jabatan */}
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(min(260px, 100%), 1fr))',
+                  gap: '1.25rem',
+                }}>
+                  <div className="form-group" style={{ marginBottom: 0 }}>
+                    <label className="form-label" style={{ fontWeight: 600, fontSize: '0.85rem', color: 'var(--warm-alabaster)', marginBottom: '0.45rem' }}>
+                      Divisi / Bagian <span style={{ color: '#EF4444' }}>*</span>
+                    </label>
+                    <select
+                      className="form-input"
+                      value={targetGroup}
+                      onChange={e => setTargetGroup(e.target.value)}
+                      required
+                      style={{ padding: '0.75rem 1rem', fontSize: '0.9rem' }}
+                    >
+                      <option value="bph">Badan Pengurus Harian (BPH)</option>
+                      {divisionsList.map(d => (
+                        <option key={d.id} value={d.shortName || d.id}>
+                          {d.name} ({d.shortName})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="form-group" style={{ marginBottom: 0 }}>
+                    <label className="form-label" style={{ fontWeight: 600, fontSize: '0.85rem', color: 'var(--warm-alabaster)', marginBottom: '0.45rem' }}>
+                      Jabatan / Amanah <span style={{ color: '#EF4444' }}>*</span>
+                    </label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      value={formData.role}
+                      onChange={e => setFormData({ ...formData, role: e.target.value })}
+                      placeholder="Contoh: Ketua Umum / Kadiv SDM / Anggota"
+                      required
+                      style={{ padding: '0.75rem 1rem', fontSize: '0.9rem' }}
+                    />
+                  </div>
+                </div>
+
+                {/* 2 Kolom: Nama Lengkap & Asal Sekolah */}
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(min(260px, 100%), 1fr))',
+                  gap: '1.25rem',
+                }}>
+                  <div className="form-group" style={{ marginBottom: 0 }}>
+                    <label className="form-label" style={{ fontWeight: 600, fontSize: '0.85rem', color: 'var(--warm-alabaster)', marginBottom: '0.45rem' }}>
+                      Nama Lengkap <span style={{ color: '#EF4444' }}>*</span>
+                    </label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      value={formData.name}
+                      onChange={e => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="Contoh: Muhammad Al-Fatih"
+                      required
+                      style={{ padding: '0.75rem 1rem', fontSize: '0.9rem' }}
+                    />
+                  </div>
+
+                  <div className="form-group" style={{ marginBottom: 0 }}>
+                    <label className="form-label" style={{ fontWeight: 600, fontSize: '0.85rem', color: 'var(--warm-alabaster)', marginBottom: '0.45rem' }}>
+                      Asal Sekolah
+                    </label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      value={formData.school}
+                      onChange={e => setFormData({ ...formData, school: e.target.value })}
+                      placeholder="Contoh: SMA Negeri 2 Purwokerto"
+                      style={{ padding: '0.75rem 1rem', fontSize: '0.9rem' }}
+                    />
+                  </div>
+                </div>
+
+                {/* Akun Instagram */}
+                <div className="form-group" style={{ marginBottom: 0 }}>
+                  <label className="form-label" style={{ fontWeight: 600, fontSize: '0.85rem', color: 'var(--warm-alabaster)', marginBottom: '0.45rem' }}>
+                    Akun Instagram <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 400 }}>(Opsional)</span>
+                  </label>
+                  <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                    <span style={{
+                      position: 'absolute',
+                      left: '0.9rem',
+                      color: 'var(--text-muted)',
+                      fontSize: '0.9rem',
+                      fontWeight: 700,
+                      pointerEvents: 'none',
+                    }}>
+                      @
+                    </span>
+                    <input
+                      type="text"
+                      className="form-input"
+                      value={formData.instagram}
+                      onChange={e => setFormData({ ...formData, instagram: e.target.value.replace(/^@/, '') })}
+                      placeholder="alfatih (tanpa @)"
+                      style={{ paddingLeft: '2.2rem', padding: '0.75rem 1rem 0.75rem 2.2rem', fontSize: '0.9rem' }}
+                    />
+                  </div>
+                </div>
+
+                {/* Card Foto Profil */}
+                <div style={{
+                  padding: '1.25rem',
+                  borderRadius: 'var(--radius-lg)',
+                  background: 'rgba(255, 255, 255, 0.02)',
+                  border: '1px solid rgba(200, 168, 91, 0.16)',
+                }}>
+                  <ImageUploadField
+                    label="Foto Profil Pengurus"
+                    value={formData.photo}
+                    onChange={val => setFormData({ ...formData, photo: val })}
+                    placeholder="Tempel URL foto atau klik Pilih Berkas Foto..."
+                    aspectRatioHint="Rasio 1:1 (Pas Foto / Persegi)"
+                    tip="Disarankan menggunakan foto resmi atau semi-formal berlatar rapi dengan rasio 1:1."
+                  />
+                </div>
               </div>
 
-              <div className="form-group" style={{ marginBottom: '1rem' }}>
-                <label className="form-label">Nama Lengkap</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.name}
-                  onChange={e => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="Contoh: Muhammad Al-Fatih"
-                  required
-                />
-              </div>
-
-              <div className="form-group" style={{ marginBottom: '1rem' }}>
-                <label className="form-label">Jabatan / Amanah</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.role}
-                  onChange={e => setFormData({ ...formData, role: e.target.value })}
-                  placeholder="Contoh: Ketua Umum / Kadiv SDM / Anggota"
-                  required
-                />
-              </div>
-
-              <div className="form-group" style={{ marginBottom: '1rem' }}>
-                <label className="form-label">Asal Sekolah</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.school}
-                  onChange={e => setFormData({ ...formData, school: e.target.value })}
-                  placeholder="Contoh: SMAN 1 Purwokerto"
-                />
-              </div>
-
-              <div className="form-group" style={{ marginBottom: '1rem' }}>
-                <label className="form-label">Akun Instagram (Opsional)</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.instagram}
-                  onChange={e => setFormData({ ...formData, instagram: e.target.value })}
-                  placeholder="Contoh: alfatih (tanpa @)"
-                />
-              </div>
-
-              <ImageUploadField
-                label="Foto Profil Pengurus"
-                value={formData.photo}
-                onChange={val => setFormData({ ...formData, photo: val })}
-                placeholder="Tempel URL foto atau klik Pilih Berkas Foto..."
-                aspectRatioHint="Rasio 1:1 (Pas Foto / Persegi)"
-              />
-
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '1.5rem' }}>
+              {/* Modal Footer */}
+              <div className="modal-footer-responsive">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
                   className="btn btn-outline"
                   disabled={isSubmitting}
+                  style={{ minWidth: 100, padding: '0.65rem 1.25rem' }}
                 >
                   Batal
                 </button>
@@ -525,7 +621,13 @@ export default function TeamManager() {
                   type="submit"
                   className="btn btn-primary"
                   disabled={isSubmitting}
-                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.55rem',
+                    padding: '0.65rem 1.4rem',
+                    fontWeight: 700,
+                  }}
                 >
                   {isSubmitting ? (
                     <>

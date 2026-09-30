@@ -116,22 +116,42 @@ export default function QAModeration() {
       {/* Answer Modal */}
       {answerModal && (
         <div className="modal-overlay-responsive" onClick={(e) => { if (e.target === e.currentTarget) { setAnswerModal(null); setAnswer(''); } }}>
-          <div className="glass-card modal-card-responsive animate-fade-in-up" style={{ maxWidth: 550, padding: '1.75rem' }}>
-            <h2 style={{ fontSize: '1.15rem', marginBottom: '1rem' }}>Jawab Pertanyaan</h2>
-            <div style={{
-              background: 'var(--glass-bg)', borderRadius: 'var(--radius-md)', padding: '1rem',
-              marginBottom: '1.25rem', borderLeft: '3px solid var(--antique-brass)',
-            }}>
-              <p style={{ fontWeight: 600, fontSize: '0.95rem', marginBottom: '0.25rem' }}>{answerModal.query}</p>
-              <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Dari: {answerModal.sender || 'Anonim'}</p>
+          <div className="glass-card modal-card-responsive animate-fade-in-up" style={{ maxWidth: 580 }}>
+            <div className="modal-header-responsive">
+              <h2 style={{ fontSize: '1.15rem', margin: 0, fontWeight: 700 }}>Jawab Pertanyaan</h2>
+              <button 
+                type="button" 
+                onClick={() => { setAnswerModal(null); setAnswer(''); }} 
+                className="btn btn-outline btn-xs"
+                style={{ padding: '0.4rem', color: 'var(--text-muted)' }}
+                aria-label="Tutup"
+              >
+                <X size={18} />
+              </button>
             </div>
-            <div className="form-group">
-              <label className="form-label">Jawaban</label>
-              <textarea className="form-input" placeholder="Tulis jawaban..." value={answer} onChange={e => setAnswer(e.target.value)} style={{ minHeight: 120 }} />
+            <div className="modal-body-responsive" style={{ padding: '1.5rem 1.75rem' }}>
+              <div style={{
+                background: 'rgba(200, 168, 91, 0.08)', borderRadius: 'var(--radius-md)', padding: '1rem',
+                marginBottom: '1.25rem', borderLeft: '3px solid var(--antique-brass)',
+                border: '1px solid rgba(200, 168, 91, 0.2)',
+              }}>
+                <p style={{ fontWeight: 600, fontSize: '0.95rem', marginBottom: '0.25rem', color: 'var(--text-primary)' }}>{answerModal.query}</p>
+                <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0 }}>Dari: {answerModal.sender || 'Anonim'}</p>
+              </div>
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label className="form-label">Jawaban Resmi</label>
+                <textarea 
+                  className="form-input" 
+                  placeholder="Tulis jawaban resmi yang santun dan edukatif..." 
+                  value={answer} 
+                  onChange={e => setAnswer(e.target.value)} 
+                  style={{ minHeight: 140, lineHeight: 1.6 }} 
+                />
+              </div>
             </div>
-            <div style={{ display: 'flex', gap: '0.75rem' }}>
-              <button onClick={handleAnswer} className="btn btn-primary" style={{ flex: 1 }}><Check size={16} /> Kirim Jawaban</button>
-              <button onClick={() => setAnswerModal(null)} className="btn btn-secondary">Batal</button>
+            <div className="modal-footer-responsive">
+              <button type="button" onClick={() => { setAnswerModal(null); setAnswer(''); }} className="btn btn-outline" style={{ minWidth: 90 }}>Batal</button>
+              <button type="button" onClick={handleAnswer} className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700 }}><Check size={16} /> Kirim Jawaban</button>
             </div>
           </div>
         </div>
