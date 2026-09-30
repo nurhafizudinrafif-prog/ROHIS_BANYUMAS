@@ -922,23 +922,17 @@ textarea.form-input {
    Motion Blur Keyframes — iOS-style smooth morph
    ═══════════════════════════════════════════ */
 
-/* Card expand: start blurred, settle to sharp */
+/* Card expand: gentle blur sweep only — NO opacity reduction 
+   (detail-content already has its own fade-in, doubling up = blink) */
 @keyframes contentMotionBlurExpand {
   0% {
-    filter: blur(4px);
-    opacity: 0.5;
-  }
-  40% {
     filter: blur(1.5px);
-    opacity: 0.8;
   }
-  70% {
-    filter: blur(0.4px);
-    opacity: 0.95;
+  50% {
+    filter: blur(0.5px);
   }
   100% {
     filter: blur(0px);
-    opacity: 1;
   }
 }
 
