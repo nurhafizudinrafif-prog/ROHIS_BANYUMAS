@@ -734,7 +734,13 @@ textarea.form-input {
   opacity: 1;
 }
 
-/* Card Sheet: Animates exact physical dimensions (Zero squashing, zero miniaturization, zero border-dissolving) */
+/* Backdrop smooth fade-out during collapse */
+.morph-backdrop.is-collapsing-backdrop {
+  opacity: 0;
+  transition: opacity 0.44s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Card Sheet: Animates exact physical dimensions */
 .morph-card-sheet {
   position: fixed;
   z-index: 100000;
@@ -747,6 +753,8 @@ textarea.form-input {
   display: flex;
   flex-direction: column;
   will-change: top, left, width, height, border-radius;
+  /* NO filter/opacity transition here — only geometry. This prevents
+     animation vs transition fights that cause blink */
   transition:
     top 0.48s cubic-bezier(0.16, 1, 0.3, 1),
     left 0.48s cubic-bezier(0.16, 1, 0.3, 1),
@@ -758,13 +766,17 @@ textarea.form-input {
 
 .morph-card-sheet.is-collapsing {
   pointer-events: none;
+  /* Collapse animation: blur + fade the entire card */
+  animation: cardCollapseBlur 0.46s cubic-bezier(0.4, 0, 0.2, 1) both;
+  /* Geometry collapses slightly faster (0.42s) so card shrinks 
+     BEFORE the animation finishes — no "visible snap at origin" */
   transition:
-    top 0.48s cubic-bezier(0.16, 1, 0.3, 1),
-    left 0.48s cubic-bezier(0.16, 1, 0.3, 1),
-    width 0.48s cubic-bezier(0.16, 1, 0.3, 1),
-    height 0.48s cubic-bezier(0.16, 1, 0.3, 1),
-    border-radius 0.48s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.48s cubic-bezier(0.16, 1, 0.3, 1);
+    top 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+    left 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+    width 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+    height 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+    border-radius 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.42s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Close button: centered grid & smooth scaling */
@@ -807,7 +819,7 @@ textarea.form-input {
 .morph-card-sheet.is-collapsing .morph-close-btn {
   opacity: 0 !important;
   transform: scale(0.65) !important;
-  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: opacity 0.18s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.18s cubic-bezier(0.25, 0.1, 0.25, 1) !important;
   pointer-events: none;
 }
 
@@ -849,7 +861,7 @@ textarea.form-input {
 }
 
 .morph-card-sheet.is-collapsing .morph-body-wrapper {
-  animation: contentMotionBlurCollapse 0.48s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: contentMotionBlurCollapse 0.42s cubic-bezier(0.4, 0, 0.2, 1) both;
 }
 
 /* Detail content: Pure symmetric, natural open & close */
@@ -868,10 +880,10 @@ textarea.form-input {
 
 .morph-card-sheet.is-collapsing .morph-detail-content {
   opacity: 0 !important;
-  transform: translateY(8px) !important;
+  transform: translateY(6px) !important;
   transition:
-    opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.24s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
   pointer-events: none;
 }
 
@@ -902,8 +914,85 @@ textarea.form-input {
   opacity: 1 !important;
   transform: translateY(0) !important;
   transition:
-    opacity 0.36s cubic-bezier(0.16, 1, 0.3, 1) 0.06s !important;
+    opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1) 0.05s !important;
   pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════
+   Motion Blur Keyframes — iOS-style smooth morph
+   ═══════════════════════════════════════════ */
+
+/* Card expand: start blurred, settle to sharp */
+@keyframes contentMotionBlurExpand {
+  0% {
+    filter: blur(4px);
+    opacity: 0.5;
+  }
+  40% {
+    filter: blur(1.5px);
+    opacity: 0.8;
+  }
+  70% {
+    filter: blur(0.4px);
+    opacity: 0.95;
+  }
+  100% {
+    filter: blur(0px);
+    opacity: 1;
+  }
+}
+
+/* Body wrapper collapse: blur content quickly, fully gone before card finishes */
+@keyframes contentMotionBlurCollapse {
+  0% {
+    filter: blur(0px);
+    opacity: 1;
+  }
+  15% {
+    filter: blur(1.5px);
+    opacity: 0.85;
+  }
+  40% {
+    filter: blur(4px);
+    opacity: 0.5;
+  }
+  65% {
+    filter: blur(6px);
+    opacity: 0.15;
+  }
+  100% {
+    filter: blur(8px);
+    opacity: 0;
+  }
+}
+
+/* Card container collapse: blur + fade the ENTIRE sheet so the 
+   "landing" into the grid is fully masked. Card is invisible by 80%. */
+@keyframes cardCollapseBlur {
+  0% {
+    filter: blur(0px);
+    opacity: 1;
+  }
+  10% {
+    filter: blur(0.5px);
+    opacity: 0.95;
+  }
+  30% {
+    filter: blur(2px);
+    opacity: 0.8;
+  }
+  55% {
+    filter: blur(4px);
+    opacity: 0.5;
+  }
+  80% {
+    filter: blur(6px);
+    opacity: 0.1;
+  }
+  100% {
+    filter: blur(8px);
+    opacity: 0;
+  }
 }
 
 

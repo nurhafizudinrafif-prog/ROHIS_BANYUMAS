@@ -182,7 +182,7 @@ export default function About() {
       setMorphPhase('idle');
       setExpandedIdx(null);
       setOriginRect(null);
-    }, 480);
+    }, 500);
   };
 
   const switchDivision = (nextIdx) => {
@@ -826,7 +826,7 @@ export default function About() {
           <div className="morph-card-overlay">
             {/* Backdrop Blur */}
             <div
-              className={`morph-backdrop ${morphPhase === 'expanded' ? 'is-active' : ''}`}
+              className={`morph-backdrop ${morphPhase === 'expanded' ? 'is-active' : ''} ${morphPhase === 'collapsing' ? 'is-collapsing-backdrop' : ''}`}
               onClick={closeCardExpansion}
             />
 
