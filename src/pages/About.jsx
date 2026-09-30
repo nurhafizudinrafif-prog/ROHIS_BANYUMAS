@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Users, Target, Heart, Award, BookOpen, Star,
@@ -125,39 +125,96 @@ const DIVISION_SHOWCASE = [
 
 
 export default function About() {
-  // Division Detail Modal State (null when closed, index 0..4 when opened)
-  const [modalDivisionIdx, setModalDivisionIdx] = useState(null);
-  const [isClosing, setIsClosing] = useState(false);
+  // Card Morphing Expansion State (Option 2 - iOS App Store Style)
+  const [expandedIdx, setExpandedIdx] = useState(null);
+  const [morphPhase, setMorphPhase] = useState('idle'); // 'idle' | 'expanding' | 'expanded' | 'collapsing'
+  const [originRect, setOriginRect] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const cardRefs = useRef([]);
 
-  const activeModalItem =
-    modalDivisionIdx !== null ? DIVISION_SHOWCASE[modalDivisionIdx] || null : null;
-  const ActiveModalIcon = activeModalItem ? activeModalItem.icon : null;
+  const activeExpandedItem =
+    expandedIdx !== null ? DIVISION_SHOWCASE[expandedIdx] || null : null;
+  const ActiveExpandedIcon = activeExpandedItem ? activeExpandedItem.icon : null;
 
-  const openModal = (idx) => {
-    setIsClosing(false);
-    setModalDivisionIdx(idx);
-  };
-
-  const closeModal = () => {
-    if (isClosing || modalDivisionIdx === null) return;
-    setIsClosing(true);
-    setTimeout(() => {
-      setModalDivisionIdx(null);
-      setIsClosing(false);
-    }, 300);
-  };
-
-  // Handle ESC key, arrow key navigation, and lock body scroll when modal is open
   useEffect(() => {
-    if (modalDivisionIdx === null) return;
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const openCardExpansion = (idx) => {
+    const cardEl = cardRefs.current[idx];
+    if (!cardEl) return;
+    const rect = cardEl.getBoundingClientRect();
+    const initialRect = {
+      top: rect.top,
+      left: rect.left,
+      width: rect.width,
+      height: rect.height,
+    };
+
+    setOriginRect(initialRect);
+    setExpandedIdx(idx);
+    setMorphPhase('expanding');
+
+    // Next frames: trigger 'expanded' so CSS transitions smoothly to full view
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setMorphPhase('expanded');
+      });
+    });
+  };
+
+  const closeCardExpansion = () => {
+    if (morphPhase !== 'expanded') return;
+
+    // Refresh current target rect in case of any slight layout adjustment
+    if (expandedIdx !== null && cardRefs.current[expandedIdx]) {
+      const rect = cardRefs.current[expandedIdx].getBoundingClientRect();
+      setOriginRect({
+        top: rect.top,
+        left: rect.left,
+        width: rect.width,
+        height: rect.height,
+      });
+    }
+
+    setMorphPhase('collapsing');
+
+    setTimeout(() => {
+      setMorphPhase('idle');
+      setExpandedIdx(null);
+      setOriginRect(null);
+    }, 500);
+  };
+
+  const switchDivision = (nextIdx) => {
+    setExpandedIdx(nextIdx);
+    if (cardRefs.current[nextIdx]) {
+      const rect = cardRefs.current[nextIdx].getBoundingClientRect();
+      setOriginRect({
+        top: rect.top,
+        left: rect.left,
+        width: rect.width,
+        height: rect.height,
+      });
+    }
+  };
+
+  // Handle ESC key, arrow key navigation, and lock body scroll when card is expanded
+  useEffect(() => {
+    if (morphPhase === 'idle') return;
 
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
-        closeModal();
+        closeCardExpansion();
       } else if (e.key === 'ArrowLeft') {
-        setModalDivisionIdx((prev) => (prev > 0 ? prev - 1 : DIVISION_SHOWCASE.length - 1));
+        switchDivision(expandedIdx > 0 ? expandedIdx - 1 : DIVISION_SHOWCASE.length - 1);
       } else if (e.key === 'ArrowRight') {
-        setModalDivisionIdx((prev) => (prev < DIVISION_SHOWCASE.length - 1 ? prev + 1 : 0));
+        switchDivision(expandedIdx < DIVISION_SHOWCASE.length - 1 ? expandedIdx + 1 : 0);
       }
     };
 
@@ -169,7 +226,7 @@ export default function About() {
       document.body.style.overflow = originalOverflow;
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [modalDivisionIdx, isClosing]);
+  }, [morphPhase, expandedIdx]);
 
   return (
     <div style={{ overflowX: 'clip', width: '100%' }}>
@@ -539,17 +596,19 @@ export default function About() {
           >
             {DIVISION_SHOWCASE.map((item, idx) => {
               const ItemIcon = item.icon;
+              const isThisCardExpanded = expandedIdx === idx && morphPhase !== 'idle';
 
               return (
                 <div
                   key={item.num}
-                  onClick={() => openModal(idx)}
+                  ref={(el) => (cardRefs.current[idx] = el)}
+                  onClick={() => openCardExpansion(idx)}
                   role="button"
                   tabIndex={0}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
-                      openModal(idx);
+                      openCardExpansion(idx);
                     }
                   }}
                   style={{
@@ -560,11 +619,13 @@ export default function About() {
                     display: 'flex',
                     flexDirection: 'column',
                     cursor: 'pointer',
-                    transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+                    transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, opacity 0.25s ease',
                     boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25)',
                     position: 'relative',
                     overflow: 'hidden',
                     boxSizing: 'border-box',
+                    opacity: isThisCardExpanded ? 0 : 1,
+                    pointerEvents: isThisCardExpanded ? 'none' : 'auto',
                   }}
                   onMouseDown={(e) => {
                     e.currentTarget.style.transform = 'scale(0.97)';
@@ -749,215 +810,200 @@ export default function About() {
           </div>
         </div>
 
-        {/* ── MODAL POPUP DETAIL DIVISI (Cinematic Smooth Zoom & Approach) ── */}
-        {activeModalItem && (
-          <div
-            onClick={closeModal}
-            className={isClosing ? 'animate-modal-backdrop-out' : 'animate-modal-backdrop-in'}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              background: 'rgba(5, 18, 14, 0.88)',
-              backdropFilter: 'blur(18px)',
-              WebkitBackdropFilter: 'blur(18px)',
-              zIndex: 99999,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: 'clamp(0.75rem, 3vw, 1.5rem)',
-              overflowY: 'auto',
-            }}
-          >
+        {/* ═══ iOS APP STORE STYLE CARD MORPHING EXPANSION (OPTION 2) ═══ */}
+        {expandedIdx !== null && originRect && activeExpandedItem && (
+          <div className="morph-card-overlay">
+            {/* Backdrop Blur */}
             <div
+              className={`morph-backdrop ${morphPhase === 'expanded' ? 'is-active' : ''}`}
+              onClick={closeCardExpansion}
+            />
+
+            {/* The Morphing Card Sheet */}
+            <div
+              className={`morph-card-sheet ${morphPhase === 'expanded' ? 'is-expanded' : ''} ${
+                morphPhase === 'collapsing' ? 'is-collapsing' : ''
+              }`}
+              style={
+                morphPhase === 'expanding' || morphPhase === 'collapsing'
+                  ? {
+                      top: `${originRect.top}px`,
+                      left: `${originRect.left}px`,
+                      width: `${originRect.width}px`,
+                      height: `${originRect.height}px`,
+                      borderRadius: '20px',
+                    }
+                  : {
+                      top: isMobile ? 0 : 'max(20px, 4vh)',
+                      left: isMobile ? 0 : 'max(16px, calc(50% - 410px))',
+                      width: isMobile ? '100vw' : 'min(820px, calc(100vw - 32px))',
+                      height: isMobile ? '100vh' : 'min(92vh, 880px)',
+                      borderRadius: isMobile ? '0px' : '24px',
+                    }
+              }
               onClick={(e) => e.stopPropagation()}
-              className={isClosing ? 'animate-modal-zoom-out' : 'animate-modal-zoom-in'}
-              style={{
-                width: '100%',
-                maxWidth: '720px',
-                maxHeight: '90vh',
-                overflowY: 'auto',
-                background: 'linear-gradient(165deg, #0D2319 0%, #07140E 100%)',
-                border: '1px solid rgba(200, 168, 91, 0.35)',
-                borderRadius: '24px',
-                boxShadow: '0 25px 70px -12px rgba(0, 0, 0, 0.9), 0 0 45px rgba(16, 185, 129, 0.18)',
-                position: 'relative',
-                display: 'flex',
-                flexDirection: 'column',
-                margin: 'auto',
-              }}
             >
-              {/* Inner animated content container for smooth division switching */}
-              <div key={activeModalItem.num} className="animate-modal-content-switch">
-                {/* Modal Header */}
+              {/* Floating Close Button */}
+              <button
+                type="button"
+                className="morph-close-btn"
+                onClick={closeCardExpansion}
+                aria-label="Tutup lembar divisi"
+              >
+                <X size={18} />
+              </button>
+
+              {/* Scrollable Container */}
+              <div className="morph-card-scrollable">
+                {/* Header (Morphs smoothly into full view) */}
                 <div
                   style={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    justifyContent: 'space-between',
-                    gap: '1rem',
-                    padding: 'clamp(1.25rem, 3vw, 1.75rem) clamp(1.25rem, 3vw, 2rem)',
+                    padding: 'clamp(1.4rem, 4vw, 2.2rem)',
                     borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                    background: 'rgba(255, 255, 255, 0.02)',
+                    background:
+                      'linear-gradient(180deg, rgba(200, 168, 91, 0.08) 0%, rgba(13, 35, 25, 0) 100%)',
                     position: 'relative',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.85rem',
+                      marginBottom: '1rem',
+                      paddingRight: '3rem',
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-heading)',
+                        fontSize: 'clamp(2rem, 5vw, 2.6rem)',
+                        fontWeight: 800,
+                        color: '#DFBF73',
+                        lineHeight: 1,
+                      }}
+                    >
+                      {activeExpandedItem.num}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: '0.76rem',
+                        color: '#E6C587',
+                        fontWeight: 700,
+                        letterSpacing: '0.06em',
+                        textTransform: 'uppercase',
+                        background: 'rgba(200, 168, 91, 0.15)',
+                        padding: '0.25rem 0.65rem',
+                        borderRadius: '6px',
+                        border: '1px solid rgba(200, 168, 91, 0.3)',
+                      }}
+                    >
+                      {activeExpandedItem.tag}
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
                     <div
                       style={{
                         width: 58,
                         height: 58,
                         borderRadius: '18px',
-                        background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(200, 168, 91, 0.15) 100%)',
+                        background:
+                          'linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(200, 168, 91, 0.15) 100%)',
                         border: '1px solid rgba(200, 168, 91, 0.35)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         color: '#DFBF73',
-                        boxShadow: '0 8px 20px rgba(0,0,0,0.3)',
+                        boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
                         flexShrink: 0,
                       }}
                     >
-                      {ActiveModalIcon && <ActiveModalIcon size={28} />}
+                      {ActiveExpandedIcon && <ActiveExpandedIcon size={28} />}
                     </div>
-                    <div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
-                        <span
-                          style={{
-                            fontFamily: 'var(--font-heading)',
-                            fontSize: '0.82rem',
-                            fontWeight: 800,
-                            color: '#E6C587',
-                            background: 'rgba(200, 168, 91, 0.15)',
-                            border: '1px solid rgba(200, 168, 91, 0.35)',
-                            padding: '0.15rem 0.6rem',
-                            borderRadius: '9999px',
-                          }}
-                        >
-                          Pilar {activeModalItem.num}
-                        </span>
-                        <span
-                          style={{
-                            fontSize: '0.75rem',
-                            color: 'rgba(247, 245, 240, 0.65)',
-                            fontWeight: 600,
-                            letterSpacing: '0.05em',
-                            textTransform: 'uppercase',
-                          }}
-                        >
-                          {activeModalItem.tag}
-                        </span>
-                      </div>
-                      <h3
-                        style={{
-                          fontFamily: 'var(--font-heading)',
-                          fontSize: 'clamp(1.3rem, 3.5vw, 1.65rem)',
-                          fontWeight: 800,
-                          color: 'var(--warm-alabaster)',
-                          margin: 0,
-                          lineHeight: 1.2,
-                        }}
-                      >
-                        {activeModalItem.detailTitle}
-                      </h3>
-                    </div>
-                  </div>
 
-                  {/* Close Button */}
-                  <button
-                    type="button"
-                    onClick={closeModal}
-                    aria-label="Tutup detail divisi"
-                    style={{
-                      width: 38,
-                      height: 38,
-                      borderRadius: '50%',
-                      background: 'rgba(255, 255, 255, 0.08)',
-                      border: '1px solid rgba(255, 255, 255, 0.12)',
-                      color: '#BACEC3',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      flexShrink: 0,
-                      transition: 'all 0.2s',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)';
-                      e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.5)';
-                      e.currentTarget.style.color = '#EF4444';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
-                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
-                      e.currentTarget.style.color = '#BACEC3';
-                    }}
-                  >
-                    <X size={18} />
-                  </button>
+                    <h2
+                      style={{
+                        fontFamily: 'var(--font-heading)',
+                        fontSize: 'clamp(1.35rem, 3.8vw, 1.85rem)',
+                        fontWeight: 800,
+                        color: 'var(--warm-alabaster)',
+                        margin: 0,
+                        lineHeight: 1.25,
+                      }}
+                    >
+                      {activeExpandedItem.detailTitle}
+                    </h2>
+                  </div>
                 </div>
 
-                {/* Modal Body */}
-                <div style={{ padding: 'clamp(1.25rem, 3vw, 2rem)' }}>
-                  {/* Detailed Description */}
+                {/* Animated Inner Content */}
+                <div
+                  key={activeExpandedItem.num}
+                  className="morph-detail-content animate-modal-content-switch"
+                  style={{ padding: 'clamp(1.4rem, 4vw, 2.2rem)' }}
+                >
                   <p
                     style={{
-                      color: 'rgba(247, 245, 240, 0.85)',
-                      fontSize: 'clamp(0.9rem, 2vw, 0.98rem)',
-                      lineHeight: 1.75,
-                      marginBottom: '1.75rem',
+                      color: 'rgba(247, 245, 240, 0.88)',
+                      fontSize: 'clamp(0.95rem, 2.2vw, 1.05rem)',
+                      lineHeight: 1.8,
+                      marginBottom: '2rem',
                     }}
                   >
-                    {activeModalItem.detailDesc}
+                    {activeExpandedItem.detailDesc}
                   </p>
 
-                  {/* Agenda & Fokus Utama Box */}
+                  {/* Agendas & Programs */}
                   <div
                     style={{
                       background: 'rgba(10, 30, 22, 0.75)',
-                      border: '1px solid rgba(200, 168, 91, 0.2)',
-                      borderRadius: '18px',
-                      padding: 'clamp(1rem, 2.5vw, 1.5rem)',
+                      border: '1px solid rgba(200, 168, 91, 0.22)',
+                      borderRadius: '20px',
+                      padding: 'clamp(1.2rem, 3vw, 1.75rem)',
+                      marginBottom: '2rem',
+                      boxShadow: 'inset 0 2px 12px rgba(0, 0, 0, 0.3)',
                     }}
                   >
                     <div
                       style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '0.5rem',
+                        gap: '0.6rem',
                         color: '#DFBF73',
-                        fontSize: '0.78rem',
+                        fontSize: '0.82rem',
                         fontWeight: 800,
                         letterSpacing: '0.08em',
                         textTransform: 'uppercase',
-                        marginBottom: '1rem',
+                        marginBottom: '1.25rem',
                       }}
                     >
-                      <Sparkles size={14} style={{ color: '#DFBF73' }} /> AGENDA & FOKUS PROGRAM KERJA:
+                      <Sparkles size={16} style={{ color: '#DFBF73' }} /> AGENDA & FOKUS PROGRAM KERJA:
                     </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                      {activeModalItem.agendas.map((agenda, i) => (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                      {activeExpandedItem.agendas.map((agenda, i) => (
                         <div
                           key={i}
                           style={{
                             display: 'flex',
                             alignItems: 'flex-start',
-                            gap: '0.75rem',
-                            padding: '0.5rem 0.65rem',
-                            borderRadius: '10px',
-                            background: 'rgba(255, 255, 255, 0.02)',
-                            border: '1px solid rgba(255, 255, 255, 0.04)',
+                            gap: '0.85rem',
+                            padding: '0.65rem 0.85rem',
+                            borderRadius: '12px',
+                            background: 'rgba(255, 255, 255, 0.03)',
+                            border: '1px solid rgba(255, 255, 255, 0.05)',
                           }}
                         >
                           <CheckCircle2
-                            size={18}
+                            size={19}
                             style={{ color: 'var(--emerald)', flexShrink: 0, marginTop: '2px' }}
                           />
                           <span
                             style={{
-                              fontSize: '0.88rem',
+                              fontSize: '0.92rem',
                               color: '#F7F5F0',
-                              lineHeight: 1.55,
+                              lineHeight: 1.6,
                               fontWeight: 500,
                             }}
                           >
@@ -967,102 +1013,99 @@ export default function About() {
                       ))}
                     </div>
                   </div>
-                </div>
-              </div>
 
-              {/* Modal Footer */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: '1rem',
-                  padding: '1.25rem clamp(1.25rem, 3vw, 2rem)',
-                  borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                  background: 'rgba(5, 18, 14, 0.5)',
-                  flexWrap: 'wrap',
-                }}
-              >
-                {/* Division Switcher */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setModalDivisionIdx((prev) =>
-                        prev > 0 ? prev - 1 : DIVISION_SHOWCASE.length - 1
-                      )
-                    }
-                    className="btn btn-outline"
+                  {/* Action Bar & Division Switcher */}
+                  <div
                     style={{
-                      padding: '0.5rem 0.85rem',
-                      fontSize: '0.8rem',
-                      display: 'inline-flex',
+                      display: 'flex',
                       alignItems: 'center',
-                      gap: '0.35rem',
-                      borderRadius: '9999px',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                      color: 'var(--warm-alabaster)',
-                      background: 'rgba(255, 255, 255, 0.04)',
-                      cursor: 'pointer',
+                      justifyContent: 'space-between',
+                      gap: '1rem',
+                      paddingTop: '1.5rem',
+                      borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                      flexWrap: 'wrap',
                     }}
                   >
-                    <ChevronLeft size={16} /> Sebelumnya
-                  </button>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          switchDivision(
+                            expandedIdx > 0 ? expandedIdx - 1 : DIVISION_SHOWCASE.length - 1
+                          )
+                        }
+                        className="btn btn-outline"
+                        style={{
+                          padding: '0.55rem 0.95rem',
+                          fontSize: '0.82rem',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.4rem',
+                          borderRadius: '9999px',
+                          border: '1px solid rgba(255, 255, 255, 0.16)',
+                          color: 'var(--warm-alabaster)',
+                          background: 'rgba(255, 255, 255, 0.05)',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        <ChevronLeft size={16} /> Sebelumnya
+                      </button>
 
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setModalDivisionIdx((prev) =>
-                        prev < DIVISION_SHOWCASE.length - 1 ? prev + 1 : 0
-                      )
-                    }
-                    className="btn btn-outline"
-                    style={{
-                      padding: '0.5rem 0.85rem',
-                      fontSize: '0.8rem',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.35rem',
-                      borderRadius: '9999px',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                      color: 'var(--warm-alabaster)',
-                      background: 'rgba(255, 255, 255, 0.04)',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Berikutnya <ChevronRight size={16} />
-                  </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          switchDivision(
+                            expandedIdx < DIVISION_SHOWCASE.length - 1 ? expandedIdx + 1 : 0
+                          )
+                        }
+                        className="btn btn-outline"
+                        style={{
+                          padding: '0.55rem 0.95rem',
+                          fontSize: '0.82rem',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.4rem',
+                          borderRadius: '9999px',
+                          border: '1px solid rgba(255, 255, 255, 0.16)',
+                          color: 'var(--warm-alabaster)',
+                          background: 'rgba(255, 255, 255, 0.05)',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        Berikutnya <ChevronRight size={16} />
+                      </button>
+                    </div>
+
+                    <Link
+                      to="/schools#pengurus"
+                      onClick={closeCardExpansion}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.55rem',
+                        padding: '0.75rem 1.4rem',
+                        borderRadius: '9999px',
+                        background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                        color: 'white',
+                        fontSize: '0.88rem',
+                        fontWeight: 700,
+                        textDecoration: 'none',
+                        boxShadow: '0 4px 16px rgba(16, 185, 129, 0.35)',
+                        transition: 'all 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.boxShadow = '0 6px 20px rgba(16, 185, 129, 0.5)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = '0 4px 16px rgba(16, 185, 129, 0.35)';
+                      }}
+                    >
+                      Lihat Pengurus & Anggota Divisi Ini <ArrowRight size={16} />
+                    </Link>
+                  </div>
                 </div>
-
-                {/* Link ke Halaman Anggota */}
-                <Link
-                  to="/schools#pengurus"
-                  onClick={closeModal}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.55rem',
-                    padding: '0.75rem 1.4rem',
-                    borderRadius: '9999px',
-                    background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-                    color: 'white',
-                    fontSize: '0.88rem',
-                    fontWeight: 700,
-                    textDecoration: 'none',
-                    boxShadow: '0 4px 16px rgba(16, 185, 129, 0.35)',
-                    transition: 'all 0.2s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 6px 20px rgba(16, 185, 129, 0.5)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 4px 16px rgba(16, 185, 129, 0.35)';
-                  }}
-                >
-                  Lihat Pengurus & Anggota Divisi Ini <ArrowRight size={16} />
-                </Link>
               </div>
             </div>
           </div>
