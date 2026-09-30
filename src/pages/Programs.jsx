@@ -163,7 +163,7 @@ export default function Programs() {
       setMorphPhase('idle');
       setExpandedIdx(null);
       setOriginRect(null);
-    }, 480);
+    }, 500);
   };
 
   const switchDivision = (nextIdx) => {
@@ -543,10 +543,6 @@ export default function Programs() {
                   morphPhase === 'expanded'
                     ? 'translate3d(0, 0, 0) scale(1, 1)'
                     : `translate3d(${deltaX}px, ${deltaY}px, 0) scale(${scaleX}, ${scaleY})`,
-                filter:
-                  morphPhase === 'expanding'
-                    ? 'blur(1.5px)'
-                    : 'none',
                 borderRadius:
                   morphPhase === 'expanded'
                     ? isMobile
