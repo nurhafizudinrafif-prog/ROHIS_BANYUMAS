@@ -681,30 +681,30 @@ textarea.form-input {
    iOS App Store Style Card Morphing Expansion (Unified Natural Physics)
    ═══════════════════════════════════════════════════════════ */
 
-@keyframes morphMotionBlurExpand {
+@keyframes contentMotionBlurExpand {
   0% {
     filter: blur(0px);
   }
   30% {
-    filter: blur(3.5px);
+    filter: blur(2.5px);
   }
   75% {
-    filter: blur(1px);
+    filter: blur(0.6px);
   }
   100% {
     filter: blur(0px);
   }
 }
 
-@keyframes morphMotionBlurCollapse {
+@keyframes contentMotionBlurCollapse {
   0% {
     filter: blur(0px);
   }
   30% {
-    filter: blur(3.5px);
+    filter: blur(2.5px);
   }
   75% {
-    filter: blur(1px);
+    filter: blur(0.6px);
   }
   100% {
     filter: blur(0px);
@@ -726,7 +726,7 @@ textarea.form-input {
   -webkit-backdrop-filter: blur(20px);
   opacity: 0;
   pointer-events: auto;
-  transition: opacity 0.52s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 0.52s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.48s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 0.48s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, backdrop-filter;
 }
 
@@ -734,6 +734,7 @@ textarea.form-input {
   opacity: 1;
 }
 
+/* Card Sheet: Animates exact physical dimensions (Zero squashing, zero miniaturization, zero border-dissolving) */
 .morph-card-sheet {
   position: fixed;
   z-index: 100000;
@@ -745,24 +746,25 @@ textarea.form-input {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  will-change: transform, filter, border-radius;
+  will-change: top, left, width, height, border-radius;
   transition:
-    transform 0.52s cubic-bezier(0.16, 1, 0.3, 1),
-    border-radius 0.52s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.52s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.morph-card-sheet.is-expanded {
-  animation: morphMotionBlurExpand 0.52s cubic-bezier(0.16, 1, 0.3, 1) both;
+    top 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+    left 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+    width 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+    border-radius 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.48s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .morph-card-sheet.is-collapsing {
   pointer-events: none;
-  animation: morphMotionBlurCollapse 0.52s cubic-bezier(0.16, 1, 0.3, 1) both;
   transition:
-    transform 0.52s cubic-bezier(0.16, 1, 0.3, 1),
-    border-radius 0.52s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.52s cubic-bezier(0.16, 1, 0.3, 1);
+    top 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+    left 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+    width 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+    border-radius 0.48s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.48s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Close button: centered grid & smooth scaling */
@@ -790,8 +792,8 @@ textarea.form-input {
   opacity: 0;
   transform: scale(0.65);
   transition:
-    opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.1s,
-    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.1s,
+    opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1) 0.1s,
+    transform 0.32s cubic-bezier(0.16, 1, 0.3, 1) 0.1s,
     background 0.2s ease,
     border-color 0.2s ease,
     color 0.2s ease;
@@ -805,7 +807,7 @@ textarea.form-input {
 .morph-card-sheet.is-collapsing .morph-close-btn {
   opacity: 0 !important;
   transform: scale(0.65) !important;
-  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
   pointer-events: none;
 }
 
@@ -842,13 +844,21 @@ textarea.form-input {
   width: 100%;
 }
 
+.morph-card-sheet.is-expanded .morph-body-wrapper {
+  animation: contentMotionBlurExpand 0.48s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.morph-card-sheet.is-collapsing .morph-body-wrapper {
+  animation: contentMotionBlurCollapse 0.48s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 /* Detail content: Pure symmetric, natural open & close */
 .morph-detail-content {
   opacity: 0;
-  transform: translateY(18px);
+  transform: translateY(14px);
   transition:
-    opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1) 0.12s,
-    transform 0.42s cubic-bezier(0.16, 1, 0.3, 1) 0.12s;
+    opacity 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.1s,
+    transform 0.38s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
 }
 
 .morph-card-sheet.is-expanded .morph-detail-content {
@@ -858,10 +868,10 @@ textarea.form-input {
 
 .morph-card-sheet.is-collapsing .morph-detail-content {
   opacity: 0 !important;
-  transform: translateY(14px) !important;
+  transform: translateY(8px) !important;
   transition:
-    opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.32s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.24s cubic-bezier(0.16, 1, 0.3, 1) !important;
   pointer-events: none;
 }
 
@@ -873,21 +883,17 @@ textarea.form-input {
   right: 0;
   opacity: 0;
   pointer-events: none;
-  transform: translateY(-8px);
-  transition:
-    opacity 0.36s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.36s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(0);
 }
 
 /* Initial frame of expand */
 .morph-card-sheet:not(.is-expanded):not(.is-collapsing) .morph-summary-content {
   opacity: 1;
-  transform: translateY(0);
 }
 
 /* Expanded state: summary is hidden */
 .morph-card-sheet.is-expanded .morph-summary-content {
-  opacity: 0;
+  opacity: 0 !important;
   pointer-events: none;
 }
 
@@ -896,8 +902,7 @@ textarea.form-input {
   opacity: 1 !important;
   transform: translateY(0) !important;
   transition:
-    opacity 0.42s cubic-bezier(0.16, 1, 0.3, 1) 0.08s,
-    transform 0.42s cubic-bezier(0.16, 1, 0.3, 1) 0.08s !important;
+    opacity 0.36s cubic-bezier(0.16, 1, 0.3, 1) 0.06s !important;
   pointer-events: none;
 }
 

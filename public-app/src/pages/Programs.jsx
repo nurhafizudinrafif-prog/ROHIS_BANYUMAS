@@ -151,7 +151,7 @@ export default function Programs() {
       setMorphPhase('idle');
       setExpandedIdx(null);
       setOriginRect(null);
-    }, 520);
+    }, 480);
   };
 
   const switchDivision = (nextIdx) => {
@@ -522,22 +522,32 @@ export default function Programs() {
                 morphPhase === 'collapsing' ? 'is-collapsing' : ''
               }`}
               style={{
-                top: `${targetTop}px`,
-                left: `${targetLeft}px`,
-                width: `${targetWidth}px`,
-                height: `${targetHeight}px`,
-                transformOrigin: 'top left',
-                transform:
+                top:
                   morphPhase === 'expanded'
-                    ? 'translate3d(0, 0, 0) scale(1, 1)'
-                    : `translate3d(${deltaX}px, ${deltaY}px, 0) scale(${scaleX}, ${scaleY})`,
+                    ? `${targetTop}px`
+                    : `${originRect ? originRect.top : targetTop}px`,
+                left:
+                  morphPhase === 'expanded'
+                    ? `${targetLeft}px`
+                    : `${originRect ? originRect.left : targetLeft}px`,
+                width:
+                  morphPhase === 'expanded'
+                    ? `${targetWidth}px`
+                    : `${originRect ? originRect.width : targetWidth}px`,
+                height:
+                  morphPhase === 'expanded'
+                    ? `${targetHeight}px`
+                    : `${originRect ? originRect.height : targetHeight}px`,
                 borderRadius:
                   morphPhase === 'expanded'
                     ? isMobile
                       ? '0px'
                       : '24px'
-                    : `${Math.round(20 / Math.max(0.01, scaleX))}px / ${Math.round(20 / Math.max(0.01, scaleY))}px`,
-                opacity: 1,
+                    : '20px',
+                transition:
+                  morphPhase === 'expanding'
+                    ? 'none'
+                    : undefined,
               }}
               onClick={(e) => e.stopPropagation()}
             >
