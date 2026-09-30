@@ -197,6 +197,23 @@ export default function Programs() {
     };
   }, [morphPhase, expandedIdx]);
 
+  // Target geometry for GPU-accelerated card morphing
+  const targetTop = isMobile ? 0 : Math.max(20, typeof window !== 'undefined' ? window.innerHeight * 0.04 : 30);
+  const targetWidth = isMobile
+    ? (typeof window !== 'undefined' ? window.innerWidth : 360)
+    : Math.min(840, typeof window !== 'undefined' ? window.innerWidth - 32 : 840);
+  const targetLeft = isMobile
+    ? 0
+    : Math.max(16, typeof window !== 'undefined' ? (window.innerWidth - targetWidth) / 2 : 16);
+  const targetHeight = isMobile
+    ? (typeof window !== 'undefined' ? window.innerHeight : 640)
+    : Math.min(typeof window !== 'undefined' ? window.innerHeight * 0.92 : 880, 880);
+
+  const scaleX = originRect && targetWidth ? originRect.width / targetWidth : 1;
+  const scaleY = originRect && targetHeight ? originRect.height / targetHeight : 1;
+  const deltaX = originRect ? originRect.left - targetLeft : 0;
+  const deltaY = originRect ? originRect.top - targetTop : 0;
+
   return (
     <div style={{ overflowX: 'clip', width: '100%' }}>
       {/* ═══ HERO ═══ */}
@@ -510,33 +527,40 @@ export default function Programs() {
               className={`morph-card-sheet ${morphPhase === 'expanded' ? 'is-expanded' : ''} ${
                 morphPhase === 'collapsing' ? 'is-collapsing' : ''
               }`}
-              style={
-                morphPhase === 'expanding' || morphPhase === 'collapsing'
-                  ? {
-                      top: `${originRect.top}px`,
-                      left: `${originRect.left}px`,
-                      width: `${originRect.width}px`,
-                      height: `${originRect.height}px`,
-                      borderRadius: '20px',
-                    }
-                  : {
-                      top: isMobile ? 0 : 'max(20px, 4vh)',
-                      left: isMobile ? 0 : 'max(16px, calc(50% - 410px))',
-                      width: isMobile ? '100vw' : 'min(820px, calc(100vw - 32px))',
-                      height: isMobile ? '100vh' : 'min(92vh, 880px)',
-                      borderRadius: isMobile ? '0px' : '24px',
-                    }
-              }
+              style={{
+                top: `${targetTop}px`,
+                left: `${targetLeft}px`,
+                width: `${targetWidth}px`,
+                height: `${targetHeight}px`,
+                transformOrigin: 'top left',
+                transform:
+                  morphPhase === 'expanded'
+                    ? 'translate3d(0, 0, 0) scale(1, 1)'
+                    : `translate3d(${deltaX}px, ${deltaY}px, 0) scale(${scaleX}, ${scaleY})`,
+                filter:
+                  morphPhase === 'expanded'
+                    ? 'blur(0px)'
+                    : morphPhase === 'collapsing'
+                    ? 'blur(7px)'
+                    : 'blur(9px)',
+                borderRadius:
+                  morphPhase === 'expanded'
+                    ? isMobile
+                      ? '0px'
+                      : '24px'
+                    : `${Math.round(20 / Math.max(0.1, Math.min(scaleX, scaleY)))}px`,
+                opacity: morphPhase === 'collapsing' ? 0.35 : 1,
+              }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Floating Close Button */}
+              {/* Floating Close Button (Dead Center Grid) */}
               <button
                 type="button"
                 className="morph-close-btn"
                 onClick={closeCardExpansion}
                 aria-label="Tutup lembar divisi"
               >
-                <X size={18} />
+                <X size={20} />
               </button>
 
               {/* Scrollable Container */}
