@@ -172,8 +172,16 @@ export default function About() {
   const closeCardExpansion = () => {
     if (morphPhase !== 'expanded') return;
 
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = 0;
+    // Recalculate originRect in case window was resized or layout shifted
+    const cardEl = cardRefs.current[expandedIdx];
+    if (cardEl) {
+      const rect = cardEl.getBoundingClientRect();
+      setOriginRect({
+        top: rect.top,
+        left: rect.left,
+        width: rect.width,
+        height: rect.height,
+      });
     }
 
     setMorphPhase('collapsing');
@@ -182,7 +190,10 @@ export default function About() {
       setMorphPhase('idle');
       setExpandedIdx(null);
       setOriginRect(null);
-    }, 500);
+      if (scrollRef.current) {
+        scrollRef.current.scrollTop = 0;
+      }
+    }, 430);
   };
 
   const switchDivision = (nextIdx) => {
@@ -630,12 +641,13 @@ export default function About() {
                     display: 'flex',
                     flexDirection: 'column',
                     cursor: 'pointer',
-                    transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, opacity 0.3s ease',
+                    transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease',
                     boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25)',
                     position: 'relative',
                     overflow: 'hidden',
                     boxSizing: 'border-box',
                     opacity: isThisCardExpanded ? 0 : 1,
+                    visibility: isThisCardExpanded ? 'hidden' : 'visible',
                     pointerEvents: isThisCardExpanded ? 'none' : 'auto',
                   }}
                   onMouseDown={(e) => {
@@ -865,18 +877,32 @@ export default function About() {
               }}
               onClick={(e) => e.stopPropagation()}
             >
+              {/* Motion Blur Overlay (Covers the morphing velocity smoothly) */}
+              <div className="morph-motion-blur-overlay" aria-hidden="true" />
+
               {/* Scrollable Container */}
               <div ref={scrollRef} className="morph-card-scrollable">
                 {/* Symmetrical Sticky Header (Pins smoothly with 0 layout shift) */}
                 <div
                   className="morph-header-bar"
                   style={{
-                    padding: 'clamp(1.2rem, 3.5vw, 1.8rem)',
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                    background: 'linear-gradient(180deg, #0D2319 0%, #0D2319 88%, rgba(13, 35, 25, 0.95) 100%)',
+                    padding:
+                      morphPhase === 'collapsing'
+                        ? 'clamp(1.2rem, 3vw, 1.6rem) clamp(1.2rem, 3vw, 1.6rem) 0 clamp(1.2rem, 3vw, 1.6rem)'
+                        : 'clamp(1.2rem, 3.5vw, 1.8rem)',
+                    borderBottom:
+                      morphPhase === 'collapsing'
+                        ? '1px solid transparent'
+                        : '1px solid rgba(255, 255, 255, 0.08)',
+                    background:
+                      morphPhase === 'collapsing'
+                        ? 'transparent'
+                        : 'linear-gradient(180deg, #0D2319 0%, #0D2319 88%, rgba(13, 35, 25, 0.95) 100%)',
                     position: 'sticky',
                     top: 0,
                     zIndex: 20,
+                    transition:
+                      'padding 0.42s cubic-bezier(0.32, 0.72, 0, 1), border-color 0.3s ease, background 0.3s ease',
                   }}
                 >
                   <div
@@ -950,11 +976,16 @@ export default function About() {
                   <h2
                     style={{
                       fontFamily: 'var(--font-heading)',
-                      fontSize: 'clamp(1.2rem, 3vw, 1.6rem)',
-                      fontWeight: 800,
+                      fontSize:
+                        morphPhase === 'collapsing'
+                          ? '1.12rem'
+                          : 'clamp(1.2rem, 3vw, 1.6rem)',
+                      fontWeight: morphPhase === 'collapsing' ? 700 : 800,
                       color: 'var(--warm-alabaster)',
-                      margin: 0,
+                      margin: morphPhase === 'collapsing' ? '0 0 0.5rem 0' : 0,
                       lineHeight: 1.25,
+                      transition:
+                        'font-size 0.42s cubic-bezier(0.32, 0.72, 0, 1), margin 0.42s cubic-bezier(0.32, 0.72, 0, 1)',
                     }}
                   >
                     {activeExpandedItem.detailTitle}
@@ -1137,7 +1168,8 @@ export default function About() {
                   <div
                     className="morph-summary-content"
                     style={{
-                      padding: 'clamp(1.2rem, 3vw, 1.6rem)',
+                      padding:
+                        '0 clamp(1.2rem, 3vw, 1.6rem) clamp(1.2rem, 3vw, 1.6rem) clamp(1.2rem, 3vw, 1.6rem)',
                     }}
                   >
                     <p
