@@ -172,20 +172,8 @@ export default function About() {
   const closeCardExpansion = () => {
     if (morphPhase !== 'expanded') return;
 
-    // Reset card internal scroll smoothly so the header returns cleanly without an abrupt jump
-    if (scrollRef.current && scrollRef.current.scrollTop > 0) {
-      scrollRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // Refresh current target rect in case of any slight layout adjustment
-    if (expandedIdx !== null && cardRefs.current[expandedIdx]) {
-      const rect = cardRefs.current[expandedIdx].getBoundingClientRect();
-      setOriginRect({
-        top: rect.top,
-        left: rect.left,
-        width: rect.width,
-        height: rect.height,
-      });
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
     }
 
     setMorphPhase('collapsing');
@@ -194,7 +182,7 @@ export default function About() {
       setMorphPhase('idle');
       setExpandedIdx(null);
       setOriginRect(null);
-    }, 500);
+    }, 520);
   };
 
   const switchDivision = (nextIdx) => {
@@ -867,168 +855,322 @@ export default function About() {
               }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Floating Close Button (Dead Center Grid) */}
-              <button
-                type="button"
-                className="morph-close-btn"
-                onClick={closeCardExpansion}
-                aria-label="Tutup lembar divisi"
-              >
-                <X size={20} />
-              </button>
-
               {/* Scrollable Container */}
               <div ref={scrollRef} className="morph-card-scrollable">
-                {/* Header (Morphs smoothly into full view) */}
+                {/* Symmetrical Sticky Header (Pins smoothly with 0 layout shift) */}
                 <div
+                  className="morph-header-bar"
                   style={{
-                    padding: 'clamp(1.4rem, 4vw, 2.2rem)',
+                    padding: 'clamp(1.2rem, 3.5vw, 1.8rem)',
                     borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                    background:
-                      'linear-gradient(180deg, rgba(200, 168, 91, 0.08) 0%, rgba(13, 35, 25, 0) 100%)',
-                    position: 'relative',
+                    background: 'linear-gradient(180deg, #0D2319 0%, #0D2319 88%, rgba(13, 35, 25, 0.95) 100%)',
+                    position: 'sticky',
+                    top: 0,
+                    zIndex: 20,
                   }}
                 >
                   <div
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '0.85rem',
-                      marginBottom: '1rem',
-                      paddingRight: '3rem',
+                      justifyContent: 'space-between',
+                      marginBottom: '0.85rem',
                     }}
                   >
-                    <span
-                      style={{
-                        fontFamily: 'var(--font-heading)',
-                        fontSize: 'clamp(2rem, 5vw, 2.6rem)',
-                        fontWeight: 800,
-                        color: '#DFBF73',
-                        lineHeight: 1,
-                      }}
-                    >
-                      {activeExpandedItem.num}
-                    </span>
-                    <span
-                      style={{
-                        fontSize: '0.76rem',
-                        color: '#E6C587',
-                        fontWeight: 700,
-                        letterSpacing: '0.06em',
-                        textTransform: 'uppercase',
-                        background: 'rgba(200, 168, 91, 0.15)',
-                        padding: '0.25rem 0.65rem',
-                        borderRadius: '6px',
-                        border: '1px solid rgba(200, 168, 91, 0.3)',
-                      }}
-                    >
-                      {activeExpandedItem.tag}
-                    </span>
-                  </div>
-
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-                    <div
-                      style={{
-                        width: 58,
-                        height: 58,
-                        borderRadius: '18px',
-                        background:
-                          'linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(200, 168, 91, 0.15) 100%)',
-                        border: '1px solid rgba(200, 168, 91, 0.35)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: '#DFBF73',
-                        boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
-                        flexShrink: 0,
-                      }}
-                    >
-                      {ActiveExpandedIcon && <ActiveExpandedIcon size={28} />}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                      <span
+                        style={{
+                          fontFamily: 'var(--font-heading)',
+                          fontSize: '1.75rem',
+                          fontWeight: 800,
+                          color: '#DFBF73',
+                          lineHeight: 1,
+                        }}
+                      >
+                        {activeExpandedItem.num}
+                      </span>
+                      <span
+                        style={{
+                          fontSize: '0.74rem',
+                          color: '#E6C587',
+                          fontWeight: 700,
+                          letterSpacing: '0.05em',
+                          textTransform: 'uppercase',
+                          background: 'rgba(200, 168, 91, 0.15)',
+                          padding: '0.22rem 0.6rem',
+                          borderRadius: '6px',
+                          border: '1px solid rgba(200, 168, 91, 0.28)',
+                        }}
+                      >
+                        {activeExpandedItem.tag}
+                      </span>
                     </div>
 
-                    <h2
-                      style={{
-                        fontFamily: 'var(--font-heading)',
-                        fontSize: 'clamp(1.35rem, 3.8vw, 1.85rem)',
-                        fontWeight: 800,
-                        color: 'var(--warm-alabaster)',
-                        margin: 0,
-                        lineHeight: 1.25,
-                      }}
-                    >
-                      {activeExpandedItem.detailTitle}
-                    </h2>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                      {/* Division Icon Badge matching grid card */}
+                      <div
+                        style={{
+                          width: 44,
+                          height: 44,
+                          borderRadius: '14px',
+                          background: 'rgba(16, 185, 129, 0.14)',
+                          border: '1px solid rgba(16, 185, 129, 0.3)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: 'var(--emerald-light)',
+                          flexShrink: 0,
+                        }}
+                      >
+                        {ActiveExpandedIcon && <ActiveExpandedIcon size={22} />}
+                      </div>
+
+                      {/* Centered Close Button */}
+                      <button
+                        type="button"
+                        className="morph-close-btn"
+                        onClick={closeCardExpansion}
+                        aria-label="Tutup lembar divisi"
+                      >
+                        <X size={20} />
+                      </button>
+                    </div>
                   </div>
+
+                  <h2
+                    style={{
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: 'clamp(1.2rem, 3vw, 1.6rem)',
+                      fontWeight: 800,
+                      color: 'var(--warm-alabaster)',
+                      margin: 0,
+                      lineHeight: 1.25,
+                    }}
+                  >
+                    {activeExpandedItem.detailTitle}
+                  </h2>
                 </div>
 
-                {/* Animated Inner Content */}
-                <div
-                  key={activeExpandedItem.num}
-                  className="morph-detail-content"
-                  style={{ padding: 'clamp(1.4rem, 4vw, 2.2rem)' }}
-                >
-                  <p
-                    style={{
-                      color: 'rgba(247, 245, 240, 0.88)',
-                      fontSize: 'clamp(0.95rem, 2.2vw, 1.05rem)',
-                      lineHeight: 1.8,
-                      marginBottom: '2rem',
-                    }}
-                  >
-                    {activeExpandedItem.detailDesc}
-                  </p>
-
-                  {/* Agendas & Programs */}
+                {/* Dual-Layer Morphing Body */}
+                <div className="morph-body-wrapper">
+                  {/* Layer 1: Detail Content (Full Expanded View) */}
                   <div
-                    style={{
-                      background: 'rgba(10, 30, 22, 0.75)',
-                      border: '1px solid rgba(200, 168, 91, 0.22)',
-                      borderRadius: '20px',
-                      padding: 'clamp(1.2rem, 3vw, 1.75rem)',
-                      marginBottom: '2rem',
-                      boxShadow: 'inset 0 2px 12px rgba(0, 0, 0, 0.3)',
-                    }}
+                    key={`detail-${activeExpandedItem.num}`}
+                    className="morph-detail-content"
+                    style={{ padding: 'clamp(1.2rem, 3.5vw, 2rem)' }}
                   >
+                    <p
+                      style={{
+                        color: 'rgba(247, 245, 240, 0.88)',
+                        fontSize: 'clamp(0.95rem, 2.2vw, 1.05rem)',
+                        lineHeight: 1.8,
+                        marginBottom: '2rem',
+                      }}
+                    >
+                      {activeExpandedItem.detailDesc}
+                    </p>
+
+                    {/* Agendas & Programs */}
+                    <div
+                      style={{
+                        background: 'rgba(10, 30, 22, 0.75)',
+                        border: '1px solid rgba(200, 168, 91, 0.22)',
+                        borderRadius: '20px',
+                        padding: 'clamp(1.2rem, 3vw, 1.75rem)',
+                        marginBottom: '2rem',
+                        boxShadow: 'inset 0 2px 12px rgba(0, 0, 0, 0.3)',
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.6rem',
+                          color: '#DFBF73',
+                          fontSize: '0.82rem',
+                          fontWeight: 800,
+                          letterSpacing: '0.08em',
+                          textTransform: 'uppercase',
+                          marginBottom: '1.25rem',
+                        }}
+                      >
+                        <Sparkles size={16} style={{ color: '#DFBF73' }} /> AGENDA & FOKUS PROGRAM KERJA:
+                      </div>
+
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                        {activeExpandedItem.agendas.map((agenda, i) => (
+                          <div
+                            key={i}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'flex-start',
+                              gap: '0.85rem',
+                              padding: '0.65rem 0.85rem',
+                              borderRadius: '12px',
+                              background: 'rgba(255, 255, 255, 0.03)',
+                              border: '1px solid rgba(255, 255, 255, 0.05)',
+                            }}
+                          >
+                            <CheckCircle2
+                              size={19}
+                              style={{ color: 'var(--emerald)', flexShrink: 0, marginTop: '2px' }}
+                            />
+                            <span
+                              style={{
+                                fontSize: '0.92rem',
+                                color: '#F7F5F0',
+                                lineHeight: 1.6,
+                                fontWeight: 500,
+                              }}
+                            >
+                              {agenda}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Action Bar & Division Switcher */}
                     <div
                       style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '0.6rem',
-                        color: '#DFBF73',
-                        fontSize: '0.82rem',
-                        fontWeight: 800,
-                        letterSpacing: '0.08em',
-                        textTransform: 'uppercase',
-                        marginBottom: '1.25rem',
+                        justifyContent: 'space-between',
+                        gap: '1rem',
+                        paddingTop: '1.5rem',
+                        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                        flexWrap: 'wrap',
                       }}
                     >
-                      <Sparkles size={16} style={{ color: '#DFBF73' }} /> AGENDA & FOKUS PROGRAM KERJA:
-                    </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            switchDivision(
+                              expandedIdx > 0 ? expandedIdx - 1 : DIVISION_SHOWCASE.length - 1
+                            )
+                          }
+                          className="btn btn-outline"
+                          style={{
+                            padding: '0.55rem 0.95rem',
+                            fontSize: '0.82rem',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.4rem',
+                            borderRadius: '9999px',
+                            border: '1px solid rgba(255, 255, 255, 0.16)',
+                            color: 'var(--warm-alabaster)',
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          <ChevronLeft size={16} /> Sebelumnya
+                        </button>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                      {activeExpandedItem.agendas.map((agenda, i) => (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            switchDivision(
+                              expandedIdx < DIVISION_SHOWCASE.length - 1 ? expandedIdx + 1 : 0
+                            )
+                          }
+                          className="btn btn-outline"
+                          style={{
+                            padding: '0.55rem 0.95rem',
+                            fontSize: '0.82rem',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.4rem',
+                            borderRadius: '9999px',
+                            border: '1px solid rgba(255, 255, 255, 0.16)',
+                            color: 'var(--warm-alabaster)',
+                            background: 'rgba(255, 255, 255, 0.05)',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          Berikutnya <ChevronRight size={16} />
+                        </button>
+                      </div>
+
+                      <Link
+                        to="/schools#pengurus"
+                        onClick={closeCardExpansion}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.55rem',
+                          padding: '0.75rem 1.4rem',
+                          borderRadius: '9999px',
+                          background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                          color: 'white',
+                          fontSize: '0.88rem',
+                          fontWeight: 700,
+                          textDecoration: 'none',
+                          boxShadow: '0 4px 16px rgba(16, 185, 129, 0.35)',
+                          transition: 'all 0.2s ease',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                          e.currentTarget.style.boxShadow = '0 6px 20px rgba(16, 185, 129, 0.5)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = 'translateY(0)';
+                          e.currentTarget.style.boxShadow = '0 4px 16px rgba(16, 185, 129, 0.35)';
+                        }}
+                      >
+                        Lihat Pengurus & Anggota Divisi Ini <ArrowRight size={16} />
+                      </Link>
+                    </div>
+                  </div>
+
+                  {/* Layer 2: Summary Content (Dissolves IN during collapse so card lands with complete text) */}
+                  <div
+                    className="morph-summary-content"
+                    style={{
+                      padding: 'clamp(1.2rem, 3vw, 1.6rem)',
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontSize: '0.85rem',
+                        color: 'rgba(247, 245, 240, 0.68)',
+                        lineHeight: 1.6,
+                        margin: '0 0 1rem 0',
+                      }}
+                    >
+                      {activeExpandedItem.desc}
+                    </p>
+
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.4rem',
+                        marginBottom: '1.25rem',
+                        padding: '0.65rem 0.85rem',
+                        borderRadius: '12px',
+                        background: 'rgba(0, 0, 0, 0.2)',
+                        border: '1px solid rgba(255, 255, 255, 0.05)',
+                      }}
+                    >
+                      {activeExpandedItem.agendas.slice(0, 2).map((agenda, i) => (
                         <div
                           key={i}
                           style={{
                             display: 'flex',
                             alignItems: 'flex-start',
-                            gap: '0.85rem',
-                            padding: '0.65rem 0.85rem',
-                            borderRadius: '12px',
-                            background: 'rgba(255, 255, 255, 0.03)',
-                            border: '1px solid rgba(255, 255, 255, 0.05)',
+                            gap: '0.5rem',
                           }}
                         >
                           <CheckCircle2
-                            size={19}
+                            size={14}
                             style={{ color: 'var(--emerald)', flexShrink: 0, marginTop: '2px' }}
                           />
                           <span
                             style={{
-                              fontSize: '0.92rem',
-                              color: '#F7F5F0',
-                              lineHeight: 1.6,
-                              fontWeight: 500,
+                              fontSize: '0.78rem',
+                              color: 'rgba(247, 245, 240, 0.82)',
+                              lineHeight: 1.45,
                             }}
                           >
                             {agenda}
@@ -1036,98 +1178,38 @@ export default function About() {
                         </div>
                       ))}
                     </div>
-                  </div>
 
-                  {/* Action Bar & Division Switcher */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      gap: '1rem',
-                      paddingTop: '1.5rem',
-                      borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                      flexWrap: 'wrap',
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          switchDivision(
-                            expandedIdx > 0 ? expandedIdx - 1 : DIVISION_SHOWCASE.length - 1
-                          )
-                        }
-                        className="btn btn-outline"
-                        style={{
-                          padding: '0.55rem 0.95rem',
-                          fontSize: '0.82rem',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '0.4rem',
-                          borderRadius: '9999px',
-                          border: '1px solid rgba(255, 255, 255, 0.16)',
-                          color: 'var(--warm-alabaster)',
-                          background: 'rgba(255, 255, 255, 0.05)',
-                          cursor: 'pointer',
-                        }}
-                      >
-                        <ChevronLeft size={16} /> Sebelumnya
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() =>
-                          switchDivision(
-                            expandedIdx < DIVISION_SHOWCASE.length - 1 ? expandedIdx + 1 : 0
-                          )
-                        }
-                        className="btn btn-outline"
-                        style={{
-                          padding: '0.55rem 0.95rem',
-                          fontSize: '0.82rem',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '0.4rem',
-                          borderRadius: '9999px',
-                          border: '1px solid rgba(255, 255, 255, 0.16)',
-                          color: 'var(--warm-alabaster)',
-                          background: 'rgba(255, 255, 255, 0.05)',
-                          cursor: 'pointer',
-                        }}
-                      >
-                        Berikutnya <ChevronRight size={16} />
-                      </button>
-                    </div>
-
-                    <Link
-                      to="/schools#pengurus"
-                      onClick={closeCardExpansion}
+                    <div
                       style={{
-                        display: 'inline-flex',
+                        display: 'flex',
                         alignItems: 'center',
-                        gap: '0.55rem',
-                        padding: '0.75rem 1.4rem',
-                        borderRadius: '9999px',
-                        background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-                        color: 'white',
-                        fontSize: '0.88rem',
-                        fontWeight: 700,
-                        textDecoration: 'none',
-                        boxShadow: '0 4px 16px rgba(16, 185, 129, 0.35)',
-                        transition: 'all 0.2s ease',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'translateY(-2px)';
-                        e.currentTarget.style.boxShadow = '0 6px 20px rgba(16, 185, 129, 0.5)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.boxShadow = '0 4px 16px rgba(16, 185, 129, 0.35)';
+                        justifyContent: 'space-between',
+                        paddingTop: '0.85rem',
+                        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
                       }}
                     >
-                      Lihat Pengurus & Anggota Divisi Ini <ArrowRight size={16} />
-                    </Link>
+                      <span
+                        style={{
+                          fontSize: '0.82rem',
+                          fontWeight: 700,
+                          color: '#DFBF73',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.45rem',
+                        }}
+                      >
+                        Pelajari Rencana & Program Divisi
+                        <ArrowRight size={14} />
+                      </span>
+                      <span
+                        style={{
+                          fontSize: '0.72rem',
+                          color: 'rgba(247, 245, 240, 0.45)',
+                        }}
+                      >
+                        5 Agenda
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
