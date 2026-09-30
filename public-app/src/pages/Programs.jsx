@@ -100,6 +100,7 @@ export default function Programs() {
   const [originRect, setOriginRect] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
   const cardRefs = useRef([]);
+  const scrollRef = useRef(null);
 
   const activeExpandedItem =
     expandedIdx !== null ? DIVISION_SHOWCASE[expandedIdx] || null : null;
@@ -140,6 +141,11 @@ export default function Programs() {
   const closeCardExpansion = () => {
     if (morphPhase !== 'expanded') return;
 
+    // Reset card internal scroll to top instantly so the header returns cleanly to the card position
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
+    }
+
     // Refresh current target rect in case of any slight layout adjustment
     if (expandedIdx !== null && cardRefs.current[expandedIdx]) {
       const rect = cardRefs.current[expandedIdx].getBoundingClientRect();
@@ -157,7 +163,7 @@ export default function Programs() {
       setMorphPhase('idle');
       setExpandedIdx(null);
       setOriginRect(null);
-    }, 500);
+    }, 480);
   };
 
   const switchDivision = (nextIdx) => {
@@ -322,7 +328,7 @@ export default function Programs() {
                     display: 'flex',
                     flexDirection: 'column',
                     cursor: 'pointer',
-                    transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, opacity 0.25s ease',
+                    transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease',
                     boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25)',
                     position: 'relative',
                     overflow: 'hidden',
@@ -538,18 +544,16 @@ export default function Programs() {
                     ? 'translate3d(0, 0, 0) scale(1, 1)'
                     : `translate3d(${deltaX}px, ${deltaY}px, 0) scale(${scaleX}, ${scaleY})`,
                 filter:
-                  morphPhase === 'expanded'
-                    ? 'blur(0px)'
-                    : morphPhase === 'collapsing'
-                    ? 'blur(7px)'
-                    : 'blur(9px)',
+                  morphPhase === 'expanding'
+                    ? 'blur(1.5px)'
+                    : 'none',
                 borderRadius:
                   morphPhase === 'expanded'
                     ? isMobile
                       ? '0px'
                       : '24px'
-                    : `${Math.round(20 / Math.max(0.1, Math.min(scaleX, scaleY)))}px`,
-                opacity: morphPhase === 'collapsing' ? 0.35 : 1,
+                    : `${Math.round(20 / Math.max(0.01, scaleX))}px / ${Math.round(20 / Math.max(0.01, scaleY))}px`,
+                opacity: 1,
               }}
               onClick={(e) => e.stopPropagation()}
             >
@@ -564,7 +568,7 @@ export default function Programs() {
               </button>
 
               {/* Scrollable Container */}
-              <div className="morph-card-scrollable">
+              <div ref={scrollRef} className="morph-card-scrollable">
                 {/* Header (Morphs smoothly into full view) */}
                 <div
                   style={{
