@@ -650,7 +650,7 @@ export default function Programs() {
                 {/* Animated Inner Content */}
                 <div
                   key={activeExpandedItem.num}
-                  className="morph-detail-content animate-modal-content-switch"
+                  className="morph-detail-content"
                   style={{ padding: 'clamp(1.4rem, 4vw, 2.2rem)' }}
                 >
                   <p

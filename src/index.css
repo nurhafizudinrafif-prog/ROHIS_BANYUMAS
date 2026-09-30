@@ -708,16 +708,60 @@ textarea.form-input {
     filter: blur(0px);
   }
   24% {
-    filter: blur(5.5px);
+    filter: blur(6px);
   }
-  58% {
-    filter: blur(2.2px);
+  55% {
+    filter: blur(2.5px);
   }
-  88% {
-    filter: blur(0.5px);
+  85% {
+    filter: blur(0.6px);
   }
   100% {
     filter: blur(0px);
+  }
+}
+
+/* Detail content stays solid, shrinks with card, and only dissolves gracefully under motion blur */
+@keyframes morphContentCollapse {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  35% {
+    opacity: 0.92;
+    transform: translateY(4px) scale(0.99);
+  }
+  65% {
+    opacity: 0.55;
+    transform: translateY(10px) scale(0.98);
+  }
+  88% {
+    opacity: 0.15;
+    transform: translateY(16px) scale(0.97);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
+}
+
+/* Close button stays visible and gently shrinks away */
+@keyframes morphCloseBtnCollapse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  40% {
+    opacity: 0.75;
+    transform: scale(0.9);
+  }
+  75% {
+    opacity: 0.25;
+    transform: scale(0.75);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.6);
   }
 }
 
@@ -777,17 +821,13 @@ textarea.form-input {
 
 /* Close button fades away smoothly during return so it doesn't linger or pop */
 .morph-card-sheet.is-collapsing .morph-close-btn {
-  opacity: 0 !important;
-  transform: scale(0.65) !important;
-  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  animation: morphCloseBtnCollapse 0.50s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
   pointer-events: none;
 }
 
-/* Detail content fades away gracefully across return so it doesn't vanish abruptly, covered smoothly by motion blur */
+/* Detail content stays solid, shrinks with card, and only dissolves gracefully under motion blur */
 .morph-card-sheet.is-collapsing .morph-detail-content {
-  opacity: 0 !important;
-  transform: translateY(16px) scale(0.98) !important;
-  transition: opacity 0.46s cubic-bezier(0.16, 1, 0.3, 1), transform 0.48s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  animation: morphContentCollapse 0.50s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
   pointer-events: none;
 }
 
