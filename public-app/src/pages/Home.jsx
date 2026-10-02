@@ -27,6 +27,8 @@ import {
   MessageCircle,
   Library,
   School,
+  GraduationCap,
+  ShieldCheck,
 } from 'lucide-react';
 
 function StatCard({ value, suffix = '+', label, delay = 0 }) {
@@ -605,8 +607,119 @@ const divisionCards = [
   },
 ];
 
+/**
+ * Authentic Leadership Avatar with Google Drive support and Dignified Islamic Emblem Fallback
+ */
+function LeaderAvatar({ leader, accentColor = 'var(--antique-brass)', size = 100 }) {
+  const [imgError, setImgError] = useState(false);
+  const [triedFallback, setTriedFallback] = useState(false);
+
+  const driveIdMatch =
+    leader.photo && typeof leader.photo === 'string'
+      ? leader.photo.match(/\/file\/d\/([a-zA-Z0-9_-]+)/i) || leader.photo.match(/[?&]id=([a-zA-Z0-9_-]+)/i)
+      : null;
+  const driveId = driveIdMatch ? driveIdMatch[1] : null;
+
+  const photoSrc =
+    triedFallback && driveId
+      ? `https://drive.google.com/thumbnail?id=${driveId}&sz=w800`
+      : parseImageUrl(leader.photo);
+
+  const hasPhoto = Boolean(
+    leader.photo && typeof leader.photo === 'string' && leader.photo.trim().length > 0 && !imgError
+  );
+
+  const handleImgError = () => {
+    if (driveId && !triedFallback) {
+      setTriedFallback(true);
+    } else {
+      setImgError(true);
+    }
+  };
+
+  const initials = leader.name
+    ? leader.name
+        .split(' ')
+        .filter(Boolean)
+        .map((n) => n[0])
+        .join('')
+        .slice(0, 2)
+        .toUpperCase()
+    : 'RO';
+
+  return (
+    <div
+      style={{
+        width: `clamp(74px, 16vw, ${size}px)`,
+        height: `clamp(74px, 16vw, ${size}px)`,
+        borderRadius: '50%',
+        position: 'relative',
+        margin: '0 auto',
+        padding: 3,
+        background: `linear-gradient(135deg, ${accentColor} 0%, rgba(200,168,91,0.3) 100%)`,
+        boxShadow: `0 8px 22px -4px color-mix(in srgb, ${accentColor} 30%, transparent)`,
+      }}
+    >
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          borderRadius: '50%',
+          overflow: 'hidden',
+          background: '#0D2319',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          border: '2px solid #FFFFFF',
+        }}
+      >
+        {hasPhoto ? (
+          <img
+            src={photoSrc}
+            alt={leader.name}
+            referrerPolicy="no-referrer"
+            onError={handleImgError}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              display: 'block',
+            }}
+          />
+        ) : (
+          <div
+            style={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'linear-gradient(180deg, #132D21 0%, #07140E 100%)',
+              color: 'var(--warm-alabaster)',
+            }}
+          >
+            <User size={size * 0.36} style={{ color: accentColor, opacity: 0.9 }} />
+            <span
+              style={{
+                fontSize: `${size * 0.16}px`,
+                fontWeight: 800,
+                letterSpacing: '0.05em',
+                color: 'var(--antique-brass)',
+                marginTop: 1,
+              }}
+            >
+              {initials}
+            </span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
-  const { home, news, articles, events, loading } = useData();
+  const { home, news, articles, events, team, loading } = useData();
   const [activeNewsIdx, setActiveNewsIdx] = useState(0);
   const newsScrollRef = useRef(null);
   const touchStartRef = useRef({ x: 0, y: 0, time: 0, isHorizontal: false });
@@ -691,6 +804,69 @@ export default function Home() {
     metaSince: '2017 • PURWOKERTO',
     metaNetwork: '17+ SMA / SMK / MA',
   };
+
+  const sambutan = home?.sambutan || {
+    tag: 'SAMBUTAN PIMPINAN',
+    titleLine1: 'Sambutan',
+    titleLine2: 'Pimpinan ROKABA',
+    greeting: "Assalamu'alaikum warahmatullahi wabarakatuh.",
+    paragraph1:
+      'Selamat datang di portal resmi ROHIS Kabupaten Banyumas (ROKABA). Website ini kami hadirkan sebagai sarana informasi, komunikasi, dan publikasi kegiatan dakwah serta pengembangan potensi pelajar se-Kabupaten Banyumas. ROKABA menjadi wadah sinergi bagi seluruh kader untuk belajar berorganisasi, memperkuat ukhuwah islamiyah, menumbuhkan jiwa kepemimpinan, dan menyebarkan syiar Islam yang rahmatan lil \'alamin.',
+    paragraph2:
+      'Kami berharap kehadiran media digital ini mampu menjadi inspirasi yang mendorong partisipasi aktif seluruh pelajar dalam setiap program kebaikan. Mari bersama-sama berikhtiar merawat dakwah sekolah, mengokohkan karakter generasi muda, dan mengharumkan nama Kabupaten Banyumas dengan prestasi dan akhlak mulia.',
+    closingGreeting: "Wassalamu'alaikum warahmatullahi wabarakatuh.",
+    btnText: 'Selengkapnya',
+    btnLink: '/about',
+    periodText: 'PERIODE 2025/2026',
+  };
+
+  const topLeaders = (() => {
+    let bphList = [];
+    if (team && typeof team === 'object') {
+      if (Array.isArray(team.bph) && team.bph.length > 0) {
+        bphList = team.bph;
+      } else if (Array.isArray(team) && team.length > 0) {
+        bphList = team;
+      }
+    }
+
+    const bphKetuaUmum = bphList.find((m) => (m.role || '').toLowerCase().includes('ketua umum')) || {
+      id: 1,
+      name: 'M. Rayyan Alfarabi',
+      role: 'Ketua Umum',
+      school: 'SMA Negeri 2 Purwokerto',
+      photo: '',
+    };
+    const bphKetuaIkhwan = bphList.find((m) => (m.role || '').toLowerCase().includes('ketua ikhwan')) || {
+      id: 2,
+      name: 'Muhammad Raif Ramadhan',
+      role: 'Ketua Ikhwan',
+      school: 'SMA Negeri 1 Jatilawang',
+      photo: '',
+    };
+    const bphKetuaAkhwat = bphList.find((m) => (m.role || '').toLowerCase().includes('ketua akhwat')) || {
+      id: 3,
+      name: 'Neesa Azkia Shafa',
+      role: 'Ketua Akhwat',
+      school: 'SMA Negeri 5 Purwokerto',
+      photo: 'https://drive.google.com/file/d/1RBwhz_vc2aPWPjAIdGpKR8YnMXOVBDCA/view?usp=sharing',
+    };
+
+    return [
+      {
+        ...bphKetuaUmum,
+        photo: home?.sambutan?.ketuaUmumPhoto || bphKetuaUmum.photo || '',
+      },
+      {
+        ...bphKetuaIkhwan,
+        photo: home?.sambutan?.ketuaIkhwanPhoto || bphKetuaIkhwan.photo || '',
+      },
+      {
+        ...bphKetuaAkhwat,
+        photo: home?.sambutan?.ketuaAkhwatPhoto || bphKetuaAkhwat.photo || 'https://drive.google.com/file/d/1RBwhz_vc2aPWPjAIdGpKR8YnMXOVBDCA/view?usp=sharing',
+      },
+    ];
+  })();
 
   const about = home?.about || {
     tag: 'TENTANG KAMI',
@@ -1457,6 +1633,147 @@ export default function Home() {
                 )}
               </div>
             )}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ 2.5 SAMBUTAN PIMPINAN ROKABA ═══ */}
+      <section id="sambutan" className="section sambutan-section">
+        <div className="sambutan-watermark" />
+        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 1.5rem' }}>
+          <div className="sambutan-grid">
+            {/* Kolom Kiri: Teks Sambutan Editorial */}
+            <div className="sambutan-text-col">
+              <span
+                className="badge badge-emerald reveal-left delay-100"
+                style={{ marginBottom: '1rem', display: 'inline-flex', alignSelf: 'flex-start' }}
+              >
+                <ShieldCheck size={14} /> {sambutan.tag || 'SAMBUTAN PIMPINAN'}
+              </span>
+
+              <h2 className="sambutan-title reveal-left delay-150">
+                {sambutan.titleLine1 || 'Sambutan'}{' '}
+                <span className="highlight">{sambutan.titleLine2 || 'Pimpinan ROKABA'}</span>
+              </h2>
+
+              <p className="sambutan-salutation reveal-left delay-200">
+                {sambutan.greeting || "Assalamu'alaikum warahmatullahi wabarakatuh."}
+              </p>
+
+              <p className="sambutan-paragraph reveal-left delay-250">
+                {sambutan.paragraph1}
+              </p>
+
+              <p className="sambutan-paragraph reveal-left delay-300">
+                {sambutan.paragraph2}
+              </p>
+
+              <p className="sambutan-salutation reveal-left delay-350" style={{ marginTop: '0.25rem', marginBottom: '1.75rem' }}>
+                {sambutan.closingGreeting || "Wassalamu'alaikum warahmatullahi wabarakatuh."}
+              </p>
+
+              <div className="reveal-left delay-400">
+                <Link
+                  to={sambutan.btnLink || '/about'}
+                  className="btn btn-secondary"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.6rem',
+                    padding: '0.75rem 1.75rem',
+                    borderRadius: '9999px',
+                    fontWeight: 600,
+                    background: '#FFFFFF',
+                    color: 'var(--deep-pine)',
+                    border: '1px solid rgba(13, 43, 34, 0.15)',
+                    boxShadow: '0 4px 14px rgba(7, 20, 14, 0.06)',
+                  }}
+                >
+                  <span>{sambutan.btnText || 'Selengkapnya'}</span>
+                  <ArrowRight size={16} style={{ color: 'var(--antique-brass)' }} />
+                </Link>
+              </div>
+            </div>
+
+            {/* Kolom Kanan: Kartu 3 Pemimpin (Ketua Umum, Ketua Ikhwan, Ketua Akhwat) */}
+            <div className="reveal-right delay-200">
+              <div className="sambutan-card">
+                <div className="sambutan-card-watermark" />
+                {/* 3 Leaders Grid */}
+                <div className="sambutan-leaders-grid">
+                  {topLeaders.map((leader, idx) => {
+                    const isKetuaUmum = idx === 0;
+                    const isKetuaIkhwan = idx === 1;
+                    const accent = isKetuaUmum
+                      ? 'var(--antique-brass)'
+                      : isKetuaIkhwan
+                      ? 'var(--emerald)'
+                      : '#D97706';
+                    const roleBadgeBg = isKetuaUmum
+                      ? 'rgba(200, 168, 91, 0.15)'
+                      : isKetuaIkhwan
+                      ? 'rgba(16, 185, 129, 0.15)'
+                      : 'rgba(217, 119, 6, 0.15)';
+                    const roleBadgeColor = isKetuaUmum
+                      ? 'var(--antique-brass-dark, #997D38)'
+                      : isKetuaIkhwan
+                      ? '#059669'
+                      : '#B45309';
+
+                    return (
+                      <div key={leader.id || idx} className="sambutan-leader-item">
+                        <div className="sambutan-leader-avatar-wrapper">
+                          <LeaderAvatar
+                            leader={leader}
+                            accentColor={accent}
+                            size={100}
+                          />
+                        </div>
+
+                        <h4 className="sambutan-leader-name">
+                          {leader.name}
+                        </h4>
+
+                        <span
+                          className="sambutan-role-badge"
+                          style={{
+                            background: roleBadgeBg,
+                            color: roleBadgeColor,
+                            border: `1px solid color-mix(in srgb, ${accent} 30%, transparent)`,
+                          }}
+                        >
+                          {leader.role}
+                        </span>
+
+                        {leader.school && (
+                          <div className="sambutan-school-text" title={leader.school}>
+                            <GraduationCap size={12} style={{ color: accent, flexShrink: 0 }} />
+                            <span
+                              style={{
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                              }}
+                            >
+                              {leader.school}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Bottom Period Badge */}
+                <div className="sambutan-period-wrapper">
+                  <span className="sambutan-period-badge">
+                    <span style={{ fontSize: '0.55rem', opacity: 0.7 }}>◆</span>
+                    {sambutan.periodText || 'PERIODE 2025/2026'}
+                    <span style={{ fontSize: '0.55rem', opacity: 0.7 }}>◆</span>
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

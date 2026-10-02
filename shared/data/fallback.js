@@ -116,6 +116,21 @@ export const fallbackData = {
       "btnSecondaryText": "Hubungi Pengurus",
       "btnSecondaryLink": "/kontak"
     },
+    "sambutan": {
+      "tag": "SAMBUTAN PIMPINAN",
+      "titleLine1": "Sambutan",
+      "titleLine2": "Pimpinan ROKABA",
+      "greeting": "Assalamu'alaikum warahmatullahi wabarakatuh.",
+      "paragraph1": "Selamat datang di portal resmi ROHIS Kabupaten Banyumas (ROKABA). Website ini kami hadirkan sebagai sarana informasi, komunikasi, dan publikasi kegiatan dakwah serta pengembangan potensi pelajar se-Kabupaten Banyumas. ROKABA menjadi wadah sinergi bagi seluruh kader untuk belajar berorganisasi, memperkuat ukhuwah islamiyah, menumbuhkan jiwa kepemimpinan, dan menyebarkan syiar Islam yang rahmatan lil 'alamin.",
+      "paragraph2": "Kami berharap kehadiran media digital ini mampu menjadi inspirasi yang mendorong partisipasi aktif seluruh pelajar dalam setiap program kebaikan. Mari bersama-sama berikhtiar merawat dakwah sekolah, mengokohkan karakter generasi muda, dan mengharumkan nama Kabupaten Banyumas dengan prestasi dan akhlak mulia.",
+      "closingGreeting": "Wassalamu'alaikum warahmatullahi wabarakatuh.",
+      "btnText": "Selengkapnya",
+      "btnLink": "/about",
+      "periodText": "PERIODE 2025/2026",
+      "ketuaUmumPhoto": "",
+      "ketuaIkhwanPhoto": "",
+      "ketuaAkhwatPhoto": "https://drive.google.com/file/d/1RBwhz_vc2aPWPjAIdGpKR8YnMXOVBDCA/view?usp=sharing"
+    },
     "sections": {
       "news": {
         "tag": "Berita Terkini",

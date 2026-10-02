@@ -19,6 +19,8 @@ import {
   ChevronUp,
   Newspaper,
   FileText,
+  ShieldCheck,
+  User,
 } from 'lucide-react';
 import ImageUploadField from './ImageUploadField';
 import { fallbackData } from '@shared/data/fallback.js';
@@ -67,6 +69,14 @@ export default function AdminHomeCMS({
     setFormData((prev) => ({
       ...prev,
       about: { ...prev.about, [field]: val },
+    }));
+  };
+
+  const updateSambutan = (field, val) => {
+    setIsDirty(true);
+    setFormData((prev) => ({
+      ...prev,
+      sambutan: { ...(prev.sambutan || {}), [field]: val },
     }));
   };
 
@@ -316,11 +326,19 @@ export default function AdminHomeCMS({
         </button>
         <button
           type="button"
+          className={`subnav-btn ${activeSubTab === 'sambutan' ? 'active' : ''}`}
+          onClick={() => setActiveSubTab('sambutan')}
+        >
+          <ShieldCheck size={16} />
+          <span>2. Sambutan Pimpinan & 3 Ketua</span>
+        </button>
+        <button
+          type="button"
           className={`subnav-btn ${activeSubTab === 'about' ? 'active' : ''}`}
           onClick={() => setActiveSubTab('about')}
         >
           <Info size={16} />
-          <span>2. Tentang Kami (About)</span>
+          <span>3. Tentang Kami (About)</span>
         </button>
         <button
           type="button"
@@ -573,6 +591,182 @@ export default function AdminHomeCMS({
                     value={formData.hero?.metaNetwork || ''}
                     onChange={(e) => updateHero('metaNetwork', e.target.value)}
                     placeholder="15+ SMA / SMK / MA"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SUB-TAB: SAMBUTAN PIMPINAN SECTION */}
+      {activeSubTab === 'sambutan' && (
+        <div className="home-cms-section card">
+          <div className="cms-section-header">
+            <div>
+              <h3>Bagian Sambutan Pimpinan & 3 Ketua</h3>
+              <p className="text-muted">
+                Atur salam pembuka, teks pidato sambutan, tombol aksi, serta foto profil resmi 3 pimpinan utama (Ketua Umum, Ketua Ikhwan, dan Ketua Akhwat).
+              </p>
+            </div>
+            <span className="badge badge-gold">Leadership Speech</span>
+          </div>
+
+          <div className="cms-form-grid">
+            <div className="form-grid-2">
+              <div className="form-group">
+                <label className="form-label">Badge / Tag Bagian</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={formData.sambutan?.tag || ''}
+                  onChange={(e) => updateSambutan('tag', e.target.value)}
+                  placeholder="SAMBUTAN PIMPINAN"
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Teks Periode (Bawah Kartu)</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={formData.sambutan?.periodText || ''}
+                  onChange={(e) => updateSambutan('periodText', e.target.value)}
+                  placeholder="PERIODE 2025/2026"
+                />
+              </div>
+            </div>
+
+            <div className="form-grid-2">
+              <div className="form-group">
+                <label className="form-label">Judul Baris 1</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={formData.sambutan?.titleLine1 || ''}
+                  onChange={(e) => updateSambutan('titleLine1', e.target.value)}
+                  placeholder="Sambutan"
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Judul Baris 2 (Warna Sorotan Emas)</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={formData.sambutan?.titleLine2 || ''}
+                  onChange={(e) => updateSambutan('titleLine2', e.target.value)}
+                  placeholder="Pimpinan ROKABA"
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Salam Pembuka</label>
+              <input
+                type="text"
+                className="form-input"
+                value={formData.sambutan?.greeting || ''}
+                onChange={(e) => updateSambutan('greeting', e.target.value)}
+                placeholder="Assalamu'alaikum warahmatullahi wabarakatuh."
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Paragraf Sambutan 1 (Selamat Datang & Visi Organisasi)</label>
+              <textarea
+                className="form-input form-textarea"
+                rows={4}
+                value={formData.sambutan?.paragraph1 || ''}
+                onChange={(e) => updateSambutan('paragraph1', e.target.value)}
+                placeholder="Tuliskan paragraf pengantar sambutan..."
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Paragraf Sambutan 2 (Harapan & Ajakan Kolaborasi)</label>
+              <textarea
+                className="form-input form-textarea"
+                rows={4}
+                value={formData.sambutan?.paragraph2 || ''}
+                onChange={(e) => updateSambutan('paragraph2', e.target.value)}
+                placeholder="Tuliskan paragraf harapan dan pesan ukhuwah..."
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Salam Penutup</label>
+              <input
+                type="text"
+                className="form-input"
+                value={formData.sambutan?.closingGreeting || ''}
+                onChange={(e) => updateSambutan('closingGreeting', e.target.value)}
+                placeholder="Wassalamu'alaikum warahmatullahi wabarakatuh."
+              />
+            </div>
+
+            <div className="form-grid-2">
+              <div className="form-group">
+                <label className="form-label">Teks Tombol Aksi</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={formData.sambutan?.btnText || ''}
+                  onChange={(e) => updateSambutan('btnText', e.target.value)}
+                  placeholder="Selengkapnya"
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Tautan / Link Tombol</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={formData.sambutan?.btnLink || ''}
+                  onChange={(e) => updateSambutan('btnLink', e.target.value)}
+                  placeholder="/about"
+                />
+              </div>
+            </div>
+
+            {/* FOTO 3 PIMPINAN UTAMA */}
+            <div className="cms-sub-box">
+              <h4 className="sub-box-title">👑 Foto Profil 3 Pimpinan Utama (Kartu Kanan)</h4>
+              <p className="text-muted sub-box-desc">
+                Upload foto profil atau tempel link Google Drive/URL gambar untuk masing-masing ketua. Jika link kosong, sistem otomatis memakai foto dari menu Tim/Pengurus atau lambang inisial resmi.
+              </p>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginTop: '1rem' }}>
+                <div style={{ background: 'rgba(200, 168, 91, 0.05)', padding: '1rem', borderRadius: '12px', border: '1px solid rgba(200, 168, 91, 0.16)' }}>
+                  <div style={{ fontWeight: 700, fontSize: '0.88rem', color: 'var(--antique-brass-light)', marginBottom: '0.5rem' }}>
+                    1. Ketua Umum (M. Rayyan Alfarabi)
+                  </div>
+                  <ImageUploadField
+                    label="Foto Ketua Umum"
+                    value={formData.sambutan?.ketuaUmumPhoto || ''}
+                    onChange={(val) => updateSambutan('ketuaUmumPhoto', val)}
+                    placeholder="Link Google Drive foto Ketua Umum..."
+                  />
+                </div>
+
+                <div style={{ background: 'rgba(16, 185, 129, 0.05)', padding: '1rem', borderRadius: '12px', border: '1px solid rgba(16, 185, 129, 0.16)' }}>
+                  <div style={{ fontWeight: 700, fontSize: '0.88rem', color: 'var(--emerald-light)', marginBottom: '0.5rem' }}>
+                    2. Ketua Ikhwan (Muhammad Raif Ramadhan)
+                  </div>
+                  <ImageUploadField
+                    label="Foto Ketua Ikhwan"
+                    value={formData.sambutan?.ketuaIkhwanPhoto || ''}
+                    onChange={(val) => updateSambutan('ketuaIkhwanPhoto', val)}
+                    placeholder="Link Google Drive foto Ketua Ikhwan..."
+                  />
+                </div>
+
+                <div style={{ background: 'rgba(217, 119, 6, 0.05)', padding: '1rem', borderRadius: '12px', border: '1px solid rgba(217, 119, 6, 0.16)' }}>
+                  <div style={{ fontWeight: 700, fontSize: '0.88rem', color: '#FBBF24', marginBottom: '0.5rem' }}>
+                    3. Ketua Akhwat (Neesa Azkia Shafa)
+                  </div>
+                  <ImageUploadField
+                    label="Foto Ketua Akhwat"
+                    value={formData.sambutan?.ketuaAkhwatPhoto || ''}
+                    onChange={(val) => updateSambutan('ketuaAkhwatPhoto', val)}
+                    placeholder="Link Google Drive foto Ketua Akhwat..."
                   />
                 </div>
               </div>
