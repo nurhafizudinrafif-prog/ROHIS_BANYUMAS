@@ -144,11 +144,6 @@ export default function Programs() {
   const closeCardExpansion = () => {
     if (morphPhase !== 'expanded') return;
 
-    // Smoothly scroll back to top if user scrolled inside the sheet
-    if (scrollRef.current) {
-      scrollRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
     // Recalculate originRect in case window was resized or layout shifted
     const cardEl = cardRefs.current[expandedIdx];
     if (cardEl) {
@@ -170,7 +165,7 @@ export default function Programs() {
       if (scrollRef.current) {
         scrollRef.current.scrollTop = 0;
       }
-    }, 440);
+    }, 520);
   };
 
   const switchDivision = (nextIdx) => {
@@ -552,7 +547,7 @@ export default function Programs() {
                     padding:
                       morphPhase === 'collapsing'
                         ? 'clamp(1.2rem, 3vw, 1.6rem) clamp(1.2rem, 3vw, 1.6rem) 0 clamp(1.2rem, 3vw, 1.6rem)'
-                        : 'clamp(1.2rem, 3.5vw, 1.8rem)',
+                        : 'clamp(1.2rem, 3vw, 1.6rem) clamp(1.2rem, 3vw, 1.6rem) 0.75rem clamp(1.2rem, 3vw, 1.6rem)',
                     borderBottom:
                       morphPhase === 'collapsing'
                         ? '1px solid transparent'
@@ -565,7 +560,7 @@ export default function Programs() {
                     top: 0,
                     zIndex: 20,
                     transition:
-                      'padding 0.42s cubic-bezier(0.25, 1, 0.35, 1), border-color 0.3s ease, background 0.3s ease',
+                      'padding 0.50s cubic-bezier(0.32, 0.72, 0, 1), border-color 0.40s ease, background 0.40s ease',
                   }}
                 >
                   <div
