@@ -149,7 +149,13 @@ export default function About() {
   const openCardExpansion = (idx) => {
     const cardEl = cardRefs.current[idx];
     if (!cardEl) return;
+
+    // Temporarily clear any transform to get absolute pristine layout dimensions
+    const prevTransform = cardEl.style.transform;
+    cardEl.style.transform = 'none';
     const rect = cardEl.getBoundingClientRect();
+    cardEl.style.transform = prevTransform;
+
     const initialRect = {
       top: rect.top,
       left: rect.left,
@@ -175,7 +181,10 @@ export default function About() {
     // Recalculate originRect in case window was resized or layout shifted
     const cardEl = cardRefs.current[expandedIdx];
     if (cardEl) {
+      const prevTransform = cardEl.style.transform;
+      cardEl.style.transform = 'none';
       const rect = cardEl.getBoundingClientRect();
+      cardEl.style.transform = prevTransform;
       setOriginRect({
         top: rect.top,
         left: rect.left,
@@ -193,13 +202,17 @@ export default function About() {
       if (scrollRef.current) {
         scrollRef.current.scrollTop = 0;
       }
-    }, 430);
+    }, 450);
   };
 
   const switchDivision = (nextIdx) => {
     setExpandedIdx(nextIdx);
     if (cardRefs.current[nextIdx]) {
-      const rect = cardRefs.current[nextIdx].getBoundingClientRect();
+      const cardEl = cardRefs.current[nextIdx];
+      const prevTransform = cardEl.style.transform;
+      cardEl.style.transform = 'none';
+      const rect = cardEl.getBoundingClientRect();
+      cardEl.style.transform = prevTransform;
       setOriginRect({
         top: rect.top,
         left: rect.left,
@@ -627,6 +640,7 @@ export default function About() {
                   onClick={() => openCardExpansion(idx)}
                   role="button"
                   tabIndex={0}
+                  className="division-interactive-card"
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
@@ -634,48 +648,9 @@ export default function About() {
                     }
                   }}
                   style={{
-                    background: 'linear-gradient(145deg, rgba(13, 35, 25, 0.85) 0%, rgba(7, 20, 14, 0.92) 100%)',
-                    border: '1px solid rgba(200, 168, 91, 0.22)',
-                    borderRadius: '20px',
-                    padding: 'clamp(1.2rem, 3vw, 1.6rem)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    cursor: 'pointer',
-                    transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease',
-                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25)',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    boxSizing: 'border-box',
                     opacity: isThisCardExpanded ? 0 : 1,
                     visibility: isThisCardExpanded ? 'hidden' : 'visible',
                     pointerEvents: isThisCardExpanded ? 'none' : 'auto',
-                  }}
-                  onMouseDown={(e) => {
-                    e.currentTarget.style.transform = 'scale(0.97)';
-                  }}
-                  onMouseUp={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-4px)';
-                  }}
-                  onTouchStart={(e) => {
-                    e.currentTarget.style.transform = 'scale(0.97)';
-                  }}
-                  onTouchEnd={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-4px)';
-                    e.currentTarget.style.borderColor = 'rgba(200, 168, 91, 0.65)';
-                    e.currentTarget.style.boxShadow =
-                      '0 16px 36px rgba(0, 0, 0, 0.4), 0 0 24px rgba(200, 168, 91, 0.15)';
-                    e.currentTarget.style.background =
-                      'linear-gradient(145deg, rgba(18, 48, 35, 0.95) 0%, rgba(10, 28, 20, 0.98) 100%)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.borderColor = 'rgba(200, 168, 91, 0.22)';
-                    e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.25)';
-                    e.currentTarget.style.background =
-                      'linear-gradient(145deg, rgba(13, 35, 25, 0.85) 0%, rgba(7, 20, 14, 0.92) 100%)';
                   }}
                 >
                   {/* Top Bar: Number, Tag, & Icon */}
@@ -813,6 +788,7 @@ export default function About() {
                   >
                     <span>Buka Detail & Program</span>
                     <div
+                      className="division-arrow-circle"
                       style={{
                         width: 28,
                         height: 28,
@@ -822,6 +798,7 @@ export default function About() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        transition: 'transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), background 0.3s ease, border-color 0.3s ease',
                       }}
                     >
                       <ArrowRight size={14} />
@@ -878,7 +855,9 @@ export default function About() {
               onClick={(e) => e.stopPropagation()}
             >
               {/* Motion Blur Overlay (Covers the morphing velocity smoothly) */}
-              <div className="morph-motion-blur-overlay" aria-hidden="true" />
+              <div className="morph-motion-blur-overlay" aria-hidden="true">
+                <div className="morph-motion-streak" />
+              </div>
 
               {/* Scrollable Container */}
               <div ref={scrollRef} className="morph-card-scrollable">
