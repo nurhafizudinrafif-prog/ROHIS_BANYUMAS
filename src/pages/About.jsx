@@ -196,7 +196,7 @@ export default function About() {
       if (scrollRef.current) {
         scrollRef.current.scrollTop = 0;
       }
-    }, 520);
+    }, 480);
   };
 
   const switchDivision = (nextIdx) => {
@@ -875,12 +875,24 @@ export default function About() {
                       'padding 0.50s cubic-bezier(0.32, 0.72, 0, 1), border-color 0.40s ease, background 0.40s ease',
                   }}
                 >
+                  {/* Floating Close Button in top right (prevents icon displacement) */}
+                  <button
+                    type="button"
+                    className="morph-close-btn"
+                    onClick={closeCardExpansion}
+                    aria-label="Tutup lembar divisi"
+                  >
+                    <X size={20} />
+                  </button>
+
                   <div
                     style={{
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       marginBottom: '0.85rem',
+                      paddingRight: morphPhase === 'expanded' ? '2.5rem' : '0',
+                      transition: 'padding-right 0.3s ease',
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
@@ -912,34 +924,22 @@ export default function About() {
                       </span>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      {/* Division Icon Badge matching grid card */}
-                      <div
-                        style={{
-                          width: 44,
-                          height: 44,
-                          borderRadius: '14px',
-                          background: 'rgba(16, 185, 129, 0.14)',
-                          border: '1px solid rgba(16, 185, 129, 0.3)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: 'var(--emerald-light)',
-                          flexShrink: 0,
-                        }}
-                      >
-                        {ActiveExpandedIcon && <ActiveExpandedIcon size={22} />}
-                      </div>
-
-                      {/* Centered Close Button */}
-                      <button
-                        type="button"
-                        className="morph-close-btn"
-                        onClick={closeCardExpansion}
-                        aria-label="Tutup lembar divisi"
-                      >
-                        <X size={20} />
-                      </button>
+                    {/* Division Icon Badge matching grid card exactly */}
+                    <div
+                      style={{
+                        width: 44,
+                        height: 44,
+                        borderRadius: '14px',
+                        background: 'rgba(16, 185, 129, 0.14)',
+                        border: '1px solid rgba(16, 185, 129, 0.3)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'var(--emerald-light)',
+                        flexShrink: 0,
+                      }}
+                    >
+                      {ActiveExpandedIcon && <ActiveExpandedIcon size={22} />}
                     </div>
                   </div>
 
@@ -1135,12 +1135,14 @@ export default function About() {
                     </div>
                   </div>
 
-                  {/* Layer 2: Summary Content (Dissolves IN during collapse so card lands with complete text) */}
+                  {/* Layer 2: Summary Content (Dissolves IN cleanly without overlap) */}
                   <div
                     className="morph-summary-content"
                     style={{
                       padding:
                         '0 clamp(1.2rem, 3vw, 1.6rem) clamp(1.2rem, 3vw, 1.6rem) clamp(1.2rem, 3vw, 1.6rem)',
+                      width: '100%',
+                      boxSizing: 'border-box',
                     }}
                   >
                     <p
