@@ -150,11 +150,8 @@ export default function About() {
     const cardEl = cardRefs.current[idx];
     if (!cardEl) return;
 
-    // Temporarily clear any transform to get absolute pristine layout dimensions
-    const prevTransform = cardEl.style.transform;
-    cardEl.style.transform = 'none';
+    // Direct getBoundingClientRect ensures exact coordinate match with 0px jump
     const rect = cardEl.getBoundingClientRect();
-    cardEl.style.transform = prevTransform;
 
     const initialRect = {
       top: rect.top,
@@ -178,13 +175,15 @@ export default function About() {
   const closeCardExpansion = () => {
     if (morphPhase !== 'expanded') return;
 
+    // Smoothly scroll back to top if user scrolled inside the sheet
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     // Recalculate originRect in case window was resized or layout shifted
     const cardEl = cardRefs.current[expandedIdx];
     if (cardEl) {
-      const prevTransform = cardEl.style.transform;
-      cardEl.style.transform = 'none';
       const rect = cardEl.getBoundingClientRect();
-      cardEl.style.transform = prevTransform;
       setOriginRect({
         top: rect.top,
         left: rect.left,
@@ -202,17 +201,14 @@ export default function About() {
       if (scrollRef.current) {
         scrollRef.current.scrollTop = 0;
       }
-    }, 450);
+    }, 520);
   };
 
   const switchDivision = (nextIdx) => {
     setExpandedIdx(nextIdx);
     if (cardRefs.current[nextIdx]) {
       const cardEl = cardRefs.current[nextIdx];
-      const prevTransform = cardEl.style.transform;
-      cardEl.style.transform = 'none';
       const rect = cardEl.getBoundingClientRect();
-      cardEl.style.transform = prevTransform;
       setOriginRect({
         top: rect.top,
         left: rect.left,
@@ -649,7 +645,6 @@ export default function About() {
                   }}
                   style={{
                     opacity: isThisCardExpanded ? 0 : 1,
-                    visibility: isThisCardExpanded ? 'hidden' : 'visible',
                     pointerEvents: isThisCardExpanded ? 'none' : 'auto',
                   }}
                 >
@@ -881,7 +876,7 @@ export default function About() {
                     top: 0,
                     zIndex: 20,
                     transition:
-                      'padding 0.42s cubic-bezier(0.32, 0.72, 0, 1), border-color 0.3s ease, background 0.3s ease',
+                      'padding 0.52s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s ease, background 0.35s ease',
                   }}
                 >
                   <div
@@ -964,7 +959,7 @@ export default function About() {
                       margin: morphPhase === 'collapsing' ? '0 0 0.5rem 0' : 0,
                       lineHeight: 1.25,
                       transition:
-                        'font-size 0.42s cubic-bezier(0.32, 0.72, 0, 1), margin 0.42s cubic-bezier(0.32, 0.72, 0, 1)',
+                        'font-size 0.52s cubic-bezier(0.22, 1, 0.36, 1), margin 0.52s cubic-bezier(0.22, 1, 0.36, 1)',
                     }}
                   >
                     {activeExpandedItem.detailTitle}

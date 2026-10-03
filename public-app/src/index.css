@@ -732,11 +732,12 @@ textarea.form-input {
   box-sizing: border-box;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   transition:
+    opacity 0.28s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.36s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.36s cubic-bezier(0.22, 1, 0.36, 1),
     border-color 0.32s ease,
     background 0.32s ease;
-  will-change: transform, box-shadow;
+  will-change: transform, box-shadow, opacity;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
 }
@@ -780,12 +781,12 @@ textarea.form-input {
 .morph-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(4, 15, 11, 0.88);
+  background: rgba(4, 15, 11, 0.86);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   opacity: 0;
   pointer-events: auto;
-  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1), backdrop-filter 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.56s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 0.56s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, backdrop-filter;
 }
 
@@ -796,10 +797,10 @@ textarea.form-input {
 /* Backdrop smooth fade-out during collapse */
 .morph-backdrop.is-collapsing-backdrop {
   opacity: 0;
-  transition: opacity 0.44s cubic-bezier(0.32, 0.72, 0, 1);
+  transition: opacity 0.52s cubic-bezier(0.22, 1, 0.36, 1), backdrop-filter 0.52s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Card Sheet: Base state */
+/* Card Sheet: Base state with hardware acceleration */
 .morph-card-sheet {
   position: fixed;
   z-index: 100000;
@@ -812,15 +813,17 @@ textarea.form-input {
   display: flex;
   flex-direction: column;
   opacity: 1;
+  transform: translateZ(0);
+  backface-visibility: hidden;
   will-change: top, left, width, height, border-radius, box-shadow;
   transition:
-    top 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    left 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    width 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    height 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    border-radius 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.4s ease;
+    top 0.56s cubic-bezier(0.16, 1, 0.3, 1),
+    left 0.56s cubic-bezier(0.16, 1, 0.3, 1),
+    width 0.56s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.56s cubic-bezier(0.16, 1, 0.3, 1),
+    border-radius 0.56s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.56s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.45s ease;
 }
 
 /* Collapsing: morph back smoothly without EVER disappearing or blinking */
@@ -830,109 +833,98 @@ textarea.form-input {
   border-color: rgba(200, 168, 91, 0.22);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   transition:
-    top 0.44s cubic-bezier(0.32, 0.72, 0, 1),
-    left 0.44s cubic-bezier(0.32, 0.72, 0, 1),
-    width 0.44s cubic-bezier(0.32, 0.72, 0, 1),
-    height 0.44s cubic-bezier(0.32, 0.72, 0, 1),
-    border-radius 0.44s cubic-bezier(0.32, 0.72, 0, 1),
-    box-shadow 0.44s cubic-bezier(0.32, 0.72, 0, 1),
-    border-color 0.44s cubic-bezier(0.32, 0.72, 0, 1);
+    top 0.52s cubic-bezier(0.22, 1, 0.36, 1),
+    left 0.52s cubic-bezier(0.22, 1, 0.36, 1),
+    width 0.52s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.52s cubic-bezier(0.22, 1, 0.36, 1),
+    border-radius 0.52s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.52s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.52s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Motion Blur Streak Overlay - Covers the morphing transit with realistic directional blur */
+/* Motion Blur Streak Overlay - Directional luminous sheen */
 .morph-motion-blur-overlay {
   position: absolute;
-  inset: -12px;
+  inset: 0;
   pointer-events: none;
   border-radius: inherit;
   opacity: 0;
   z-index: 25;
-  background: 
-    linear-gradient(
-      180deg,
-      rgba(200, 168, 91, 0) 0%,
-      rgba(200, 168, 91, 0.12) 20%,
-      rgba(16, 185, 129, 0.09) 50%,
-      rgba(200, 168, 91, 0.12) 80%,
-      rgba(200, 168, 91, 0) 100%
-    );
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  filter: blur(2px);
+  background: linear-gradient(
+    180deg,
+    rgba(200, 168, 91, 0) 0%,
+    rgba(200, 168, 91, 0.08) 20%,
+    rgba(16, 185, 129, 0.06) 50%,
+    rgba(200, 168, 91, 0.08) 80%,
+    rgba(200, 168, 91, 0) 100%
+  );
+  box-shadow: inset 0 0 35px rgba(200, 168, 91, 0.1);
   transform: translateZ(0);
 }
 
-/* Speed streak subtle lines for cinematic motion blur feel */
+/* Optical motion-vector glow flare */
 .morph-motion-streak {
   position: absolute;
   inset: 0;
-  background: repeating-linear-gradient(
+  background: linear-gradient(
     180deg,
-    rgba(200, 168, 91, 0.07) 0px,
-    rgba(200, 168, 91, 0.07) 2px,
-    transparent 2px,
-    transparent 12px
+    transparent 0%,
+    rgba(200, 168, 91, 0.06) 30%,
+    rgba(16, 185, 129, 0.05) 50%,
+    rgba(200, 168, 91, 0.06) 70%,
+    transparent 100%
   );
-  opacity: 0.75;
+  opacity: 0.8;
   mix-blend-mode: screen;
 }
 
 .morph-card-sheet.is-expanded .morph-motion-blur-overlay {
-  animation: motionBlurExpand 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: motionOverlayExpand 0.56s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .morph-card-sheet.is-collapsing .morph-motion-blur-overlay {
-  animation: motionBlurCollapse 0.44s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+  animation: motionOverlayCollapse 0.52s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-@keyframes motionBlurExpand {
+@keyframes motionOverlayExpand {
   0% {
     opacity: 0;
-    transform: scaleY(0.7) translateY(-8px);
-    filter: blur(1px);
+    transform: scaleY(0.9);
   }
-  22% {
-    opacity: 0.95;
-    transform: scaleY(1.08) translateY(0);
-    filter: blur(4px);
+  24% {
+    opacity: 0.85;
+    transform: scaleY(1.04);
   }
-  50% {
-    opacity: 0.65;
-    transform: scaleY(1.03) translateY(0);
-    filter: blur(2.5px);
-  }
-  80% {
-    opacity: 0.2;
+  52% {
+    opacity: 0.45;
     transform: scaleY(1.01);
-    filter: blur(1px);
+  }
+  82% {
+    opacity: 0.08;
+    transform: scaleY(1);
   }
   100% {
     opacity: 0;
     transform: scaleY(1);
-    filter: blur(0px);
   }
 }
 
-@keyframes motionBlurCollapse {
+@keyframes motionOverlayCollapse {
   0% {
     opacity: 0;
     transform: scaleY(1);
-    filter: blur(0px);
   }
-  25% {
-    opacity: 0.95;
-    transform: scaleY(1.07) translateY(4px);
-    filter: blur(4.5px);
+  28% {
+    opacity: 0.8;
+    transform: scaleY(0.96);
   }
-  60% {
-    opacity: 0.5;
-    transform: scaleY(1.02);
-    filter: blur(2px);
+  65% {
+    opacity: 0.35;
+    transform: scaleY(0.99);
   }
   100% {
     opacity: 0;
-    transform: scaleY(0.85);
-    filter: blur(0px);
+    transform: scaleY(1);
   }
 }
 
@@ -961,8 +953,8 @@ textarea.form-input {
   opacity: 0;
   transform: scale(0.65);
   transition:
-    opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1) 0.1s,
-    transform 0.32s cubic-bezier(0.16, 1, 0.3, 1) 0.1s,
+    opacity 0.36s cubic-bezier(0.16, 1, 0.3, 1) 0.15s,
+    transform 0.36s cubic-bezier(0.16, 1, 0.3, 1) 0.15s,
     background 0.2s ease,
     border-color 0.2s ease,
     color 0.2s ease;
@@ -976,7 +968,7 @@ textarea.form-input {
 .morph-card-sheet.is-collapsing .morph-close-btn {
   opacity: 0 !important;
   transform: scale(0.6) !important;
-  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition: opacity 0.22s cubic-bezier(0.22, 1, 0.36, 1), transform 0.22s cubic-bezier(0.22, 1, 0.36, 1) !important;
   pointer-events: none;
 }
 
@@ -998,6 +990,7 @@ textarea.form-input {
   transform: scale(0.94);
 }
 
+/* Card Content: Dynamic Velocity-Based Motion Blur */
 .morph-card-scrollable {
   flex: 1;
   overflow-y: auto;
@@ -1005,6 +998,62 @@ textarea.form-input {
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scrollbar-color: rgba(200, 168, 91, 0.3) transparent;
+  transform: translateZ(0);
+}
+
+.morph-card-sheet.is-expanded .morph-card-scrollable {
+  animation: morphMotionBlurExpand 0.56s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: filter, transform;
+}
+
+.morph-card-sheet.is-collapsing .morph-card-scrollable {
+  animation: morphMotionBlurCollapse 0.52s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: filter, transform;
+}
+
+@keyframes morphMotionBlurExpand {
+  0% {
+    filter: blur(0px);
+    transform: translateZ(0) scale(1);
+  }
+  22% {
+    /* Peak velocity: subtle optical motion blur */
+    filter: blur(2.5px);
+    transform: translateZ(0) scale(1.006);
+  }
+  52% {
+    /* Velocity decelerating */
+    filter: blur(1.1px);
+    transform: translateZ(0) scale(1.002);
+  }
+  80% {
+    filter: blur(0.25px);
+    transform: translateZ(0) scale(1);
+  }
+  100% {
+    filter: blur(0px);
+    transform: translateZ(0) scale(1);
+  }
+}
+
+@keyframes morphMotionBlurCollapse {
+  0% {
+    filter: blur(0px);
+    transform: translateZ(0) scale(1);
+  }
+  26% {
+    /* Fast return velocity into original grid card */
+    filter: blur(2.4px);
+    transform: translateZ(0) scale(0.994);
+  }
+  65% {
+    filter: blur(1px);
+    transform: translateZ(0) scale(0.998);
+  }
+  100% {
+    filter: blur(0px);
+    transform: translateZ(0) scale(1);
+  }
 }
 
 /* Body wrapper — container */
@@ -1013,15 +1062,15 @@ textarea.form-input {
   width: 100%;
 }
 
-/* Detail content: smooth directional exit with blur */
+/* Detail content: smooth directional exit with subtle blur */
 .morph-detail-content {
   opacity: 0;
   transform: translateY(16px);
-  filter: blur(5px);
+  filter: blur(4px);
   transition:
-    opacity 0.46s cubic-bezier(0.22, 1, 0.36, 1) 0.08s,
-    transform 0.46s cubic-bezier(0.22, 1, 0.36, 1) 0.08s,
-    filter 0.42s cubic-bezier(0.22, 1, 0.36, 1) 0.08s;
+    opacity 0.48s cubic-bezier(0.16, 1, 0.3, 1) 0.08s,
+    transform 0.48s cubic-bezier(0.16, 1, 0.3, 1) 0.08s,
+    filter 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.08s;
   will-change: opacity, transform, filter;
 }
 
@@ -1033,12 +1082,12 @@ textarea.form-input {
 
 .morph-card-sheet.is-collapsing .morph-detail-content {
   opacity: 0 !important;
-  transform: translateY(12px) scale(0.98) !important;
-  filter: blur(6px) !important;
+  transform: translateY(8px) scale(0.99) !important;
+  filter: blur(3px) !important;
   transition:
-    opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-    filter 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.3s cubic-bezier(0.22, 1, 0.36, 1) !important;
   pointer-events: none;
 }
 
@@ -1049,7 +1098,7 @@ textarea.form-input {
   left: 0;
   right: 0;
   opacity: 0;
-  filter: blur(4px);
+  filter: blur(3px);
   pointer-events: none;
   transform: translateY(0);
 }
@@ -1061,12 +1110,12 @@ textarea.form-input {
 
 .morph-card-sheet.is-expanded .morph-summary-content {
   opacity: 0 !important;
-  filter: blur(6px) !important;
-  transform: translateY(-10px) scale(0.98) !important;
+  filter: blur(4px) !important;
+  transform: translateY(-8px) scale(0.99) !important;
   transition:
-    opacity 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1) !important;
+    opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
   pointer-events: none;
 }
 
@@ -1075,8 +1124,8 @@ textarea.form-input {
   filter: blur(0px) !important;
   transform: translateY(0) !important;
   transition:
-    opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1) 0.08s,
-    filter 0.32s cubic-bezier(0.22, 1, 0.36, 1) 0.08s !important;
+    opacity 0.36s cubic-bezier(0.22, 1, 0.36, 1) 0.06s,
+    filter 0.36s cubic-bezier(0.22, 1, 0.36, 1) 0.06s !important;
   pointer-events: none;
 }
 
