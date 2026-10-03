@@ -170,7 +170,7 @@ export default function Programs() {
       if (scrollRef.current) {
         scrollRef.current.scrollTop = 0;
       }
-    }, 520);
+    }, 440);
   };
 
   const switchDivision = (nextIdx) => {
@@ -331,6 +331,7 @@ export default function Programs() {
                   }}
                   style={{
                     opacity: isThisCardExpanded ? 0 : 1,
+                    visibility: isThisCardExpanded ? 'hidden' : 'visible',
                     pointerEvents: isThisCardExpanded ? 'none' : 'auto',
                   }}
                 >
@@ -394,7 +395,7 @@ export default function Programs() {
                   <h3
                     style={{
                       fontFamily: 'var(--font-heading)',
-                      fontSize: '1.12rem',
+                      fontSize: '1.15rem',
                       fontWeight: 700,
                       color: 'var(--warm-alabaster)',
                       margin: '0 0 0.5rem 0',
@@ -564,7 +565,7 @@ export default function Programs() {
                     top: 0,
                     zIndex: 20,
                     transition:
-                      'padding 0.52s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s ease, background 0.35s ease',
+                      'padding 0.42s cubic-bezier(0.25, 1, 0.35, 1), border-color 0.3s ease, background 0.3s ease',
                   }}
                 >
                   <div
@@ -638,11 +639,11 @@ export default function Programs() {
                   <h2
                     style={{
                       fontFamily: 'var(--font-heading)',
-                      fontSize: 'clamp(1.18rem, 2.5vw, 1.45rem)',
+                      fontSize: '1.15rem',
                       fontWeight: 700,
                       color: 'var(--warm-alabaster)',
-                      margin: 0,
-                      lineHeight: 1.3,
+                      margin: '0 0 0.5rem 0',
+                      lineHeight: 1.35,
                       letterSpacing: '-0.01em',
                     }}
                   >
