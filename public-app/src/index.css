@@ -990,7 +990,7 @@ textarea.form-input {
   transform: scale(0.94);
 }
 
-/* Card Content: Dynamic Velocity-Based Motion Blur */
+/* Card Content Container: Smooth scrolling with clean hardware compositing */
 .morph-card-scrollable {
   flex: 1;
   overflow-y: auto;
@@ -1001,131 +1001,140 @@ textarea.form-input {
   transform: translateZ(0);
 }
 
-.morph-card-sheet.is-expanded .morph-card-scrollable {
-  animation: morphMotionBlurExpand 0.56s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  will-change: filter, transform;
-}
-
-.morph-card-sheet.is-collapsing .morph-card-scrollable {
-  animation: morphMotionBlurCollapse 0.52s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  will-change: filter, transform;
-}
-
-@keyframes morphMotionBlurExpand {
-  0% {
-    filter: blur(0px);
-    transform: translateZ(0) scale(1);
-  }
-  22% {
-    /* Peak velocity: subtle optical motion blur */
-    filter: blur(2.5px);
-    transform: translateZ(0) scale(1.006);
-  }
-  52% {
-    /* Velocity decelerating */
-    filter: blur(1.1px);
-    transform: translateZ(0) scale(1.002);
-  }
-  80% {
-    filter: blur(0.25px);
-    transform: translateZ(0) scale(1);
-  }
-  100% {
-    filter: blur(0px);
-    transform: translateZ(0) scale(1);
-  }
-}
-
-@keyframes morphMotionBlurCollapse {
-  0% {
-    filter: blur(0px);
-    transform: translateZ(0) scale(1);
-  }
-  26% {
-    /* Fast return velocity into original grid card */
-    filter: blur(2.4px);
-    transform: translateZ(0) scale(0.994);
-  }
-  65% {
-    filter: blur(1px);
-    transform: translateZ(0) scale(0.998);
-  }
-  100% {
-    filter: blur(0px);
-    transform: translateZ(0) scale(1);
-  }
-}
-
 /* Body wrapper — container */
 .morph-body-wrapper {
   position: relative;
   width: 100%;
 }
 
-/* Detail content: smooth directional exit with subtle blur */
+/* ═══ TEXT TRANSITIONS: EDITORIAL FLUID CASCADE ═══ */
+
+/* Detail content: container */
 .morph-detail-content {
   opacity: 0;
-  transform: translateY(16px);
-  filter: blur(4px);
-  transition:
-    opacity 0.48s cubic-bezier(0.16, 1, 0.3, 1) 0.08s,
-    transform 0.48s cubic-bezier(0.16, 1, 0.3, 1) 0.08s,
-    filter 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.08s;
-  will-change: opacity, transform, filter;
+  pointer-events: none;
+  transition: opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .morph-card-sheet.is-expanded .morph-detail-content {
   opacity: 1;
-  transform: translateY(0);
-  filter: blur(0px);
+  pointer-events: auto;
 }
 
 .morph-card-sheet.is-collapsing .morph-detail-content {
   opacity: 0 !important;
-  transform: translateY(8px) scale(0.99) !important;
-  filter: blur(3px) !important;
-  transition:
-    opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.3s cubic-bezier(0.22, 1, 0.36, 1) !important;
   pointer-events: none;
+  transition: opacity 0.16s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
-/* Summary content: visible in grid & collapsing, hidden in expanded */
+/* 1. Lead Description Text: Silky upward fade */
+.morph-text-lead {
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+  will-change: opacity, transform;
+}
+
+.morph-card-sheet.is-expanded .morph-text-lead {
+  animation: textCascadeIn 0.44s cubic-bezier(0.16, 1, 0.3, 1) 0.08s forwards;
+}
+
+.morph-card-sheet.is-collapsing .morph-text-lead {
+  animation: textFadeOutQuick 0.16s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* 2. Agenda Box Container */
+.morph-text-agenda-box {
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+  will-change: opacity, transform;
+}
+
+.morph-card-sheet.is-expanded .morph-text-agenda-box {
+  animation: textCascadeIn 0.48s cubic-bezier(0.16, 1, 0.3, 1) 0.14s forwards;
+}
+
+.morph-card-sheet.is-collapsing .morph-text-agenda-box {
+  animation: textFadeOutQuick 0.14s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* 3. Staggered Agenda Items */
+.morph-agenda-item {
+  opacity: 0;
+  transform: translate3d(0, 8px, 0);
+  will-change: opacity, transform;
+}
+
+.morph-card-sheet.is-expanded .morph-agenda-item {
+  animation: textCascadeIn 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.morph-card-sheet.is-collapsing .morph-agenda-item {
+  animation: textFadeOutQuick 0.12s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* 4. Action Bar */
+.morph-action-bar {
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+  will-change: opacity, transform;
+}
+
+.morph-card-sheet.is-expanded .morph-action-bar {
+  animation: textCascadeIn 0.46s cubic-bezier(0.16, 1, 0.3, 1) 0.22s forwards;
+}
+
+.morph-card-sheet.is-collapsing .morph-action-bar {
+  animation: textFadeOutQuick 0.14s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Keyframes: Silky Subpixel Cascade */
+@keyframes textCascadeIn {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes textFadeOutQuick {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 4px, 0);
+  }
+}
+
+/* Summary Content: dissolves out cleanly on open, dissolves in on return */
 .morph-summary-content {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   opacity: 0;
-  filter: blur(3px);
   pointer-events: none;
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
+  will-change: opacity;
 }
 
 .morph-card-sheet:not(.is-expanded):not(.is-collapsing) .morph-summary-content {
   opacity: 1;
-  filter: blur(0px);
 }
 
 .morph-card-sheet.is-expanded .morph-summary-content {
   opacity: 0 !important;
-  filter: blur(4px) !important;
-  transform: translateY(-8px) scale(0.99) !important;
-  transition:
-    opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-    filter 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  transition: opacity 0.18s ease-out !important;
   pointer-events: none;
 }
 
 .morph-card-sheet.is-collapsing .morph-summary-content {
   opacity: 1 !important;
-  filter: blur(0px) !important;
-  transform: translateY(0) !important;
-  transition:
-    opacity 0.36s cubic-bezier(0.22, 1, 0.36, 1) 0.06s,
-    filter 0.36s cubic-bezier(0.22, 1, 0.36, 1) 0.06s !important;
+  transition: opacity 0.28s cubic-bezier(0.22, 1, 0.36, 1) 0.1s !important;
   pointer-events: none;
 }
 

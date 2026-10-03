@@ -950,16 +950,12 @@ export default function About() {
                   <h2
                     style={{
                       fontFamily: 'var(--font-heading)',
-                      fontSize:
-                        morphPhase === 'collapsing'
-                          ? '1.12rem'
-                          : 'clamp(1.2rem, 3vw, 1.6rem)',
-                      fontWeight: morphPhase === 'collapsing' ? 700 : 800,
+                      fontSize: 'clamp(1.18rem, 2.5vw, 1.45rem)',
+                      fontWeight: 700,
                       color: 'var(--warm-alabaster)',
-                      margin: morphPhase === 'collapsing' ? '0 0 0.5rem 0' : 0,
-                      lineHeight: 1.25,
-                      transition:
-                        'font-size 0.52s cubic-bezier(0.22, 1, 0.36, 1), margin 0.52s cubic-bezier(0.22, 1, 0.36, 1)',
+                      margin: 0,
+                      lineHeight: 1.3,
+                      letterSpacing: '-0.01em',
                     }}
                   >
                     {activeExpandedItem.detailTitle}
@@ -975,6 +971,7 @@ export default function About() {
                     style={{ padding: 'clamp(1.2rem, 3.5vw, 2rem)' }}
                   >
                     <p
+                      className="morph-text-lead"
                       style={{
                         color: 'rgba(247, 245, 240, 0.88)',
                         fontSize: 'clamp(0.95rem, 2.2vw, 1.05rem)',
@@ -987,6 +984,7 @@ export default function About() {
 
                     {/* Agendas & Programs */}
                     <div
+                      className="morph-text-agenda-box"
                       style={{
                         background: 'rgba(10, 30, 22, 0.75)',
                         border: '1px solid rgba(200, 168, 91, 0.22)',
@@ -1016,6 +1014,7 @@ export default function About() {
                         {activeExpandedItem.agendas.map((agenda, i) => (
                           <div
                             key={i}
+                            className="morph-agenda-item"
                             style={{
                               display: 'flex',
                               alignItems: 'flex-start',
@@ -1024,6 +1023,7 @@ export default function About() {
                               borderRadius: '12px',
                               background: 'rgba(255, 255, 255, 0.03)',
                               border: '1px solid rgba(255, 255, 255, 0.05)',
+                              animationDelay: `${0.1 + i * 0.04}s`,
                             }}
                           >
                             <CheckCircle2
@@ -1047,6 +1047,7 @@ export default function About() {
 
                     {/* Action Bar & Division Switcher */}
                     <div
+                      className="morph-action-bar"
                       style={{
                         display: 'flex',
                         alignItems: 'center',
