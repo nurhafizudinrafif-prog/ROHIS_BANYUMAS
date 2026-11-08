@@ -1070,3 +1070,480 @@
     justify-self: end;
   }
 }
+
+/* ==========================================================================
+   SAMBUTAN PIMPINAN SECTION (100% Reference-Faithful Desktop & Mobile)
+   ========================================================================== */
+.rk-sambutan-section {
+  padding-block: clamp(16px, 2.5vw, 28px);
+}
+
+.rk-sambutan-header {
+  margin-bottom: clamp(12px, 1.8vw, 18px);
+}
+
+.rk-sambutan-title {
+  font-size: clamp(1.65rem, 2.6vw, 2.25rem);
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--rk-ink);
+  letter-spacing: -0.02em;
+  margin: 0 0 6px 0;
+}
+
+.rk-show-desktop {
+  display: inline;
+}
+.rk-show-mobile {
+  display: none;
+}
+
+.rk-sambutan-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: clamp(0.86rem, 1.1vw, 0.96rem);
+  font-weight: 600;
+  color: var(--rk-ink);
+}
+
+.rk-sambutan-eyebrow-bar {
+  width: 32px;
+  height: 4px;
+  border-radius: 9999px;
+  background: #C8A85B;
+  flex-shrink: 0;
+}
+
+/* Tabs on Desktop */
+.rk-sambutan-tabs {
+  display: inline-flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  margin-bottom: 20px;
+}
+
+.rk-sambutan-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  background: var(--rk-surface);
+  color: var(--rk-ink);
+  box-shadow: var(--rk-shadow-card);
+}
+
+.rk-sambutan-tab:hover {
+  transform: translateY(-1px);
+}
+
+.rk-sambutan-tab--active {
+  background: var(--rk-pine);
+  color: #FFFFFF;
+  border-color: var(--rk-pine);
+  box-shadow: 0 4px 14px rgba(13, 35, 25, 0.22);
+}
+
+.rk-sambutan-tab-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #9CA3AF;
+  display: inline-block;
+  transition: background 0.2s ease;
+}
+
+.rk-sambutan-tab--active .rk-sambutan-tab-dot {
+  background: #4ADE80;
+}
+
+/* Two-column layout on Desktop */
+.rk-sambutan-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(24px, 3.5vw, 44px);
+  align-items: start;
+}
+
+/* Left content */
+.rk-sambutan-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.rk-sambutan-body {
+  color: var(--rk-ink);
+  font-size: clamp(0.9rem, 1.15vw, 0.96rem);
+  line-height: 1.65;
+  display: grid;
+  gap: 14px;
+}
+
+.rk-sambutan-salutation {
+  font-weight: 700;
+  color: var(--rk-ink);
+  font-size: 0.98rem;
+  margin: 0;
+}
+
+.rk-sambutan-closing {
+  font-weight: 700;
+  color: var(--rk-ink);
+  font-size: 0.98rem;
+  margin: 4px 0 0 0;
+}
+
+/* Desktop Actions */
+.rk-sambutan-desktop-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.rk-sambutan-btn-next {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 22px;
+  border-radius: 12px;
+  background: var(--rk-pine);
+  color: #FFFFFF;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(13, 35, 25, 0.24);
+  transition: all 0.2s ease;
+  min-height: 44px;
+  text-decoration: none;
+}
+
+.rk-sambutan-btn-next:hover {
+  background: var(--rk-pine-hover);
+  transform: translateY(-1px);
+}
+
+.rk-sambutan-btn-profile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 12px;
+  background: var(--rk-surface);
+  color: var(--rk-ink);
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: var(--rk-shadow-card);
+  text-decoration: none;
+  min-height: 44px;
+  transition: all 0.2s ease;
+}
+
+.rk-sambutan-btn-profile:hover {
+  color: var(--rk-pine);
+  transform: translateY(-1px);
+}
+
+/* Mobile Actions Wrap (hidden on desktop) */
+.rk-sambutan-mobile-actions-wrap {
+  display: none;
+}
+
+/* Right column - Deck of Cards */
+.rk-sambutan-deck-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.rk-sambutan-deck-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--rk-ink);
+  margin-bottom: 12px;
+}
+
+.rk-sambutan-deck-eyebrow-bar {
+  color: #C8A85B;
+  font-weight: 800;
+}
+
+.rk-sambutan-deck-panel {
+  background: #F8F7F2;
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow:
+    0 10px 28px rgba(16, 38, 27, 0.06),
+    inset 0 1px 1px rgba(255, 255, 255, 0.9);
+  border: 1.5px solid rgba(255, 255, 255, 0.88);
+}
+
+.rk-sambutan-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.rk-leader-card {
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 10px;
+  border: 1.5px solid transparent;
+  box-shadow: var(--rk-shadow-card);
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  width: 100%;
+}
+
+.rk-leader-card:hover {
+  transform: translateY(-2px);
+}
+
+.rk-leader-card--active {
+  background: #EDF5EF;
+  border-color: #2D6A4F;
+  box-shadow:
+    0 4px 18px rgba(45, 106, 79, 0.16),
+    var(--rk-shadow-card);
+}
+
+.rk-leader-photo-frame {
+  width: 100%;
+  aspect-ratio: 120 / 146;
+  border-radius: 11px;
+  overflow: hidden;
+  background: transparent;
+  margin-bottom: 8px;
+}
+
+.rk-leader-photo-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.rk-leader-role-desktop {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--rk-ink);
+  line-height: 1.2;
+}
+
+.rk-leader-role-mobile {
+  display: none;
+}
+
+.rk-leader-card-name {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--rk-muted);
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.rk-leader-active-badge {
+  margin-top: 6px;
+  background: #0D2319;
+  color: #FFFFFF;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.rk-sambutan-note {
+  font-size: 0.76rem;
+  font-style: italic;
+  color: var(--rk-muted);
+  text-align: right;
+  margin-top: 10px;
+}
+
+/* Mobile-only elements hidden on desktop */
+.rk-mobile-leader-info,
+.rk-mobile-selector-head,
+.rk-mobile-footer-note {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   RESPONSIVE (Matching Image 1 on Mobile <= 768px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .rk-show-desktop {
+    display: none;
+  }
+  .rk-show-mobile {
+    display: inline;
+  }
+
+  /* Hide desktop tabs, desktop actions, deck eyebrow, and desktop note */
+  .rk-sambutan-tabs,
+  .rk-sambutan-desktop-actions,
+  .rk-sambutan-deck-eyebrow,
+  .rk-sambutan-note {
+    display: none;
+  }
+
+  .rk-sambutan-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* Mobile leader info right under title & eyebrow */
+  .rk-mobile-leader-info {
+    display: block;
+    margin-top: 14px;
+    margin-bottom: 8px;
+  }
+
+  .rk-mobile-leader-name {
+    display: block;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--rk-ink);
+  }
+
+  .rk-mobile-leader-role {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--rk-muted);
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .rk-mobile-leader-divider {
+    border: none;
+    height: 1px;
+    background: var(--rk-line);
+    margin: 10px 0 16px 0;
+  }
+
+  /* Deck of 3 cards placed after text on mobile */
+  .rk-sambutan-deck-wrap {
+    order: 2;
+    margin-top: 12px;
+  }
+
+  .rk-mobile-selector-head {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--rk-ink);
+    margin-bottom: 12px;
+  }
+
+  .rk-sambutan-deck-panel {
+    padding: 10px;
+    border-radius: 18px;
+  }
+
+  .rk-sambutan-cards-grid {
+    gap: 8px;
+  }
+
+  .rk-leader-card {
+    padding: 8px 4px;
+    border-radius: 14px;
+  }
+
+  .rk-leader-photo-frame {
+    border-radius: 10px;
+    margin-bottom: 6px;
+  }
+
+  .rk-leader-role-desktop {
+    display: none;
+  }
+
+  .rk-leader-role-mobile {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--rk-ink);
+    line-height: 1.15;
+  }
+
+  .rk-leader-card-name {
+    display: none;
+  }
+
+  .rk-leader-active-badge {
+    display: none;
+  }
+
+  /* Mobile Actions (Buttons placed below the cards) */
+  .rk-sambutan-mobile-actions-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: 18px;
+    width: 100%;
+  }
+
+  .rk-sambutan-mobile-actions-wrap .rk-sambutan-btn-next {
+    width: 100%;
+    min-height: 46px;
+    border-radius: 12px;
+  }
+
+  .rk-sambutan-mobile-actions-wrap .rk-sambutan-btn-profile {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    text-decoration: underline;
+    font-size: 0.92rem;
+    color: var(--rk-ink);
+    padding: 4px;
+    min-height: auto;
+  }
+
+  .rk-mobile-footer-note {
+    display: block;
+    text-align: center;
+    margin-top: 16px;
+  }
+
+  .rk-mobile-footer-org {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--rk-ink);
+  }
+
+  .rk-mobile-footer-sub {
+    display: block;
+    font-size: 0.76rem;
+    font-style: italic;
+    color: var(--rk-muted);
+    margin-top: 3px;
+  }
+}
+
