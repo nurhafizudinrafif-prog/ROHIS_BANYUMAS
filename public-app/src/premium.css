@@ -15,3 +15,4 @@ body{background:#F7F5F0}button,input,select,textarea{font:inherit}button,a{-webk
 @media(max-width:640px){.rk-home .rk-hero h1{font-size:clamp(44px,13.5vw,66px)}.rk-hero-desc,.rk-hero-lead{overflow-wrap:anywhere}}
 .rk-site main>div:not(.rk-home)>section:first-child h1{font-family:'Newsreader',Georgia,serif!important}
 .rk-site main>div:not(.rk-home)>section:first-child .badge-emerald{color:#DFBF73;background:#c8a85b16;border:1px solid #c8a85b33}
+@media(min-width:641px) and (max-width:900px){.rk-photo-tab{font-size:14px;padding:12px 15px;right:10px}.rk-hero-figure figcaption{left:22px;right:22px;bottom:38px}}
