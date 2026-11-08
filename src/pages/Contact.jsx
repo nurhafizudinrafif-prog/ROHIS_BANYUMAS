@@ -10,6 +10,7 @@ const STORAGE_KEY = 'rokaba:contact_submissions';
 
 export default function Contact() {
   const [name, setName] = useState('');
+  const [school, setSchool] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -23,6 +24,7 @@ export default function Contact() {
       existing.unshift({
         id: Date.now(),
         name: name.trim(),
+        school: school.trim(),
         email: email.trim(),
         message: message.trim(),
         createdAt: new Date().toISOString(),
@@ -33,6 +35,7 @@ export default function Contact() {
     }
 
     setName('');
+    setSchool('');
     setEmail('');
     setMessage('');
     setSubmitted(true);
@@ -45,9 +48,14 @@ export default function Contact() {
         <Container>
           <div className="rk-eyebrow" style={{ marginBottom: '8px' }}>
             <span className="rk-eyebrow-bar" aria-hidden="true" />
+            <span>Sekretariat & Hubungan Masyarakat</span>
           </div>
 
           <h1 className="rk-page-title">Mari terhubung</h1>
+          <p className="rk-page-lead" style={{ marginTop: '8px', maxWidth: '60ch' }}>
+            Hubungi Sekretariat ROHIS Kabupaten Banyumas (ROKABA) untuk informasi
+            program, undangan delegasi sekolah, maupun kolaborasi kegiatan.
+          </p>
         </Container>
       </section>
 
@@ -55,42 +63,109 @@ export default function Contact() {
       <section className="rk-section" style={{ paddingTop: '8px' }}>
         <Container>
           <div className="rk-split-40-60" style={{ alignItems: 'start' }}>
-            {/* Left Info Card */}
-            <SoftCard
-              style={{
-                padding: 'clamp(24px, 3vw, 34px)',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                gap: '16px',
-                minHeight: '260px',
-              }}
-            >
-              <h2
+            {/* Left Info Column */}
+            <div style={{ display: 'grid', gap: '16px' }}>
+              <SoftCard
                 style={{
-                  fontSize: 'clamp(1.45rem, 2.2vw, 1.85rem)',
-                  lineHeight: 1.2,
+                  padding: 'clamp(24px, 3vw, 32px)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  gap: '14px',
                 }}
               >
-                Kabupaten
-                <br />
-                Banyumas
-              </h2>
+                <h2
+                  style={{
+                    fontSize: 'clamp(1.45rem, 2.2vw, 1.85rem)',
+                    lineHeight: 1.2,
+                  }}
+                >
+                  Kabupaten
+                  <br />
+                  Banyumas
+                </h2>
 
-              <span className="rk-eyebrow-bar" aria-hidden="true" />
+                <span className="rk-eyebrow-bar" aria-hidden="true" />
 
-              <a
-                href="mailto:rokaba.banyumas@gmail.com"
-                style={{
-                  fontSize: '0.95rem',
-                  fontWeight: 500,
-                  color: 'var(--rk-ink)',
-                  wordBreak: 'break-word',
-                }}
-              >
-                rokaba.banyumas@gmail.com
-              </a>
-            </SoftCard>
+                <p style={{ fontSize: '0.9rem', lineHeight: 1.65 }}>
+                  <strong>Sekretariat Bersama ROKABA</strong>
+                  <br />
+                  Seksi Pendidikan Agama Islam (PAI) Kantor Kementerian Agama
+                  Kabupaten Banyumas, Jl. Mayjen D.J. Panjaitan No. 1,
+                  Purwokerto, Jawa Tengah 53141.
+                </p>
+
+                <div
+                  className="rk-inset-panel"
+                  style={{
+                    padding: '12px 14px',
+                    display: 'grid',
+                    gap: '6px',
+                  }}
+                >
+                  <a
+                    href="mailto:rokaba.banyumas@gmail.com"
+                    style={{
+                      fontSize: '0.9rem',
+                      fontWeight: 700,
+                      color: 'var(--rk-pine)',
+                      wordBreak: 'break-word',
+                    }}
+                  >
+                    rokaba.banyumas@gmail.com
+                  </a>
+                  <span style={{ fontSize: '0.82rem', color: 'var(--rk-muted)' }}>
+                    Surat resmi & kolaborasi: info@rohisbanyumas.id
+                  </span>
+                </div>
+
+                <div
+                  style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '10px',
+                    paddingTop: '4px',
+                  }}
+                >
+                  <a
+                    href="https://www.instagram.com/rohis_banyumas"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rk-pill"
+                    style={{ fontSize: '0.8rem', minHeight: '36px' }}
+                  >
+                    Instagram @rohis_banyumas
+                  </a>
+                  <a
+                    href="https://www.youtube.com/@rohisbanyumas9"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rk-pill"
+                    style={{ fontSize: '0.8rem', minHeight: '36px' }}
+                  >
+                    YouTube ROKABA
+                  </a>
+                </div>
+              </SoftCard>
+
+              <SoftCard style={{ padding: '18px 22px' }}>
+                <strong
+                  style={{
+                    display: 'block',
+                    fontSize: '0.88rem',
+                    color: 'var(--rk-ink)',
+                    marginBottom: '6px',
+                  }}
+                >
+                  Waktu Layanan Kesekretariatan
+                </strong>
+                <p style={{ fontSize: '0.84rem', lineHeight: 1.55 }}>
+                  Senin – Jumat: 08:00 – 16:00 WIB
+                  <br />
+                  Sabtu (Koordinasi Pengurus): 08:00 – 12:00 WIB
+                </p>
+              </SoftCard>
+            </div>
 
             {/* Right Form Card */}
             <SoftCard style={{ padding: 'clamp(20px, 2.5vw, 28px)' }}>
@@ -105,6 +180,17 @@ export default function Contact() {
                   value={name}
                   onChange={(e) => {
                     setName(e.target.value);
+                    if (submitted) setSubmitted(false);
+                  }}
+                />
+
+                <InsetField
+                  label="Asal Sekolah / Instansi"
+                  type="text"
+                  placeholder="Contoh: SMA Negeri 4 Purwokerto"
+                  value={school}
+                  onChange={(e) => {
+                    setSchool(e.target.value);
                     if (submitted) setSubmitted(false);
                   }}
                 />

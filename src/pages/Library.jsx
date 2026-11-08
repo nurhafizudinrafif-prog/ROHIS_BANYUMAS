@@ -7,7 +7,7 @@ import {
   SoftCard,
 } from '../components/ui/SoftUI';
 
-const CATEGORIES = ['Semua', 'Modul', 'Panduan'];
+const CATEGORIES = ['Semua', 'Modul', 'Panduan', 'Ibadah', 'Kajian', 'Teknologi'];
 
 const REFERENCE_DOCUMENTS = [
   {
@@ -15,6 +15,7 @@ const REFERENCE_DOCUMENTS = [
     title: 'Modul kaderisasi',
     category: 'Modul',
     badge: 'PDF',
+    size: '3.1 MB',
     description:
       'Panduan terstruktur pembinaan dasar, penguatan akhlak, dan kepemimpinan kader ROHIS SMA, SMK, dan MA di Kabupaten Banyumas.',
     topics: [
@@ -28,6 +29,7 @@ const REFERENCE_DOCUMENTS = [
     title: 'Panduan kegiatan',
     category: 'Panduan',
     badge: 'PDF',
+    size: '2.2 MB',
     description:
       'Pedoman teknis perencanaan, pelaksanaan, administrasi, dan evaluasi kegiatan ROHIS di tingkat sekolah maupun lintas sekolah.',
     topics: [
@@ -41,6 +43,7 @@ const REFERENCE_DOCUMENTS = [
     title: 'Materi pembinaan',
     category: 'Modul',
     badge: 'PDF',
+    size: '1.9 MB',
     description:
       'Kumpulan materi kajian pelajar, halaqah mingguan, dan inspirasi kebaikan sehari-hari untuk anggota ROHIS Banyumas.',
     topics: [
@@ -69,16 +72,16 @@ export default function Library() {
         combined.push({
           id: String(doc.id || doc.title),
           title: doc.title,
-          category: /panduan|sop|pedoman/i.test(
-            `${doc.category || ''} ${doc.title || ''}`
-          )
-            ? 'Panduan'
-            : 'Modul',
-          badge: 'PDF',
+          category: doc.category || 'Modul',
+          badge: doc.type || 'PDF',
+          size: doc.size || '2.0 MB',
           description:
             doc.description ||
             'Materi bacaan dan referensi kegiatan ROHIS Kabupaten Banyumas.',
-          topics: [],
+          topics: [
+            'Referensi resmi kegiatan dan dakwah pelajar ROKABA',
+            'Bahan diskusi mentoring dan kajian unit ROHIS sekolah',
+          ],
         });
       }
     });
@@ -88,7 +91,11 @@ export default function Library() {
         activeCat === 'Semua' ||
         item.category.toLowerCase() === activeCat.toLowerCase();
       const q = query.trim().toLowerCase();
-      const matchQuery = !q || item.title.toLowerCase().includes(q);
+      const matchQuery =
+        !q ||
+        `${item.title} ${item.description} ${item.category}`
+          .toLowerCase()
+          .includes(q);
       return matchCat && matchQuery;
     });
   }, [cmsDocs, activeCat, query]);
@@ -100,9 +107,14 @@ export default function Library() {
         <Container>
           <div className="rk-eyebrow" style={{ marginBottom: '8px' }}>
             <span className="rk-eyebrow-bar" aria-hidden="true" />
+            <span>Perpustakaan Digital ROKABA</span>
           </div>
 
           <h1 className="rk-page-title">Bekal untuk terus belajar</h1>
+          <p className="rk-page-lead" style={{ marginTop: '6px' }}>
+            Koleksi modul kaderisasi, panduan kegiatan, dan materi kajian untuk
+            mendukung gerak dakwah pelajar di sekolah.
+          </p>
         </Container>
       </section>
 
@@ -142,7 +154,7 @@ export default function Library() {
           </div>
 
           <div style={{ display: 'grid', gap: '14px' }}>
-            {visibleDocs.slice(0, query.trim() ? 10 : 3).map((doc) => (
+            {visibleDocs.map((doc) => (
               <SoftCard
                 key={doc.id}
                 as="button"
@@ -156,18 +168,39 @@ export default function Library() {
                   width: '100%',
                 }}
               >
-                <strong style={{ fontSize: '1.06rem', color: 'var(--rk-ink)' }}>
-                  {doc.title}
-                </strong>
+                <div>
+                  <strong
+                    style={{
+                      display: 'block',
+                      fontSize: '1.06rem',
+                      color: 'var(--rk-ink)',
+                    }}
+                  >
+                    {doc.title}
+                  </strong>
+                  <span
+                    style={{
+                      display: 'block',
+                      fontSize: '0.84rem',
+                      color: 'var(--rk-muted)',
+                      marginTop: '4px',
+                    }}
+                  >
+                    {doc.description}
+                  </span>
+                </div>
 
                 <div
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '16px',
+                    gap: '14px',
+                    flexShrink: 0,
                   }}
                 >
-                  <span className="rk-doc-badge">{doc.badge}</span>
+                  <span className="rk-doc-badge">
+                    {doc.badge} • {doc.size}
+                  </span>
 
                   <span
                     aria-hidden="true"
@@ -192,7 +225,7 @@ export default function Library() {
       <AccessibleDialog
         open={Boolean(selectedDoc)}
         onClose={() => setSelectedDoc(null)}
-        eyebrow={`Perpustakaan ROKABA • ${selectedDoc?.category || 'Materi'}`}
+        eyebrow={`Perpustakaan ROKABA • ${selectedDoc?.category || 'Materi'} (${selectedDoc?.size || 'PDF'})`}
         title={selectedDoc?.title || 'Detail Materi'}
       >
         {selectedDoc && (

@@ -148,6 +148,43 @@
   box-shadow: var(--rk-shadow-inset);
 }
 
+.rk-nav-dropdown-wrap {
+  position: relative;
+}
+
+.rk-dropdown-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 220px;
+  padding: 8px;
+  border-radius: 16px;
+  background: linear-gradient(155deg, rgba(251, 251, 247, 0.96) 0%, rgba(238, 241, 234, 0.94) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.95);
+  box-shadow: var(--rk-shadow-raised-hover);
+  backdrop-filter: blur(18px);
+  display: grid;
+  gap: 4px;
+  z-index: 80;
+}
+
+.rk-dropdown-panel a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 11px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--rk-ink);
+  transition: background-color 140ms ease;
+}
+
+.rk-dropdown-panel a:hover,
+.rk-dropdown-panel a[aria-current="page"] {
+  background: var(--rk-surface-sage);
+}
+
 /* --------------------------------------------------------------------------
    3. 3D BEVELED PINE BUTTONS & LINKS
    -------------------------------------------------------------------------- */
@@ -573,6 +610,12 @@
   gap: 18px;
 }
 
+.rk-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
 .rk-grid-5 {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -951,7 +994,8 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .rk-grid-3 {
+  .rk-grid-3,
+  .rk-grid-4 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -994,6 +1038,7 @@
   }
 
   .rk-grid-3,
+  .rk-grid-4,
   .rk-grid-2,
   .rk-grid-5,
   .rk-home-news-row {

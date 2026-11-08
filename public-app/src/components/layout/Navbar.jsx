@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import logo from '../../assets/logo.png';
 
 const PRIMARY_LINKS = [
@@ -8,20 +8,28 @@ const PRIMARY_LINKS = [
   ['/programs', 'Program'],
   ['/berita', 'Berita'],
   ['/events', 'Agenda'],
+  ['/schools', 'Sekolah'],
+];
+
+const MORE_LINKS = [
+  ['/articles', 'Artikel & Opini'],
+  ['/gallery', 'Galeri Kegiatan'],
+  ['/library', 'Perpustakaan'],
+  ['/consultation', 'Ruang Konsultasi'],
 ];
 
 const ALL_MOBILE_LINKS = [
   ['/', 'Beranda'],
-  ['/about', 'Tentang'],
-  ['/programs', 'Program'],
-  ['/berita', 'Berita'],
-  ['/events', 'Agenda'],
-  ['/schools', 'Sekolah anggota'],
-  ['/articles', 'Artikel'],
+  ['/about', 'Tentang ROKABA'],
+  ['/programs', 'Program & Divisi'],
+  ['/berita', 'Berita Kegiatan'],
+  ['/events', 'Agenda Bersama'],
+  ['/schools', 'Sekolah Anggota'],
+  ['/articles', 'Artikel & Opini'],
+  ['/gallery', 'Galeri Kegiatan'],
   ['/library', 'Perpustakaan'],
-  ['/gallery', 'Galeri'],
-  ['/consultation', 'Konsultasi'],
-  ['/contact', 'Kontak'],
+  ['/consultation', 'Ruang Konsultasi'],
+  ['/contact', 'Kontak & Sekretariat'],
 ];
 
 export function Brand({ onClick }) {
@@ -39,16 +47,29 @@ export function Brand({ onClick }) {
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
   const location = useLocation();
   const drawerRef = useRef(null);
   const toggleBtnRef = useRef(null);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     setMobileOpen(false);
+    setMoreOpen(false);
     if (!location.hash) {
       window.scrollTo({ top: 0, behavior: 'instant' });
     }
   }, [location.pathname, location.hash]);
+
+  useEffect(() => {
+    const handleOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setMoreOpen(false);
+      }
+    };
+    document.addEventListener('pointerdown', handleOutside);
+    return () => document.removeEventListener('pointerdown', handleOutside);
+  }, []);
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -59,9 +80,12 @@ export default function Navbar() {
     }
 
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && mobileOpen) {
-        setMobileOpen(false);
-        toggleBtnRef.current?.focus();
+      if (e.key === 'Escape') {
+        if (moreOpen) setMoreOpen(false);
+        if (mobileOpen) {
+          setMobileOpen(false);
+          toggleBtnRef.current?.focus();
+        }
       }
       if (mobileOpen && e.key === 'Tab' && drawerRef.current) {
         const focusables = drawerRef.current.querySelectorAll('a[href], button:not([disabled])');
@@ -84,12 +108,14 @@ export default function Navbar() {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [mobileOpen]);
+  }, [mobileOpen, moreOpen]);
 
   const isRouteActive = (path) => {
     if (path === '/') return location.pathname === '/';
     return location.pathname === path || location.pathname.startsWith(`${path}/`);
   };
+
+  const isMoreActive = MORE_LINKS.some(([path]) => isRouteActive(path));
 
   return (
     <>
@@ -113,6 +139,53 @@ export default function Navbar() {
                   {label}
                 </Link>
               ))}
+
+              <div className="rk-nav-dropdown-wrap" ref={dropdownRef}>
+                <button
+                  type="button"
+                  className="rk-nav-link"
+                  aria-expanded={moreOpen}
+                  aria-controls="rk-more-menu"
+                  onClick={() => setMoreOpen((prev) => !prev)}
+                  style={{
+                    border: 'none',
+                    background: isMoreActive ? 'rgba(255, 255, 255, 0.75)' : 'transparent',
+                    boxShadow: isMoreActive ? 'var(--rk-shadow-inset)' : 'none',
+                    cursor: 'pointer',
+                    gap: '5px',
+                  }}
+                >
+                  <span>Layanan</span>
+                  <ChevronDown
+                    size={15}
+                    style={{
+                      transition: 'transform 150ms ease',
+                      transform: moreOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                    }}
+                  />
+                </button>
+
+                {moreOpen && (
+                  <div
+                    id="rk-more-menu"
+                    className="rk-dropdown-panel"
+                    role="menu"
+                    aria-label="Menu layanan dan literasi"
+                  >
+                    {MORE_LINKS.map(([path, label]) => (
+                      <Link
+                        key={path}
+                        to={path}
+                        role="menuitem"
+                        aria-current={isRouteActive(path) ? 'page' : undefined}
+                      >
+                        <span>{label}</span>
+                        <span aria-hidden="true">→</span>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
 
               <Link
                 to="/contact"

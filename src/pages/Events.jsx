@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useData } from '../context/DataContext';
 import {
   AccessibleDialog,
@@ -8,29 +8,27 @@ import {
   formatShortDayMonth,
 } from '../components/ui/SoftUI';
 
-const UPCOMING_REFERENCE_EVENTS = [
-  {
-    id: 'kajian-pelajar',
-    title: 'Kajian pelajar',
-    subtitle: 'Informasi menyusul',
-    description:
-      'Majelis ilmu dan diskusi keislaman lintas SMA, SMK, dan MA se-Kabupaten Banyumas untuk mempererat ukhuwah serta memperkaya wawasan pelajar Muslim.',
-  },
-  {
-    id: 'forum-silaturahmi',
-    title: 'Forum silaturahmi',
-    subtitle: 'Informasi menyusul',
-    description:
-      'Pertemuan rutin pengurus dan kader ROHIS se-Kabupaten Banyumas untuk berbagi pengalaman organisasi, kolaborasi kegiatan, dan penguatan dakwah sekolah.',
-  },
-];
+const TABS = ['Semua', 'Mendatang', 'Arsip'];
 
 export default function Events() {
   const { events } = useData();
-  const [tab, setTab] = useState('Mendatang');
+  const [tab, setTab] = useState('Semua');
   const [selectedEvent, setSelectedEvent] = useState(null);
 
-  const cmsEvents = Array.isArray(events) ? events : [];
+  const cmsEvents = useMemo(
+    () => (Array.isArray(events) ? events : []),
+    [events]
+  );
+
+  const visibleEvents = useMemo(() => {
+    if (tab === 'Mendatang') {
+      return cmsEvents.filter((ev) => ev.status === 'upcoming');
+    }
+    if (tab === 'Arsip') {
+      return cmsEvents.filter((ev) => ev.status === 'completed');
+    }
+    return cmsEvents;
+  }, [cmsEvents, tab]);
 
   return (
     <div className="rk-page">
@@ -39,13 +37,19 @@ export default function Events() {
         <Container>
           <div className="rk-eyebrow" style={{ marginBottom: '8px' }}>
             <span className="rk-eyebrow-bar" aria-hidden="true" />
+            <span>Agenda Kegiatan ROKABA</span>
           </div>
 
           <h1 className="rk-page-title">Agenda bersama</h1>
+          <p className="rk-page-lead">
+            Jadwal kajian Ahad pagi, Latihan Dasar Kepemimpinan (LDK), bakti
+            sosial, workshop jurnalistik, dan perlombaan pelajar se-Kabupaten
+            Banyumas.
+          </p>
         </Container>
       </section>
 
-      {/* 2. FILTER BAR + EVENT ROWS */}
+      {/* 2. FILTER BAR + ALL 7 REAL EVENTS */}
       <section className="rk-section" style={{ paddingTop: '8px' }}>
         <Container>
           <div className="rk-filter-bar">
@@ -54,7 +58,7 @@ export default function Events() {
               role="group"
               aria-label="Filter status agenda"
             >
-              {['Mendatang', 'Arsip'].map((item) => (
+              {TABS.map((item) => (
                 <button
                   key={item}
                   type="button"
@@ -76,140 +80,91 @@ export default function Events() {
                 padding: '7px 16px',
               }}
             >
-              <button
-                type="button"
-                onClick={() =>
-                  setTab((prev) =>
-                    prev === 'Mendatang' ? 'Arsip' : 'Mendatang'
-                  )
-                }
-                aria-label="Periode sebelumnya"
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: 0,
-                  fontWeight: 700,
-                }}
-              >
-                ←
-              </button>
-              <span>Bulan ini</span>
-              <button
-                type="button"
-                onClick={() =>
-                  setTab((prev) =>
-                    prev === 'Mendatang' ? 'Arsip' : 'Mendatang'
-                  )
-                }
-                aria-label="Periode berikutnya"
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: 0,
-                  fontWeight: 700,
-                }}
-              >
-                →
-              </button>
+              <span>Periode 2025/2026 • {visibleEvents.length} Kegiatan</span>
             </div>
           </div>
 
           <div style={{ display: 'grid', gap: '14px' }}>
-            {tab === 'Mendatang'
-              ? UPCOMING_REFERENCE_EVENTS.map((ev) => (
-                  <SoftCard
-                    key={ev.id}
-                    as="button"
-                    type="button"
-                    interactive
-                    className="rk-event-row"
-                    onClick={() => setSelectedEvent(ev)}
-                    style={{ textAlign: 'left', cursor: 'pointer', width: '100%' }}
-                  >
-                    <div className="rk-event-date-box" aria-hidden="true">
-                      <span style={{ fontSize: '1.15rem' }}>—</span>
-                    </div>
-
-                    <span
-                      aria-hidden="true"
-                      style={{
-                        width: '1px',
-                        height: '38px',
-                        background: 'var(--rk-line)',
-                      }}
-                    />
-
-                    <div>
-                      <h2 style={{ fontSize: '1.15rem', fontWeight: 800 }}>
-                        {ev.title}
-                      </h2>
-                      <p style={{ fontSize: '0.88rem', marginTop: '2px' }}>
-                        {ev.subtitle}
-                      </p>
-                    </div>
-
-                    <span
-                      aria-hidden="true"
-                      style={{ fontSize: '1.05rem', fontWeight: 700 }}
-                    >
-                      →
+            {visibleEvents.map((ev, idx) => {
+              const dm = formatShortDayMonth(ev.date);
+              return (
+                <SoftCard
+                  key={ev.id || idx}
+                  as="button"
+                  type="button"
+                  interactive
+                  className="rk-event-row"
+                  onClick={() => setSelectedEvent(ev)}
+                  style={{
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    width: '100%',
+                  }}
+                >
+                  <div className="rk-event-date-box">
+                    <span style={{ fontSize: '0.96rem', lineHeight: 1.08 }}>
+                      {dm.day}
                     </span>
-                  </SoftCard>
-                ))
-              : cmsEvents.map((ev, idx) => {
-                  const dm = formatShortDayMonth(ev.date);
-                  return (
-                    <SoftCard
-                      key={ev.id || idx}
-                      as="button"
-                      type="button"
-                      interactive
-                      className="rk-event-row"
-                      onClick={() => setSelectedEvent(ev)}
+                    <span style={{ fontSize: '0.68rem', opacity: 0.8 }}>
+                      {dm.month}
+                    </span>
+                  </div>
+
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      width: '1px',
+                      height: '44px',
+                      background: 'var(--rk-line)',
+                    }}
+                  />
+
+                  <div style={{ display: 'grid', gap: '3px' }}>
+                    <div
                       style={{
-                        textAlign: 'left',
-                        cursor: 'pointer',
-                        width: '100%',
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
+                        gap: '8px',
+                        fontSize: '0.76rem',
+                        fontWeight: 700,
+                        color: 'var(--rk-brass-text)',
                       }}
                     >
-                      <div className="rk-event-date-box">
-                        <span style={{ fontSize: '0.95rem', lineHeight: 1.1 }}>
-                          {dm.day}
-                        </span>
-                        <span style={{ fontSize: '0.68rem', opacity: 0.8 }}>
-                          {dm.month}
-                        </span>
-                      </div>
+                      <span>{ev.type || 'Kegiatan'}</span>
+                      {ev.time && (
+                        <>
+                          <span aria-hidden="true">•</span>
+                          <span>{ev.time}</span>
+                        </>
+                      )}
+                      {ev.location && (
+                        <>
+                          <span aria-hidden="true">•</span>
+                          <span>{ev.location}</span>
+                        </>
+                      )}
+                    </div>
 
-                      <span
-                        aria-hidden="true"
-                        style={{
-                          width: '1px',
-                          height: '38px',
-                          background: 'var(--rk-line)',
-                        }}
-                      />
+                    <h2 style={{ fontSize: '1.12rem', fontWeight: 800 }}>
+                      {ev.title}
+                    </h2>
 
-                      <div>
-                        <h2 style={{ fontSize: '1.12rem', fontWeight: 800 }}>
-                          {ev.title}
-                        </h2>
-                        <p style={{ fontSize: '0.86rem', marginTop: '2px' }}>
-                          {ev.location || formatIndonesianDate(ev.date)}
-                        </p>
-                      </div>
+                    <p style={{ fontSize: '0.86rem' }}>
+                      {ev.speaker ? `Pemateri: ${ev.speaker} — ` : ''}
+                      {ev.description}
+                    </p>
+                  </div>
 
-                      <span
-                        aria-hidden="true"
-                        style={{ fontSize: '1.05rem', fontWeight: 700 }}
-                      >
-                        →
-                      </span>
-                    </SoftCard>
-                  );
-                })}
+                  <span
+                    aria-hidden="true"
+                    style={{ fontSize: '1.05rem', fontWeight: 700 }}
+                  >
+                    →
+                  </span>
+                </SoftCard>
+              );
+            })}
           </div>
         </Container>
       </section>
@@ -217,24 +172,37 @@ export default function Events() {
       <AccessibleDialog
         open={Boolean(selectedEvent)}
         onClose={() => setSelectedEvent(null)}
-        eyebrow="Informasi Kegiatan ROKABA"
+        eyebrow={`Agenda ${selectedEvent?.type || 'ROKABA'}`}
         title={selectedEvent?.title || 'Detail Agenda'}
       >
         {selectedEvent && (
           <div style={{ display: 'grid', gap: '12px' }}>
             <p style={{ fontSize: '0.94rem', lineHeight: 1.6 }}>
-              {selectedEvent.description ||
-                'Kegiatan kebersamaan dan pembinaan pelajar Muslim SMA, SMK, dan MA se-Kabupaten Banyumas.'}
+              {selectedEvent.description}
             </p>
-            <div className="rk-inset-panel" style={{ fontSize: '0.88rem' }}>
-              <strong>Waktu & Tempat: </strong>
-              <span>
-                {selectedEvent.date
-                  ? `${formatIndonesianDate(selectedEvent.date)} • ${
-                      selectedEvent.location || 'Kabupaten Banyumas'
-                    }`
-                  : 'Jadwal pelaksanaan akan diumumkan melalui kanal resmi ROKABA.'}
-              </span>
+            <div
+              className="rk-inset-panel"
+              style={{ fontSize: '0.88rem', display: 'grid', gap: '6px' }}
+            >
+              <div>
+                <strong>Tanggal & Waktu: </strong>
+                <span>
+                  {formatIndonesianDate(selectedEvent.date)}{' '}
+                  {selectedEvent.time ? `• ${selectedEvent.time}` : ''}
+                </span>
+              </div>
+              {selectedEvent.location && (
+                <div>
+                  <strong>Lokasi: </strong>
+                  <span>{selectedEvent.location}</span>
+                </div>
+              )}
+              {selectedEvent.speaker && (
+                <div>
+                  <strong>Narasumber / Pemateri: </strong>
+                  <span>{selectedEvent.speaker}</span>
+                </div>
+              )}
             </div>
           </div>
         )}
