@@ -1,133 +1,348 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { ChevronDown, Check } from 'lucide-react';
 import { useData } from '../context/DataContext';
-import { MessageCircle, Send, User, CheckCircle, Clock, ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
+import {
+  Container,
+  PageHeader,
+  SoftCard,
+  InsetField,
+  PrimaryButton,
+  EmptyState,
+  formatIndonesianDate,
+} from '../components/ui/SoftUI';
+
+const TOPIC_CATEGORIES = [
+  'Semua',
+  'Keislaman harian',
+  'Organisasi ROHIS',
+  'Belajar & pertemanan',
+];
 
 export default function Consultation() {
-  const { questions } = useData();
-  const [form, setForm] = useState({ sender: '', query: '', category: 'Umum' });
-  const [submitted, setSubmitted] = useState(false);
-  const [expanded, setExpanded] = useState(null);
+  const { questions = [], settings = {} } = useData();
+  const officialEmail = settings?.contactEmail || 'rokaba.banyumas@gmail.com';
 
-  const published = questions.filter(q => q.isPublic && q.status === 'answered');
-  const categories = ['Umum', 'Fiqih', 'Akhlak', 'Motivasi', 'Ibadah'];
+  const [activeCategory, setActiveCategory] = useState('Semua');
+  const [openQuestionId, setOpenQuestionId] = useState(null);
+
+  // State formulir pertanyaan
+  const [senderName, setSenderName] = useState('');
+  const [topic, setTopic] = useState('Organisasi ROHIS');
+  const [questionText, setQuestionText] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+  const [statusMessage, setStatusMessage] = useState('');
+  const [copied, setCopied] = useState(false);
+
+  const answeredQuestions = useMemo(() => {
+    return questions.filter((q) => q.status === 'answered' && q.answer);
+  }, [questions]);
+
+  const filteredQuestions = useMemo(() => {
+    if (activeCategory === 'Semua') return answeredQuestions;
+    const target = activeCategory.toLowerCase();
+    return answeredQuestions.filter((q) => {
+      const cat = String(q.category || '').toLowerCase();
+      if (target === 'keislaman harian') {
+        return (
+          cat.includes('ibadah') ||
+          cat.includes('akhlak') ||
+          cat.includes('fiqih') ||
+          cat.includes('islam')
+        );
+      }
+      if (target === 'organisasi rohis') {
+        return (
+          cat.includes('organisasi') ||
+          cat.includes('rohis') ||
+          cat.includes('kader')
+        );
+      }
+      if (target === 'belajar & pertemanan') {
+        return (
+          cat.includes('remaja') ||
+          cat.includes('belajar') ||
+          cat.includes('teman') ||
+          cat.includes('motivasi')
+        );
+      }
+      return cat === target;
+    });
+  }, [answeredQuestions, activeCategory]);
+
+  const buildFormattedBody = () => {
+    const sender = senderName.trim() || 'Pelajar Banyumas (Tanpa Nama)';
+    return `Assalamu'alaikum Tim Pembina & Konsultasi ROKABA,\n\nNama / Inisial: ${sender}\nTopik: ${topic}\n\nPertanyaan:\n${questionText.trim()}\n\nTerima kasih.`;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!form.query.trim()) return;
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 4000);
-    setForm({ sender: '', query: '', category: 'Umum' });
+    if (!questionText.trim() || questionText.trim().length < 10) {
+      setErrorMsg(
+        'Mohon tuliskan pertanyaanmu minimal 10 karakter agar dapat dipahami dengan jelas.'
+      );
+      return;
+    }
+    setErrorMsg('');
+
+    const subject = `[Konsultasi ROKABA - ${topic}] Pertanyaan dari ${
+      senderName.trim() || 'Pelajar'
+    }`;
+    const body = buildFormattedBody();
+    const mailtoUrl = `mailto:${officialEmail}?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+
+    setStatusMessage(
+      `Aplikasi email Anda telah disiapkan untuk mengirim pertanyaan ke ${officialEmail}. Jika belum terbuka otomatis, Anda dapat menyalin teks pertanyaan di bawah.`
+    );
+    window.location.href = mailtoUrl;
+  };
+
+  const handleCopyQuestion = async () => {
+    if (!questionText.trim()) {
+      setErrorMsg('Tuliskan pertanyaanmu terlebih dahulu sebelum menyalin.');
+      return;
+    }
+    setErrorMsg('');
+    try {
+      await navigator.clipboard.writeText(buildFormattedBody());
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch {
+      setCopied(false);
+    }
   };
 
   return (
-    <div style={{ overflowX: 'clip', width: '100%' }}>
-      <section style={{
-        background: 'var(--deep-pine)', paddingTop: '8rem', paddingBottom: '3rem', position: 'relative', overflow: 'hidden', width: '100%',
-      }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 30% 50%, rgba(16,185,129,0.06) 0%, transparent 50%)', pointerEvents: 'none' }} />
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', position: 'relative' }}>
-          <span className="badge badge-emerald animate-fade-in-up" style={{ marginBottom: '1rem' }}><MessageCircle size={14} /> Q&A</span>
-          <h1 className="animate-fade-in-up delay-100" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4.5vw, 2.8rem)', fontWeight: 800, color: 'var(--warm-alabaster)' }}>
-            Konsultasi & Tanya Jawab
-          </h1>
-          <p className="animate-fade-in-up delay-200" style={{ color: 'rgba(245,242,237,0.55)', maxWidth: 500, marginTop: '0.75rem' }}>
-            Tanyakan apa saja seputar agama dan kehidupan. Bisa anonim!
-          </p>
-        </div>
-      </section>
+    <div className="rk-page">
+      <PageHeader
+        breadcrumb={[{ label: 'Beranda', to: '/' }, { label: 'Konsultasi' }]}
+        title="Ruang bertanya dan berbagi"
+        lead="Sampaikan pertanyaan seputar kegiatan ROHIS, belajar, atau keseharian pelajar dengan santun dan nyaman."
+      />
 
-      <section className="section" style={{ background: 'var(--warm-alabaster)', width: '100%' }}>
-        <div className="container" style={{ maxWidth: 900, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '2rem' }}>
-            {/* Form */}
-            <div>
-              <h2 style={{ fontSize: '1.35rem', marginBottom: '1.5rem' }}>Ajukan Pertanyaan</h2>
-              {submitted && (
-                <div className="animate-fade-in-up" style={{
-                  background: 'var(--emerald-glass)', border: '1px solid var(--emerald)',
-                  borderRadius: 'var(--radius-lg)', padding: '1.25rem', marginBottom: '1.5rem',
-                  display: 'flex', alignItems: 'center', gap: '0.75rem',
-                }}>
-                  <CheckCircle size={20} style={{ color: 'var(--emerald)', flexShrink: 0 }} />
-                  <div>
-                    <strong style={{ fontSize: '0.9rem' }}>Pertanyaan terkirim!</strong>
-                    <p style={{ fontSize: '0.82rem', color: 'rgba(13,43,34,0.6)', marginTop: '0.15rem' }}>
-                      Pertanyaan Anda akan dijawab oleh ustadz/ustadzah dan ditampilkan setelah dimoderasi.
-                    </p>
-                  </div>
-                </div>
-              )}
-              <form onSubmit={handleSubmit} style={{
-                background: 'white', borderRadius: 'var(--radius-xl)', padding: '2rem',
-                border: '1px solid rgba(13,43,34,0.06)', boxShadow: 'var(--shadow-sm)',
-              }}>
-                <div className="form-group">
-                  <label className="form-label">Nama (opsional)</label>
-                  <input type="text" className="form-input" placeholder="Kosongkan untuk anonim" value={form.sender} onChange={e => setForm({ ...form, sender: e.target.value })} />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Kategori</label>
-                  <select className="form-input" value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}>
-                    {categories.map(c => <option key={c} value={c}>{c}</option>)}
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Pertanyaan *</label>
-                  <textarea className="form-input" placeholder="Tulis pertanyaan Anda di sini..." value={form.query} onChange={e => setForm({ ...form, query: e.target.value })} required />
-                </div>
-                <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
-                  <Send size={16} /> Kirim Pertanyaan
+      <section className="rk-section" aria-label="Ruang konsultasi dan tanya jawab pelajar">
+        <Container>
+          {/* Filter Kategori Topik */}
+          <div className="rk-filter-bar">
+            <div className="rk-filter-pills" role="group" aria-label="Topik konsultasi">
+              {TOPIC_CATEGORIES.map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  className="rk-pill"
+                  aria-pressed={activeCategory === cat}
+                  onClick={() => setActiveCategory(cat)}
+                >
+                  {cat}
                 </button>
-              </form>
+              ))}
             </div>
+          </div>
 
-            {/* Published Q&A */}
-            <div>
-              <h2 style={{ fontSize: '1.35rem', marginBottom: '1.5rem' }}>Pertanyaan Terjawab</h2>
-              {published.length > 0 ? (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                  {published.map((q) => (
-                    <div key={q.id} style={{
-                      background: 'white', borderRadius: 'var(--radius-lg)',
-                      border: '1px solid rgba(13,43,34,0.06)', overflow: 'hidden', boxShadow: 'var(--shadow-sm)',
-                    }}>
-                      <button onClick={() => setExpanded(expanded === q.id ? null : q.id)} style={{
-                        width: '100%', padding: '1.25rem', background: 'none', border: 'none', cursor: 'pointer',
-                        display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem', textAlign: 'left',
-                      }}>
+          <div className="rk-split-50-50">
+            {/* Formulir Pertanyaan Jujur */}
+            <SoftCard as="section" aria-labelledby="rk-consult-form-title">
+              <h2
+                id="rk-consult-form-title"
+                style={{ fontSize: '1.25rem', marginBottom: '6px' }}
+              >
+                Sampaikan pertanyaanmu dengan nyaman.
+              </h2>
+              <p style={{ fontSize: '0.9rem', marginBottom: '18px' }}>
+                Pertanyaan akan dikirimkan melalui email resmi pengurus dan pembina ROKABA ({officialEmail}) untuk ditanggapi secara santun.
+              </p>
+
+              <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '14px' }} noValidate>
+                <div className="rk-split-50-50" style={{ gap: '12px' }}>
+                  <InsetField
+                    id="rk-consult-name"
+                    label="Nama atau inisial (opsional)"
+                    placeholder="Contoh: Ahmad / Hamba Allah"
+                    value={senderName}
+                    onChange={(e) => setSenderName(e.target.value)}
+                  />
+
+                  <InsetField
+                    as="select"
+                    id="rk-consult-topic"
+                    label="Topik bahasan"
+                    value={topic}
+                    onChange={(e) => setTopic(e.target.value)}
+                  >
+                    <option value="Keislaman harian">Keislaman harian</option>
+                    <option value="Organisasi ROHIS">Organisasi ROHIS</option>
+                    <option value="Belajar & pertemanan">Belajar & pertemanan</option>
+                  </InsetField>
+                </div>
+
+                <InsetField
+                  as="textarea"
+                  id="rk-consult-question"
+                  label="Pertanyaanmu"
+                  placeholder="Tuliskan pertanyaan atau hal yang ingin kamu diskusikan..."
+                  rows={4}
+                  required
+                  value={questionText}
+                  onChange={(e) => {
+                    setQuestionText(e.target.value);
+                    if (errorMsg) setErrorMsg('');
+                  }}
+                />
+
+                {errorMsg && (
+                  <p
+                    role="alert"
+                    style={{
+                      margin: 0,
+                      fontSize: '0.85rem',
+                      color: '#8C2D19',
+                      fontWeight: 600,
+                    }}
+                  >
+                    {errorMsg}
+                  </p>
+                )}
+
+                {statusMessage && (
+                  <div
+                    role="status"
+                    className="rk-inset-panel"
+                    style={{
+                      padding: '12px 14px',
+                      fontSize: '0.86rem',
+                      color: 'var(--rk-ink)',
+                    }}
+                  >
+                    {statusMessage}
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px', paddingTop: '4px' }}>
+                  <PrimaryButton type="submit">Kirim pertanyaan</PrimaryButton>
+                  <button
+                    type="button"
+                    className="rk-btn-secondary"
+                    onClick={handleCopyQuestion}
+                  >
+                    {copied ? <Check size={16} /> : null}
+                    <span>{copied ? 'Pertanyaan disalin' : 'Salin teks pertanyaan'}</span>
+                  </button>
+                </div>
+              </form>
+            </SoftCard>
+
+            {/* Daftar Jawaban Terpilih */}
+            <div style={{ display: 'grid', gap: '14px', alignContent: 'start' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <h2 style={{ fontSize: '1.2rem' }}>Jawaban terpilih</h2>
+                <span className="rk-badge">{filteredQuestions.length} diskusi</span>
+              </div>
+
+              {filteredQuestions.length === 0 ? (
+                <EmptyState
+                  title="Belum ada tanya-jawab pada topik ini"
+                  description="Pilih kategori Semua untuk membaca tanggapan yang telah dipublikasikan."
+                  action={
+                    <button
+                      type="button"
+                      className="rk-btn-secondary"
+                      onClick={() => setActiveCategory('Semua')}
+                    >
+                      Lihat semua topik
+                    </button>
+                  }
+                />
+              ) : (
+                filteredQuestions.map((item, idx) => {
+                  const isOpen =
+                    openQuestionId === item.id ||
+                    (openQuestionId === null && idx === 0);
+
+                  const questionTitle = item.question || item.query || '';
+                  const senderLabel = item.askerName || item.sender || 'Anonim';
+
+                  return (
+                    <SoftCard key={item.id} as="article" style={{ padding: '20px 22px' }}>
+                      <button
+                        type="button"
+                        aria-expanded={isOpen}
+                        onClick={() =>
+                          setOpenQuestionId(isOpen ? -1 : item.id)
+                        }
+                        style={{
+                          width: '100%',
+                          background: 'none',
+                          border: 'none',
+                          padding: 0,
+                          textAlign: 'left',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          justifyContent: 'space-between',
+                          gap: '12px',
+                        }}
+                      >
                         <div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
-                            <span className="badge badge-emerald" style={{ fontSize: '0.68rem' }}>{q.category}</span>
-                            <span style={{ fontSize: '0.72rem', color: 'rgba(13,43,34,0.35)' }}>{q.sender}</span>
+                          <div className="rk-meta-line" style={{ marginBottom: '6px' }}>
+                            <span>{item.category || 'Diskusi Pelajar'}</span>
+                            <span>•</span>
+                            <span>Oleh {senderLabel}</span>
                           </div>
-                          <p style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--deep-pine)', lineHeight: 1.4 }}>{q.query}</p>
+                          <h3
+                            style={{
+                              fontSize: '1.02rem',
+                              lineHeight: 1.4,
+                              color: 'var(--rk-ink)',
+                            }}
+                          >
+                            {questionTitle}
+                          </h3>
                         </div>
-                        {expanded === q.id ? <ChevronUp size={18} style={{ color: 'rgba(13,43,34,0.3)', flexShrink: 0 }} /> : <ChevronDown size={18} style={{ color: 'rgba(13,43,34,0.3)', flexShrink: 0 }} />}
+
+                        <ChevronDown
+                          size={18}
+                          style={{
+                            flexShrink: 0,
+                            marginTop: '4px',
+                            color: 'var(--rk-muted)',
+                            transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                            transition: 'transform 160ms ease',
+                          }}
+                        />
                       </button>
-                      {expanded === q.id && (
-                        <div style={{
-                          padding: '0 1.25rem 1.25rem', borderTop: '1px solid rgba(13,43,34,0.06)',
-                          paddingTop: '1rem', animation: 'fadeInUp 0.3s ease',
-                        }}>
-                          <p style={{ fontSize: '0.9rem', color: 'rgba(13,43,34,0.65)', lineHeight: 1.7 }}>{q.answer}</p>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.75rem', fontSize: '0.75rem', color: 'rgba(13,43,34,0.35)' }}>
-                            <Clock size={12} />
-                            Dijawab {new Date(q.answeredAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
+
+                      {isOpen && (
+                        <div
+                          className="rk-inset-panel"
+                          style={{
+                            marginTop: '14px',
+                            padding: '16px 18px',
+                          }}
+                        >
+                          <div
+                            style={{
+                              fontSize: '0.8rem',
+                              fontWeight: 700,
+                              color: 'var(--rk-brass-text)',
+                              marginBottom: '6px',
+                            }}
+                          >
+                            Tanggapan {item.answeredBy || 'Dewan Pembina ROKABA'} •{' '}
+                            {formatIndonesianDate(item.answeredAt || item.createdAt)}
                           </div>
+                          <p style={{ fontSize: '0.92rem', color: 'var(--rk-ink)', lineHeight: 1.65 }}>
+                            {item.answer}
+                          </p>
                         </div>
                       )}
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div style={{ textAlign: 'center', padding: '3rem', color: 'rgba(13,43,34,0.35)', background: 'white', borderRadius: 'var(--radius-xl)' }}>
-                  <HelpCircle size={40} style={{ marginBottom: '1rem', opacity: 0.3 }} />
-                  <p>Belum ada pertanyaan terjawab</p>
-                </div>
+                    </SoftCard>
+                  );
+                })
               )}
             </div>
           </div>
-        </div>
+        </Container>
       </section>
     </div>
   );

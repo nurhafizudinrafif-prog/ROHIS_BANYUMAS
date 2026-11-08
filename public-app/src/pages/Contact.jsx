@@ -1,123 +1,268 @@
 import { useState } from 'react';
-import { Mail, Phone, MapPin, Send, CheckCircle, MessageCircle, Camera, Play } from 'lucide-react';
+import { Check } from 'lucide-react';
+import { useData } from '../context/DataContext';
+import {
+  Container,
+  PageHeader,
+  SoftCard,
+  InsetField,
+  PrimaryButton,
+} from '../components/ui/SoftUI';
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
-  const [submitted, setSubmitted] = useState(false);
+  const { settings = {} } = useData();
+  const officialEmail = settings?.contactEmail || 'rokaba.banyumas@gmail.com';
+  const addressText = settings?.address || 'Kabupaten Banyumas, Jawa Tengah';
+  const instagramUrl =
+    settings?.socialLinks?.instagram || 'https://www.instagram.com/rohis_banyumas/';
+  const youtubeUrl =
+    settings?.socialLinks?.youtube || 'https://www.youtube.com/@rohisbanyumas9';
+
+  const [name, setName] = useState('');
+  const [school, setSchool] = useState('');
+  const [email, setEmail] = useState('');
+  const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+  const [statusNote, setStatusNote] = useState('');
+  const [copied, setCopied] = useState(false);
+
+  const composeFormattedMessage = () => {
+    return `Assalamu'alaikum Pengurus ROKABA,\n\nNama: ${name.trim()}\nAsal Sekolah / Instansi: ${
+      school.trim() || '-'
+    }\nEmail Balasan: ${email.trim()}\nSubjek: ${
+      subject.trim() || 'Silaturahmi & Kolaborasi'
+    }\n\nPesan:\n${message.trim()}\n\nTerima kasih.`;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 4000);
-    setForm({ name: '', email: '', subject: '', message: '' });
+    if (!name.trim() || !email.trim() || !message.trim()) {
+      setErrorMsg('Mohon lengkapi Nama, Email, dan isi Pesan sebelum mengirim.');
+      return;
+    }
+    setErrorMsg('');
+
+    const mailSubject = subject.trim()
+      ? `[ROKABA] ${subject.trim()} — ${name.trim()}`
+      : `[ROKABA] Pesan dari ${name.trim()}`;
+    const mailBody = composeFormattedMessage();
+
+    setStatusNote(
+      `Aplikasi email Anda telah disiapkan menuju ${officialEmail}. Apabila klien email belum terbuka, Anda dapat menggunakan tombol Salin Pesan di samping.`
+    );
+    window.location.href = `mailto:${officialEmail}?subject=${encodeURIComponent(
+      mailSubject
+    )}&body=${encodeURIComponent(mailBody)}`;
+  };
+
+  const handleCopyMessage = async () => {
+    if (!message.trim()) {
+      setErrorMsg('Tuliskan isi pesan terlebih dahulu sebelum menyalin.');
+      return;
+    }
+    setErrorMsg('');
+    try {
+      await navigator.clipboard.writeText(composeFormattedMessage());
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch {
+      setCopied(false);
+    }
   };
 
   return (
-    <div style={{ overflowX: 'clip', width: '100%' }}>
-      <section style={{
-        background: 'var(--deep-pine)', paddingTop: '8rem', paddingBottom: '3rem', position: 'relative', overflow: 'hidden', width: '100%',
-      }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 60% 50%, rgba(16,185,129,0.06) 0%, transparent 50%)', pointerEvents: 'none' }} />
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', position: 'relative' }}>
-          <span className="badge badge-emerald animate-fade-in-up" style={{ marginBottom: '1rem' }}><Mail size={14} /> Kontak</span>
-          <h1 className="animate-fade-in-up delay-100" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4.5vw, 2.8rem)', fontWeight: 800, color: 'var(--warm-alabaster)' }}>
-            Hubungi Kami
-          </h1>
-          <p className="animate-fade-in-up delay-200" style={{ color: 'rgba(245,242,237,0.55)', maxWidth: 500, marginTop: '0.75rem' }}>
-            Silakan hubungi kami untuk pertanyaan, kerja sama, atau informasi lebih lanjut.
-          </p>
-        </div>
-      </section>
+    <div className="rk-page">
+      <PageHeader
+        breadcrumb={[{ label: 'Beranda', to: '/' }, { label: 'Kontak' }]}
+        title="Mari terhubung"
+        lead="Untuk undangan kegiatan, kolaborasi sekolah, atau pertanyaan umum seputar ROKABA."
+      />
 
-      <section className="section" style={{ background: 'var(--warm-alabaster)', width: '100%' }}>
-        <div className="container" style={{ maxWidth: 1000, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '2rem' }}>
-            {/* Contact Info */}
-            <div>
-              <h2 style={{ fontSize: '1.35rem', marginBottom: '1.5rem' }}>Informasi Kontak</h2>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginBottom: '2rem' }}>
-                {[
-                  { icon: MapPin, label: 'Alamat', value: 'Purwokerto, Kabupaten Banyumas, Jawa Tengah 53100', color: 'var(--emerald)' },
-                  { icon: Mail, label: 'Email', value: 'info@rohisbanyumas.id', color: 'var(--antique-brass)' },
-                  { icon: Phone, label: 'Telepon', value: '+62 812-3456-7890', color: '#7C3AED' },
-                ].map(({ icon: Icon, label, value, color }, i) => (
-                  <div key={i} style={{
-                    background: 'white', borderRadius: 'var(--radius-lg)', padding: '1.25rem',
-                    display: 'flex', gap: '1rem', alignItems: 'flex-start',
-                    border: '1px solid rgba(13,43,34,0.06)',
-                  }}>
-                    <div style={{
-                      width: 44, height: 44, borderRadius: '12px', background: `${color}12`,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                    }}>
-                      <Icon size={20} style={{ color }} />
-                    </div>
-                    <div>
-                      <p style={{ fontSize: '0.78rem', color: 'rgba(13,43,34,0.4)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</p>
-                      <p style={{ fontSize: '0.95rem', fontWeight: 500, marginTop: '0.15rem' }}>{value}</p>
-                    </div>
-                  </div>
-                ))}
+      <section className="rk-section" aria-label="Informasi kontak dan formulir pesan">
+        <Container>
+          <div className="rk-split-40-60">
+            {/* Kartu Kiri: Informasi Kontak Terverifikasi */}
+            <SoftCard as="aside" style={{ display: 'grid', gap: '20px' }}>
+              <div>
+                <span
+                  style={{
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    color: 'var(--rk-brass-text)',
+                  }}
+                >
+                  Wilayah
+                </span>
+                <h2 style={{ fontSize: '1.22rem', marginTop: '4px' }}>
+                  {addressText}
+                </h2>
               </div>
 
-              <h3 style={{ fontSize: '1rem', marginBottom: '1rem' }}>Media Sosial</h3>
-              <div style={{ display: 'flex', gap: '0.75rem' }}>
-                {[
-                  { icon: Camera, label: 'Instagram', color: '#E4405F' },
-                  { icon: Play, label: 'YouTube', color: '#FF0000' },
-                  { icon: MessageCircle, label: 'WhatsApp', color: '#25D366' },
-                ].map(({ icon: Icon, label, color }) => (
-                  <a key={label} href="#" aria-label={label} style={{
-                    width: 48, height: 48, borderRadius: '14px', background: `${color}10`,
-                    border: `1px solid ${color}20`, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    color, transition: 'all 0.2s', textDecoration: 'none',
-                  }}>
-                    <Icon size={20} />
+              <div>
+                <span
+                  style={{
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    color: 'var(--rk-brass-text)',
+                  }}
+                >
+                  Email resmi
+                </span>
+                <p style={{ marginTop: '4px', fontSize: '1.02rem', fontWeight: 600 }}>
+                  <a
+                    href={`mailto:${officialEmail}`}
+                    style={{ color: 'var(--rk-ink)', textDecoration: 'underline' }}
+                  >
+                    {officialEmail}
                   </a>
-                ))}
+                </p>
               </div>
-            </div>
 
-            {/* Form */}
-            <div>
-              <h2 style={{ fontSize: '1.35rem', marginBottom: '1.5rem' }}>Kirim Pesan</h2>
-              {submitted && (
-                <div className="animate-fade-in-up" style={{
-                  background: 'var(--emerald-glass)', border: '1px solid var(--emerald)',
-                  borderRadius: 'var(--radius-lg)', padding: '1rem', marginBottom: '1.25rem',
-                  display: 'flex', alignItems: 'center', gap: '0.75rem',
-                }}>
-                  <CheckCircle size={20} style={{ color: 'var(--emerald)' }} />
-                  <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>Pesan berhasil dikirim!</span>
+              <div>
+                <span
+                  style={{
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    color: 'var(--rk-brass-text)',
+                  }}
+                >
+                  Kanal publikasi resmi
+                </span>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '8px' }}>
+                  <a
+                    href={instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rk-pill"
+                  >
+                    Instagram @rohis_banyumas ↗
+                  </a>
+                  <a
+                    href={youtubeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rk-pill"
+                  >
+                    YouTube ROKABA ↗
+                  </a>
                 </div>
-              )}
-              <form onSubmit={handleSubmit} style={{
-                background: 'white', borderRadius: 'var(--radius-xl)', padding: '2rem',
-                border: '1px solid rgba(13,43,34,0.06)', boxShadow: 'var(--shadow-sm)',
-              }}>
-                <div className="form-group">
-                  <label className="form-label">Nama</label>
-                  <input type="text" className="form-input" required placeholder="Nama lengkap" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
+              </div>
+
+              <div
+                className="rk-inset-panel"
+                style={{ padding: '16px 18px', fontSize: '0.88rem', color: 'var(--rk-muted)' }}
+              >
+                Untuk kerja sama kegiatan lintas sekolah, sertakan nama sekolah dan kontak pengurus yang dapat dihubungi.
+              </div>
+            </SoftCard>
+
+            {/* Kartu Kanan: Formulir Pesan */}
+            <SoftCard as="section" aria-labelledby="rk-contact-form-heading">
+              <h2
+                id="rk-contact-form-heading"
+                style={{ fontSize: '1.25rem', marginBottom: '16px' }}
+              >
+                Kirim pesan ke pengurus
+              </h2>
+
+              <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '14px' }} noValidate>
+                <div className="rk-split-50-50" style={{ gap: '12px' }}>
+                  <InsetField
+                    id="rk-contact-name"
+                    label="Nama lengkap"
+                    placeholder="Nama lengkapmu"
+                    required
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+
+                  <InsetField
+                    id="rk-contact-school"
+                    label="Asal sekolah / instansi"
+                    placeholder="Contoh: SMA Negeri 1 Purwokerto"
+                    value={school}
+                    onChange={(e) => setSchool(e.target.value)}
+                  />
                 </div>
-                <div className="form-group">
-                  <label className="form-label">Email</label>
-                  <input type="email" className="form-input" required placeholder="email@contoh.com" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
+
+                <div className="rk-split-50-50" style={{ gap: '12px' }}>
+                  <InsetField
+                    id="rk-contact-email"
+                    type="email"
+                    label="Email"
+                    placeholder="nama@email.com"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+
+                  <InsetField
+                    id="rk-contact-subject"
+                    label="Subjek"
+                    placeholder="Contoh: Undangan Kolaborasi Kajian"
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                  />
                 </div>
-                <div className="form-group">
-                  <label className="form-label">Subjek</label>
-                  <input type="text" className="form-input" required placeholder="Topik pesan" value={form.subject} onChange={e => setForm({ ...form, subject: e.target.value })} />
+
+                <InsetField
+                  as="textarea"
+                  id="rk-contact-message"
+                  label="Pesan"
+                  placeholder="Tuliskan maksud, agenda, atau pertanyaan yang ingin disampaikan..."
+                  rows={4}
+                  required
+                  value={message}
+                  onChange={(e) => {
+                    setMessage(e.target.value);
+                    if (errorMsg) setErrorMsg('');
+                  }}
+                />
+
+                {errorMsg && (
+                  <p
+                    role="alert"
+                    style={{
+                      margin: 0,
+                      fontSize: '0.85rem',
+                      color: '#8C2D19',
+                      fontWeight: 600,
+                    }}
+                  >
+                    {errorMsg}
+                  </p>
+                )}
+
+                {statusNote && (
+                  <div
+                    role="status"
+                    className="rk-inset-panel"
+                    style={{
+                      padding: '12px 14px',
+                      fontSize: '0.86rem',
+                      color: 'var(--rk-ink)',
+                    }}
+                  >
+                    {statusNote}
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px', paddingTop: '4px' }}>
+                  <PrimaryButton type="submit">Kirim pesan</PrimaryButton>
+                  <button
+                    type="button"
+                    className="rk-btn-secondary"
+                    onClick={handleCopyMessage}
+                  >
+                    {copied ? <Check size={16} /> : null}
+                    <span>{copied ? 'Pesan disalin' : 'Salin isi pesan'}</span>
+                  </button>
                 </div>
-                <div className="form-group">
-                  <label className="form-label">Pesan</label>
-                  <textarea className="form-input" required placeholder="Tulis pesan Anda..." value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} />
-                </div>
-                <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
-                  <Send size={16} /> Kirim Pesan
-                </button>
               </form>
-            </div>
+            </SoftCard>
           </div>
-        </div>
+        </Container>
       </section>
     </div>
   );

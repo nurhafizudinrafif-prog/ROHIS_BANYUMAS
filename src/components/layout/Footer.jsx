@@ -1,4 +1,58 @@
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, MapPin, Mail } from 'lucide-react';
-import { Brand } from './Navbar';
-export default function Footer(){return <footer className="rk-footer"><div className="rk-wrap"><div className="rk-footer-grid"><div><Brand/><p>Ruang belajar, bertumbuh, dan berkontribusi bagi pelajar Muslim se-Kabupaten Banyumas.</p><a href="https://www.instagram.com/rohisbanyumas" target="_blank" rel="noreferrer">Ikuti perjalanan kami <ArrowUpRight size={16}/></a></div><div><h3>Organisasi</h3><Link to="/about">Tentang ROKABA</Link><Link to="/programs">Program & divisi</Link><Link to="/schools">Sekolah anggota</Link><Link to="/contact">Hubungi pengurus</Link></div><div><h3>Ruang pelajar</h3><Link to="/berita">Berita kegiatan</Link><Link to="/events">Agenda</Link><Link to="/articles">Artikel & opini</Link><Link to="/library">Perpustakaan</Link><Link to="/gallery">Galeri</Link><Link to="/consultation">Konsultasi</Link></div><div><h3>Mari terhubung</h3><p><MapPin size={17}/> Kabupaten Banyumas,<br/>Jawa Tengah, Indonesia</p><a href="mailto:rokaba.banyumas@gmail.com"><Mail size={17}/> rokaba.banyumas@gmail.com</a></div></div><div className="rk-footer-bottom"><span>© {new Date().getFullYear()} ROHIS Kabupaten Banyumas</span><span>Berakar pada akhlak. Bergerak dalam karya.</span></div></div></footer>}
+import { useData } from '../../context/DataContext';
+
+export default function Footer() {
+  const { settings } = useData();
+  const email = settings?.contactEmail || 'rokaba.banyumas@gmail.com';
+  const locationText = settings?.address || 'Kabupaten Banyumas';
+  const instagramUrl = settings?.socialLinks?.instagram || 'https://www.instagram.com/rohis_banyumas/';
+  const youtubeUrl = settings?.socialLinks?.youtube || 'https://www.youtube.com/@rohisbanyumas9';
+
+  return (
+    <footer className="rk-footer-wrap">
+      <div className="rk-container">
+        <div className="rk-footer-bar">
+          <div className="rk-footer-top">
+            <div className="rk-footer-brand">
+              <strong>ROKABA — ROHIS Kabupaten Banyumas</strong>
+              <span>
+                Wadah kolaborasi, pembinaan karakter, dan syiar pelajar Muslim SMA/SMK/MA se-Kabupaten Banyumas.
+              </span>
+            </div>
+
+            <div className="rk-footer-meta">
+              <span>{locationText}</span>
+              <span aria-hidden="true">•</span>
+              <a href={`mailto:${email}`}>{email}</a>
+            </div>
+          </div>
+
+          <div className="rk-footer-links-row">
+            <nav className="rk-footer-nav" aria-label="Tautan cepat footer">
+              <Link to="/about">Tentang</Link>
+              <Link to="/programs">Program</Link>
+              <Link to="/berita">Berita</Link>
+              <Link to="/events">Agenda</Link>
+              <Link to="/schools">Sekolah anggota</Link>
+              <Link to="/articles">Artikel</Link>
+              <Link to="/library">Perpustakaan</Link>
+              <Link to="/gallery">Galeri</Link>
+              <Link to="/consultation">Konsultasi</Link>
+              <Link to="/contact">Kontak</Link>
+            </nav>
+
+            <div className="rk-footer-meta" style={{ fontSize: '0.84rem' }}>
+              <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
+                Instagram Resmi ↗
+              </a>
+              <span aria-hidden="true">•</span>
+              <a href={youtubeUrl} target="_blank" rel="noopener noreferrer">
+                YouTube ↗
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}

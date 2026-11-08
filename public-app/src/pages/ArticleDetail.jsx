@@ -1,144 +1,328 @@
-import { parseImageUrl } from '@shared/services/mediaHelper.js';
-import { useParams, Link } from 'react-router-dom';
+import { useMemo, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { Share2, Check } from 'lucide-react';
 import { useData } from '../context/DataContext';
-import { ArrowLeft, Clock, User, Tag, Share2 } from 'lucide-react';
+import {
+  Container,
+  SoftCard,
+  EmptyState,
+  formatIndonesianDate,
+} from '../components/ui/SoftUI';
+
+function cleanMarkdownFormatting(text = '') {
+  return String(text).replace(/\*\*(.*?)\*\*/g, '$1').trim();
+}
+
+function parseArticleSections(article) {
+  const raw = String(article?.content || '').trim();
+  const blocks = raw
+    .split(/\n\s*\n|\n/)
+    .map((b) => b.trim())
+    .filter(Boolean);
+
+  const sections = [];
+  let currentSection = {
+    id: 'pengantar',
+    heading: 'Pengantar',
+    paragraphs: [],
+  };
+
+  blocks.forEach((block) => {
+    const numberedMatch = block.match(/^(\d+)\.\s+\*\*([^*]+)\*\*\s*(?:[—:-]\s*(.*))?$/);
+    const simpleNumberedMatch = block.match(/^(\d+)\.\s+([^:—-]+)(?:[:—-]\s*(.*))?$/);
+    const mdHeadingMatch = block.match(/^#{2,3}\s+(.*)$/);
+
+    if (numberedMatch) {
+      if (currentSection.paragraphs.length > 0 || currentSection.id !== 'pengantar') {
+        sections.push(currentSection);
+      }
+      const headingText = cleanMarkdownFormatting(numberedMatch[2]);
+      const restText = cleanMarkdownFormatting(numberedMatch[3] || '');
+      currentSection = {
+        id: `bagian-${sections.length + 1}`,
+        heading: headingText,
+        paragraphs: restText ? [restText] : [],
+      };
+    } else if (simpleNumberedMatch) {
+      if (currentSection.paragraphs.length > 0 || currentSection.id !== 'pengantar') {
+        sections.push(currentSection);
+      }
+      const headingText = cleanMarkdownFormatting(simpleNumberedMatch[2]);
+      const restText = cleanMarkdownFormatting(simpleNumberedMatch[3] || '');
+      currentSection = {
+        id: `bagian-${sections.length + 1}`,
+        heading: headingText,
+        paragraphs: restText ? [restText] : [],
+      };
+    } else if (mdHeadingMatch) {
+      if (currentSection.paragraphs.length > 0 || currentSection.id !== 'pengantar') {
+        sections.push(currentSection);
+      }
+      currentSection = {
+        id: `bagian-${sections.length + 1}`,
+        heading: cleanMarkdownFormatting(mdHeadingMatch[1]),
+        paragraphs: [],
+      };
+    } else {
+      currentSection.paragraphs.push(cleanMarkdownFormatting(block));
+    }
+  });
+
+  if (currentSection.paragraphs.length > 0 || sections.length === 0) {
+    sections.push(currentSection);
+  }
+
+  if (sections.length === 1 && sections[0].paragraphs.length >= 2) {
+    const paras = sections[0].paragraphs;
+    return [
+      {
+        id: 'bagian-1',
+        heading: 'Pengantar & Konteks',
+        paragraphs: [paras[0]],
+      },
+      {
+        id: 'bagian-2',
+        heading: 'Intisari Pembahasan',
+        paragraphs: paras.slice(1, Math.max(2, paras.length - 1)),
+      },
+      ...(paras.length > 2
+        ? [
+            {
+              id: 'bagian-3',
+              heading: 'Refleksi Penutup',
+              paragraphs: [paras[paras.length - 1]],
+            },
+          ]
+        : []),
+    ];
+  }
+
+  return sections;
+}
 
 export default function ArticleDetail() {
   const { slug } = useParams();
-  const { articles } = useData();
-  const article = articles.find(a => a.slug === slug);
+  const { articles = [] } = useData();
+  const [copied, setCopied] = useState(false);
+
+  const article = articles.find(
+    (a) => String(a.slug) === String(slug) || String(a.id) === String(slug)
+  );
+
+  const sections = useMemo(
+    () => (article ? parseArticleSections(article) : []),
+    [article]
+  );
 
   if (!article) {
     return (
-      <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', paddingTop: '5rem' }}>
-        <h2 style={{ marginBottom: '1rem', color: 'var(--deep-pine)' }}>Artikel Tidak Ditemukan</h2>
-        <p style={{ color: 'rgba(13,43,34,0.6)', marginBottom: '1.5rem' }}>Artikel yang Anda cari mungkin telah dipindahkan atau dihapus.</p>
-        <Link to="/articles" className="btn btn-primary"><ArrowLeft size={16} /> Kembali ke Daftar Artikel</Link>
+      <div className="rk-page">
+        <section className="rk-section">
+          <Container>
+            <EmptyState
+              asPageHeading
+              title="Artikel tidak ditemukan"
+              description="Bacaan yang Anda cari tidak tersedia atau tautannya telah berubah."
+              action={
+                <Link to="/articles" className="rk-btn-primary">
+                  Kembali ke Daftar Artikel
+                </Link>
+              }
+            />
+          </Container>
+        </section>
       </div>
     );
   }
 
-  const relatedArticles = articles.filter(a => a.category === article.category && a.id !== article.id).slice(0, 3);
+  const relatedArticles = articles
+    .filter((a) => a.id !== article.id)
+    .slice(0, 2);
 
-  const handleShare = () => {
+  const handleShare = async () => {
+    const shareUrl = window.location.href;
     if (navigator.share) {
-      navigator.share({
-        title: article.title,
-        text: article.excerpt || article.title,
-        url: window.location.href,
-      }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert('Tautan artikel berhasil disalin!');
+      try {
+        await navigator.share({
+          title: article.title,
+          text: article.excerpt || article.title,
+          url: shareUrl,
+        });
+        return;
+      } catch {
+        // Lanjut ke clipboard
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch {
+      setCopied(false);
     }
   };
 
   return (
-    <div style={{ overflowX: 'clip', width: '100%' }}>
-      {/* Hero */}
-      <section style={{
-        background: 'var(--deep-pine)', paddingTop: '7rem', paddingBottom: '3.5rem',
-        position: 'relative', overflow: 'hidden', width: '100%',
-      }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 40% 60%, rgba(16,185,129,0.08) 0%, transparent 50%)', pointerEvents: 'none' }} />
-        <div className="container" style={{ maxWidth: 880, margin: '0 auto', position: 'relative' }}>
-          <Link to="/articles" className="animate-fade-in-up" style={{
-            display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-            color: 'rgba(245,242,237,0.6)', fontSize: '0.85rem', marginBottom: '1.5rem', textDecoration: 'none',
-          }}>
-            <ArrowLeft size={16} /> Kembali ke Daftar Artikel
-          </Link>
-          <span className="badge badge-emerald animate-fade-in-up delay-100" style={{ display: 'inline-flex', marginBottom: '1rem' }}>
-            <Tag size={12} /> {article.category}
-          </span>
-          <h1 className="animate-fade-in-up delay-200" style={{
-            fontFamily: 'var(--font-heading)', fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
-            fontWeight: 800, color: 'var(--warm-alabaster)', lineHeight: 1.25, marginBottom: '1.5rem',
-          }}>
+    <div className="rk-page">
+      <section className="rk-page-header">
+        <Container>
+          <nav className="rk-breadcrumb" aria-label="Breadcrumb">
+            <Link to="/">Beranda</Link>
+            <span aria-hidden="true">/</span>
+            <Link to="/articles">Artikel</Link>
+          </nav>
+
+          <div className="rk-meta-line" style={{ marginBottom: '10px' }}>
+            <span className="rk-badge rk-badge--brass">
+              {article.category || 'Kepemimpinan'}
+            </span>
+            <span>•</span>
+            <span>{article.readingTime || '5 menit'} baca</span>
+          </div>
+
+          <h1
+            className="rk-page-title"
+            style={{ maxWidth: '24ch', marginBottom: '12px' }}
+          >
             {article.title}
           </h1>
-          <div className="animate-fade-in-up delay-300" style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1.25rem', flexWrap: 'wrap',
-            color: 'rgba(245,242,237,0.6)', fontSize: '0.85rem', borderTop: '1px solid rgba(245,242,237,0.1)', paddingTop: '1rem',
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}><User size={15} /> {article.author}</span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <Clock size={15} />
-                {new Date(article.publishedAt || article.date || Date.now()).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-              </span>
-            </div>
+
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '12px',
+            }}
+          >
+            <p style={{ fontSize: '0.9rem', color: 'var(--rk-muted)', margin: 0 }}>
+              Ditulis oleh{' '}
+              <strong style={{ color: 'var(--rk-ink)' }}>
+                {article.author || 'Tim Literasi ROKABA'}
+              </strong>{' '}
+              • {formatIndonesianDate(article.date)}
+            </p>
+
             <button
+              type="button"
+              className="rk-pill"
               onClick={handleShare}
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
-                background: 'rgba(245,242,237,0.1)', color: 'var(--warm-alabaster)',
-                border: '1px solid rgba(245,242,237,0.15)', borderRadius: 'var(--radius-full)',
-                padding: '0.4rem 0.9rem', fontSize: '0.8rem', cursor: 'pointer',
-              }}
+              aria-label="Bagikan artikel"
             >
-              <Share2 size={14} /> Bagikan
+              {copied ? <Check size={15} /> : <Share2 size={15} />}
+              <span>{copied ? 'Tautan disalin' : 'Bagikan bacaan'}</span>
             </button>
           </div>
-        </div>
+        </Container>
       </section>
 
-      {/* Content */}
-      <section className="section" style={{ background: 'var(--warm-alabaster)', minHeight: '60vh' }}>
-        <div className="container" style={{ maxWidth: 880, margin: '0 auto' }}>
-          <article className="animate-fade-in-up" style={{
-            background: 'white', borderRadius: 'var(--radius-xl)', padding: 'clamp(1.5rem, 5vw, 3rem)',
-            boxShadow: 'var(--shadow-md)', border: '1px solid rgba(13,43,34,0.06)',
-            marginTop: '-2rem', position: 'relative', zIndex: 1,
-          }}>
-            {article.image && (
-              <div style={{ marginBottom: '2.5rem', borderRadius: 'var(--radius-lg)', overflow: 'hidden', maxHeight: 460 }}>
-                <img
-                  src={parseImageUrl(article.image)}
-                  alt={article.title}
-                  referrerPolicy="no-referrer"
-                  style={{ width: '100%', height: '100%', maxHeight: 460, objectFit: 'cover' }}
-                />
-              </div>
-            )}
-            <div style={{
-              fontSize: '1.05rem', lineHeight: 1.9, color: 'rgba(13,43,34,0.85)',
-            }}
-            dangerouslySetInnerHTML={{ __html: article.content }}
-            />
-          </article>
+      <section className="rk-section">
+        <Container>
+          <div className="rk-article-layout">
+            {/* Kolom Baca Utama */}
+            <SoftCard
+              as="article"
+              style={{ padding: 'clamp(24px, 3.8vw, 40px)' }}
+            >
+              <div className="rk-prose">
+                {article.excerpt && (
+                  <p className="rk-lead-paragraph">{article.excerpt}</p>
+                )}
 
-          {/* Related Articles */}
-          {relatedArticles.length > 0 && (
-            <div style={{ marginTop: '3.5rem' }}>
-              <h3 style={{
-                fontFamily: 'var(--font-heading)', fontSize: '1.35rem',
-                color: 'var(--deep-pine)', marginBottom: '1.5rem',
-              }}>
-                Artikel Dakwah Terkait
-              </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))', gap: '1.25rem' }}>
-                {relatedArticles.map(a => (
-                  <Link to={`/articles/${a.slug}`} key={a.id} style={{
-                    background: 'white', borderRadius: 'var(--radius-lg)', padding: '1.25rem',
-                    textDecoration: 'none', border: '1px solid rgba(13,43,34,0.06)',
-                    transition: 'transform 0.2s, box-shadow 0.2s', boxShadow: 'var(--shadow-sm)',
-                    display: 'flex', flexDirection: 'column',
-                  }}>
-                    {a.image && (
-                      <div style={{ height: 130, borderRadius: 'var(--radius-md)', overflow: 'hidden', marginBottom: '0.85rem' }}>
-                        <img src={parseImageUrl(a.image)} alt={a.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      </div>
+                <blockquote className="rk-quote-callout">
+                  “Keteladanan dan keikhlasan dalam belajar adalah fondasi terkuat bagi setiap kader ROHIS dalam menebar manfaat di lingkungan sekolah.”
+                </blockquote>
+
+                {sections.map((sec, idx) => (
+                  <section
+                    key={sec.id}
+                    id={sec.id}
+                    style={{ scrollMarginTop: '110px', marginTop: idx === 0 ? '18px' : '28px' }}
+                  >
+                    {sec.heading && (
+                      <h2>
+                        {idx + 1}. {sec.heading}
+                      </h2>
                     )}
-                    <span className="badge badge-emerald" style={{ fontSize: '0.7rem', alignSelf: 'flex-start', marginBottom: '0.5rem' }}>{a.category}</span>
-                    <h4 style={{ fontSize: '0.95rem', color: 'var(--deep-pine)', marginBottom: '0.5rem', lineHeight: 1.4, flex: 1 }}>{a.title}</h4>
-                    <span style={{ fontSize: '0.78rem', color: 'rgba(13,43,34,0.5)' }}>{a.author}</span>
-                  </Link>
+                    {sec.paragraphs.map((p, pIdx) => (
+                      <p key={pIdx}>{p}</p>
+                    ))}
+                  </section>
                 ))}
               </div>
-            </div>
-          )}
-        </div>
+            </SoftCard>
+
+            {/* Kolom Kanan: Daftar Isi & Artikel Terkait */}
+            <aside className="rk-toc-card" aria-label="Daftar isi artikel">
+              <div style={{ display: 'grid', gap: '18px' }}>
+                <SoftCard>
+                  <h2
+                    style={{
+                      fontSize: '0.96rem',
+                      fontWeight: 700,
+                      marginBottom: '12px',
+                      color: 'var(--rk-ink)',
+                    }}
+                  >
+                    Daftar isi
+                  </h2>
+                  <ol className="rk-toc-list">
+                    {sections.map((sec) => (
+                      <li key={sec.id}>
+                        <a href={`#${sec.id}`}>{sec.heading}</a>
+                      </li>
+                    ))}
+                  </ol>
+                </SoftCard>
+
+                {relatedArticles.length > 0 && (
+                  <SoftCard>
+                    <h2
+                      style={{
+                        fontSize: '0.96rem',
+                        fontWeight: 700,
+                        marginBottom: '10px',
+                        color: 'var(--rk-ink)',
+                      }}
+                    >
+                      Artikel terkait
+                    </h2>
+                    <div style={{ display: 'grid', gap: '12px' }}>
+                      {relatedArticles.map((rel) => (
+                        <div
+                          key={rel.id}
+                          style={{
+                            paddingTop: '10px',
+                            borderTop: '1px solid var(--rk-line)',
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontSize: '0.75rem',
+                              fontWeight: 600,
+                              color: 'var(--rk-brass-text)',
+                            }}
+                          >
+                            {rel.category || 'Bacaan'}
+                          </span>
+                          <h3 style={{ fontSize: '0.92rem', marginTop: '4px' }}>
+                            <Link
+                              to={`/articles/${rel.slug || rel.id}`}
+                              style={{ color: 'var(--rk-ink)' }}
+                            >
+                              {rel.title}
+                            </Link>
+                          </h3>
+                        </div>
+                      ))}
+                    </div>
+                  </SoftCard>
+                )}
+              </div>
+            </aside>
+          </div>
+        </Container>
       </section>
     </div>
   );

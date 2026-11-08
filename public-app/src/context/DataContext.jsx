@@ -1,23 +1,30 @@
 // DataContext - Centralized State Management with Cloud Sync
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { fetchData, saveData, fetchAllData } from '@shared/services/cloudSync.js';
+import { fallbackData } from '@shared/data/fallback.js';
 
 const DataContext = createContext(null);
 
+function buildInitialData(source = fallbackData) {
+  return {
+    home: source['rokaba:home'] || null,
+    news: source['rokaba:news'] || [],
+    articles: source['rokaba:articles'] || [],
+    events: source['rokaba:events'] || [],
+    schools: source['rokaba:schools'] || [],
+    gallery: source['rokaba:gallery'] || [],
+    questions: source['rokaba:questions'] || [],
+    library: source['rokaba:library'] || [],
+    team: source['rokaba:team'] || [],
+    programs: source['rokaba:programs'] || [],
+    settings: source['rokaba:settings'] || null,
+    users: source['rokaba:users'] || [],
+    auditLogs: source['rokaba:audit_logs'] || [],
+  };
+}
+
 export function DataProvider({ children }) {
-  const [data, setData] = useState({
-    home: null,
-    news: [],
-    articles: [],
-    events: [],
-    schools: [],
-    gallery: [],
-    questions: [],
-    library: [],
-    team: [],
-    users: [],
-    auditLogs: [],
-  });
+  const [data, setData] = useState(() => buildInitialData(fallbackData));
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lastSync, setLastSync] = useState(null);
@@ -29,15 +36,17 @@ export function DataProvider({ children }) {
     try {
       const allData = await fetchAllData();
       setData({
-        home: allData['rokaba:home'],
-        news: allData['rokaba:news'] || [],
-        articles: allData['rokaba:articles'] || [],
-        events: allData['rokaba:events'] || [],
-        schools: allData['rokaba:schools'] || [],
-        gallery: allData['rokaba:gallery'] || [],
-        questions: allData['rokaba:questions'] || [],
-        library: allData['rokaba:library'] || [],
-        team: allData['rokaba:team'] || [],
+        home: allData['rokaba:home'] || fallbackData['rokaba:home'],
+        news: allData['rokaba:news'] || fallbackData['rokaba:news'] || [],
+        articles: allData['rokaba:articles'] || fallbackData['rokaba:articles'] || [],
+        events: allData['rokaba:events'] || fallbackData['rokaba:events'] || [],
+        schools: allData['rokaba:schools'] || fallbackData['rokaba:schools'] || [],
+        gallery: allData['rokaba:gallery'] || fallbackData['rokaba:gallery'] || [],
+        questions: allData['rokaba:questions'] || fallbackData['rokaba:questions'] || [],
+        library: allData['rokaba:library'] || fallbackData['rokaba:library'] || [],
+        team: allData['rokaba:team'] || fallbackData['rokaba:team'] || [],
+        programs: allData['rokaba:programs'] || fallbackData['rokaba:programs'] || [],
+        settings: allData['rokaba:settings'] || fallbackData['rokaba:settings'] || null,
         users: allData['rokaba:users'] || [],
         auditLogs: allData['rokaba:audit_logs'] || [],
       });
@@ -71,7 +80,7 @@ export function DataProvider({ children }) {
     return value;
   }, []);
 
-  // Update data (for admin)
+  // Update data (for admin or synced interactions)
   const updateData = useCallback(async (key, value) => {
     const result = await saveData(`rokaba:${key}`, value);
     if (result.success) {

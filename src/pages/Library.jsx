@@ -1,98 +1,250 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useData } from '../context/DataContext';
-import { Library as LibraryIcon, Download, Search, FileText, Presentation, File } from 'lucide-react';
+import { getMediaUrl } from '@shared/services/mediaHelper';
+import {
+  Container,
+  PageHeader,
+  FilterBar,
+  InsetField,
+  DocumentRow,
+  AccessibleDialog,
+  EmptyState,
+} from '../components/ui/SoftUI';
 
-const typeIcons = { pdf: FileText, slide: Presentation, doc: File };
-const typeColors = { pdf: '#EF4444', slide: '#F59E0B', doc: '#3B82F6' };
+const CURATED_DOCUMENTS = [
+  {
+    id: 'panduan-rohis-sekolah',
+    title: 'Panduan Dasar Pengelolaan ROHIS Sekolah',
+    category: 'Panduan ROHIS',
+    fileType: 'PDF',
+    meta: 'Panduan pengurus • 24 halaman',
+    author: 'Bidang Kaderisasi ROKABA',
+    description:
+      'Pedoman terstruktur bagi pengurus baru dalam menyusun program kerja tahunan, tata tertib syuro, regenerasi kader, dan administrasi dasar ROHIS di sekolah.',
+    outline: [
+      'Struktur organisasi & pembagian amanah BPH ROHIS',
+      'Penyusunan kalender kegiatan tahun ajaran berjalan',
+      'SOP komunikasi dengan pembina dan kesiswaan sekolah',
+    ],
+  },
+  {
+    id: 'modul-kepemimpinan-pelajar',
+    title: 'Modul Kepemimpinan dan Adab Bermusyawarah',
+    category: 'Kepemimpinan',
+    fileType: 'PDF',
+    meta: 'Kaderisasi • 18 halaman',
+    author: 'Dewan Pembina & Bidang SDM ROKABA',
+    description:
+      'Materi pegangan Latihan Dasar Kepemimpinan ROHIS (LDKR) yang membahas etika syuro, pengambilan keputusan yang adil, serta seni merangkul rekan sebaya.',
+    outline: [
+      'Prinsip syuro dan adab menyampaikan pendapat',
+      'Manajemen konflik dan komunikasi empatik antar-pelajar',
+      'Studi kasus pengelolaan kepanitiaan acara sekolah',
+    ],
+  },
+  {
+    id: 'kumpulan-materi-kajian-remaja',
+    title: 'Kumpulan Materi Kajian Remaja Pilihan',
+    category: 'Materi Kajian',
+    fileType: 'SLIDE',
+    meta: 'Syiar • 12 topik',
+    author: 'Bidang Syiar & Dakwah ROKABA',
+    description:
+      'Rangkuman silabus dan salindia (slide) materi kajian remaja untuk menghidupkan halaqah mingguan maupun kajian bulanan di masjid sekolah.',
+    outline: [
+      'Menjaga adab menuntut ilmu di era digital',
+      'Manajemen waktu antara akademik dan amanah organisasi',
+      'Ukhuwah Islamiyah dan kepedulian sosial pelajar',
+    ],
+  },
+];
 
 export default function Library() {
-  const { library } = useData();
-  const [search, setSearch] = useState('');
-  const [catFilter, setCatFilter] = useState('Semua');
+  const { library = [], books = [] } = useData();
+  const [activeCategory, setActiveCategory] = useState('Semua');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedDoc, setSelectedDoc] = useState(null);
 
-  const categories = ['Semua', ...new Set(library.map(l => l.category))];
-  const filtered = library
-    .filter(l => catFilter === 'Semua' || l.category === catFilter)
-    .filter(l => l.title.toLowerCase().includes(search.toLowerCase()));
+  const allDocuments = useMemo(() => {
+    const rawItems = [...library, ...books];
+    const mappedCms = rawItems.map((b) => {
+      const catLower = String(b.category || '').toLowerCase();
+      let mappedCategory = 'Materi Kajian';
+      if (catLower.includes('panduan') || catLower.includes('modul')) {
+        mappedCategory = 'Panduan ROHIS';
+      } else if (catLower.includes('kepemimpinan') || catLower.includes('kader')) {
+        mappedCategory = 'Kepemimpinan';
+      }
+
+      const hasValidExternalFile =
+        b.fileUrl &&
+        b.fileUrl !== '#' &&
+        b.fileUrl !== 'https://drive.google.com';
+
+      return {
+        id: b.id,
+        title: b.title,
+        category: mappedCategory,
+        fileType: String(b.type || b.fileType || 'PDF').toUpperCase(),
+        meta: `${b.category || 'Materi ROHIS'}${b.size || b.fileSize ? ` • ${b.size || b.fileSize}` : ''}`,
+        author: b.author || 'Tim Literasi ROKABA',
+        description:
+          b.description ||
+          'Materi bacaan dan referensi resmi untuk mendukung kegiatan literasi serta pembinaan kader ROHIS.',
+        fileUrl: hasValidExternalFile ? getMediaUrl(b.fileUrl) : '',
+        outline: [
+          'Ringkasan materi dan panduan praktis aplikasi di sekolah',
+          'Referensi diskusi kelompok / mentoring pelajar',
+        ],
+      };
+    });
+
+    const existingTitles = new Set(CURATED_DOCUMENTS.map((d) => d.title.toLowerCase()));
+    const extras = mappedCms.filter(
+      (d) => !existingTitles.has(String(d.title || '').toLowerCase())
+    );
+    return [...CURATED_DOCUMENTS, ...extras];
+  }, [library, books]);
+
+  const categories = ['Semua', 'Panduan ROHIS', 'Kepemimpinan', 'Materi Kajian'];
+
+  const filteredDocs = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    return allDocuments.filter((doc) => {
+      const matchesCat =
+        activeCategory === 'Semua' ||
+        String(doc.category || '').toLowerCase() === activeCategory.toLowerCase();
+      const matchesSearch =
+        !q ||
+        String(doc.title || '').toLowerCase().includes(q) ||
+        String(doc.description || '').toLowerCase().includes(q) ||
+        String(doc.meta || '').toLowerCase().includes(q);
+      return matchesCat && matchesSearch;
+    });
+  }, [allDocuments, activeCategory, searchQuery]);
 
   return (
-    <div style={{ overflowX: 'clip', width: '100%' }}>
-      <section style={{
-        background: 'var(--deep-pine)', paddingTop: '8rem', paddingBottom: '3rem', position: 'relative', overflow: 'hidden', width: '100%',
-      }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 70% 40%, rgba(181,141,79,0.06) 0%, transparent 50%)', pointerEvents: 'none' }} />
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', position: 'relative' }}>
-          <span className="badge badge-brass animate-fade-in-up" style={{ marginBottom: '1rem' }}><LibraryIcon size={14} /> E-Library</span>
-          <h1 className="animate-fade-in-up delay-100" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4.5vw, 2.8rem)', fontWeight: 800, color: 'var(--warm-alabaster)' }}>
-            Perpustakaan Digital
-          </h1>
-          <p className="animate-fade-in-up delay-200" style={{ color: 'rgba(245,242,237,0.55)', maxWidth: 500, marginTop: '0.75rem' }}>
-            Unduh materi dakwah, kajian, dan slide presentasi secara gratis.
-          </p>
-        </div>
-      </section>
+    <div className="rk-page">
+      <PageHeader
+        breadcrumb={[{ label: 'Beranda', to: '/' }, { label: 'Perpustakaan' }]}
+        title="Bekal untuk terus belajar"
+        lead="Unduh modul kepemimpinan, panduan kegiatan ROHIS, dan materi pembinaan pilihan."
+      />
 
-      <section className="section" style={{ background: 'var(--warm-alabaster)', width: '100%' }}>
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap', alignItems: 'center' }}>
-            <div style={{ position: 'relative', flex: '1 1 240px' }}>
-              <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'rgba(13,43,34,0.3)' }} />
-              <input type="text" placeholder="Cari materi..." value={search} onChange={e => setSearch(e.target.value)} className="form-input" style={{ paddingLeft: '2.75rem' }} />
-            </div>
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-              {categories.map(c => (
-                <button key={c} onClick={() => setCatFilter(c)} className={`btn btn-sm ${catFilter === c ? 'btn-brass' : 'btn-ghost'}`}>{c}</button>
+      <section className="rk-section" aria-label="Katalog perpustakaan dan modul">
+        <Container>
+          <FilterBar
+            categories={categories}
+            activeCategory={activeCategory}
+            onSelectCategory={setActiveCategory}
+            searchNode={
+              <InsetField
+                id="rk-library-search"
+                type="search"
+                aria-label="Cari materi atau panduan"
+                placeholder="Cari materi atau panduan..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            }
+          />
+
+          {filteredDocs.length === 0 ? (
+            <EmptyState
+              title="Materi tidak ditemukan"
+              description="Coba kata kunci lain atau pilih kategori Semua untuk menampilkan seluruh modul."
+              action={
+                <button
+                  type="button"
+                  className="rk-btn-secondary"
+                  onClick={() => {
+                    setActiveCategory('Semua');
+                    setSearchQuery('');
+                  }}
+                >
+                  Tampilkan semua materi
+                </button>
+              }
+            />
+          ) : (
+            <div style={{ display: 'grid', gap: '14px' }}>
+              {filteredDocs.map((doc) => (
+                <DocumentRow
+                  key={doc.id}
+                  badge={doc.fileType}
+                  title={doc.title}
+                  meta={doc.meta}
+                  actionLabel="Lihat dokumen"
+                  onAction={() => setSelectedDoc(doc)}
+                />
               ))}
             </div>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '1.25rem' }}>
-            {filtered.map((item, i) => {
-              const Icon = typeIcons[item.type] || FileText;
-              const color = typeColors[item.type] || 'var(--emerald)';
-              return (
-                <div key={item.id} className="animate-fade-in-up" style={{
-                  animationDelay: `${i * 60}ms`, background: 'white', borderRadius: 'var(--radius-xl)',
-                  padding: '1.75rem', border: '1px solid rgba(13,43,34,0.06)', boxShadow: 'var(--shadow-sm)',
-                  display: 'flex', gap: '1.25rem', alignItems: 'flex-start', transition: 'all 0.3s',
-                }}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)'; }}
-                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; }}
-                >
-                  <div style={{
-                    width: 52, height: 52, borderRadius: '14px', background: `${color}12`,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                  }}>
-                    <Icon size={24} style={{ color }} />
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem' }}>
-                      <span className="badge" style={{ background: `${color}15`, color, fontSize: '0.68rem', textTransform: 'uppercase' }}>
-                        {item.type}
-                      </span>
-                      <span className="badge badge-pine" style={{ fontSize: '0.68rem' }}>{item.category}</span>
-                    </div>
-                    <h3 style={{ fontSize: '1rem', marginBottom: '0.5rem' }}>{item.title}</h3>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.75rem' }}>
-                      <span style={{ fontSize: '0.78rem', color: 'rgba(13,43,34,0.35)' }}>{item.size}</span>
-                      <a href={item.fileUrl} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-primary" style={{ padding: '0.4rem 1rem' }}>
-                        <Download size={14} /> Unduh
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {filtered.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '4rem', color: 'rgba(13,43,34,0.35)' }}>
-              <LibraryIcon size={48} style={{ marginBottom: '1rem', opacity: 0.3 }} />
-              <p>Tidak ada materi ditemukan</p>
-            </div>
           )}
-        </div>
+        </Container>
       </section>
+
+      <AccessibleDialog
+        open={Boolean(selectedDoc)}
+        onClose={() => setSelectedDoc(null)}
+        eyebrow={`${selectedDoc?.fileType || 'PDF'} • ${selectedDoc?.category || 'Materi'}`}
+        title={selectedDoc?.title || ''}
+      >
+        {selectedDoc && (
+          <div style={{ display: 'grid', gap: '16px' }}>
+            <p>{selectedDoc.description}</p>
+
+            {Array.isArray(selectedDoc.outline) && selectedDoc.outline.length > 0 && (
+              <div className="rk-inset-panel" style={{ padding: '16px 18px' }}>
+                <h3 style={{ fontSize: '0.94rem', marginBottom: '8px' }}>
+                  Pokok Bahasan Utama
+                </h3>
+                <ul className="rk-program-list">
+                  {selectedDoc.outline.map((item, idx) => (
+                    <li key={idx}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <div className="rk-inset-panel" style={{ padding: '14px 16px', fontSize: '0.86rem', color: 'var(--rk-muted)' }}>
+              <strong style={{ color: 'var(--rk-ink)' }}>Penyusun: </strong>
+              {selectedDoc.author} ({selectedDoc.meta})
+            </div>
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', paddingTop: '4px' }}>
+              {selectedDoc.fileUrl ? (
+                <a
+                  href={selectedDoc.fileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rk-btn-primary"
+                >
+                  Unduh / Buka Dokumen ↗
+                </a>
+              ) : (
+                <a
+                  href={`mailto:rokaba.banyumas@gmail.com?subject=${encodeURIComponent(
+                    `Permohonan Salinan Modul: ${selectedDoc.title}`
+                  )}&body=${encodeURIComponent(
+                    `Assalamu'alaikum Pengurus ROKABA,\n\nSaya ingin memohon salinan dokumen "${selectedDoc.title}" untuk referensi kegiatan ROHIS di sekolah kami.\n\nNama:\nAsal Sekolah:\n\nTerima kasih.`
+                  )}`}
+                  className="rk-btn-primary"
+                >
+                  Minta Salinan via Email Resmi
+                </a>
+              )}
+              <Link
+                to="/articles"
+                className="rk-btn-secondary"
+                onClick={() => setSelectedDoc(null)}
+              >
+                Baca Artikel Terkait
+              </Link>
+            </div>
+          </div>
+        )}
+      </AccessibleDialog>
     </div>
   );
 }

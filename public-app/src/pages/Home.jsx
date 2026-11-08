@@ -1,27 +1,596 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, ArrowRight, BookOpen, Users, CalendarDays, MapPin, Library, MessageCircle, Camera } from 'lucide-react';
 import { useData } from '../context/DataContext';
-import { parseImageUrl, extractDriveId } from '@shared/services/mediaHelper.js';
-import logo from '../assets/logo.png';
-const formatDate = value => { const date=new Date(value); return Number.isNaN(date.getTime())?'Tanggal belum tersedia':date.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}); };
-function Photo({src,alt,className='',eager=false}) { const [failed,setFailed]=useState(''); const id=extractDriveId(src); const url=id?`https://lh3.googleusercontent.com/d/${id}=w1400`:parseImageUrl(src);return <div className={`rk-photo ${className}`}>{url&&failed!==url?<img src={url} alt={alt} loading={eager?'eager':'lazy'} referrerPolicy="no-referrer" onError={()=>setFailed(url)}/>:<div className="rk-photo-fallback"><img src={logo} alt=""/><span>ROHIS Kabupaten Banyumas</span></div>}</div>; }
-function SectionHead({title,desc,to,label='Lihat selengkapnya'}) {return <div className="rk-section-head"><div><h2>{title}</h2>{desc&&<p>{desc}</p>}</div>{to&&<Link className="rk-text-link" to={to}>{label}<ArrowUpRight size={18}/></Link>}</div>;}
-const services=[{icon:Users,title:'Jaringan sekolah',desc:'Temukan dan kenali ROHIS di seluruh Kabupaten Banyumas.',to:'/schools'},{icon:BookOpen,title:'Artikel & refleksi',desc:'Bacaan untuk memperluas wawasan dan merawat keimanan.',to:'/articles'},{icon:Library,title:'Perpustakaan digital',desc:'Modul kaderisasi dan materi belajar untuk tumbuh bersama.',to:'/library'},{icon:MessageCircle,title:'Ruang konsultasi',desc:'Sampaikan pertanyaan dan temukan arahan untuk keseharian.',to:'/consultation'}];
-export default function Home(){
- const {home,news=[],events=[],team=[],loading}=useData();const h=home?.hero||{},about=home?.about||{},s=home?.sambutan||{},closing=home?.closing||{};
- const latest=[...news].filter(n=>n.status!=='draft').sort((a,b)=>(Number(a.order)||999)-(Number(b.order)||999)||new Date(b.publishedAt||b.date)-new Date(a.publishedAt||a.date)).slice(0,3);
- const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Jakarta'}).format(new Date());
- const agenda=events.filter(e=>e.date&&e.date.slice(0,10)>=today&&e.status!=='cancelled').sort((a,b)=>a.date.localeCompare(b.date)).slice(0,3);
- const leaders=(Array.isArray(team)?team:team?.bph||[]).filter(t=>(t.role||'').toLowerCase().includes('ketua')).slice(0,3);
- const stats=home?.stats||[];
- return <div className="rk-home"><section className="rk-hero"><div className="rk-wrap rk-hero-grid"><div className="rk-hero-copy"><div className="rk-official"><span/> Forum Komunikasi ROHIS Banyumas</div><h1>{h.titleLine1||'ROHIS'}<br/>{h.titleLine2||'Banyumas'}</h1><p className="rk-hero-lead">{h.leadPhrase||'Ruang belajar, bertumbuh, dan berkontribusi bersama.'}</p><p className="rk-hero-desc">{h.narrative||'Menghubungkan pelajar Muslim lintas SMA, SMK, dan MA untuk merawat ukhuwah, mengasah kepemimpinan, dan menghadirkan karya nyata.'}</p><div className="rk-actions"><Link className="rk-button rk-gold" to={h.btnPrimaryLink||'/about'}>{h.btnPrimaryText||'Mengenal ROKABA'}<ArrowUpRight size={19}/></Link><Link className="rk-hero-secondary" to={h.btnSecondaryLink||'/schools'}>{h.btnSecondaryText||'Sekolah anggota'}<ArrowRight size={18}/></Link></div><div className="rk-hero-note"><span>Berakar pada akhlak.</span><span>Bergerak dalam karya nyata.</span></div></div><figure className="rk-hero-figure"><Photo src={h.photoUrl} alt={h.photoTitle||'Dokumentasi kegiatan ROHIS Banyumas'} eager/><figcaption><span><Camera size={15}/>{h.photoStamp||'Dokumentasi ROKABA'}</span><strong>{h.photoTitle||'Merawat ukhuwah, memperluas langkah.'}</strong><small><MapPin size={13}/>{h.photoLoc||'Kabupaten Banyumas'}</small></figcaption><div className="rk-photo-tab">Kebersamaan yang menggerakkan.</div></figure></div></section>
- <div className="rk-stats"><div className="rk-wrap">{stats.map((stat,i)=><div key={i}><strong>{stat.value}{stat.suffix}</strong><span>{stat.label}</span></div>)}</div></div>
- <section className="rk-section rk-about"><div className="rk-wrap rk-about-grid"><div><span className="rk-kicker">Mengenal ROKABA</span><h2>{about.title||'Bertemu dalam ukhuwah. Bertumbuh bersama.'}</h2><p className="rk-intro">{about.lead||'Wadah silaturahmi dan pengembangan diri bagi pelajar Muslim se-Kabupaten Banyumas.'}</p><p>{about.paragraph1}</p><Link className="rk-text-link" to="/about">Profil dan perjalanan kami<ArrowUpRight size={18}/></Link></div><div className="rk-about-visual"><Photo src={about.photoUrl||h.photoUrl} alt="Dokumentasi kebersamaan kader ROHIS"/><div className="rk-about-caption"><Users size={25}/><div><strong>{about.point1Title||'Sinergi lintas sekolah'}</strong><p>{about.point1Desc||'Bersama membangun generasi yang berkarakter.'}</p></div></div></div></div></section>
- <section className="rk-section rk-news"><div className="rk-wrap"><SectionHead title={home?.sections?.news?.title||'Kabar dari ruang pergerakan'} desc={home?.sections?.news?.desc||'Cerita, karya, dan langkah baik dari pelajar Banyumas.'} to="/berita" label="Semua berita"/><div className="rk-news-grid">{latest.map((n,i)=><Link className={`rk-story ${i===0?'rk-story-featured':''}`} to={`/berita/${n.slug||n.id}`} key={n.id}><Photo src={n.image||n.coverImage} alt={n.title}/><div className="rk-story-body"><div className="rk-meta"><span>{n.category||'Kegiatan'}</span><time>{formatDate(n.publishedAt||n.date)}</time></div><h3>{n.title}</h3>{i===0&&<p>{n.excerpt}</p>}<span className="rk-story-link">Baca cerita<ArrowUpRight size={18}/></span></div></Link>)}</div>{!latest.length&&<p className="rk-empty">{loading?'Memuat kabar terbaru…':'Berita kegiatan akan ditampilkan di sini.'}</p>}</div></section>
- <section className="rk-section rk-services"><div className="rk-wrap"><SectionHead title={home?.sections?.services?.title||'Ruang untuk terus bertumbuh'} desc={home?.sections?.services?.desc}/><div className="rk-services-grid">{services.map(({icon:Icon,...item})=><Link to={item.to} className="rk-service" key={item.to}><Icon size={28} strokeWidth={1.4}/><h3>{item.title}</h3><p>{item.desc}</p><ArrowUpRight className="rk-service-arrow" size={20}/></Link>)}</div></div></section>
- <section className="rk-section"><div className="rk-wrap rk-agenda-grid"><div><span className="rk-kicker">Catat waktunya</span><h2>Kegiatan & kajian bersama.</h2><p>{home?.sections?.events?.desc||'Temukan kesempatan belajar dan berkontribusi bersama kader se-Banyumas.'}</p><Link className="rk-text-link" to="/events">Seluruh agenda<ArrowUpRight size={18}/></Link></div><div className="rk-agenda-list">{agenda.map(e=><Link to="/events" className="rk-event" key={e.id}><div className="rk-date"><strong>{new Date(e.date).getDate()}</strong><span>{new Date(e.date).toLocaleDateString('id-ID',{month:'short'})}</span></div><div><span className="rk-meta">{e.type||'Agenda'} · {formatDate(e.date)}</span><h3>{e.title}</h3><p><MapPin size={14}/>{e.location}</p></div><ArrowUpRight size={20}/></Link>)}{!agenda.length&&<div className="rk-empty-agenda"><CalendarDays size={36} strokeWidth={1.2}/><h3>Ruang pertemuan berikutnya</h3><p>{loading?'Memuat jadwal kegiatan…':'Jadwal kegiatan mendatang akan diumumkan di sini. Jelajahi agenda untuk melihat kegiatan ROKABA.'}</p><Link className="rk-text-link" to="/events">Lihat kegiatan<ArrowRight size={17}/></Link></div>}</div></div></section>
- <section className="rk-section rk-message"><div className="rk-wrap rk-message-grid"><div><span className="rk-kicker">Dari pengurus</span><h2>{s.titleLine1||'Sambutan'}<br/>{s.titleLine2||'Pimpinan ROKABA'}</h2><span className="rk-period">{s.periodText}</span></div><div><p className="rk-greeting">{s.greeting||"Assalamu’alaikum warahmatullahi wabarakatuh."}</p><p>{s.paragraph1||'Selamat datang di rumah digital ROHIS Kabupaten Banyumas. Mari merawat ukhuwah dan menghadirkan manfaat bersama.'}</p><details className="rk-message-details"><summary>Baca sambutan lengkap</summary><p>{s.paragraph2}</p><p>{s.closingGreeting}</p></details>{leaders.length>0&&<div className="rk-leaders">{leaders.map(l=><div key={l.id||l.name}><strong>{l.name}</strong><span>{l.role}</span></div>)}</div>}</div></div></section>
- {home?.timeline?.length>0&&<section className="rk-section"><div className="rk-wrap"><SectionHead title="Jejak perjalanan" desc="Langkah yang membentuk ROKABA hari ini." to="/about" label="Sejarah organisasi"/><div className="rk-timeline">{home.timeline.map(t=><article key={t.id||t.year}><span>{t.year}</span><h3>{t.title}</h3><p>{t.desc}</p></article>)}</div></div></section>}
- <section className="rk-invitation"><div className="rk-wrap"><div><span className="rk-kicker">Ambil bagian dalam kebaikan</span><h2>{closing.headline||'Mari tumbuh bersama.'}</h2><p>{closing.lead||'Mulai langkahmu bersama keluarga besar ROHIS Kabupaten Banyumas.'}</p></div><Link className="rk-button rk-gold" to={closing.btnSecondaryLink||'/contact'}>{closing.btnSecondaryText||'Hubungi pengurus'}<ArrowUpRight size={20}/></Link></div></section></div>;
+import {
+  Container,
+  SoftCard,
+  PhotoFrame,
+  SmartImage,
+  EmptyState,
+  ROKABA_REAL_PHOTOS,
+  normalizeTeamData,
+  getJakartaToday,
+  isEventUpcoming,
+  formatIndonesianDate,
+} from '../components/ui/SoftUI';
+
+const DEFAULT_HERO_PHOTO = ROKABA_REAL_PHOTOS[0];
+
+const PRIMARY_SERVICES = [
+  {
+    id: 'programs',
+    title: 'Program & kegiatan',
+    description: 'Kenali pembinaan, syiar, kepemimpinan, dan kolaborasi pelajar.',
+    ctaText: 'Lihat program',
+    link: '/programs',
+  },
+  {
+    id: 'schools',
+    title: 'Sekolah anggota',
+    description: 'Terhubung dengan jaringan ROHIS SMA, SMK, dan MA di Banyumas.',
+    ctaText: 'Lihat jaringan',
+    link: '/schools',
+  },
+  {
+    id: 'library',
+    title: 'Perpustakaan',
+    description: 'Unduh modul, panduan kegiatan, dan bacaan pilihan untuk pengurus.',
+    ctaText: 'Buka materi',
+    link: '/library',
+  },
+];
+
+const SECONDARY_SERVICES = [
+  { label: 'Artikel & bacaan pelajar', link: '/articles' },
+  { label: 'Galeri dokumentasi', link: '/gallery' },
+  { label: 'Ruang konsultasi sebaya', link: '/consultation' },
+];
+
+export default function Home() {
+  const { home = {}, news = [], events = [], team } = useData();
+  const hiddenSections = Array.isArray(home?.hiddenSections) ? home.hiddenSections : [];
+  const isVisible = (sectionKey) => !hiddenSections.includes(sectionKey);
+
+  const heroData = home?.hero || {};
+  const heroPhoto =
+    heroData.photoUrl ||
+    heroData.backgroundImage ||
+    news?.[0]?.image ||
+    DEFAULT_HERO_PHOTO;
+
+  // Gunakan headline rancangan Soft UI kecuali jika admin mengubah judul secara spesifik
+  const heroTitle =
+    heroData.title && heroData.title !== 'Menyatukan Langkah, Menguatkan Ukhuwah.'
+      ? heroData.title
+      : 'Tempat berkumpul, bertumbuh, dan bergerak bersama.';
+
+  const heroSubtitle =
+    heroData.subtitle && !heroData.subtitle.startsWith('Wadah kolaborasi')
+      ? heroData.subtitle
+      : 'ROKABA mempertemukan ROHIS SMA, SMK, dan MA se-Kabupaten Banyumas dalam ruang pembinaan, persaudaraan, dan kegiatan nyata yang dekat dengan keseharian pelajar.';
+
+  // Urutkan berita sesuai order lalu tanggal terbaru
+  const sortedNews = [...news].sort((a, b) => {
+    const orderA = Number.isFinite(Number(a.order)) ? Number(a.order) : 999;
+    const orderB = Number.isFinite(Number(b.order)) ? Number(b.order) : 999;
+    if (orderA !== orderB) return orderA - orderB;
+    return String(b.date || '').localeCompare(String(a.date || ''));
+  });
+
+  const featuredNews = sortedNews[0] || null;
+  const secondaryNews = sortedNews.slice(1, 3);
+
+  // Urutkan agenda dan pisahkan mendatang vs arsip berdasarkan zona waktu Asia/Jakarta
+  const todayStr = getJakartaToday();
+  const sortedEvents = [...events].sort((a, b) =>
+    String(b.date || '').localeCompare(String(a.date || ''))
+  );
+  const upcomingEvents = sortedEvents
+    .filter((ev) => isEventUpcoming(ev, todayStr))
+    .sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')));
+  const archivedEvents = sortedEvents.filter((ev) => !isEventUpcoming(ev, todayStr));
+  const displayedEvents = (upcomingEvents.length > 0 ? upcomingEvents : archivedEvents).slice(0, 3);
+
+  // Normalisasi stats (mendukung array langsung maupun objek .items)
+  const rawStats = Array.isArray(home?.stats)
+    ? home.stats
+    : Array.isArray(home?.stats?.items)
+    ? home.stats.items
+    : [];
+
+  const statsItems =
+    rawStats.length > 0
+      ? rawStats.map((s) => ({
+          value: `${s.value}${s.suffix || ''}`,
+          label: s.label,
+        }))
+      : [
+          { value: '15+', label: 'Dari Sekolah Kab. Banyumas' },
+          { value: '53+', label: 'Anggota Aktif' },
+          { value: '7+', label: 'Event Besar' },
+          { value: '2017', label: 'Tahun Berdiri' },
+        ];
+
+  const aboutData = home?.about || {};
+  const sambutanData = home?.sambutan || {};
+  const closingData = home?.closing || {};
+
+  // Normalisasi timeline (mendukung array langsung maupun objek .steps)
+  const timelineSteps = Array.isArray(home?.timeline)
+    ? home.timeline
+    : Array.isArray(home?.timeline?.steps)
+    ? home.timeline.steps
+    : [];
+
+  // Data pimpinan untuk sambutan
+  const { bph } = normalizeTeamData(team);
+  const topLeaders = bph.slice(0, 3);
+
+  return (
+    <div className="rk-page">
+      {/* 1. HERO SECTION (45% Teks / 55% Bingkai Foto) */}
+      {isVisible('hero') && (
+        <section className="rk-hero" aria-labelledby="rk-hero-heading">
+          <Container>
+            <div className="rk-hero-grid">
+              <div>
+                <div className="rk-eyebrow">
+                  <span className="rk-eyebrow-bar" aria-hidden="true" />
+                  <span>ROKABA • ROHIS Kabupaten Banyumas</span>
+                </div>
+
+                <h1 id="rk-hero-heading" className="rk-hero-title">
+                  {heroTitle}
+                </h1>
+
+                <p className="rk-hero-lead">{heroSubtitle}</p>
+
+                <div className="rk-hero-actions">
+                  <Link to="/about" className="rk-btn-primary">
+                    Mengenal ROKABA
+                  </Link>
+                  <Link to="/programs" className="rk-link-inline">
+                    <span>Jelajahi program</span>
+                    <span aria-hidden="true">→</span>
+                  </Link>
+                </div>
+
+                <p className="rk-hero-subnote">
+                  Terbuka untuk pelajar, pengurus ROHIS, dan sekolah anggota di Banyumas.
+                </p>
+              </div>
+
+              <div>
+                <PhotoFrame
+                  src={heroPhoto}
+                  alt="Dokumentasi kebersamaan pengurus dan kader ROHIS Kabupaten Banyumas"
+                  aspect="16/10"
+                  eager
+                  captionTitle="Kebersamaan kader ROHIS Banyumas"
+                  captionSub="Dokumentasi kegiatan pelajar lintas sekolah"
+                />
+              </div>
+            </div>
+          </Container>
+        </section>
+      )}
+
+      {/* 2. PINTU MASUK LAYANAN (Temukan ruangmu.) */}
+      {isVisible('services') && (
+        <section className="rk-section" aria-labelledby="rk-services-heading">
+          <Container>
+            <div className="rk-section-head">
+              <div>
+                <h2 id="rk-services-heading" className="rk-section-title">
+                  Temukan ruangmu.
+                </h2>
+              </div>
+            </div>
+
+            <div className="rk-grid-3">
+              {PRIMARY_SERVICES.map((service) => (
+                <SoftCard key={service.id} as="article" interactive className="rk-service-card">
+                  <div>
+                    <h3>{service.title}</h3>
+                    <p style={{ marginTop: '8px' }}>{service.description}</p>
+                  </div>
+                  <Link to={service.link} className="rk-card-link">
+                    <span>{service.ctaText}</span>
+                    <span aria-hidden="true">→</span>
+                  </Link>
+                </SoftCard>
+              ))}
+            </div>
+
+            <div
+              style={{
+                marginTop: '20px',
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                gap: '10px',
+              }}
+            >
+              <span style={{ fontSize: '0.86rem', color: 'var(--rk-muted)', fontWeight: 600 }}>
+                Eksplorasi lainnya:
+              </span>
+              {SECONDARY_SERVICES.map((item) => (
+                <Link key={item.link} to={item.link} className="rk-pill">
+                  <span>{item.label}</span>
+                  <span aria-hidden="true">→</span>
+                </Link>
+              ))}
+            </div>
+          </Container>
+        </section>
+      )}
+
+      {/* 3. SOROTAN BERITA & AGENDA BERSAMA */}
+      {(isVisible('news') || isVisible('events')) && (
+        <section className="rk-section" aria-label="Sorotan berita dan agenda">
+          <Container>
+            <div className="rk-split-60-40">
+              {/* Kolom Kiri: Kabar dari ROKABA */}
+              {isVisible('news') && (
+                <div>
+                  <div className="rk-section-head">
+                    <h2 className="rk-section-title">Kabar dari ROKABA</h2>
+                    <Link to="/berita" className="rk-card-link" style={{ marginTop: 0 }}>
+                      <span>Semua berita</span>
+                      <span aria-hidden="true">→</span>
+                    </Link>
+                  </div>
+
+                  {featuredNews ? (
+                    <div style={{ display: 'grid', gap: '16px' }}>
+                      <SoftCard as="article" className="rk-news-feature-card">
+                        <div className="rk-news-feature-thumb">
+                          <SmartImage
+                            src={featuredNews.image || DEFAULT_HERO_PHOTO}
+                            alt={featuredNews.title}
+                          />
+                        </div>
+                        <div className="rk-meta-line">
+                          <span className="rk-badge rk-badge--brass">
+                            {featuredNews.category || 'Kegiatan'}
+                          </span>
+                          <span>•</span>
+                          <span>{formatIndonesianDate(featuredNews.date)}</span>
+                        </div>
+                        <h3 style={{ fontSize: '1.22rem', lineHeight: 1.3 }}>
+                          <Link
+                            to={`/berita/${featuredNews.slug || featuredNews.id}`}
+                            style={{ color: 'inherit' }}
+                          >
+                            {featuredNews.title}
+                          </Link>
+                        </h3>
+                        <p>{featuredNews.excerpt}</p>
+                        <Link
+                          to={`/berita/${featuredNews.slug || featuredNews.id}`}
+                          className="rk-card-link"
+                          style={{ marginTop: '4px' }}
+                        >
+                          <span>Baca selengkapnya</span>
+                          <span aria-hidden="true">→</span>
+                        </Link>
+                      </SoftCard>
+
+                      {secondaryNews.length > 0 && (
+                        <div className="rk-grid-2">
+                          {secondaryNews.map((item) => (
+                            <SoftCard key={item.id} as="article" style={{ padding: '18px 20px' }}>
+                              <div className="rk-meta-line">
+                                <span>{item.category || 'Kabar'}</span>
+                                <span>•</span>
+                                <span>{formatIndonesianDate(item.date)}</span>
+                              </div>
+                              <h3
+                                style={{
+                                  fontSize: '1rem',
+                                  lineHeight: 1.35,
+                                  marginTop: '6px',
+                                  marginBottom: '8px',
+                                }}
+                              >
+                                <Link
+                                  to={`/berita/${item.slug || item.id}`}
+                                  style={{ color: 'inherit' }}
+                                >
+                                  {item.title}
+                                </Link>
+                              </h3>
+                              <Link
+                                to={`/berita/${item.slug || item.id}`}
+                                className="rk-card-link"
+                                style={{ fontSize: '0.86rem' }}
+                              >
+                                <span>Baca berita</span>
+                                <span aria-hidden="true">→</span>
+                              </Link>
+                            </SoftCard>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <EmptyState
+                      title="Belum ada kabar terbaru"
+                      description="Berita kegiatan ROKABA akan segera ditampilkan di sini."
+                    />
+                  )}
+                </div>
+              )}
+
+              {/* Kolom Kanan: Agenda bersama (Inset Panel) */}
+              {isVisible('events') && (
+                <div>
+                  <div className="rk-section-head">
+                    <h2 className="rk-section-title">Agenda bersama</h2>
+                    <span className="rk-badge">
+                      {upcomingEvents.length > 0 ? 'Mendatang' : 'Arsip kegiatan'}
+                    </span>
+                  </div>
+
+                  <SoftCard variant="inset" style={{ display: 'grid', gap: '16px' }}>
+                    {upcomingEvents.length === 0 && displayedEvents.length > 0 && (
+                      <p
+                        style={{
+                          fontSize: '0.84rem',
+                          color: 'var(--rk-muted)',
+                          background: 'rgba(255, 255, 255, 0.55)',
+                          padding: '10px 12px',
+                          borderRadius: '12px',
+                          border: '1px solid var(--rk-line)',
+                        }}
+                      >
+                        Belum ada jadwal baru yang terdaftar. Berikut dokumentasi agenda terakhir yang telah terlaksana:
+                      </p>
+                    )}
+
+                    {displayedEvents.length > 0 ? (
+                      <div>
+                        {displayedEvents.map((ev) => {
+                          const upcoming = isEventUpcoming(ev, todayStr);
+                          return (
+                            <div key={ev.id} className="rk-agenda-mini-item">
+                              <div className="rk-meta-line">
+                                <span>{formatIndonesianDate(ev.date)}</span>
+                                <span>•</span>
+                                <span>{upcoming ? 'Mendatang' : 'Terlaksana'}</span>
+                              </div>
+                              <h3>{ev.title}</h3>
+                              <p>
+                                {ev.location || 'Kabupaten Banyumas'}
+                                {ev.time ? ` • ${ev.time}` : ''}
+                              </p>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <p style={{ fontSize: '0.9rem' }}>Belum ada agenda yang tercatat.</p>
+                    )}
+
+                    <div style={{ paddingTop: '4px' }}>
+                      <Link to="/events" className="rk-card-link">
+                        <span>Lihat seluruh agenda</span>
+                        <span aria-hidden="true">→</span>
+                      </Link>
+                    </div>
+                  </SoftCard>
+                </div>
+              )}
+            </div>
+          </Container>
+        </section>
+      )}
+
+      {/* 4. MENGENAL ROKABA & STATISTIK VALID */}
+      {(isVisible('about') || isVisible('stats')) && (
+        <section className="rk-section" aria-labelledby="rk-about-home-heading">
+          <Container>
+            <SoftCard style={{ padding: 'clamp(24px, 3.5vw, 36px)' }}>
+              <div className="rk-split-60-40" style={{ alignItems: 'center' }}>
+                <div>
+                  <div className="rk-eyebrow">
+                    <span className="rk-eyebrow-bar" aria-hidden="true" />
+                    <span>{aboutData.tag || aboutData.eyebrow || 'Tentang Kami'}</span>
+                  </div>
+                  <h2 id="rk-about-home-heading" className="rk-section-title">
+                    {aboutData.title || 'Mengenal Lebih Dekat ROKABA'}
+                  </h2>
+                  {(aboutData.quoteText || aboutData.quote) && (
+                    <blockquote
+                      style={{
+                        margin: '14px 0',
+                        paddingLeft: '14px',
+                        borderLeft: '3px solid var(--rk-brass)',
+                        color: 'var(--rk-ink)',
+                        fontWeight: 500,
+                        fontSize: '0.96rem',
+                      }}
+                    >
+                      {aboutData.quoteText || `“${aboutData.quote}”`}
+                    </blockquote>
+                  )}
+                  <p style={{ marginTop: '10px', maxWidth: '62ch' }}>
+                    {aboutData.lead ||
+                      aboutData.paragraph1 ||
+                      aboutData.description ||
+                      'ROHIS Kabupaten Banyumas (ROKABA) hadir sebagai rumah bersama bagi seluruh ekstrakurikuler Kerohanian Islam tingkat SMA, SMK, dan MA di Banyumas.'}
+                  </p>
+                  <div style={{ marginTop: '18px', display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+                    <Link to="/about" className="rk-card-link">
+                      <span>Pelajari profil & sejarah lengkap</span>
+                      <span aria-hidden="true">→</span>
+                    </Link>
+                  </div>
+                </div>
+
+                {isVisible('stats') && (
+                  <div className="rk-grid-2">
+                    {statsItems.map((stat, idx) => (
+                      <div key={idx} className="rk-inset-panel" style={{ padding: '18px' }}>
+                        <div
+                          style={{
+                            fontSize: 'clamp(1.5rem, 2.4vw, 2rem)',
+                            fontWeight: 700,
+                            color: 'var(--rk-pine)',
+                            letterSpacing: '-0.03em',
+                          }}
+                        >
+                          {stat.value}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: '0.84rem',
+                            color: 'var(--rk-muted)',
+                            marginTop: '4px',
+                            lineHeight: 1.4,
+                          }}
+                        >
+                          {stat.label}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </SoftCard>
+          </Container>
+        </section>
+      )}
+
+      {/* 5. SAMBUTAN PIMPINAN */}
+      {isVisible('sambutan') && (
+        <section className="rk-section" aria-labelledby="rk-leaders-heading">
+          <Container>
+            <div className="rk-section-head">
+              <div>
+                <div className="rk-eyebrow">
+                  <span className="rk-eyebrow-bar" aria-hidden="true" />
+                  <span>{sambutanData.tag || 'Sambutan Pimpinan'}</span>
+                </div>
+                <h2 id="rk-leaders-heading" className="rk-section-title">
+                  {sambutanData.titleLine1
+                    ? `${sambutanData.titleLine1} ${sambutanData.titleLine2 || ''}`.trim()
+                    : 'Sambutan Pimpinan ROKABA'}
+                </h2>
+              </div>
+              <Link to="/schools#pengurus" className="rk-card-link">
+                <span>Struktur pengurus</span>
+                <span aria-hidden="true">→</span>
+              </Link>
+            </div>
+
+            <div className="rk-split-60-40">
+              <SoftCard>
+                {sambutanData.greeting && (
+                  <p style={{ fontWeight: 600, color: 'var(--rk-ink)', marginBottom: '10px' }}>
+                    {sambutanData.greeting}
+                  </p>
+                )}
+                <p style={{ marginBottom: '12px' }}>
+                  {sambutanData.paragraph1 ||
+                    'Selamat datang di portal resmi ROHIS Kabupaten Banyumas (ROKABA). Website ini kami hadirkan sebagai sarana informasi, komunikasi, dan publikasi kegiatan dakwah serta pengembangan potensi pelajar se-Kabupaten Banyumas.'}
+                </p>
+                {sambutanData.paragraph2 && <p>{sambutanData.paragraph2}</p>}
+              </SoftCard>
+
+              <div style={{ display: 'grid', gap: '12px' }}>
+                {topLeaders.map((leader) => (
+                  <SoftCard key={leader.id} as="article" style={{ padding: '16px 20px' }}>
+                    <span
+                      style={{
+                        fontSize: '0.76rem',
+                        fontWeight: 700,
+                        color: 'var(--rk-brass-text)',
+                      }}
+                    >
+                      {leader.role}
+                    </span>
+                    <h3 style={{ fontSize: '1.02rem', marginTop: '2px' }}>{leader.name}</h3>
+                    <p style={{ fontSize: '0.84rem' }}>{leader.school}</p>
+                  </SoftCard>
+                ))}
+              </div>
+            </div>
+          </Container>
+        </section>
+      )}
+
+      {/* 6. JEJAK PERJALANAN (TIMELINE) */}
+      {isVisible('timeline') && timelineSteps.length > 0 && (
+        <section className="rk-section" aria-labelledby="rk-timeline-heading">
+          <Container>
+            <div className="rk-section-head">
+              <div>
+                <div className="rk-eyebrow">
+                  <span className="rk-eyebrow-bar" aria-hidden="true" />
+                  <span>Jejak Perjalanan</span>
+                </div>
+                <h2 id="rk-timeline-heading" className="rk-section-title">
+                  Langkah Demi Langkah Membangun Ukhuwah
+                </h2>
+              </div>
+            </div>
+
+            <div className="rk-grid-4">
+              {timelineSteps.slice(0, 4).map((step, idx) => (
+                <SoftCard key={step.id || idx} as="article">
+                  <span className="rk-badge rk-badge--brass">{step.year}</span>
+                  <h3 style={{ marginTop: '10px', marginBottom: '6px', fontSize: '1.05rem' }}>
+                    {step.title}
+                  </h3>
+                  <p style={{ fontSize: '0.88rem' }}>{step.desc || step.description}</p>
+                </SoftCard>
+              ))}
+            </div>
+          </Container>
+        </section>
+      )}
+
+      {/* 7. AJAKAN PENUTUP */}
+      {isVisible('closing') && (
+        <section className="rk-section" aria-labelledby="rk-closing-heading">
+          <Container>
+            <SoftCard
+              style={{
+                padding: 'clamp(24px, 3.5vw, 36px)',
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '20px',
+              }}
+            >
+              <div style={{ maxWidth: '620px' }}>
+                <div className="rk-eyebrow">
+                  <span className="rk-eyebrow-bar" aria-hidden="true" />
+                  <span>{closingData.tag || 'Mari Berkolaborasi'}</span>
+                </div>
+                <h2 id="rk-closing-heading" className="rk-section-title">
+                  {closingData.headline || closingData.title || 'Mari Bertumbuh Bersama dalam Kebaikan'}
+                </h2>
+                <p style={{ marginTop: '8px' }}>
+                  {closingData.lead ||
+                    closingData.subtitle ||
+                    'Jadilah bagian dari perjalanan dakwah pelajar yang ramah, inklusif, dan berdampak nyata bagi sekolah serta masyarakat Kabupaten Banyumas.'}
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+                <Link to="/contact" className="rk-btn-primary">
+                  Hubungi Kami
+                </Link>
+                <Link to="/schools" className="rk-btn-secondary">
+                  Lihat Jaringan Sekolah
+                </Link>
+              </div>
+            </SoftCard>
+          </Container>
+        </section>
+      )}
+    </div>
+  );
 }

@@ -135,6 +135,22 @@ export function parseImageUrl(url) {
 }
 
 /**
+ * Alias for parseImageUrl for convenient media resolution across pages
+ */
+export function getMediaUrl(url) {
+  return parseImageUrl(url);
+}
+
+/**
+ * Resolves a video URL (YouTube, Google Drive, TikTok, Instagram) into an embeddable iframe URL
+ */
+export function getVideoEmbedUrl(url) {
+  if (!url || typeof url !== 'string') return '';
+  const parsed = parseMediaItem({ videoUrl: url, type: 'video' });
+  return parsed.embedUrl || '';
+}
+
+/**
  * Comprehensive parser for Gallery and Media items
  * Supports: Google Drive (Photos & Videos), TikTok, Instagram, YouTube, and Direct media.
  */

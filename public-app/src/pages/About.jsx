@@ -1,1374 +1,378 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useData } from '../context/DataContext';
 import {
-  Users, Target, Heart, Award, BookOpen, Star,
-  GraduationCap, ExternalLink, ShieldCheck,
-  Flame, Megaphone, Newspaper, Coins, Sparkles,
-  ArrowRight, CheckCircle2, School, X, ChevronLeft, ChevronRight
-} from 'lucide-react';
+  Container,
+  PageHeader,
+  SoftCard,
+  PhotoFrame,
+  AccessibleDialog,
+  ROKABA_REAL_PHOTOS,
+  normalizeTeamData,
+} from '../components/ui/SoftUI';
 
-/**
- * Authentic SVG Instagram Icon (FEATHER / LUCIDE STYLE)
- */
-function InstagramIcon({ size = 15, className = '', style = {} }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      style={{ display: 'inline-block', verticalAlign: 'middle', flexShrink: 0, ...style }}
-    >
-      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-    </svg>
-  );
-}
-
-/**
- * 5 Division Showcase Data (Matches Exact Reference)
- */
-const DIVISION_SHOWCASE = [
+const VALUES = [
   {
-    num: '01',
-    key: 'SDM',
-    title: 'DIVISI SDM (SUMBER DAYA MANUSIA)',
-    tag: 'DIVISI SDM',
-    desc: 'Fokus pada pembinaan karakter, peningkatan kapasitas kader, regenerasi kepengurusan, serta penguatan soliditas anggota ROHIS se-Kabupaten Banyumas.',
-    icon: Users,
-    detailTitle: 'Divisi SDM (Sumber Daya Manusia)',
-    detailDesc: 'Pusat kaderisasi dan pengembangan kapasitas generasi muda Islam yang membina karakter kepemimpinan, integritas, dan keilmuan pengurus rohis sekolah.',
-    agendas: [
-      'Latihan Dasar Kepemimpinan (LDK) ROHIS se-Banyumas',
-      'Mentoring & upgrading berkala kapasitas pengurus',
-      'Regenerasi & estafet kepengurusan terstruktur',
-      'Pembinaan karakter Islami dan spiritual leadership',
-      'Forum silaturahmi kader rohis lintas SMA/SMK/MA',
-    ],
+    title: 'Ukhuwah & Inklusivitas',
+    description:
+      'Merangkul keberagaman latar belakang pelajar SMA, SMK, dan MA se-Kabupaten Banyumas dalam suasana persaudaraan yang hangat.',
   },
   {
-    num: '02',
-    key: 'Dakwah',
-    title: 'DIVISI DAKWAH',
-    tag: 'DIVISI Dakwah',
-    desc: 'Jantung gerakan dakwah Islam yang menyelenggarakan kajian keilmuan, pembinaan ruhiyah, serta syiar Islam yang rahmatan lil \'alamin bagi pelajar dan masyarakat.',
-    icon: Flame,
-    detailTitle: 'Divisi Dakwah',
-    detailDesc: 'Jantung gerakan dakwah Islam yang menyelenggarakan kajian keilmuan, pembinaan ruhiyah, serta syiar Islam yang rahmatan lil \'alamin bagi pelajar dan masyarakat.',
-    agendas: [
-      'Kajian Ahad Pagi rutin se-Kabupaten Banyumas',
-      'Halaqah tarbiyah & bimbingan keislaman mingguan',
-      'Safari Dakwah ke sekolah-sekolah se-Banyumas',
-      'Tabligh Akbar & Dauroh Tahsin Tilawah Al-Qur\'an',
-      'Peringatan Hari Besar Islam (PHBI) bersama pelajar',
-    ],
+    title: 'Adab & Keteladanan',
+    description:
+      'Menempatkan akhlak mulia, rasa hormat kepada guru, dan semangat belajar sebagai fondasi setiap gerak kader ROHIS.',
   },
   {
-    num: '03',
-    key: 'Jurnalistik',
-    title: 'DIVISI JURNALISTIK',
-    tag: 'DIVISI Jurnalistik',
-    desc: 'Mengelola publikasi informasi, dokumentasi kegiatan, buletin dakwah, konten multimedia kreatif, dan syiar digital di era modern.',
-    icon: Newspaper,
-    detailTitle: 'Divisi Jurnalistik',
-    detailDesc: 'Garda terdepan syiar kreatif visual dan literasi digital yang mengemas dakwah Islam dengan bahasa generasi muda yang inspiratif, edukatif, dan segar.',
-    agendas: [
-      'Penerbitan Buletin Dakwah Digital & Majalah Dinding',
-      'Produksi video dakwah kreatif Instagram, TikTok & YouTube',
-      'Liputan fotografi, videografi, dan dokumentasi kegiatan',
-      'Pengelolaan portal website resmi & artikel islami pelajar',
-      'Workshop jurnalistik, desain grafis & multimedia dakwah',
-    ],
-  },
-  {
-    num: '04',
-    key: 'HUMAS',
-    title: 'DIVISI HUMAS (HUBUNGAN MASYARAKAT)',
-    tag: 'DIVISI HUMAS',
-    desc: 'Menjadi jembatan komunikasi, relasi, dan sinergi antara ROHIS sekolah, instansi pemerintah, lembaga keagamaan, serta masyarakat luas.',
-    icon: Megaphone,
-    detailTitle: 'Divisi HUMAS (Hubungan Masyarakat)',
-    detailDesc: 'Penghubung silaturahmi yang mempererat ukhuwah antar-pangkalan sekolah, membangun jejaring instansi dinas & kemenag, dan bakti sosial masyarakat.',
-    agendas: [
-      'Jaringan komunikasi & silaturahmi antar-ROHIS sekolah',
-      'Sinergi kemitraan bersama Kemenag & Dinas Pendidikan',
-      'Aksi kepedulian sosial kemanusiaan & tanggap bencana',
-      'Publikasi hubungan eksternal dan keterbukaan informasi',
-      'Sarasehan & forum temu pembina ROHIS se-Kabupaten Banyumas',
-    ],
-  },
-  {
-    num: '05',
-    key: 'DANUS',
-    title: 'DIVISI DANUS (DANA USAHA)',
-    tag: 'DIVISI DANUS',
-    desc: 'Membangun kemandirian finansial organisasi melalui kegiatan kewirausahaan halal, pengadaan merchandise resmi, kemitraan sponsorship, dan unit usaha produktif.',
-    icon: Coins,
-    detailTitle: 'Divisi DANUS (Dana Usaha)',
-    detailDesc: 'Membangun pilar kemandirian ekonomi dakwah melalui unit usaha kreatif, merchandise resmi, dan kemitraan sponsorship produktif yang halal dan berkah.',
-    agendas: [
-      'Pengadaan atribut resmi & merchandise resmi ROKABA',
-      'Bazar kewirausahaan halal pada perhelatan agenda akbar',
-      'Manajemen kemitraan sponsorship & donasi dakwah',
-      'Pelatihan kewirausahaan mandiri bagi kader pelajar',
-      'Pengelolaan unit dana abadi organisasi secara transparan',
-    ],
+    title: 'Karya & Kolaborasi',
+    description:
+      'Mendorong pelajar menghasilkan program pembinaan, literasi kreatif, dan aksi sosial yang relevan dengan kebutuhan sekolah.',
   },
 ];
 
-
-
 export default function About() {
-  // Card Morphing Expansion State (Option 2 - iOS App Store Style)
-  const [expandedIdx, setExpandedIdx] = useState(null);
-  const [morphPhase, setMorphPhase] = useState('idle'); // 'idle' | 'expanding' | 'expanded' | 'collapsing'
-  const [originRect, setOriginRect] = useState(null);
-  const [isMobile, setIsMobile] = useState(false);
-  const cardRefs = useRef([]);
-  const scrollRef = useRef(null);
+  const { home = {}, team, programs = [] } = useData();
+  const [selectedDivision, setSelectedDivision] = useState(null);
 
-  const activeExpandedItem =
-    expandedIdx !== null ? DIVISION_SHOWCASE[expandedIdx] || null : null;
-  const ActiveExpandedIcon = activeExpandedItem ? activeExpandedItem.icon : null;
+  const { bph, divisions, allMembers } = normalizeTeamData(team);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const timelineSteps = Array.isArray(home?.timeline)
+    ? home.timeline
+    : Array.isArray(home?.timeline?.steps)
+    ? home.timeline.steps
+    : [];
 
-  const openCardExpansion = (idx) => {
-    const cardEl = cardRefs.current[idx];
-    if (!cardEl) return;
+  const rawStats = Array.isArray(home?.stats)
+    ? home.stats
+    : Array.isArray(home?.stats?.items)
+    ? home.stats.items
+    : [];
 
-    // Direct getBoundingClientRect ensures exact coordinate match with 0px jump
-    const rect = cardEl.getBoundingClientRect();
+  const statsItems =
+    rawStats.length > 0
+      ? rawStats.map((s) => ({
+          value: `${s.value}${s.suffix || ''}`,
+          label: s.label,
+        }))
+      : [
+          { value: '15+', label: 'Dari Sekolah Kab. Banyumas' },
+          { value: '53+', label: 'Anggota Aktif' },
+          { value: '7+', label: 'Event Besar' },
+          { value: '2017', label: 'Tahun Berdiri' },
+        ];
 
-    const initialRect = {
-      top: rect.top,
-      left: rect.left,
-      width: rect.width,
-      height: rect.height,
-    };
-
-    setOriginRect(initialRect);
-    setExpandedIdx(idx);
-    setMorphPhase('expanding');
-
-    // Next frames: trigger 'expanded' so CSS transitions smoothly to full view
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setMorphPhase('expanded');
-      });
-    });
-  };
-
-  const closeCardExpansion = () => {
-    if (morphPhase !== 'expanded') return;
-
-    // Recalculate originRect in case window was resized or layout shifted
-    const cardEl = cardRefs.current[expandedIdx];
-    if (cardEl) {
-      const rect = cardEl.getBoundingClientRect();
-      setOriginRect({
-        top: rect.top,
-        left: rect.left,
-        width: rect.width,
-        height: rect.height,
-      });
-    }
-
-    setMorphPhase('collapsing');
-
-    setTimeout(() => {
-      setMorphPhase('idle');
-      setExpandedIdx(null);
-      setOriginRect(null);
-      if (scrollRef.current) {
-        scrollRef.current.scrollTop = 0;
-      }
-    }, 480);
-  };
-
-  const switchDivision = (nextIdx) => {
-    setExpandedIdx(nextIdx);
-    if (cardRefs.current[nextIdx]) {
-      const cardEl = cardRefs.current[nextIdx];
-      const rect = cardEl.getBoundingClientRect();
-      setOriginRect({
-        top: rect.top,
-        left: rect.left,
-        width: rect.width,
-        height: rect.height,
-      });
-    }
-  };
-
-  // Handle ESC key, arrow key navigation, and lock body scroll when card is expanded
-  useEffect(() => {
-    if (morphPhase === 'idle') return;
-
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        closeCardExpansion();
-      } else if (e.key === 'ArrowLeft') {
-        switchDivision(expandedIdx > 0 ? expandedIdx - 1 : DIVISION_SHOWCASE.length - 1);
-      } else if (e.key === 'ArrowRight') {
-        switchDivision(expandedIdx < DIVISION_SHOWCASE.length - 1 ? expandedIdx + 1 : 0);
-      }
-    };
-
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.body.style.overflow = originalOverflow;
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [morphPhase, expandedIdx]);
-
-  // Target geometry for GPU-accelerated card morphing
-  const targetTop = isMobile ? 0 : Math.max(20, typeof window !== 'undefined' ? window.innerHeight * 0.04 : 30);
-  const targetWidth = isMobile
-    ? (typeof window !== 'undefined' ? window.innerWidth : 360)
-    : Math.min(840, typeof window !== 'undefined' ? window.innerWidth - 32 : 840);
-  const targetLeft = isMobile
-    ? 0
-    : Math.max(16, typeof window !== 'undefined' ? (window.innerWidth - targetWidth) / 2 : 16);
-  const targetHeight = isMobile
-    ? (typeof window !== 'undefined' ? window.innerHeight : 640)
-    : Math.min(typeof window !== 'undefined' ? window.innerHeight * 0.92 : 880, 880);
-
-  const scaleX = originRect && targetWidth ? originRect.width / targetWidth : 1;
-  const scaleY = originRect && targetHeight ? originRect.height / targetHeight : 1;
-  const deltaX = originRect ? originRect.left - targetLeft : 0;
-  const deltaY = originRect ? originRect.top - targetTop : 0;
+  const aboutPhoto =
+    home?.about?.photoUrl || home?.hero?.photoUrl || ROKABA_REAL_PHOTOS[1];
 
   return (
-    <div style={{ overflowX: 'clip', width: '100%' }}>
-      {/* ═══ HERO ═══ */}
-      <section
-        style={{
-          background: 'var(--deep-pine)',
-          paddingTop: '8rem',
-          paddingBottom: '4rem',
-          position: 'relative',
-          overflow: 'hidden',
-          width: '100%',
-        }}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'radial-gradient(ellipse at 30% 50%, rgba(16,185,129,0.08) 0%, transparent 50%)',
-            pointerEvents: 'none',
-          }}
-        />
-        <div
-          className="container"
-          style={{
-            maxWidth: 1200,
-            margin: '0 auto',
-            position: 'relative',
-            zIndex: 1,
-          }}
-        >
-          <span className="badge badge-emerald animate-fade-in-up" style={{ marginBottom: '1rem' }}>
-            <BookOpen size={14} /> Tentang ROKABA
-          </span>
-          <h1
-            className="animate-fade-in-up delay-100"
-            style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(2rem, 5vw, 3rem)',
-              fontWeight: 800,
-              color: 'var(--warm-alabaster)',
-              maxWidth: 700,
-              lineHeight: 1.15,
-            }}
-          >
-            Forum Komunikasi Rohis{' '}
-            <span style={{ color: 'var(--emerald-light)' }}>Kabupaten Banyumas</span>
-          </h1>
-          <p
-            className="animate-fade-in-up delay-200"
-            style={{
-              color: 'rgba(245,242,237,0.55)',
-              fontSize: '1.05rem',
-              maxWidth: 600,
-              marginTop: '1.25rem',
-              lineHeight: 1.7,
-            }}
-          >
-            Wadah koordinasi dan sinergi seluruh Rohis SMA/SMK/MA se-Kabupaten Banyumas dalam menjalankan misi dakwah pelajar.
-          </p>
-        </div>
-      </section>
+    <div className="rk-page">
+      <PageHeader
+        breadcrumb={[{ label: 'Beranda', to: '/' }, { label: 'Tentang' }]}
+        title="Mengenal ROKABA"
+        lead="ROHIS Kabupaten Banyumas (ROKABA) adalah wadah silaturahmi, pembinaan karakter, dan kolaborasi pelajar Muslim tingkat SMA, SMK, dan MA se-Kabupaten Banyumas."
+      />
 
-      {/* ═══ SEJARAH & LATAR BELAKANG (Exact Match to Screenshot 2) ═══ */}
-      <section
-        className="section"
-        style={{
-          background: 'var(--deep-pine)',
-          backgroundImage: `
-            radial-gradient(ellipse at 70% 30%, rgba(16,185,129,0.08) 0%, transparent 60%),
-            url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2310B981' stroke-width='0.75' stroke-opacity='0.08'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40 Z'/%3E%3Ccircle cx='40' cy='40' r='18'/%3E%3Ccircle cx='40' cy='40' r='28'/%3E%3Cpath d='M0 0 L80 80 M80 0 L0 80'/%3E%3C/g%3E%3C/svg%3E")
-          `,
-          position: 'relative',
-          overflow: 'hidden',
-          width: '100%',
-          borderTop: '1px solid rgba(255,255,255,0.05)',
-          borderBottom: '1px solid rgba(255,255,255,0.05)',
-        }}
-      >
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
-              gap: 'clamp(1.5rem, 4vw, 3rem)',
-              alignItems: 'center',
-            }}
-          >
-            {/* Left: History Narrative */}
-            <div>
-              <h2
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: 'clamp(2rem, 4vw, 2.75rem)',
-                  fontWeight: 800,
-                  color: 'var(--warm-alabaster)',
-                  marginBottom: '1.75rem',
-                  lineHeight: 1.2,
-                }}
-              >
-                Sejarah & Latar Belakang
+      {/* Intro + Framed Photo */}
+      <section className="rk-section">
+        <Container>
+          <div className="rk-split-50-50" style={{ alignItems: 'center' }}>
+            <SoftCard>
+              <div className="rk-eyebrow">
+                <span className="rk-eyebrow-bar" aria-hidden="true" />
+                <span>Identitas Organisasi</span>
+              </div>
+              <h2 className="rk-section-title" style={{ marginBottom: '12px' }}>
+                {home?.about?.title || 'Rumah tumbuh bersama bagi pengurus ROHIS lintas sekolah.'}
               </h2>
-
-              <p
-                style={{
-                  color: 'rgba(245, 242, 237, 0.72)',
-                  fontSize: '0.96rem',
-                  lineHeight: 1.85,
-                  marginBottom: '1.35rem',
-                }}
-              >
-                Organisasi ROHIS Kabupaten Banyumas didirikan pada tahun 2017 sebagai wadah koordinasi dan silaturahmi antar ROHIS (Rohani Islam) sekolah tingkat SMA/SMK/MA se-Kabupaten Banyumas, Jawa Tengah.
+              <p style={{ marginBottom: '12px' }}>
+                {home?.about?.lead ||
+                  'Berdiri sejak tahun 2017 di Purwokerto, Kabupaten Banyumas, ROKABA mempertemukan para pegiat ekstrakurikuler Kerohanian Islam agar saling menguatkan.'}
+              </p>
+              <p>
+                {home?.about?.paragraph1 ||
+                  'Melalui pertukaran modul pembinaan, pelatihan kepemimpinan, hingga kegiatan syiar bersama, setiap sekolah anggota dapat bertumbuh dan berbagi inspirasi kebaikan.'}
               </p>
 
-              <p
-                style={{
-                  color: 'rgba(245, 242, 237, 0.72)',
-                  fontSize: '0.96rem',
-                  lineHeight: 1.85,
-                  marginBottom: '1.35rem',
-                }}
-              >
-                Berawal dari inisiatif beberapa pengurus ROHIS sekolah yang merasa perlu adanya sinergi dan kolaborasi lintas sekolah, organisasi ini terus berkembang hingga kini menjadi pusat dakwah pemuda Islam yang menaungi lebih dari 15 sekolah di Kabupaten Banyumas dengan puluhan kader dakwah aktif.
-              </p>
-
-              <p
-                style={{
-                  color: 'rgba(245, 242, 237, 0.72)',
-                  fontSize: '0.96rem',
-                  lineHeight: 1.85,
-                }}
-              >
-                Selain mengkoordinasikan kegiatan antar ROHIS, organisasi ini juga menyelenggarakan program-program dakwah, pendidikan, sosial, dan pengembangan kapasitas yang terbuka untuk seluruh pemuda Muslim di Kabupaten Banyumas.
-              </p>
-            </div>
-
-            {/* Right: 3 Vertical Stat Cards */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              {[
-                { number: '2017', label: 'Tahun Berdiri' },
-                { number: '15+', label: 'Dari Sekolah Kab. Banyumas' },
-                { number: '53+', label: 'Anggota Aktif' },
-              ].map((stat, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    background: 'rgba(10, 32, 24, 0.75)',
-                    backdropFilter: 'blur(16px)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    borderRadius: '20px',
-                    padding: '1.85rem 2rem',
-                    textAlign: 'center',
-                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
-                    transition: 'transform 0.3s ease, border-color 0.3s ease',
-                  }}
-                  onMouseEnter={e => {
-                    e.currentTarget.style.transform = 'translateY(-3px)';
-                    e.currentTarget.style.borderColor = 'rgba(181, 141, 79, 0.4)';
-                  }}
-                  onMouseLeave={e => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
-                  }}
-                >
-                  <div
-                    style={{
-                      fontFamily: 'var(--font-heading)',
-                      fontSize: 'clamp(2.2rem, 3.5vw, 2.75rem)',
-                      fontWeight: 800,
-                      color: '#E6C587',
-                      lineHeight: 1,
-                      letterSpacing: '-0.02em',
-                    }}
-                  >
-                    {stat.number}
+              <div className="rk-grid-2" style={{ marginTop: '20px' }}>
+                {statsItems.map((item, idx) => (
+                  <div key={idx} className="rk-inset-panel" style={{ padding: '14px 16px' }}>
+                    <strong
+                      style={{
+                        display: 'block',
+                        fontSize: '1.35rem',
+                        color: 'var(--rk-pine)',
+                        letterSpacing: '-0.02em',
+                      }}
+                    >
+                      {item.value}
+                    </strong>
+                    <span style={{ fontSize: '0.82rem', color: 'var(--rk-muted)' }}>
+                      {item.label}
+                    </span>
                   </div>
-                  <div
-                    style={{
-                      color: 'rgba(245, 242, 237, 0.65)',
-                      fontSize: '0.86rem',
-                      marginTop: '0.5rem',
-                      fontWeight: 500,
-                    }}
-                  >
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </SoftCard>
+
+            <PhotoFrame
+              src={aboutPhoto}
+              alt="Dokumentasi Musyawarah Kerja dan Kebersamaan ROHIS Kabupaten Banyumas"
+              aspect="16/10"
+              captionTitle={home?.about?.photoTag || 'Dokumentasi Kegiatan ROKABA'}
+              captionSub="Sinergi pelajar SMA, SMK, dan MA se-Kabupaten Banyumas"
+            />
           </div>
-        </div>
+        </Container>
       </section>
 
-      {/* ═══ VISION & MISSION ═══ */}
-      <section className="section" style={{ background: 'var(--warm-alabaster)' }}>
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
-              gap: '1.5rem',
-            }}
-          >
-            <div
-              className="animate-fade-in-up"
-              style={{
-                background: 'white',
-                borderRadius: 'var(--radius-xl)',
-                padding: 'clamp(1.5rem, 4vw, 2.5rem)',
-                border: '1px solid rgba(13,43,34,0.06)',
-                boxShadow: 'var(--shadow-sm)',
-              }}
-            >
-              <div
-                style={{
-                  width: 56,
-                  height: 56,
-                  borderRadius: '16px',
-                  background: 'var(--emerald-glass)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginBottom: '1.5rem',
-                }}
-              >
-                <Target size={26} style={{ color: 'var(--emerald)' }} />
-              </div>
-              <h3 style={{ fontSize: '1.35rem', marginBottom: '1rem' }}>Visi</h3>
-              <p style={{ color: 'rgba(13,43,34,0.6)', lineHeight: 1.8, fontSize: '0.95rem' }}>
-                Menjadi forum dakwah pelajar paling modern, inklusif, dan kredibel di Kabupaten Banyumas yang mengedepankan nilai Islam Rahmatan Lil Alamin.
+      {/* Visi & Misi */}
+      <section className="rk-section" aria-labelledby="rk-visi-misi-heading">
+        <Container>
+          <div className="rk-section-head">
+            <div>
+              <h2 id="rk-visi-misi-heading" className="rk-section-title">
+                Visi & Misi
+              </h2>
+              <p className="rk-section-subtitle">
+                Arah gerak pembinaan dan pelayanan pelajar Muslim di Kabupaten Banyumas.
               </p>
             </div>
+          </div>
 
-            <div
-              className="animate-fade-in-up delay-200"
-              style={{
-                background: 'white',
-                borderRadius: 'var(--radius-xl)',
-                padding: 'clamp(1.5rem, 4vw, 2.5rem)',
-                border: '1px solid rgba(13,43,34,0.06)',
-                boxShadow: 'var(--shadow-sm)',
-              }}
-            >
-              <div
+          <div className="rk-split-50-50">
+            <SoftCard as="article">
+              <span className="rk-badge rk-badge--brass">Visi ROKABA</span>
+              <h3 style={{ marginTop: '12px', marginBottom: '10px', fontSize: '1.25rem' }}>
+                Terwujudnya pelajar Muslim Banyumas yang berakhlak mulia, berdaya kepemimpinan, dan kolaboratif dalam kebaikan.
+              </h3>
+              <p>
+                Menjadikan ROHIS di setiap sekolah sebagai ruang yang ramah, relevan dengan perkembangan zaman, serta mampu menghadirkan keteladanan positif di lingkungan teman sebaya.
+              </p>
+            </SoftCard>
+
+            <SoftCard as="article">
+              <span className="rk-badge rk-badge--pine">Misi Utama</span>
+              <ul
                 style={{
-                  width: 56,
-                  height: 56,
-                  borderRadius: '16px',
-                  background: 'rgba(181,141,79,0.12)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginBottom: '1.5rem',
+                  margin: '12px 0 0',
+                  paddingLeft: '18px',
+                  display: 'grid',
+                  gap: '10px',
+                  color: 'var(--rk-muted)',
+                  fontSize: '0.94rem',
                 }}
               >
-                <Star size={26} style={{ color: 'var(--antique-brass)' }} />
-              </div>
-              <h3 style={{ fontSize: '1.35rem', marginBottom: '1rem' }}>Misi</h3>
-              <ul style={{ color: 'rgba(13,43,34,0.6)', lineHeight: 2, fontSize: '0.95rem', paddingLeft: '1.25rem' }}>
-                <li>Menyatukan dan mengkoordinasikan seluruh Rohis se-Banyumas</li>
-                <li>Mengembangkan literasi Islam moderat untuk pelajar</li>
-                <li>Memfasilitasi pengembangan kader dakwah yang berkualitas</li>
-                <li>Menyelenggarakan kegiatan syiar yang kreatif dan berdampak</li>
-                <li>Memanfaatkan teknologi digital untuk dakwah</li>
+                <li>
+                  Mempererat ukhuwah dan jejaring komunikasi antar-pengurus ROHIS SMA, SMK, dan MA se-Kabupaten Banyumas.
+                </li>
+                <li>
+                  Menyelenggarakan kaderisasi, pelatihan manajemen organisasi, dan pendampingan keislaman yang sejuk serta terukur.
+                </li>
+                <li>
+                  Mengembangkan literasi digital, jurnalistik pelajar, dan media syiar kreatif yang menginspirasi.
+                </li>
               </ul>
-            </div>
+            </SoftCard>
           </div>
-        </div>
+        </Container>
       </section>
 
-      {/* ═══ VALUES ═══ */}
-      <section className="section section-pine">
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div className="section-header">
-            <h2>Nilai-Nilai Kami</h2>
-            <div className="section-divider" />
+      {/* Nilai-nilai & Jejak Perjalanan */}
+      <section className="rk-section" aria-labelledby="rk-values-heading">
+        <Container>
+          <div className="rk-section-head">
+            <h2 id="rk-values-heading" className="rk-section-title">
+              Nilai yang kami jaga
+            </h2>
           </div>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))',
-              gap: '1.25rem',
-            }}
-          >
-            {[
-              { icon: Heart, title: 'Rahmatan Lil Alamin', desc: 'Islam yang penuh kasih sayang dan membawa manfaat untuk semua.' },
-              { icon: Users, title: 'Ukhuwah', desc: 'Persaudaraan yang erat antar sesama kader rohis.' },
-              { icon: Award, title: 'Keunggulan', desc: 'Selalu berusaha menjadi yang terbaik dalam dakwah dan ilmu.' },
-              { icon: BookOpen, title: 'Literasi', desc: 'Mengutamakan ilmu dan wawasan sebagai bekal dakwah.' },
-            ].map((value, i) => (
-              <div
-                key={i}
-                className="animate-fade-in-up"
-                style={{
-                  animationDelay: `${i * 100}ms`,
-                  background: 'rgba(255,255,255,0.04)',
-                  backdropFilter: 'blur(12px)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  borderRadius: 'var(--radius-xl)',
-                  padding: '2rem',
-                  textAlign: 'center',
-                }}
-              >
-                <div
-                  style={{
-                    width: 48,
-                    height: 48,
-                    borderRadius: '14px',
-                    background: 'linear-gradient(135deg, var(--emerald), var(--emerald-dark))',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '0 auto 1.25rem',
-                    boxShadow: 'var(--shadow-emerald)',
-                  }}
-                >
-                  <value.icon size={22} color="white" />
-                </div>
-                <h4 style={{ color: 'var(--warm-alabaster)', marginBottom: '0.5rem', fontSize: '1.05rem' }}>{value.title}</h4>
-                <p style={{ color: 'rgba(245,242,237,0.5)', fontSize: '0.85rem', lineHeight: 1.6 }}>{value.desc}</p>
-              </div>
+
+          <div className="rk-grid-3">
+            {VALUES.map((val) => (
+              <SoftCard key={val.title} as="article">
+                <h3 style={{ marginBottom: '8px' }}>{val.title}</h3>
+                <p>{val.description}</p>
+              </SoftCard>
             ))}
           </div>
-        </div>
+
+          {timelineSteps.length > 0 && (
+            <div style={{ marginTop: '36px' }}>
+              <div className="rk-section-head">
+                <h2 className="rk-section-title">Sejarah & jejak perjalanan</h2>
+              </div>
+              <div className="rk-grid-4">
+                {timelineSteps.slice(0, 4).map((step, idx) => (
+                  <SoftCard key={step.id || idx} as="article">
+                    <span className="rk-badge rk-badge--brass">{step.year}</span>
+                    <h3 style={{ marginTop: '10px', marginBottom: '6px', fontSize: '1.05rem' }}>
+                      {step.title}
+                    </h3>
+                    <p style={{ fontSize: '0.88rem' }}>{step.desc || step.description}</p>
+                  </SoftCard>
+                ))}
+              </div>
+            </div>
+          )}
+        </Container>
       </section>
 
-      {/* ═══ 5 DIVISI PROGRAM KERJA DENGAN MODAL DETAIL INTERAKTIF ═══ */}
-      <section
-        className="section"
-        id="program-divisi"
-        style={{
-          background: 'var(--deep-pine)',
-          backgroundImage: `
-            radial-gradient(ellipse at 30% 70%, rgba(16,185,129,0.06) 0%, transparent 65%),
-            url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2310B981' stroke-width='0.75' stroke-opacity='0.08'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40 Z'/%3E%3Ccircle cx='40' cy='40' r='18'/%3E%3Ccircle cx='40' cy='40' r='28'/%3E%3Cpath d='M0 0 L80 80 M80 0 L0 80'/%3E%3C/g%3E%3C/svg%3E")
-          `,
-          borderTop: '1px solid rgba(255,255,255,0.06)',
-          position: 'relative',
-          overflow: 'hidden',
-          width: '100%',
-        }}
-      >
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div className="section-header" style={{ marginBottom: '2.5rem' }}>
-            <span className="badge badge-emerald" style={{ marginBottom: '0.75rem' }}>
-              <Sparkles size={14} /> 5 Pilar Gerakan
-            </span>
-            <h2 style={{ color: 'var(--warm-alabaster)' }}>Fokus & Program Divisi</h2>
-            <div className="section-divider" />
-            <p style={{ color: 'rgba(245,242,237,0.6)' }}>
-              5 divisi utama penggerak dakwah, kaderisasi kepemimpinan, dan syiar pelajar Islam se-Kabupaten Banyumas.
-            </p>
+      {/* Struktur Kepengurusan Ringkas (BPH + 5 Divisi) */}
+      <section className="rk-section" aria-labelledby="rk-structure-heading">
+        <Container>
+          <div className="rk-section-head">
+            <div>
+              <h2 id="rk-structure-heading" className="rk-section-title">
+                Struktur kepengurusan
+              </h2>
+              <p className="rk-section-subtitle">
+                Badan Pengurus Harian dan 5 bidang gerak ROKABA periode berjalan.
+              </p>
+            </div>
+            <Link to="/schools#pengurus" className="rk-card-link">
+              <span>Lihat direktori lengkap ({allMembers.length} pengurus)</span>
+              <span aria-hidden="true">→</span>
+            </Link>
           </div>
 
-          {/* 5 Cards Grid */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))',
-              gap: '1.25rem',
-              width: '100%',
-              boxSizing: 'border-box',
-            }}
-          >
-            {DIVISION_SHOWCASE.map((item, idx) => {
-              const ItemIcon = item.icon;
-              const isThisCardExpanded = expandedIdx === idx && morphPhase !== 'idle';
+          {/* BPH Strip */}
+          {bph.length > 0 && (
+            <div className="rk-grid-4" style={{ marginBottom: '24px' }}>
+              {bph.slice(0, 8).map((member) => (
+                <SoftCard key={member.id} as="article" style={{ padding: '18px' }}>
+                  <span
+                    style={{
+                      fontSize: '0.76rem',
+                      fontWeight: 700,
+                      color: 'var(--rk-brass-text)',
+                    }}
+                  >
+                    {member.role}
+                  </span>
+                  <h3 style={{ fontSize: '1rem', marginTop: '4px', marginBottom: '4px' }}>
+                    {member.name}
+                  </h3>
+                  <p style={{ fontSize: '0.84rem' }}>{member.school}</p>
+                </SoftCard>
+              ))}
+            </div>
+          )}
+
+          {/* 5 Divisi */}
+          <div className="rk-grid-3">
+            {programs.map((prog) => {
+              const matchedDiv = divisions.find(
+                (d) =>
+                  String(d.shortName || '').toLowerCase() ===
+                    String(prog.division || '').toLowerCase() ||
+                  String(d.name || '').toLowerCase() ===
+                    String(prog.title || '').toLowerCase()
+              );
+              const divMembers = matchedDiv?.members || [];
+              const agendas = Array.isArray(prog.details)
+                ? prog.details
+                : Array.isArray(prog.agendas)
+                ? prog.agendas
+                : [];
 
               return (
-                <div
-                  key={item.num}
-                  ref={(el) => (cardRefs.current[idx] = el)}
-                  onClick={() => openCardExpansion(idx)}
-                  role="button"
-                  tabIndex={0}
-                  className="division-interactive-card"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      openCardExpansion(idx);
-                    }
-                  }}
+                <SoftCard
+                  key={prog.id}
+                  as="article"
+                  interactive
                   style={{
-                    opacity: isThisCardExpanded ? 0 : 1,
-                    visibility: isThisCardExpanded ? 'hidden' : 'visible',
-                    pointerEvents: isThisCardExpanded ? 'none' : 'auto',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    gap: '16px',
                   }}
                 >
-                  {/* Top Bar: Number, Tag, & Icon */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      marginBottom: '1rem',
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                      <span
-                        style={{
-                          fontFamily: 'var(--font-heading)',
-                          fontSize: '1.75rem',
-                          fontWeight: 800,
-                          color: '#DFBF73',
-                          lineHeight: 1,
-                        }}
-                      >
-                        {item.num}
-                      </span>
-                      <span
-                        style={{
-                          fontSize: '0.72rem',
-                          color: '#E6C587',
-                          fontWeight: 700,
-                          letterSpacing: '0.05em',
-                          textTransform: 'uppercase',
-                          background: 'rgba(200, 168, 91, 0.12)',
-                          padding: '0.2rem 0.55rem',
-                          borderRadius: '6px',
-                          border: '1px solid rgba(200, 168, 91, 0.25)',
-                        }}
-                      >
-                        {item.tag}
-                      </span>
+                  <div>
+                    <div className="rk-meta-line">
+                      <span className="rk-badge">Bidang {prog.division || 'Gerak'}</span>
+                      <span>•</span>
+                      <span>{divMembers.length} pengurus</span>
                     </div>
-
-                    <div
-                      style={{
-                        width: 44,
-                        height: 44,
-                        borderRadius: '14px',
-                        background: 'rgba(16, 185, 129, 0.12)',
-                        border: '1px solid rgba(16, 185, 129, 0.25)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'var(--emerald-light)',
-                        flexShrink: 0,
-                      }}
-                    >
-                      <ItemIcon size={22} />
-                    </div>
+                    <h3 style={{ marginTop: '10px', marginBottom: '8px' }}>{prog.title}</h3>
+                    <p style={{ fontSize: '0.9rem' }}>{prog.description}</p>
                   </div>
 
-                  {/* Division Title */}
-                  <h3
+                  <button
+                    type="button"
+                    className="rk-card-link"
+                    onClick={() =>
+                      setSelectedDivision({
+                        ...prog,
+                        agendas,
+                        members: divMembers,
+                      })
+                    }
                     style={{
-                      fontFamily: 'var(--font-heading)',
-                      fontSize: '1.15rem',
-                      fontWeight: 700,
-                      color: 'var(--warm-alabaster)',
-                      margin: '0 0 0.5rem 0',
-                      lineHeight: 1.35,
+                      background: 'none',
+                      border: 'none',
+                      padding: 0,
+                      cursor: 'pointer',
+                      textAlign: 'left',
                     }}
                   >
-                    {item.detailTitle}
-                  </h3>
-
-                  {/* Short Description */}
-                  <p
-                    style={{
-                      fontSize: '0.85rem',
-                      color: 'rgba(247, 245, 240, 0.68)',
-                      lineHeight: 1.6,
-                      margin: '0 0 1rem 0',
-                      flexGrow: 1,
-                    }}
-                  >
-                    {item.desc}
-                  </p>
-
-                  {/* Highlights (Preview 2 items) */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.4rem',
-                      marginBottom: '1.25rem',
-                      padding: '0.65rem 0.85rem',
-                      borderRadius: '12px',
-                      background: 'rgba(0, 0, 0, 0.2)',
-                      border: '1px solid rgba(255, 255, 255, 0.05)',
-                    }}
-                  >
-                    {item.agendas.slice(0, 2).map((agenda, i) => (
-                      <div
-                        key={i}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.5rem',
-                          fontSize: '0.78rem',
-                          color: 'rgba(247, 245, 240, 0.82)',
-                        }}
-                      >
-                        <CheckCircle2 size={13} style={{ color: 'var(--emerald)', flexShrink: 0 }} />
-                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          {agenda}
-                        </span>
-                      </div>
-                    ))}
-                    {item.agendas.length > 2 && (
-                      <span style={{ fontSize: '0.72rem', color: '#DFBF73', fontWeight: 600, paddingLeft: '1.3rem' }}>
-                        +{item.agendas.length - 2} program lainnya...
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Interactive Action Prompt */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      paddingTop: '0.85rem',
-                      borderTop: '1px solid rgba(255, 255, 255, 0.06)',
-                      color: '#DFBF73',
-                      fontSize: '0.82rem',
-                      fontWeight: 600,
-                    }}
-                  >
-                    <span>Buka Detail & Program</span>
-                    <div
-                      className="division-arrow-circle"
-                      style={{
-                        width: 28,
-                        height: 28,
-                        borderRadius: '50%',
-                        background: 'rgba(200, 168, 91, 0.15)',
-                        border: '1px solid rgba(200, 168, 91, 0.3)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        transition: 'transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), background 0.3s ease, border-color 0.3s ease',
-                      }}
-                    >
-                      <ArrowRight size={14} />
-                    </div>
-                  </div>
-                </div>
+                    <span>Lihat program & anggota divisi</span>
+                    <span aria-hidden="true">→</span>
+                  </button>
+                </SoftCard>
               );
             })}
           </div>
-        </div>
+        </Container>
+      </section>
 
-        {/* ═══ iOS APP STORE STYLE CARD MORPHING EXPANSION (OPTION 2) ═══ */}
-        {expandedIdx !== null && originRect && activeExpandedItem && (
-          <div className="morph-card-overlay">
-            {/* Backdrop Blur */}
-            <div
-              className={`morph-backdrop ${morphPhase === 'expanded' ? 'is-active' : ''} ${morphPhase === 'collapsing' ? 'is-collapsing-backdrop' : ''}`}
-              onClick={closeCardExpansion}
-            />
+      <AccessibleDialog
+        open={Boolean(selectedDivision)}
+        onClose={() => setSelectedDivision(null)}
+        eyebrow={`Bidang ${selectedDivision?.division || 'ROKABA'}`}
+        title={selectedDivision?.title || ''}
+      >
+        {selectedDivision && (
+          <div style={{ display: 'grid', gap: '18px' }}>
+            <p>{selectedDivision.description}</p>
 
-            {/* The Morphing Card Sheet */}
-            <div
-              className={`morph-card-sheet ${morphPhase === 'expanded' ? 'is-expanded' : ''} ${
-                morphPhase === 'collapsing' ? 'is-collapsing' : ''
-              }`}
-              style={{
-                top:
-                  morphPhase === 'expanded'
-                    ? `${targetTop}px`
-                    : `${originRect ? originRect.top : targetTop}px`,
-                left:
-                  morphPhase === 'expanded'
-                    ? `${targetLeft}px`
-                    : `${originRect ? originRect.left : targetLeft}px`,
-                width:
-                  morphPhase === 'expanded'
-                    ? `${targetWidth}px`
-                    : `${originRect ? originRect.width : targetWidth}px`,
-                height:
-                  morphPhase === 'expanded'
-                    ? `${targetHeight}px`
-                    : `${originRect ? originRect.height : targetHeight}px`,
-                borderRadius:
-                  morphPhase === 'expanded'
-                    ? isMobile
-                      ? '0px'
-                      : '24px'
-                    : '20px',
-                transition:
-                  morphPhase === 'expanding'
-                    ? 'none'
-                    : undefined,
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Motion Blur Overlay (Covers the morphing velocity smoothly) */}
-              <div className="morph-motion-blur-overlay" aria-hidden="true">
-                <div className="morph-motion-streak" />
-              </div>
-
-              {/* Scrollable Container */}
-              <div ref={scrollRef} className="morph-card-scrollable">
-                {/* Symmetrical Sticky Header (Pins smoothly with 0 layout shift) */}
-                <div
-                  className="morph-header-bar"
-                  style={{
-                    padding:
-                      morphPhase === 'collapsing'
-                        ? 'clamp(1.2rem, 3vw, 1.6rem) clamp(1.2rem, 3vw, 1.6rem) 0 clamp(1.2rem, 3vw, 1.6rem)'
-                        : 'clamp(1.2rem, 3vw, 1.6rem) clamp(1.2rem, 3vw, 1.6rem) 0.75rem clamp(1.2rem, 3vw, 1.6rem)',
-                    borderBottom:
-                      morphPhase === 'collapsing'
-                        ? '1px solid transparent'
-                        : '1px solid rgba(255, 255, 255, 0.08)',
-                    background:
-                      morphPhase === 'collapsing'
-                        ? 'transparent'
-                        : 'linear-gradient(180deg, #0D2319 0%, #0D2319 88%, rgba(13, 35, 25, 0.95) 100%)',
-                    position: 'sticky',
-                    top: 0,
-                    zIndex: 20,
-                    transition:
-                      'padding 0.50s cubic-bezier(0.32, 0.72, 0, 1), border-color 0.40s ease, background 0.40s ease',
-                  }}
-                >
-                  {/* Floating Close Button in top right (prevents icon displacement) */}
-                  <button
-                    type="button"
-                    className="morph-close-btn"
-                    onClick={closeCardExpansion}
-                    aria-label="Tutup lembar divisi"
-                  >
-                    <X size={20} />
-                  </button>
-
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      marginBottom: '0.85rem',
-                      paddingRight: morphPhase === 'expanded' ? '2.5rem' : '0',
-                      transition: 'padding-right 0.3s ease',
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                      <span
-                        style={{
-                          fontFamily: 'var(--font-heading)',
-                          fontSize: '1.75rem',
-                          fontWeight: 800,
-                          color: '#DFBF73',
-                          lineHeight: 1,
-                        }}
-                      >
-                        {activeExpandedItem.num}
-                      </span>
-                      <span
-                        style={{
-                          fontSize: '0.74rem',
-                          color: '#E6C587',
-                          fontWeight: 700,
-                          letterSpacing: '0.05em',
-                          textTransform: 'uppercase',
-                          background: 'rgba(200, 168, 91, 0.15)',
-                          padding: '0.22rem 0.6rem',
-                          borderRadius: '6px',
-                          border: '1px solid rgba(200, 168, 91, 0.28)',
-                        }}
-                      >
-                        {activeExpandedItem.tag}
-                      </span>
-                    </div>
-
-                    {/* Division Icon Badge matching grid card exactly */}
-                    <div
-                      style={{
-                        width: 44,
-                        height: 44,
-                        borderRadius: '14px',
-                        background: 'rgba(16, 185, 129, 0.14)',
-                        border: '1px solid rgba(16, 185, 129, 0.3)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'var(--emerald-light)',
-                        flexShrink: 0,
-                      }}
-                    >
-                      {ActiveExpandedIcon && <ActiveExpandedIcon size={22} />}
-                    </div>
-                  </div>
-
-                  <h2
-                    style={{
-                      fontFamily: 'var(--font-heading)',
-                      fontSize: '1.15rem',
-                      fontWeight: 700,
-                      color: 'var(--warm-alabaster)',
-                      margin: '0 0 0.5rem 0',
-                      lineHeight: 1.35,
-                      letterSpacing: '-0.01em',
-                    }}
-                  >
-                    {activeExpandedItem.detailTitle}
-                  </h2>
+            {Array.isArray(selectedDivision.agendas) &&
+              selectedDivision.agendas.length > 0 && (
+                <div className="rk-inset-panel" style={{ padding: '18px' }}>
+                  <h3 style={{ fontSize: '0.96rem', marginBottom: '10px' }}>
+                    Program & Kegiatan Utama
+                  </h3>
+                  <ul className="rk-program-list">
+                    {selectedDivision.agendas.map((ag, i) => (
+                      <li key={i}>{ag}</li>
+                    ))}
+                  </ul>
                 </div>
+              )}
 
-                {/* Dual-Layer Morphing Body */}
-                <div className="morph-body-wrapper">
-                  {/* Layer 1: Detail Content (Full Expanded View) */}
-                  <div
-                    key={`detail-${activeExpandedItem.num}`}
-                    className="morph-detail-content"
-                    style={{ padding: 'clamp(1.2rem, 3.5vw, 2rem)' }}
-                  >
-                    <p
-                      className="morph-text-lead"
-                      style={{
-                        color: 'rgba(247, 245, 240, 0.88)',
-                        fontSize: 'clamp(0.95rem, 2.2vw, 1.05rem)',
-                        lineHeight: 1.8,
-                        marginBottom: '2rem',
-                      }}
-                    >
-                      {activeExpandedItem.detailDesc}
-                    </p>
-
-                    {/* Agendas & Programs */}
-                    <div
-                      className="morph-text-agenda-box"
-                      style={{
-                        background: 'rgba(10, 30, 22, 0.75)',
-                        border: '1px solid rgba(200, 168, 91, 0.22)',
-                        borderRadius: '20px',
-                        padding: 'clamp(1.2rem, 3vw, 1.75rem)',
-                        marginBottom: '2rem',
-                        boxShadow: 'inset 0 2px 12px rgba(0, 0, 0, 0.3)',
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.6rem',
-                          color: '#DFBF73',
-                          fontSize: '0.82rem',
-                          fontWeight: 800,
-                          letterSpacing: '0.08em',
-                          textTransform: 'uppercase',
-                          marginBottom: '1.25rem',
-                        }}
-                      >
-                        <Sparkles size={16} style={{ color: '#DFBF73' }} /> AGENDA & FOKUS PROGRAM KERJA:
+            {Array.isArray(selectedDivision.members) &&
+              selectedDivision.members.length > 0 && (
+                <div>
+                  <h3 style={{ fontSize: '0.96rem', marginBottom: '10px' }}>
+                    Anggota Divisi ({selectedDivision.members.length})
+                  </h3>
+                  <div className="rk-grid-2">
+                    {selectedDivision.members.map((m) => (
+                      <div key={m.id} className="rk-inset-panel" style={{ padding: '12px 14px' }}>
+                        <strong style={{ display: 'block', fontSize: '0.9rem', color: 'var(--rk-ink)' }}>
+                          {m.name}
+                        </strong>
+                        <span style={{ display: 'block', fontSize: '0.8rem', color: 'var(--rk-brass-text)' }}>
+                          {m.role}
+                        </span>
+                        <span style={{ display: 'block', fontSize: '0.78rem', color: 'var(--rk-muted)' }}>
+                          {m.school}
+                        </span>
                       </div>
-
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                        {activeExpandedItem.agendas.map((agenda, i) => (
-                          <div
-                            key={i}
-                            className="morph-agenda-item"
-                            style={{
-                              display: 'flex',
-                              alignItems: 'flex-start',
-                              gap: '0.85rem',
-                              padding: '0.65rem 0.85rem',
-                              borderRadius: '12px',
-                              background: 'rgba(255, 255, 255, 0.03)',
-                              border: '1px solid rgba(255, 255, 255, 0.05)',
-                              animationDelay: `${0.1 + i * 0.04}s`,
-                            }}
-                          >
-                            <CheckCircle2
-                              size={19}
-                              style={{ color: 'var(--emerald)', flexShrink: 0, marginTop: '2px' }}
-                            />
-                            <span
-                              style={{
-                                fontSize: '0.92rem',
-                                color: '#F7F5F0',
-                                lineHeight: 1.6,
-                                fontWeight: 500,
-                              }}
-                            >
-                              {agenda}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Action Bar & Division Switcher */}
-                    <div
-                      className="morph-action-bar"
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        gap: '1rem',
-                        paddingTop: '1.5rem',
-                        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                        flexWrap: 'wrap',
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            switchDivision(
-                              expandedIdx > 0 ? expandedIdx - 1 : DIVISION_SHOWCASE.length - 1
-                            )
-                          }
-                          className="btn btn-outline"
-                          style={{
-                            padding: '0.55rem 0.95rem',
-                            fontSize: '0.82rem',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.4rem',
-                            borderRadius: '9999px',
-                            border: '1px solid rgba(255, 255, 255, 0.16)',
-                            color: 'var(--warm-alabaster)',
-                            background: 'rgba(255, 255, 255, 0.05)',
-                            cursor: 'pointer',
-                          }}
-                        >
-                          <ChevronLeft size={16} /> Sebelumnya
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() =>
-                            switchDivision(
-                              expandedIdx < DIVISION_SHOWCASE.length - 1 ? expandedIdx + 1 : 0
-                            )
-                          }
-                          className="btn btn-outline"
-                          style={{
-                            padding: '0.55rem 0.95rem',
-                            fontSize: '0.82rem',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.4rem',
-                            borderRadius: '9999px',
-                            border: '1px solid rgba(255, 255, 255, 0.16)',
-                            color: 'var(--warm-alabaster)',
-                            background: 'rgba(255, 255, 255, 0.05)',
-                            cursor: 'pointer',
-                          }}
-                        >
-                          Berikutnya <ChevronRight size={16} />
-                        </button>
-                      </div>
-
-                      <Link
-                        to="/schools#pengurus"
-                        onClick={closeCardExpansion}
-                        style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '0.55rem',
-                          padding: '0.75rem 1.4rem',
-                          borderRadius: '9999px',
-                          background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-                          color: 'white',
-                          fontSize: '0.88rem',
-                          fontWeight: 700,
-                          textDecoration: 'none',
-                          boxShadow: '0 4px 16px rgba(16, 185, 129, 0.35)',
-                          transition: 'all 0.2s ease',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'translateY(-2px)';
-                          e.currentTarget.style.boxShadow = '0 6px 20px rgba(16, 185, 129, 0.5)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = 'translateY(0)';
-                          e.currentTarget.style.boxShadow = '0 4px 16px rgba(16, 185, 129, 0.35)';
-                        }}
-                      >
-                        Lihat Pengurus & Anggota Divisi Ini <ArrowRight size={16} />
-                      </Link>
-                    </div>
-                  </div>
-
-                  {/* Layer 2: Summary Content (Dissolves IN cleanly without overlap) */}
-                  <div
-                    className="morph-summary-content"
-                    style={{
-                      padding:
-                        '0 clamp(1.2rem, 3vw, 1.6rem) clamp(1.2rem, 3vw, 1.6rem) clamp(1.2rem, 3vw, 1.6rem)',
-                      width: '100%',
-                      boxSizing: 'border-box',
-                    }}
-                  >
-                    <p
-                      style={{
-                        fontSize: '0.85rem',
-                        color: 'rgba(247, 245, 240, 0.68)',
-                        lineHeight: 1.6,
-                        margin: '0 0 1rem 0',
-                      }}
-                    >
-                      {activeExpandedItem.desc}
-                    </p>
-
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '0.4rem',
-                        marginBottom: '1.25rem',
-                        padding: '0.65rem 0.85rem',
-                        borderRadius: '12px',
-                        background: 'rgba(0, 0, 0, 0.2)',
-                        border: '1px solid rgba(255, 255, 255, 0.05)',
-                      }}
-                    >
-                      {activeExpandedItem.agendas.slice(0, 2).map((agenda, i) => (
-                        <div
-                          key={i}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'flex-start',
-                            gap: '0.5rem',
-                          }}
-                        >
-                          <CheckCircle2
-                            size={14}
-                            style={{ color: 'var(--emerald)', flexShrink: 0, marginTop: '2px' }}
-                          />
-                          <span
-                            style={{
-                              fontSize: '0.78rem',
-                              color: 'rgba(247, 245, 240, 0.82)',
-                              lineHeight: 1.45,
-                            }}
-                          >
-                            {agenda}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        paddingTop: '0.85rem',
-                        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontSize: '0.82rem',
-                          fontWeight: 700,
-                          color: '#DFBF73',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.45rem',
-                        }}
-                      >
-                        Pelajari Rencana & Program Divisi
-                        <ArrowRight size={14} />
-                      </span>
-                      <span
-                        style={{
-                          fontSize: '0.72rem',
-                          color: 'rgba(247, 245, 240, 0.45)',
-                        }}
-                      >
-                        5 Agenda
-                      </span>
-                    </div>
+                    ))}
                   </div>
                 </div>
-              </div>
-            </div>
+              )}
           </div>
         )}
-      </section>
-
-      {/* ═══════════════════════════════════════════
-          CTA Section: Struktur Pengurus & Sekolah Anggota
-          ═══════════════════════════════════════════ */}
-      <section className="section" style={{ background: 'var(--warm-alabaster)', borderTop: '1px solid rgba(13,43,34,0.06)' }}>
-        <div className="container" style={{ maxWidth: 1050, margin: '0 auto' }}>
-          <div
-            style={{
-              background: 'linear-gradient(135deg, #07140E 0%, #0D2319 50%, #132D21 100%)',
-              borderRadius: '24px',
-              padding: 'clamp(2.5rem, 5vw, 3.75rem) clamp(1.5rem, 4vw, 3rem)',
-              color: 'var(--warm-alabaster)',
-              boxShadow: '0 20px 48px -12px rgba(7, 20, 14, 0.45), 0 0 0 1px rgba(200, 168, 91, 0.22)',
-              position: 'relative',
-              overflow: 'hidden',
-              textAlign: 'center',
-            }}
-          >
-            {/* Ambient Background Accents */}
-            <div
-              style={{
-                position: 'absolute',
-                top: '-20%',
-                right: '-10%',
-                width: 380,
-                height: 380,
-                background: 'radial-gradient(circle, rgba(16,185,129,0.2) 0%, transparent 68%)',
-                pointerEvents: 'none',
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                bottom: '-25%',
-                left: '-10%',
-                width: 340,
-                height: 340,
-                background: 'radial-gradient(circle, rgba(200,168,91,0.14) 0%, transparent 65%)',
-                pointerEvents: 'none',
-              }}
-            />
-
-            <div style={{ position: 'relative', zIndex: 1 }}>
-              <span
-                className="badge badge-gold"
-                style={{
-                  marginBottom: '1.25rem',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.45rem',
-                  background: 'rgba(200, 168, 91, 0.15)',
-                  color: '#DFBF73',
-                  border: '1px solid rgba(200, 168, 91, 0.35)',
-                  borderRadius: '9999px',
-                  padding: '0.35rem 1rem',
-                  fontSize: '0.82rem',
-                  fontWeight: 600,
-                  letterSpacing: '0.03em',
-                }}
-              >
-                <Users size={14} /> Fungsionaris & Basis Rohis
-              </span>
-              <h2
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: 'clamp(1.75rem, 4vw, 2.35rem)',
-                  fontWeight: 800,
-                  color: '#F7F5F0',
-                  marginBottom: '1rem',
-                  lineHeight: 1.25,
-                  letterSpacing: '-0.015em',
-                }}
-              >
-                Kenali Fungsionaris & Pangkalan Sekolah Anggota
-              </h2>
-              <p
-                style={{
-                  color: 'rgba(245, 242, 237, 0.82)',
-                  maxWidth: 680,
-                  margin: '0 auto 2.25rem',
-                  fontSize: 'clamp(0.94rem, 1.8vw, 1.05rem)',
-                  lineHeight: 1.75,
-                }}
-              >
-                Struktur fungsionaris Badan Pengurus Harian (BPH), Divisi SDM, Dakwah, HUMAS, Jurnalistik, DANUS, serta direktori pangkalan ROHIS SMA, SMK, dan MA se-Kabupaten Banyumas dapat Anda telusuri secara lengkap pada halaman <strong style={{ color: '#DFBF73', fontWeight: 700 }}>Anggota</strong>.
-              </p>
-
-              <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-                <Link
-                  to="/schools#pengurus"
-                  className="btn btn-primary btn-lg"
-                  style={{
-                    background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-                    color: '#FFFFFF',
-                    border: '1px solid rgba(255, 255, 255, 0.25)',
-                    borderRadius: '9999px',
-                    padding: '0.85rem 2rem',
-                    fontSize: '0.98rem',
-                    fontWeight: 600,
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.6rem',
-                    boxShadow: '0 8px 25px rgba(16, 185, 129, 0.38)',
-                    textDecoration: 'none',
-                    transition: 'all 0.25s ease',
-                  }}
-                >
-                  <Users size={18} /> Struktur Pengurus ROKABA
-                </Link>
-                <Link
-                  to="/schools#sekolah"
-                  className="btn btn-glass btn-lg"
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    color: '#F5F2ED',
-                    border: '1.5px solid rgba(255, 255, 255, 0.35)',
-                    borderRadius: '9999px',
-                    padding: '0.85rem 2rem',
-                    fontSize: '0.98rem',
-                    fontWeight: 600,
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.6rem',
-                    textDecoration: 'none',
-                    backdropFilter: 'blur(12px)',
-                    WebkitBackdropFilter: 'blur(12px)',
-                    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
-                    transition: 'all 0.25s ease',
-                  }}
-                >
-                  <School size={18} /> Direktori Sekolah Anggota
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      </AccessibleDialog>
     </div>
   );
 }

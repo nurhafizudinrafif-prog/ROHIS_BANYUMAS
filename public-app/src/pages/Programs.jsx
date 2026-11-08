@@ -1,925 +1,376 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useData } from '../context/DataContext';
 import {
-  Users, Newspaper, Megaphone, Coins, Sparkles,
-  ArrowRight, CheckCircle2, Flame, Compass, X, ChevronLeft, ChevronRight
-} from 'lucide-react';
+  Container,
+  PageHeader,
+  SoftCard,
+  AccessibleDialog,
+  normalizeTeamData,
+} from '../components/ui/SoftUI';
 
-const DIVISION_SHOWCASE = [
+const CORE_PILLARS = [
   {
-    num: '01',
-    key: 'SDM',
-    title: 'DIVISI SDM (SUMBER DAYA MANUSIA)',
-    tag: 'DIVISI SDM',
-    desc: 'Fokus pada pembinaan karakter, peningkatan kapasitas kader, regenerasi kepengurusan, serta penguatan soliditas anggota ROHIS se-Kabupaten Banyumas.',
-    icon: Users,
-    detailTitle: 'Divisi SDM (Sumber Daya Manusia)',
-    detailDesc: 'Pusat kaderisasi dan pengembangan potensi pemuda Islam yang membina karakter kepemimpinan, integritas, dan keilmuan pengurus rohis sekolah.',
-    agendas: [
-      'Latihan Dasar Kepemimpinan (LDK) ROHIS se-Banyumas',
-      'Mentoring & upgrading kepemimpinan kader berkala',
-      'Regenerasi & estafet kepengurusan terstruktur',
-      'Pembinaan karakter Islami dan spiritual leadership',
-      'Forum silaturahmi kader rohis lintas SMA/SMK/MA',
+    id: 'sdm',
+    divisionKey: 'SDM',
+    title: 'Pembinaan & Kaderisasi',
+    fieldLabel: 'Bidang SDM',
+    summary:
+      'Latihan kepemimpinan, halaqah pelajar, dan penguatan karakter pengurus ROHIS.',
+    spotlightTitle: 'Program Pembinaan / SDM',
+    spotlightBody:
+      'Fokus pada pembentukan pengurus ROHIS yang berakhlak, terampil memimpin, dan siap menghidupkan kegiatan positif di sekolah.',
+    highlights: [
+      'Latihan Dasar Kepemimpinan ROHIS',
+      'Pendampingan pengurus sekolah',
+      'Forum silaturahmi lintas sekolah',
     ],
   },
   {
-    num: '02',
-    key: 'Dakwah',
-    title: 'DIVISI DAKWAH',
-    tag: 'DIVISI Dakwah',
-    desc: 'Jantung gerakan dakwah Islam yang menyelenggarakan kajian keilmuan, pembinaan ruhiyah, serta syiar Islam yang rahmatan lil \'alamin bagi pelajar dan masyarakat.',
-    icon: Flame,
-    detailTitle: 'Divisi Dakwah',
-    detailDesc: 'Jantung gerakan dakwah Islam yang menyelenggarakan kajian keilmuan, pembinaan ruhiyah, serta syiar Islam yang rahmatan lil \'alamin bagi pelajar dan masyarakat.',
-    agendas: [
+    id: 'dakwah',
+    divisionKey: 'Dakwah',
+    title: 'Syiar & Kegiatan Bersama',
+    fieldLabel: 'Bidang Syiar',
+    summary:
+      'Kajian pelajar, peringatan hari besar Islam, dan kolaborasi lintas sekolah.',
+    spotlightTitle: 'Program Syiar & Dakwah',
+    spotlightBody:
+      'Menghadirkan ruang kajian dan kegiatan keislaman yang menyejukkan, relevan dengan keseharian remaja, serta mempererat ukhuwah lintas sekolah.',
+    highlights: [
       'Kajian Ahad Pagi rutin se-Kabupaten Banyumas',
-      'Halaqah tarbiyah & bimbingan keislaman mingguan',
       'Safari Dakwah ke sekolah-sekolah se-Banyumas',
-      'Tabligh Akbar & Dauroh Tahsin Tilawah Al-Qur\'an',
       'Peringatan Hari Besar Islam (PHBI) bersama pelajar',
     ],
   },
   {
-    num: '03',
-    key: 'Jurnalistik',
-    title: 'DIVISI JURNALISTIK',
-    tag: 'DIVISI Jurnalistik',
-    desc: 'Mengelola publikasi informasi, dokumentasi kegiatan, buletin dakwah, konten multimedia kreatif, dan syiar digital di era modern.',
-    icon: Newspaper,
-    detailTitle: 'Divisi Jurnalistik',
-    detailDesc: 'Garda terdepan syiar kreatif visual dan literasi digital yang mengemas dakwah Islam dengan bahasa generasi muda yang inspiratif, edukatif, dan segar.',
-    agendas: [
-      'Penerbitan Buletin Dakwah Digital & Majalah Dinding',
-      'Produksi video dakwah kreatif Instagram, TikTok & YouTube',
-      'Liputan fotografi, videografi, dan dokumentasi agenda',
-      'Pengelolaan portal website resmi & artikel islami pelajar',
-      'Workshop jurnalistik, desain grafis & multimedia dakwah',
+    id: 'jurnalistik',
+    divisionKey: 'Jurnalistik',
+    title: 'Media & Literasi',
+    fieldLabel: 'Bidang Media',
+    summary:
+      'Pengelolaan publikasi, dokumentasi kegiatan, desain kreatif, dan tulisan pelajar.',
+    spotlightTitle: 'Program Media & Jurnalistik',
+    spotlightBody:
+      'Mengembangkan kapasitas jurnalistik, desain visual, dan pengelolaan media sosial agar pesan kebaikan pelajar Banyumas tersampaikan secara jernih.',
+    highlights: [
+      'Produksi konten dakwah kreatif Instagram, TikTok & YouTube',
+      'Penerbitan artikel dakwah dan buletin digital',
+      'Workshop jurnalistik, desain grafis & media dakwah',
     ],
   },
   {
-    num: '04',
-    key: 'HUMAS',
-    title: 'DIVISI HUMAS (HUBUNGAN MASYARAKAT)',
-    tag: 'DIVISI HUMAS',
-    desc: 'Menjadi jembatan komunikasi, relasi, dan sinergi antara ROHIS sekolah, instansi pemerintah, lembaga keagamaan, serta masyarakat luas.',
-    icon: Megaphone,
-    detailTitle: 'Divisi HUMAS (Hubungan Masyarakat)',
-    detailDesc: 'Penghubung silaturahmi yang mempererat ukhuwah antar-pangkalan sekolah, membangun jejaring instansi dinas & kemenag, dan bakti sosial masyarakat.',
-    agendas: [
-      'Jaringan komunikasi & silaturahmi antar-ROHIS sekolah',
-      'Sinergi kemitraan bersama Kemenag & Dinas Pendidikan',
-      'Aksi kepedulian sosial kemanusiaan & tanggap bencana',
-      'Publikasi hubungan eksternal dan keterbukaan informasi',
-      'Sarasehan & forum temu pembina ROHIS se-Kabupaten Banyumas',
+    id: 'humas',
+    divisionKey: 'HUMAS',
+    title: 'Hubungan Masyarakat',
+    fieldLabel: 'Bidang Humas',
+    summary:
+      'Jembatan silaturahmi antar-sekolah anggota, kemitraan strategis, dan kepedulian sosial.',
+    spotlightTitle: 'Program Hubungan Masyarakat',
+    spotlightBody:
+      'Menjaga komunikasi aktif dengan pembina dan pengurus ROHIS di puluhan sekolah anggota serta membangun kolaborasi strategis.',
+    highlights: [
+      'Koordinasi dan silaturahmi antar ROHIS sekolah se-Banyumas',
+      'Aksi sosial peduli umat dan pelajar',
+      'Penyelenggaraan forum konsolidasi lintas generasi',
     ],
   },
   {
-    num: '05',
-    key: 'DANUS',
-    title: 'DIVISI DANUS (DANA USAHA)',
-    tag: 'DIVISI DANUS',
-    desc: 'Membangun kemandirian finansial organisasi melalui kegiatan kewirausahaan halal, pengadaan merchandise resmi, kemitraan sponsorship, dan unit usaha produktif.',
-    icon: Coins,
-    detailTitle: 'Divisi DANUS (Dana Usaha)',
-    detailDesc: 'Membangun pilar kemandirian ekonomi dakwah melalui unit usaha kreatif, merchandise resmi, dan kemitraan sponsorship produktif yang halal dan berkah.',
-    agendas: [
-      'Pengadaan atribut resmi & merchandise resmi ROKABA',
-      'Bazar kewirausahaan halal pada perhelatan agenda akbar',
-      'Manajemen kemitraan sponsorship & donasi dakwah',
-      'Pelatihan kewirausahaan mandiri bagi kader pelajar',
-      'Pengelolaan unit dana abadi organisasi secara transparan',
+    id: 'danus',
+    divisionKey: 'DANUS',
+    title: 'Kemandirian & Kewirausahaan',
+    fieldLabel: 'Bidang Danus',
+    summary:
+      'Pengembangan kemandirian kas organisasi, atribut resmi kader, dan edukasi wirausaha pelajar.',
+    spotlightTitle: 'Program Dana Usaha (DANUS)',
+    spotlightBody:
+      'Membangun kemandirian finansial organisasi melalui kegiatan kewirausahaan halal, pengadaan merchandise resmi, dan kemitraan.',
+    highlights: [
+      'Pengadaan merchandise resmi ROHIS (kaos, pin, totebag)',
+      'Bazaar kewirausahaan pada event besar ROHIS',
+      'Edukasi dasar entrepreneurship syariah untuk pelajar',
     ],
   },
 ];
 
 export default function Programs() {
-  // Card Morphing Expansion State (Option 2 - iOS App Store Style)
-  const [expandedIdx, setExpandedIdx] = useState(null);
-  const [morphPhase, setMorphPhase] = useState('idle'); // 'idle' | 'expanding' | 'expanded' | 'collapsing'
-  const [originRect, setOriginRect] = useState(null);
-  const [isMobile, setIsMobile] = useState(false);
-  const cardRefs = useRef([]);
-  const scrollRef = useRef(null);
+  const { programs = [], team } = useData();
+  const { divisions } = normalizeTeamData(team);
+  const [selectedId, setSelectedId] = useState(CORE_PILLARS[0].id);
+  const [dialogProgram, setDialogProgram] = useState(null);
 
-  const activeExpandedItem =
-    expandedIdx !== null ? DIVISION_SHOWCASE[expandedIdx] || null : null;
-  const ActiveExpandedIcon = activeExpandedItem ? activeExpandedItem.icon : null;
+  const mergedPillars = CORE_PILLARS.map((pillar) => {
+    const cmsMatch = programs.find(
+      (p) =>
+        String(p.division || '').toLowerCase() === pillar.divisionKey.toLowerCase() ||
+        String(p.title || '').toLowerCase().includes(pillar.id)
+    );
+    const matchedDiv = divisions.find(
+      (d) =>
+        String(d.shortName || '').toLowerCase() === pillar.divisionKey.toLowerCase() ||
+        String(d.id || '').toLowerCase() === pillar.id
+    );
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
+    const agendas =
+      Array.isArray(cmsMatch?.details) && cmsMatch.details.length > 0
+        ? cmsMatch.details
+        : Array.isArray(cmsMatch?.agendas) && cmsMatch.agendas.length > 0
+        ? cmsMatch.agendas
+        : pillar.highlights;
+
+    return {
+      ...pillar,
+      cmsTitle: cmsMatch?.title || pillar.title,
+      cmsDescription: cmsMatch?.description || pillar.spotlightBody,
+      agendas,
+      members: matchedDiv?.members || [],
     };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  });
 
-  const openCardExpansion = (idx) => {
-    const cardEl = cardRefs.current[idx];
-    if (!cardEl) return;
-
-    // Direct getBoundingClientRect ensures exact coordinate match with 0px jump
-    const rect = cardEl.getBoundingClientRect();
-
-    const initialRect = {
-      top: rect.top,
-      left: rect.left,
-      width: rect.width,
-      height: rect.height,
-    };
-
-    setOriginRect(initialRect);
-    setExpandedIdx(idx);
-    setMorphPhase('expanding');
-
-    // Next frames: trigger 'expanded' so CSS transitions smoothly to full view
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setMorphPhase('expanded');
-      });
-    });
-  };
-
-  const closeCardExpansion = () => {
-    if (morphPhase !== 'expanded') return;
-
-    // Recalculate originRect in case window was resized or layout shifted
-    const cardEl = cardRefs.current[expandedIdx];
-    if (cardEl) {
-      const rect = cardEl.getBoundingClientRect();
-      setOriginRect({
-        top: rect.top,
-        left: rect.left,
-        width: rect.width,
-        height: rect.height,
-      });
-    }
-
-    setMorphPhase('collapsing');
-
-    setTimeout(() => {
-      setMorphPhase('idle');
-      setExpandedIdx(null);
-      setOriginRect(null);
-      if (scrollRef.current) {
-        scrollRef.current.scrollTop = 0;
-      }
-    }, 480);
-  };
-
-  const switchDivision = (nextIdx) => {
-    setExpandedIdx(nextIdx);
-    if (cardRefs.current[nextIdx]) {
-      const cardEl = cardRefs.current[nextIdx];
-      const rect = cardEl.getBoundingClientRect();
-      setOriginRect({
-        top: rect.top,
-        left: rect.left,
-        width: rect.width,
-        height: rect.height,
-      });
-    }
-  };
-
-  // Handle ESC key, arrow key navigation, and lock body scroll when card is expanded
-  useEffect(() => {
-    if (morphPhase === 'idle') return;
-
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        closeCardExpansion();
-      } else if (e.key === 'ArrowLeft') {
-        switchDivision(expandedIdx > 0 ? expandedIdx - 1 : DIVISION_SHOWCASE.length - 1);
-      } else if (e.key === 'ArrowRight') {
-        switchDivision(expandedIdx < DIVISION_SHOWCASE.length - 1 ? expandedIdx + 1 : 0);
-      }
-    };
-
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.body.style.overflow = originalOverflow;
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [morphPhase, expandedIdx]);
-
-  // Target geometry for GPU-accelerated card morphing
-  const targetTop = isMobile ? 0 : Math.max(20, typeof window !== 'undefined' ? window.innerHeight * 0.04 : 30);
-  const targetWidth = isMobile
-    ? (typeof window !== 'undefined' ? window.innerWidth : 360)
-    : Math.min(840, typeof window !== 'undefined' ? window.innerWidth - 32 : 840);
-  const targetLeft = isMobile
-    ? 0
-    : Math.max(16, typeof window !== 'undefined' ? (window.innerWidth - targetWidth) / 2 : 16);
-  const targetHeight = isMobile
-    ? (typeof window !== 'undefined' ? window.innerHeight : 640)
-    : Math.min(typeof window !== 'undefined' ? window.innerHeight * 0.92 : 880, 880);
-
-  const scaleX = originRect && targetWidth ? originRect.width / targetWidth : 1;
-  const scaleY = originRect && targetHeight ? originRect.height / targetHeight : 1;
-  const deltaX = originRect ? originRect.left - targetLeft : 0;
-  const deltaY = originRect ? originRect.top - targetTop : 0;
+  const activePillar =
+    mergedPillars.find((p) => p.id === selectedId) || mergedPillars[0];
 
   return (
-    <div style={{ overflowX: 'clip', width: '100%' }}>
-      {/* ═══ HERO ═══ */}
-      <section
-        style={{
-          background: 'var(--deep-pine)',
-          paddingTop: '8rem',
-          paddingBottom: '3.5rem',
-          position: 'relative',
-          overflow: 'hidden',
-          width: '100%',
-        }}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'radial-gradient(ellipse at 40% 50%, rgba(16,185,129,0.06) 0%, transparent 50%)',
-            pointerEvents: 'none',
-          }}
-        />
-        <div
-          className="container"
-          style={{
-            maxWidth: 1200,
-            margin: '0 auto',
-            position: 'relative',
-          }}
-        >
-          <span className="badge badge-emerald animate-fade-in-up" style={{ marginBottom: '1rem' }}>
-            <Compass size={14} /> 5 Pilar Gerakan
-          </span>
-          <h1
-            className="animate-fade-in-up delay-100"
-            style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: 'clamp(2rem, 4.5vw, 2.8rem)',
-              fontWeight: 800,
-              color: 'var(--warm-alabaster)',
-            }}
-          >
-            Program Kerja Divisi
-          </h1>
-          <p
-            className="animate-fade-in-up delay-200"
-            style={{
-              color: 'rgba(245,242,237,0.55)',
-              maxWidth: 550,
-              marginTop: '0.75rem',
-              lineHeight: 1.7,
-            }}
-          >
-            5 divisi utama penggerak dakwah, kaderisasi kepemimpinan, dan syiar pelajar Islam se-Kabupaten Banyumas.
-          </p>
-        </div>
-      </section>
+    <div className="rk-page">
+      <PageHeader
+        breadcrumb={[{ label: 'Beranda', to: '/' }, { label: 'Program' }]}
+        title="Ruang belajar dan berkarya"
+        lead="Program ROKABA dirancang agar pengurus ROHIS memiliki ruang pembinaan, kepemimpinan, media kreatif, dan pelayanan sebaya."
+      />
 
-      {/* ═══ 5 DIVISI PROGRAM KERJA DENGAN MODAL DETAIL INTERAKTIF ═══ */}
-      <section
-        className="section"
-        id="program-divisi"
-        style={{
-          background: 'var(--deep-pine)',
-          backgroundImage: `
-            radial-gradient(ellipse at 30% 70%, rgba(16,185,129,0.06) 0%, transparent 65%),
-            url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2310B981' stroke-width='0.75' stroke-opacity='0.08'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40 Z'/%3E%3Ccircle cx='40' cy='40' r='18'/%3E%3Ccircle cx='40' cy='40' r='28'/%3E%3Cpath d='M0 0 L80 80 M80 0 L0 80'/%3E%3C/g%3E%3C/svg%3E")
-          `,
-          position: 'relative',
-          overflow: 'hidden',
-          width: '100%',
-        }}
-      >
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto' }}>
-          {/* 5 Cards Grid */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))',
-              gap: '1.25rem',
-              width: '100%',
-              boxSizing: 'border-box',
-            }}
-          >
-            {DIVISION_SHOWCASE.map((item, idx) => {
-              const ItemIcon = item.icon;
-              const isThisCardExpanded = expandedIdx === idx && morphPhase !== 'idle';
-
+      {/* 3 Pilar Utama + 2 Bidang Pendukung */}
+      <section className="rk-section" aria-label="Daftar bidang program ROKABA">
+        <Container>
+          <div className="rk-grid-3">
+            {mergedPillars.slice(0, 3).map((pillar) => {
+              const isSelected = pillar.id === activePillar.id;
               return (
-                <div
-                  key={item.num}
-                  ref={(el) => (cardRefs.current[idx] = el)}
-                  onClick={() => openCardExpansion(idx)}
+                <SoftCard
+                  key={pillar.id}
+                  as="article"
+                  interactive
+                  selected={isSelected}
+                  onClick={() => setSelectedId(pillar.id)}
                   role="button"
                   tabIndex={0}
-                  className="division-interactive-card"
+                  aria-pressed={isSelected}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
-                      openCardExpansion(idx);
+                      setSelectedId(pillar.id);
                     }
                   }}
                   style={{
-                    opacity: isThisCardExpanded ? 0 : 1,
-                    visibility: isThisCardExpanded ? 'hidden' : 'visible',
-                    pointerEvents: isThisCardExpanded ? 'none' : 'auto',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    gap: '18px',
                   }}
                 >
-                  {/* Top Bar: Number, Tag, & Icon */}
+                  <div>
+                    <h3>{pillar.title}</h3>
+                    <p style={{ marginTop: '8px' }}>{pillar.summary}</p>
+                  </div>
                   <div
                     style={{
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
-                      marginBottom: '1rem',
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                      <span
-                        style={{
-                          fontFamily: 'var(--font-heading)',
-                          fontSize: '1.75rem',
-                          fontWeight: 800,
-                          color: '#DFBF73',
-                          lineHeight: 1,
-                        }}
-                      >
-                        {item.num}
-                      </span>
-                      <span
-                        style={{
-                          fontSize: '0.72rem',
-                          color: '#E6C587',
-                          fontWeight: 700,
-                          letterSpacing: '0.05em',
-                          textTransform: 'uppercase',
-                          background: 'rgba(200, 168, 91, 0.12)',
-                          padding: '0.2rem 0.55rem',
-                          borderRadius: '6px',
-                          border: '1px solid rgba(200, 168, 91, 0.25)',
-                        }}
-                      >
-                        {item.tag}
-                      </span>
-                    </div>
-
-                    <div
-                      style={{
-                        width: 44,
-                        height: 44,
-                        borderRadius: '14px',
-                        background: 'rgba(16, 185, 129, 0.12)',
-                        border: '1px solid rgba(16, 185, 129, 0.25)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'var(--emerald-light)',
-                        flexShrink: 0,
-                      }}
-                    >
-                      <ItemIcon size={22} />
-                    </div>
-                  </div>
-
-                  {/* Division Title */}
-                  <h3
-                    style={{
-                      fontFamily: 'var(--font-heading)',
-                      fontSize: '1.15rem',
-                      fontWeight: 700,
-                      color: 'var(--warm-alabaster)',
-                      margin: '0 0 0.5rem 0',
-                      lineHeight: 1.35,
-                    }}
-                  >
-                    {item.detailTitle}
-                  </h3>
-
-                  {/* Short Description */}
-                  <p
-                    style={{
-                      fontSize: '0.85rem',
-                      color: 'rgba(247, 245, 240, 0.68)',
-                      lineHeight: 1.6,
-                      margin: '0 0 1rem 0',
-                      flexGrow: 1,
-                    }}
-                  >
-                    {item.desc}
-                  </p>
-
-                  {/* Highlights (Preview 2 items) */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.4rem',
-                      marginBottom: '1.25rem',
-                      padding: '0.65rem 0.85rem',
-                      borderRadius: '12px',
-                      background: 'rgba(0, 0, 0, 0.2)',
-                      border: '1px solid rgba(255, 255, 255, 0.05)',
-                    }}
-                  >
-                    {item.agendas.slice(0, 2).map((agenda, i) => (
-                      <div
-                        key={i}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.5rem',
-                          fontSize: '0.78rem',
-                          color: 'rgba(247, 245, 240, 0.82)',
-                        }}
-                      >
-                        <CheckCircle2 size={13} style={{ color: 'var(--emerald)', flexShrink: 0 }} />
-                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          {agenda}
-                        </span>
-                      </div>
-                    ))}
-                    {item.agendas.length > 2 && (
-                      <span style={{ fontSize: '0.72rem', color: '#DFBF73', fontWeight: 600, paddingLeft: '1.3rem' }}>
-                        +{item.agendas.length - 2} program lainnya...
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Interactive Action Prompt */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      paddingTop: '0.85rem',
-                      borderTop: '1px solid rgba(255, 255, 255, 0.06)',
-                      color: '#DFBF73',
-                      fontSize: '0.82rem',
+                      paddingTop: '8px',
+                      borderTop: '1px solid var(--rk-line)',
+                      fontSize: '0.84rem',
                       fontWeight: 600,
+                      color: isSelected ? 'var(--rk-pine)' : 'var(--rk-brass-text)',
                     }}
                   >
-                    <span>Buka Detail & Program</span>
-                    <div
-                      className="division-arrow-circle"
-                      style={{
-                        width: 28,
-                        height: 28,
-                        borderRadius: '50%',
-                        background: 'rgba(200, 168, 91, 0.15)',
-                        border: '1px solid rgba(200, 168, 91, 0.3)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        transition: 'transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), background 0.3s ease, border-color 0.3s ease',
-                      }}
-                    >
-                      <ArrowRight size={14} />
-                    </div>
+                    <span>{pillar.fieldLabel}</span>
+                    <span aria-hidden="true">→</span>
                   </div>
-                </div>
+                </SoftCard>
               );
             })}
           </div>
-        </div>
 
-        {/* ═══ iOS APP STORE STYLE CARD MORPHING EXPANSION (OPTION 2) ═══ */}
-        {expandedIdx !== null && originRect && activeExpandedItem && (
-          <div className="morph-card-overlay">
-            {/* Backdrop Blur */}
-            <div
-              className={`morph-backdrop ${morphPhase === 'expanded' ? 'is-active' : ''} ${
-                morphPhase === 'collapsing' ? 'is-collapsing-backdrop' : ''
-              }`}
-              onClick={closeCardExpansion}
-            />
-
-            {/* The Morphing Card Sheet */}
-            <div
-              className={`morph-card-sheet ${morphPhase === 'expanded' ? 'is-expanded' : ''} ${
-                morphPhase === 'collapsing' ? 'is-collapsing' : ''
-              }`}
-              style={{
-                top:
-                  morphPhase === 'expanded'
-                    ? `${targetTop}px`
-                    : `${originRect ? originRect.top : targetTop}px`,
-                left:
-                  morphPhase === 'expanded'
-                    ? `${targetLeft}px`
-                    : `${originRect ? originRect.left : targetLeft}px`,
-                width:
-                  morphPhase === 'expanded'
-                    ? `${targetWidth}px`
-                    : `${originRect ? originRect.width : targetWidth}px`,
-                height:
-                  morphPhase === 'expanded'
-                    ? `${targetHeight}px`
-                    : `${originRect ? originRect.height : targetHeight}px`,
-                borderRadius:
-                  morphPhase === 'expanded'
-                    ? isMobile
-                      ? '0px'
-                      : '24px'
-                    : '20px',
-                transition:
-                  morphPhase === 'expanding'
-                    ? 'none'
-                    : undefined,
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Motion Blur Overlay (Covers the morphing velocity smoothly) */}
-              <div className="morph-motion-blur-overlay" aria-hidden="true">
-                <div className="morph-motion-streak" />
-              </div>
-
-              {/* Scrollable Container */}
-              <div ref={scrollRef} className="morph-card-scrollable">
-                {/* Symmetrical Sticky Header (Pins smoothly with 0 layout shift) */}
-                <div
-                  className="morph-header-bar"
+          {/* 2 Bidang Tambahan (Humas & Danus) */}
+          <div className="rk-grid-2" style={{ marginTop: '20px' }}>
+            {mergedPillars.slice(3).map((pillar) => {
+              const isSelected = pillar.id === activePillar.id;
+              return (
+                <SoftCard
+                  key={pillar.id}
+                  as="article"
+                  interactive
+                  selected={isSelected}
+                  onClick={() => setSelectedId(pillar.id)}
+                  role="button"
+                  tabIndex={0}
+                  aria-pressed={isSelected}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setSelectedId(pillar.id);
+                    }
+                  }}
                   style={{
-                    padding:
-                      morphPhase === 'collapsing'
-                        ? 'clamp(1.2rem, 3vw, 1.6rem) clamp(1.2rem, 3vw, 1.6rem) 0 clamp(1.2rem, 3vw, 1.6rem)'
-                        : 'clamp(1.2rem, 3vw, 1.6rem) clamp(1.2rem, 3vw, 1.6rem) 0.75rem clamp(1.2rem, 3vw, 1.6rem)',
-                    borderBottom:
-                      morphPhase === 'collapsing'
-                        ? '1px solid transparent'
-                        : '1px solid rgba(255, 255, 255, 0.08)',
-                    background:
-                      morphPhase === 'collapsing'
-                        ? 'transparent'
-                        : 'linear-gradient(180deg, #0D2319 0%, #0D2319 88%, rgba(13, 35, 25, 0.95) 100%)',
-                    position: 'sticky',
-                    top: 0,
-                    zIndex: 20,
-                    transition:
-                      'padding 0.50s cubic-bezier(0.32, 0.72, 0, 1), border-color 0.40s ease, background 0.40s ease',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    gap: '14px',
                   }}
                 >
-                  {/* Floating Close Button in top right (prevents icon displacement) */}
-                  <button
-                    type="button"
-                    className="morph-close-btn"
-                    onClick={closeCardExpansion}
-                    aria-label="Tutup lembar divisi"
-                  >
-                    <X size={20} />
-                  </button>
-
+                  <div>
+                    <h3>{pillar.title}</h3>
+                    <p style={{ marginTop: '6px' }}>{pillar.summary}</p>
+                  </div>
                   <div
                     style={{
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
-                      marginBottom: '0.85rem',
-                      paddingRight: morphPhase === 'expanded' ? '2.5rem' : '0',
-                      transition: 'padding-right 0.3s ease',
+                      paddingTop: '8px',
+                      borderTop: '1px solid var(--rk-line)',
+                      fontSize: '0.84rem',
+                      fontWeight: 600,
+                      color: isSelected ? 'var(--rk-pine)' : 'var(--rk-brass-text)',
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                      <span
-                        style={{
-                          fontFamily: 'var(--font-heading)',
-                          fontSize: '1.75rem',
-                          fontWeight: 800,
-                          color: '#DFBF73',
-                          lineHeight: 1,
-                        }}
-                      >
-                        {activeExpandedItem.num}
-                      </span>
-                      <span
-                        style={{
-                          fontSize: '0.74rem',
-                          color: '#E6C587',
-                          fontWeight: 700,
-                          letterSpacing: '0.05em',
-                          textTransform: 'uppercase',
-                          background: 'rgba(200, 168, 91, 0.15)',
-                          padding: '0.22rem 0.6rem',
-                          borderRadius: '6px',
-                          border: '1px solid rgba(200, 168, 91, 0.28)',
-                        }}
-                      >
-                        {activeExpandedItem.tag}
-                      </span>
-                    </div>
-
-                    {/* Division Icon Badge matching grid card exactly */}
-                    <div
-                      style={{
-                        width: 44,
-                        height: 44,
-                        borderRadius: '14px',
-                        background: 'rgba(16, 185, 129, 0.14)',
-                        border: '1px solid rgba(16, 185, 129, 0.3)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'var(--emerald-light)',
-                        flexShrink: 0,
-                      }}
-                    >
-                      {ActiveExpandedIcon && <ActiveExpandedIcon size={22} />}
-                    </div>
+                    <span>{pillar.fieldLabel}</span>
+                    <span aria-hidden="true">→</span>
                   </div>
+                </SoftCard>
+              );
+            })}
+          </div>
 
-                  <h2
+          {/* Panel Sorotan Program di Bawah (Sesuai Gambar 02-halaman-konten.png) */}
+          <SoftCard
+            style={{
+              marginTop: '28px',
+              padding: 'clamp(24px, 3.5vw, 34px)',
+            }}
+          >
+            <div className="rk-program-spotlight">
+              <div>
+                <span
+                  style={{
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    color: 'var(--rk-brass-text)',
+                  }}
+                >
+                  Sorotan program
+                </span>
+                <h2
+                  style={{
+                    fontSize: 'clamp(1.35rem, 2.2vw, 1.75rem)',
+                    marginTop: '6px',
+                    marginBottom: '10px',
+                    letterSpacing: '-0.025em',
+                  }}
+                >
+                  {activePillar.spotlightTitle}
+                </h2>
+                <p style={{ maxWidth: '58ch' }}>{activePillar.spotlightBody}</p>
+
+                <div
+                  style={{
+                    marginTop: '18px',
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    alignItems: 'center',
+                    gap: '16px',
+                  }}
+                >
+                  <button
+                    type="button"
+                    className="rk-card-link"
+                    onClick={() => setDialogProgram(activePillar)}
                     style={{
-                      fontFamily: 'var(--font-heading)',
-                      fontSize: '1.15rem',
-                      fontWeight: 700,
-                      color: 'var(--warm-alabaster)',
-                      margin: '0 0 0.5rem 0',
-                      lineHeight: 1.35,
-                      letterSpacing: '-0.01em',
+                      background: 'none',
+                      border: 'none',
+                      padding: 0,
+                      cursor: 'pointer',
                     }}
                   >
-                    {activeExpandedItem.detailTitle}
-                  </h2>
-                </div>
+                    <span>Lihat kegiatan</span>
+                    <span aria-hidden="true">→</span>
+                  </button>
 
-                {/* Dual-Layer Morphing Body */}
-                <div className="morph-body-wrapper">
-                  {/* Layer 1: Detail Content (Full Expanded View) */}
-                  <div
-                    key={`detail-${activeExpandedItem.num}`}
-                    className="morph-detail-content"
-                    style={{ padding: 'clamp(1.2rem, 3.5vw, 2rem)' }}
-                  >
-                    <p
-                      className="morph-text-lead"
-                      style={{
-                        color: 'rgba(247, 245, 240, 0.88)',
-                        fontSize: 'clamp(0.95rem, 2.2vw, 1.05rem)',
-                        lineHeight: 1.8,
-                        marginBottom: '2rem',
-                      }}
-                    >
-                      {activeExpandedItem.detailDesc}
-                    </p>
-
-                    {/* Agendas & Programs */}
-                    <div
-                      className="morph-text-agenda-box"
-                      style={{
-                        background: 'rgba(10, 30, 22, 0.75)',
-                        border: '1px solid rgba(200, 168, 91, 0.22)',
-                        borderRadius: '20px',
-                        padding: 'clamp(1.2rem, 3vw, 1.75rem)',
-                        marginBottom: '2rem',
-                        boxShadow: 'inset 0 2px 12px rgba(0, 0, 0, 0.3)',
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.6rem',
-                          color: '#DFBF73',
-                          fontSize: '0.82rem',
-                          fontWeight: 800,
-                          letterSpacing: '0.08em',
-                          textTransform: 'uppercase',
-                          marginBottom: '1.25rem',
-                        }}
-                      >
-                        <Sparkles size={16} style={{ color: '#DFBF73' }} /> AGENDA & FOKUS PROGRAM KERJA:
-                      </div>
-
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                        {activeExpandedItem.agendas.map((agenda, i) => (
-                          <div
-                            key={i}
-                            className="morph-agenda-item"
-                            style={{
-                              display: 'flex',
-                              alignItems: 'flex-start',
-                              gap: '0.85rem',
-                              padding: '0.65rem 0.85rem',
-                              borderRadius: '12px',
-                              background: 'rgba(255, 255, 255, 0.03)',
-                              border: '1px solid rgba(255, 255, 255, 0.05)',
-                              animationDelay: `${0.1 + i * 0.04}s`,
-                            }}
-                          >
-                            <CheckCircle2
-                              size={19}
-                              style={{ color: 'var(--emerald)', flexShrink: 0, marginTop: '2px' }}
-                            />
-                            <span
-                              style={{
-                                fontSize: '0.92rem',
-                                color: '#F7F5F0',
-                                lineHeight: 1.6,
-                                fontWeight: 500,
-                              }}
-                            >
-                              {agenda}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Action Bar & Division Switcher */}
-                    <div
-                      className="morph-action-bar"
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        gap: '1rem',
-                        paddingTop: '1.5rem',
-                        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                        flexWrap: 'wrap',
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            switchDivision(
-                              expandedIdx > 0 ? expandedIdx - 1 : DIVISION_SHOWCASE.length - 1
-                            )
-                          }
-                          className="btn btn-outline"
-                          style={{
-                            padding: '0.55rem 0.95rem',
-                            fontSize: '0.82rem',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.4rem',
-                            borderRadius: '9999px',
-                            border: '1px solid rgba(255, 255, 255, 0.16)',
-                            color: 'var(--warm-alabaster)',
-                            background: 'rgba(255, 255, 255, 0.05)',
-                            cursor: 'pointer',
-                          }}
-                        >
-                          <ChevronLeft size={16} /> Sebelumnya
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() =>
-                            switchDivision(
-                              expandedIdx < DIVISION_SHOWCASE.length - 1 ? expandedIdx + 1 : 0
-                            )
-                          }
-                          className="btn btn-outline"
-                          style={{
-                            padding: '0.55rem 0.95rem',
-                            fontSize: '0.82rem',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.4rem',
-                            borderRadius: '9999px',
-                            border: '1px solid rgba(255, 255, 255, 0.16)',
-                            color: 'var(--warm-alabaster)',
-                            background: 'rgba(255, 255, 255, 0.05)',
-                            cursor: 'pointer',
-                          }}
-                        >
-                          Berikutnya <ChevronRight size={16} />
-                        </button>
-                      </div>
-
-                      <Link
-                        to="/schools#pengurus"
-                        onClick={closeCardExpansion}
-                        style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '0.55rem',
-                          padding: '0.75rem 1.4rem',
-                          borderRadius: '9999px',
-                          background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-                          color: 'white',
-                          fontSize: '0.88rem',
-                          fontWeight: 700,
-                          textDecoration: 'none',
-                          boxShadow: '0 4px 16px rgba(16, 185, 129, 0.35)',
-                          transition: 'all 0.2s ease',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'translateY(-2px)';
-                          e.currentTarget.style.boxShadow = '0 6px 20px rgba(16, 185, 129, 0.5)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = 'translateY(0)';
-                          e.currentTarget.style.boxShadow = '0 4px 16px rgba(16, 185, 129, 0.35)';
-                        }}
-                      >
-                        Lihat Pengurus & Anggota Divisi Ini <ArrowRight size={16} />
-                      </Link>
-                    </div>
-                  </div>
-
-                  {/* Layer 2: Summary Content (Dissolves IN cleanly without overlap) */}
-                  <div
-                    className="morph-summary-content"
-                    style={{
-                      padding:
-                        '0 clamp(1.2rem, 3vw, 1.6rem) clamp(1.2rem, 3vw, 1.6rem) clamp(1.2rem, 3vw, 1.6rem)',
-                      width: '100%',
-                      boxSizing: 'border-box',
-                    }}
-                  >
-                    <p
-                      style={{
-                        fontSize: '0.85rem',
-                        color: 'rgba(247, 245, 240, 0.68)',
-                        lineHeight: 1.6,
-                        margin: '0 0 1rem 0',
-                      }}
-                    >
-                      {activeExpandedItem.desc}
-                    </p>
-
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '0.4rem',
-                        marginBottom: '1.25rem',
-                        padding: '0.65rem 0.85rem',
-                        borderRadius: '12px',
-                        background: 'rgba(0, 0, 0, 0.2)',
-                        border: '1px solid rgba(255, 255, 255, 0.05)',
-                      }}
-                    >
-                      {activeExpandedItem.agendas.slice(0, 2).map((agenda, i) => (
-                        <div
-                          key={i}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'flex-start',
-                            gap: '0.5rem',
-                          }}
-                        >
-                          <CheckCircle2
-                            size={14}
-                            style={{ color: 'var(--emerald)', flexShrink: 0, marginTop: '2px' }}
-                          />
-                          <span
-                            style={{
-                              fontSize: '0.78rem',
-                              color: 'rgba(247, 245, 240, 0.82)',
-                              lineHeight: 1.45,
-                            }}
-                          >
-                            {agenda}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        paddingTop: '0.85rem',
-                        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontSize: '0.82rem',
-                          fontWeight: 700,
-                          color: '#DFBF73',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.45rem',
-                        }}
-                      >
-                        Pelajari Rencana & Program Divisi
-                        <ArrowRight size={14} />
-                      </span>
-                      <span
-                        style={{
-                          fontSize: '0.72rem',
-                          color: 'rgba(247, 245, 240, 0.45)',
-                        }}
-                      >
-                        5 Agenda
-                      </span>
-                    </div>
-                  </div>
+                  <Link to="/events" className="rk-card-link" style={{ color: 'var(--rk-muted)' }}>
+                    <span>Jadwal agenda terkait</span>
+                    <span aria-hidden="true">→</span>
+                  </Link>
                 </div>
               </div>
+
+              <div className="rk-inset-panel" style={{ padding: '20px 22px' }}>
+                <ul className="rk-program-list">
+                  {activePillar.highlights.map((item, idx) => (
+                    <li key={idx}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </SoftCard>
+        </Container>
+      </section>
+
+      <AccessibleDialog
+        open={Boolean(dialogProgram)}
+        onClose={() => setDialogProgram(null)}
+        eyebrow={dialogProgram?.fieldLabel || 'Sorotan Program'}
+        title={dialogProgram?.spotlightTitle || ''}
+      >
+        {dialogProgram && (
+          <div style={{ display: 'grid', gap: '18px' }}>
+            <p>{dialogProgram.cmsDescription}</p>
+
+            <div className="rk-inset-panel" style={{ padding: '18px' }}>
+              <h3 style={{ fontSize: '0.96rem', marginBottom: '10px' }}>
+                Rangkaian Kegiatan & Fokus Kerja
+              </h3>
+              <ul className="rk-program-list">
+                {dialogProgram.agendas.map((item, idx) => (
+                  <li key={idx}>{item}</li>
+                ))}
+              </ul>
+            </div>
+
+            {dialogProgram.members.length > 0 && (
+              <div>
+                <h3 style={{ fontSize: '0.96rem', marginBottom: '10px' }}>
+                  Tim Penggerak ({dialogProgram.members.length} pengurus)
+                </h3>
+                <div className="rk-grid-2">
+                  {dialogProgram.members.slice(0, 6).map((m) => (
+                    <div key={m.id} className="rk-inset-panel" style={{ padding: '12px 14px' }}>
+                      <strong style={{ display: 'block', fontSize: '0.9rem', color: 'var(--rk-ink)' }}>
+                        {m.name}
+                      </strong>
+                      <span style={{ display: 'block', fontSize: '0.8rem', color: 'var(--rk-brass-text)' }}>
+                        {m.role}
+                      </span>
+                      <span style={{ display: 'block', fontSize: '0.78rem', color: 'var(--rk-muted)' }}>
+                        {m.school}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', paddingTop: '4px' }}>
+              <Link to="/events" className="rk-btn-primary" onClick={() => setDialogProgram(null)}>
+                Lihat Agenda Terdekat
+              </Link>
+              <Link to="/schools#pengurus" className="rk-btn-secondary" onClick={() => setDialogProgram(null)}>
+                Lihat Semua Pengurus
+              </Link>
             </div>
           </div>
         )}
-      </section>
+      </AccessibleDialog>
     </div>
   );
 }

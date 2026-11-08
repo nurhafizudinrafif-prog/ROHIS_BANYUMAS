@@ -1,101 +1,308 @@
+import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useData } from '../context/DataContext';
-import { Calendar, MapPin, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { getMediaUrl } from '@shared/services/mediaHelper';
+import {
+  Container,
+  PageHeader,
+  SoftCard,
+  AccessibleDialog,
+  EmptyState,
+  getJakartaToday,
+  isEventUpcoming,
+  formatIndonesianDate,
+  formatShortDayMonth,
+} from '../components/ui/SoftUI';
 
 export default function Events() {
-  const { events } = useData();
-  const upcoming = events.filter(e => e.status === 'upcoming').sort((a, b) => new Date(a.date) - new Date(b.date));
-  const completed = events.filter(e => e.status === 'completed').sort((a, b) => new Date(b.date) - new Date(a.date));
+  const { events = [] } = useData();
+  const todayStr = getJakartaToday();
+
+  const { upcomingList, archivedList } = useMemo(() => {
+    const up = [];
+    const ar = [];
+    events.forEach((ev) => {
+      if (isEventUpcoming(ev, todayStr)) {
+        up.push(ev);
+      } else {
+        ar.push(ev);
+      }
+    });
+    up.sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')));
+    ar.sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+    return { upcomingList: up, archivedList: ar };
+  }, [events, todayStr]);
+
+  const [statusTab, setStatusTab] = useState('Mendatang');
+  const [activeType, setActiveType] = useState('Semua');
+  const [selectedEvent, setSelectedEvent] = useState(null);
+
+  const eventTypes = useMemo(() => {
+    const types = new Set(['Semua']);
+    events.forEach((ev) => {
+      if (ev.type) types.add(ev.type);
+    });
+    return Array.from(types);
+  }, [events]);
+
+  // Sumber daftar sesuai tab, namun jika Mendatang kosong kita tetap tampilkan arsip di bawah pemberitahuan jujur
+  const baseEvents = useMemo(() => {
+    if (statusTab === 'Mendatang') {
+      return upcomingList.length > 0 ? upcomingList : archivedList;
+    }
+    if (statusTab === 'Arsip') {
+      return archivedList;
+    }
+    return [...upcomingList, ...archivedList];
+  }, [statusTab, upcomingList, archivedList]);
+
+  const filteredEvents = useMemo(() => {
+    if (activeType === 'Semua') return baseEvents;
+    return baseEvents.filter(
+      (ev) => String(ev.type || '').toLowerCase() === activeType.toLowerCase()
+    );
+  }, [baseEvents, activeType]);
 
   return (
-    <div style={{ overflowX: 'clip', width: '100%' }}>
-      <section style={{
-        background: 'var(--deep-pine)', paddingTop: '8rem', paddingBottom: '3rem', position: 'relative', overflow: 'hidden', width: '100%',
-      }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 60% 40%, rgba(16,185,129,0.06) 0%, transparent 50%)', pointerEvents: 'none' }} />
-        <div className="container" style={{ maxWidth: 1200, margin: '0 auto', position: 'relative' }}>
-          <span className="badge badge-emerald animate-fade-in-up" style={{ marginBottom: '1rem' }}><Calendar size={14} /> Agenda</span>
-          <h1 className="animate-fade-in-up delay-100" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(2rem, 4.5vw, 2.8rem)', fontWeight: 800, color: 'var(--warm-alabaster)' }}>
-            Agenda Kegiatan
-          </h1>
-          <p className="animate-fade-in-up delay-200" style={{ color: 'rgba(245,242,237,0.55)', maxWidth: 500, marginTop: '0.75rem' }}>
-            Jadwal kegiatan dakwah dan pengembangan diri ROKABA.
-          </p>
-        </div>
-      </section>
+    <div className="rk-page">
+      <PageHeader
+        breadcrumb={[{ label: 'Beranda', to: '/' }, { label: 'Agenda' }]}
+        title="Agenda bersama"
+        lead="Jadwal pertemuan, pelatihan, dan kegiatan kolaborasi ROHIS Kabupaten Banyumas."
+      />
 
-      <section className="section" style={{ background: 'var(--warm-alabaster)', width: '100%' }}>
-        <div className="container" style={{ maxWidth: 800, margin: '0 auto' }}>
-          {upcoming.length > 0 && (
-            <>
-              <h2 style={{ fontSize: '1.35rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <AlertCircle size={20} style={{ color: 'var(--emerald)' }} /> Akan Datang
-              </h2>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '3rem' }}>
-                {upcoming.map((event, i) => {
-                  const d = new Date(event.date);
-                  return (
-                    <div key={event.id} className="animate-fade-in-up" style={{
-                      animationDelay: `${i * 80}ms`, background: 'white', borderRadius: 'var(--radius-xl)',
-                      padding: 'clamp(1.15rem, 3vw, 1.75rem)', display: 'flex', gap: '1rem', alignItems: 'flex-start',
-                      border: '1px solid rgba(13,43,34,0.06)', boxShadow: 'var(--shadow-sm)',
-                      borderLeft: '4px solid var(--emerald)', transition: 'all 0.3s', flexWrap: 'wrap',
-                    }}>
-                      <div style={{
-                        minWidth: 68, textAlign: 'center', background: 'var(--emerald-glass)',
-                        borderRadius: 'var(--radius-md)', padding: '0.75rem',
-                      }}>
-                        <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.75rem', color: 'var(--emerald)', lineHeight: 1 }}>{d.getDate()}</div>
-                        <div style={{ fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', color: 'var(--emerald-dark)', marginTop: '0.15rem' }}>
-                          {d.toLocaleDateString('id-ID', { month: 'short', year: 'numeric' })}
-                        </div>
-                      </div>
-                      <div>
-                        <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>{event.title}</h3>
-                        <p style={{ fontSize: '0.88rem', color: 'rgba(13,43,34,0.55)', marginBottom: '0.75rem', lineHeight: 1.6 }}>{event.description}</p>
-                        <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap', fontSize: '0.82rem', color: 'rgba(13,43,34,0.45)' }}>
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><MapPin size={14} /> {event.location}</span>
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><Clock size={14} /> {event.time} WIB</span>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+      <section className="rk-section" aria-label="Daftar agenda kegiatan">
+        <Container>
+          {/* Baris Filter Status (Mendatang / Arsip) & Jenis Kegiatan */}
+          <div className="rk-filter-bar">
+            <div className="rk-filter-pills" role="tablist" aria-label="Status jadwal agenda">
+              {['Mendatang', 'Arsip', 'Semua'].map((tab) => (
+                <button
+                  key={tab}
+                  type="button"
+                  role="tab"
+                  aria-selected={statusTab === tab}
+                  className="rk-pill"
+                  onClick={() => setStatusTab(tab)}
+                >
+                  {tab === 'Mendatang' && `Mendatang (${upcomingList.length})`}
+                  {tab === 'Arsip' && `Arsip (${archivedList.length})`}
+                  {tab === 'Semua' && `Semua (${events.length})`}
+                </button>
+              ))}
+            </div>
+
+            {eventTypes.length > 1 && (
+              <div className="rk-filter-pills" role="group" aria-label="Filter jenis agenda">
+                {eventTypes.map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    className="rk-pill"
+                    aria-pressed={activeType === t}
+                    onClick={() => setActiveType(t)}
+                  >
+                    {t}
+                  </button>
+                ))}
               </div>
-            </>
+            )}
+          </div>
+
+          {/* Pemberitahuan jujur apabila tab Mendatang dipilih namun jadwal mendatang belum ada */}
+          {statusTab === 'Mendatang' && upcomingList.length === 0 && archivedList.length > 0 && (
+            <SoftCard
+              variant="inset"
+              style={{
+                marginBottom: '20px',
+                padding: '16px 20px',
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '12px',
+              }}
+            >
+              <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--rk-ink)' }}>
+                <strong>Info Jadwal:</strong> Saat ini belum ada jadwal agenda mendatang yang baru. Berikut dokumentasi agenda terakhir yang telah terlaksana (Arsip):
+              </p>
+              <button
+                type="button"
+                className="rk-pill"
+                onClick={() => setStatusTab('Arsip')}
+              >
+                Beralih ke tab Arsip
+              </button>
+            </SoftCard>
           )}
 
-          {completed.length > 0 && (
-            <>
-              <h2 style={{ fontSize: '1.35rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <CheckCircle size={20} style={{ color: 'rgba(13,43,34,0.3)' }} /> Selesai
-              </h2>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                {completed.map((event, i) => {
-                  const d = new Date(event.date);
-                  return (
-                    <div key={event.id} className="animate-fade-in-up" style={{
-                      animationDelay: `${i * 80}ms`, background: 'white', borderRadius: 'var(--radius-lg)',
-                      padding: '1.25rem 1.5rem', display: 'flex', gap: '1.25rem', alignItems: 'center',
-                      border: '1px solid rgba(13,43,34,0.04)', opacity: 0.7,
-                    }}>
-                      <div style={{ minWidth: 50, textAlign: 'center' }}>
-                        <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '1.15rem', color: 'rgba(13,43,34,0.4)' }}>{d.getDate()}</div>
-                        <div style={{ fontSize: '0.65rem', color: 'rgba(13,43,34,0.3)', textTransform: 'uppercase' }}>
-                          {d.toLocaleDateString('id-ID', { month: 'short' })}
-                        </div>
-                      </div>
-                      <div>
-                        <h4 style={{ fontSize: '0.95rem', color: 'rgba(13,43,34,0.6)' }}>{event.title}</h4>
-                        <span style={{ fontSize: '0.78rem', color: 'rgba(13,43,34,0.35)' }}>{event.location}</span>
-                      </div>
+          {filteredEvents.length === 0 ? (
+            <EmptyState
+              title="Belum ada agenda pada kategori ini"
+              description="Silakan pilih filter Semua untuk melihat seluruh riwayat kegiatan ROKABA."
+              action={
+                <button
+                  type="button"
+                  className="rk-btn-secondary"
+                  onClick={() => {
+                    setStatusTab('Semua');
+                    setActiveType('Semua');
+                  }}
+                >
+                  Tampilkan semua agenda
+                </button>
+              }
+            />
+          ) : (
+            <div style={{ display: 'grid', gap: '16px' }}>
+              {filteredEvents.map((ev) => {
+                const { day, month } = formatShortDayMonth(ev.date);
+                const upcoming = isEventUpcoming(ev, todayStr);
+
+                return (
+                  <SoftCard
+                    key={ev.id}
+                    as="article"
+                    interactive
+                    className="rk-event-row"
+                    onClick={() => setSelectedEvent(ev)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setSelectedEvent(ev);
+                      }
+                    }}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <div className="rk-event-date-box" aria-hidden="true">
+                      <strong>{day}</strong>
+                      <span>{month}</span>
                     </div>
-                  );
-                })}
-              </div>
-            </>
+
+                    <div>
+                      <div className="rk-meta-line" style={{ marginBottom: '4px' }}>
+                        <span
+                          className={`rk-badge ${
+                            upcoming ? 'rk-badge--pine' : 'rk-badge--brass'
+                          }`}
+                        >
+                          {upcoming ? 'Mendatang' : 'Arsip • Terlaksana'}
+                        </span>
+                        {ev.type && (
+                          <>
+                            <span>•</span>
+                            <span>{ev.type}</span>
+                          </>
+                        )}
+                      </div>
+
+                      <h3 style={{ fontSize: '1.12rem', marginBottom: '4px' }}>
+                        {ev.title}
+                      </h3>
+
+                      <p style={{ fontSize: '0.9rem' }}>
+                        {ev.location || 'Kabupaten Banyumas'}
+                        {ev.time ? ` • ${ev.time}` : ''}
+                      </p>
+                    </div>
+
+                    <div>
+                      <span className="rk-card-link" style={{ marginTop: 0 }}>
+                        <span>Lihat detail</span>
+                        <span aria-hidden="true">→</span>
+                      </span>
+                    </div>
+                  </SoftCard>
+                );
+              })}
+            </div>
           )}
-        </div>
+        </Container>
       </section>
+
+      <AccessibleDialog
+        open={Boolean(selectedEvent)}
+        onClose={() => setSelectedEvent(null)}
+        eyebrow={
+          selectedEvent
+            ? isEventUpcoming(selectedEvent, todayStr)
+              ? 'Agenda Mendatang'
+              : 'Arsip Kegiatan Terlaksana'
+            : 'Detail Agenda'
+        }
+        title={selectedEvent?.title || ''}
+      >
+        {selectedEvent && (
+          <div style={{ display: 'grid', gap: '16px' }}>
+            {selectedEvent.image && (
+              <div
+                style={{
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  border: '1px solid var(--rk-line)',
+                  aspectRatio: '16/9',
+                }}
+              >
+                <img
+                  src={getMediaUrl(selectedEvent.image)}
+                  alt={selectedEvent.title}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              </div>
+            )}
+
+            <div className="rk-inset-panel" style={{ padding: '16px 18px', display: 'grid', gap: '8px' }}>
+              <div style={{ fontSize: '0.9rem' }}>
+                <strong style={{ color: 'var(--rk-ink)' }}>Tanggal: </strong>
+                <span style={{ color: 'var(--rk-muted)' }}>
+                  {formatIndonesianDate(selectedEvent.date)}
+                </span>
+              </div>
+              {selectedEvent.time && (
+                <div style={{ fontSize: '0.9rem' }}>
+                  <strong style={{ color: 'var(--rk-ink)' }}>Waktu: </strong>
+                  <span style={{ color: 'var(--rk-muted)' }}>{selectedEvent.time}</span>
+                </div>
+              )}
+              <div style={{ fontSize: '0.9rem' }}>
+                <strong style={{ color: 'var(--rk-ink)' }}>Lokasi: </strong>
+                <span style={{ color: 'var(--rk-muted)' }}>
+                  {selectedEvent.location || 'Kabupaten Banyumas'}
+                </span>
+              </div>
+              <div style={{ fontSize: '0.9rem' }}>
+                <strong style={{ color: 'var(--rk-ink)' }}>Status: </strong>
+                <span style={{ color: 'var(--rk-brass-text)', fontWeight: 600 }}>
+                  {isEventUpcoming(selectedEvent, todayStr)
+                    ? 'Mendatang'
+                    : 'Telah terlaksana (Arsip)'}
+                </span>
+              </div>
+            </div>
+
+            {selectedEvent.description && <p>{selectedEvent.description}</p>}
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', paddingTop: '4px' }}>
+              <Link
+                to="/contact"
+                className="rk-btn-primary"
+                onClick={() => setSelectedEvent(null)}
+              >
+                Hubungi Panitia / Pengurus
+              </Link>
+              <button
+                type="button"
+                className="rk-btn-secondary"
+                onClick={() => setSelectedEvent(null)}
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
+        )}
+      </AccessibleDialog>
     </div>
   );
 }
