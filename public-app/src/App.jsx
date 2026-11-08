@@ -24,9 +24,9 @@ export default function App() {
       <DataProvider>
         <Router>
           <ScrollProgressBar />
-          <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', width: '100%', maxWidth: '100vw', overflowX: 'clip' }}>
+          <div className="rk-site" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', width: '100%', maxWidth: '100vw', overflowX: 'clip' }}>
           <Navbar />
-          <main style={{ flex: 1, width: '100%', maxWidth: '100vw', overflowX: 'clip' }}>
+          <main id="main-content" style={{ flex: 1, width: '100%', maxWidth: '100vw', overflowX: 'clip' }}>
             <Routes>
               {/* Primary Routes */}
               <Route path="/" element={<Home />} />
@@ -65,3 +65,4 @@ export default function App() {
     </ErrorBoundary>
   );
 }
+
