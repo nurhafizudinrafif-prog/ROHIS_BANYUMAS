@@ -1,13 +1,32 @@
 /* ==========================================================================
-   ROKABA — Soft UI × Liquid Glass Component Architecture
+   ROKABA — 100% Reference-Faithful Soft UI × Liquid Glass Architecture
    ========================================================================== */
 
+/* 1. OUTER 3D BOARD SHELL (Matches the framed board in 01, 02, 03) */
 .rk-site {
   min-height: 100vh;
+  padding: clamp(12px, 2.2vw, 28px);
   display: flex;
   flex-direction: column;
-  background-color: var(--rk-canvas);
-  color: var(--rk-ink);
+  align-items: center;
+}
+
+.rk-board-shell {
+  width: 100%;
+  max-width: 1240px;
+  min-height: calc(100vh - clamp(24px, 4.4vw, 56px));
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: var(--rk-radius-board);
+  background:
+    radial-gradient(circle at 28% 6%, rgba(188, 208, 190, 0.28) 0%, transparent 38%),
+    radial-gradient(circle at 85% 18%, rgba(255, 255, 255, 0.75) 0%, transparent 45%),
+    linear-gradient(165deg, #F6F7F2 0%, #ECEEE7 100%);
+  border: 2px solid rgba(255, 255, 255, 0.92);
+  box-shadow: var(--rk-shadow-board);
+  overflow: hidden;
+  position: relative;
 }
 
 .rk-container,
@@ -15,92 +34,90 @@
   width: 100%;
   max-width: var(--rk-container-max);
   margin-inline: auto;
-  padding-inline: clamp(16px, 4vw, 40px);
+  padding-inline: clamp(20px, 3.8vw, 44px);
 }
 
 .rk-page {
-  padding-bottom: clamp(48px, 6vw, 88px);
+  padding-top: 2px;
+  padding-bottom: clamp(14px, 2vw, 24px);
 }
 
 .rk-section {
-  padding-block: clamp(28px, 4.5vw, 56px);
+  padding-block: clamp(10px, 1.5vw, 18px);
 }
 
 /* --------------------------------------------------------------------------
-   1. LIQUID GLASS NAVIGATION BAR
+   2. LIQUID GLASS NAVIGATION BAR (With Refractive Green-White Sheen)
    -------------------------------------------------------------------------- */
 .rk-header-shell {
+  padding-top: clamp(16px, 2.2vw, 26px);
+  padding-bottom: 10px;
   position: sticky;
   top: 0;
   z-index: 60;
-  padding-top: clamp(10px, 1.8vw, 18px);
-  padding-bottom: 8px;
 }
 
 .rk-glass-nav {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  min-height: 68px;
-  padding: 10px 18px;
+  min-height: 70px;
+  padding: 10px 18px 10px 22px;
   border-radius: 18px;
-  background: rgba(247, 245, 240, 0.94);
-  border: 1px solid rgba(16, 41, 31, 0.11);
+  background:
+    radial-gradient(150px 70px at 27% 50%, rgba(126, 166, 128, 0.34) 0%, transparent 78%),
+    radial-gradient(220px 80px at 56% 35%, rgba(255, 255, 255, 0.72) 0%, transparent 82%),
+    linear-gradient(135deg, rgba(251, 251, 247, 0.84) 0%, rgba(235, 239, 231, 0.74) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.92);
   box-shadow:
-    0 8px 24px rgba(16, 41, 31, 0.07),
-    -2px -2px 10px rgba(255, 255, 255, 0.80),
-    inset 0 1px 0 rgba(255, 255, 255, 0.92);
-}
-
-@supports (backdrop-filter: blur(16px)) or (-webkit-backdrop-filter: blur(16px)) {
-  .rk-glass-nav {
-    background: linear-gradient(
-      135deg,
-      rgba(250, 249, 245, 0.84) 0%,
-      rgba(241, 242, 237, 0.74) 100%
-    );
-    backdrop-filter: blur(18px) saturate(140%);
-    -webkit-backdrop-filter: blur(18px) saturate(140%);
-  }
+    0 12px 26px rgba(16, 38, 27, 0.12),
+    0 3px 8px rgba(16, 38, 27, 0.06),
+    -4px -4px 12px rgba(255, 255, 255, 0.92),
+    inset 0 2px 2px rgba(255, 255, 255, 0.98),
+    inset 0 -1px 2px rgba(16, 41, 31, 0.05);
+  backdrop-filter: blur(20px) saturate(165%);
+  -webkit-backdrop-filter: blur(20px) saturate(165%);
 }
 
 .rk-brand {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   min-width: 0;
 }
 
 .rk-brand img {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   object-fit: contain;
   flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(16, 41, 31, 0.15));
 }
 
 .rk-brand-divider {
-  width: 1px;
-  height: 28px;
-  background: var(--rk-line-strong);
+  width: 1.5px;
+  height: 30px;
+  background: rgba(16, 41, 31, 0.18);
   flex-shrink: 0;
 }
 
 .rk-brand-text {
   display: flex;
   flex-direction: column;
-  line-height: 1.2;
+  line-height: 1.18;
 }
 
 .rk-brand-text strong {
-  font-size: 0.98rem;
-  font-weight: 700;
+  font-size: 1.06rem;
+  font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--rk-ink);
 }
 
 .rk-brand-text small {
-  font-size: 0.76rem;
+  font-size: 0.78rem;
   font-weight: 500;
   color: var(--rk-muted);
 }
@@ -108,121 +125,58 @@
 .rk-nav-links {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: clamp(8px, 1.6vw, 22px);
 }
 
 .rk-nav-link {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 8px 13px;
-  border-radius: 11px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--rk-muted);
-  transition: background-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 0.94rem;
+  font-weight: 600;
+  color: var(--rk-ink);
+  transition: background-color 150ms ease, box-shadow 150ms ease;
 }
 
 .rk-nav-link:hover {
-  color: var(--rk-ink);
-  background: rgba(16, 41, 31, 0.05);
+  background: rgba(255, 255, 255, 0.55);
 }
 
 .rk-nav-link[aria-current="page"] {
-  color: var(--rk-ink);
-  font-weight: 600;
-  background: var(--rk-surface-inset);
+  background: rgba(255, 255, 255, 0.75);
   box-shadow: var(--rk-shadow-inset);
 }
 
-.rk-nav-dropdown-wrap {
-  position: relative;
-}
-
-.rk-nav-dropdown-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 8px 13px;
-  border-radius: 11px;
-  border: none;
-  background: transparent;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--rk-muted);
-  cursor: pointer;
-  transition: background-color 160ms ease, color 160ms ease;
-}
-
-.rk-nav-dropdown-btn:hover,
-.rk-nav-dropdown-btn[aria-expanded="true"] {
-  color: var(--rk-ink);
-  background: rgba(16, 41, 31, 0.05);
-}
-
-.rk-dropdown-panel {
-  position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
-  min-width: 220px;
-  padding: 8px;
-  border-radius: 16px;
-  background: var(--rk-surface);
-  border: 1px solid var(--rk-line-strong);
-  box-shadow: var(--rk-shadow-raised-hover);
-  display: grid;
-  gap: 4px;
-  z-index: 80;
-}
-
-.rk-dropdown-panel a {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 9px 12px;
-  border-radius: 10px;
-  font-size: 0.88rem;
-  font-weight: 500;
-  color: var(--rk-muted);
-  transition: background-color 140ms ease, color 140ms ease;
-}
-
-.rk-dropdown-panel a:hover,
-.rk-dropdown-panel a[aria-current="page"] {
-  background: var(--rk-surface-inset);
-  color: var(--rk-ink);
-  font-weight: 600;
-}
-
 /* --------------------------------------------------------------------------
-   2. BUTTONS & CONTROLS (SOFT UI BEVEL & INSET)
+   3. 3D BEVELED PINE BUTTONS & LINKS
    -------------------------------------------------------------------------- */
 .rk-btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 46px;
-  padding: 11px 22px;
-  border-radius: var(--rk-radius-pill);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: linear-gradient(180deg, #163629 0%, #10291F 100%);
+  min-height: 44px;
+  padding: 10px 22px;
+  border-radius: var(--rk-radius-btn);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: linear-gradient(180deg, #1B3F2F 0%, #0E261C 100%);
   color: #F7F5F0;
   font-size: 0.92rem;
-  font-weight: 600;
+  font-weight: 700;
   box-shadow: var(--rk-shadow-button);
   cursor: pointer;
-  transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
 }
 
 .rk-btn-primary:hover {
-  background: linear-gradient(180deg, #1B4131 0%, #122F23 100%);
+  background: linear-gradient(180deg, #214B38 0%, #112E22 100%);
   transform: translateY(-1px);
 }
 
 .rk-btn-primary:active {
   transform: translateY(0);
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.28);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
 .rk-btn-secondary {
@@ -230,88 +184,94 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 46px;
-  padding: 11px 20px;
-  border-radius: var(--rk-radius-pill);
-  border: 1px solid var(--rk-line-strong);
-  background: var(--rk-surface);
+  min-height: 44px;
+  padding: 10px 20px;
+  border-radius: var(--rk-radius-btn);
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  background: linear-gradient(155deg, #FAF9F5 0%, #EFF0EA 100%);
   color: var(--rk-ink);
   font-size: 0.92rem;
-  font-weight: 600;
-  box-shadow: var(--rk-shadow-raised);
+  font-weight: 700;
+  box-shadow: var(--rk-shadow-pill);
   cursor: pointer;
-  transition: transform 160ms ease, box-shadow 160ms ease;
+  transition: transform 150ms ease, box-shadow 150ms ease;
 }
 
 .rk-btn-secondary:hover {
   transform: translateY(-1px);
-  box-shadow: var(--rk-shadow-raised-hover);
+  box-shadow: var(--rk-shadow-raised);
 }
 
 .rk-link-inline {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 44px;
-  padding: 6px 4px;
-  font-size: 0.94rem;
-  font-weight: 600;
+  font-size: 0.95rem;
+  font-weight: 700;
   color: var(--rk-ink);
-  transition: gap 160ms ease, color 160ms ease;
 }
 
-.rk-link-inline:hover {
-  gap: 11px;
-  color: var(--rk-pine-hover);
+.rk-link-inline span:first-child {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  text-decoration-thickness: 1.5px;
+  text-decoration-color: rgba(16, 41, 31, 0.35);
+}
+
+.rk-link-inline:hover span:first-child {
+  text-decoration-color: var(--rk-ink);
 }
 
 /* --------------------------------------------------------------------------
-   3. SOFT UI CARDS, INSET PANELS & PHOTO FRAMES
+   4. SCULPTED 3D NEUMORPHIC CARDS, INSET PANELS & PHOTO FRAMES
    -------------------------------------------------------------------------- */
 .rk-soft-card {
-  background: linear-gradient(165deg, var(--rk-surface-raised) 0%, var(--rk-surface) 100%);
-  border: 1px solid var(--rk-line);
+  background: linear-gradient(155deg, #FAF9F5 0%, #F1F2EC 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.92);
   border-radius: var(--rk-radius-card);
-  padding: clamp(20px, 2.5vw, 28px);
+  padding: clamp(18px, 2.2vw, 24px);
   box-shadow: var(--rk-shadow-raised);
-  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
 }
 
 .rk-soft-card--interactive:hover {
   transform: translateY(-2px);
   box-shadow: var(--rk-shadow-raised-hover);
-  border-color: rgba(16, 41, 31, 0.16);
 }
 
+/* Sage-tinted Selected 3D Card (Matches /programs 'Pembinaan' in 02-halaman-konten.png) */
 .rk-soft-card--selected {
-  border-color: rgba(16, 41, 31, 0.34);
+  background: linear-gradient(155deg, #E2EDE4 0%, #D3E2D6 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.95);
   box-shadow:
-    0 4px 14px rgba(16, 41, 31, 0.11),
-    inset 0 0 0 1px rgba(16, 41, 31, 0.18);
+    8px 12px 24px rgba(18, 36, 26, 0.13),
+    -5px -5px 14px rgba(255, 255, 255, 0.95),
+    inset 1.5px 1.5px 2px rgba(255, 255, 255, 0.95);
 }
 
 .rk-inset-panel {
   background: var(--rk-surface-inset);
-  border: 1px solid rgba(16, 41, 31, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.8);
   border-radius: var(--rk-radius-card);
-  padding: clamp(18px, 2.2vw, 26px);
+  padding: clamp(16px, 2vw, 22px);
   box-shadow: var(--rk-shadow-inset);
 }
 
+/* 3D Double-Bevel Photo Frame + True Liquid Glass Caption */
 .rk-photo-frame {
   position: relative;
-  padding: 10px;
+  padding: 6px;
   border-radius: var(--rk-radius-frame);
-  background: var(--rk-surface-inset);
-  border: 1px solid rgba(16, 41, 31, 0.10);
-  box-shadow: var(--rk-shadow-inset);
+  background: linear-gradient(145deg, #FFFFFF 0%, #E9ECE4 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.96);
+  box-shadow: var(--rk-shadow-photo);
 }
 
 .rk-photo-inner {
   position: relative;
   overflow: hidden;
-  border-radius: calc(var(--rk-radius-frame) - 6px);
-  background: #DCE0D6;
+  border-radius: calc(var(--rk-radius-frame) - 5px);
+  background: #D5DBD2;
 }
 
 .rk-photo-inner img {
@@ -320,82 +280,96 @@
   object-fit: cover;
 }
 
+/* True Smoked Frosted Liquid Glass Caption (Matches 01 & 03) */
 .rk-glass-caption {
   position: absolute;
   left: 14px;
-  right: 14px;
   bottom: 14px;
-  padding: 12px 16px;
-  border-radius: 14px;
-  background: rgba(247, 245, 240, 0.93);
-  border: 1px solid rgba(255, 255, 255, 0.72);
-  box-shadow: 0 8px 20px rgba(16, 41, 31, 0.14);
-  color: var(--rk-ink);
-}
-
-@supports (backdrop-filter: blur(14px)) or (-webkit-backdrop-filter: blur(14px)) {
-  .rk-glass-caption {
-    background: linear-gradient(
-      135deg,
-      rgba(250, 249, 245, 0.85) 0%,
-      rgba(241, 242, 237, 0.74) 100%
-    );
-    backdrop-filter: blur(14px) saturate(135%);
-    -webkit-backdrop-filter: blur(14px) saturate(135%);
-  }
+  width: fit-content;
+  max-width: calc(100% - 28px);
+  padding: 10px 18px;
+  border-radius: 13px;
+  background: linear-gradient(
+    135deg,
+    rgba(22, 38, 29, 0.58) 0%,
+    rgba(50, 70, 58, 0.42) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.46);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.24),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px) saturate(165%);
+  -webkit-backdrop-filter: blur(16px) saturate(165%);
+  color: #FFFFFF;
 }
 
 .rk-glass-caption strong {
   display: block;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   font-weight: 700;
-  color: var(--rk-ink);
-  line-height: 1.3;
+  color: #FFFFFF;
+  line-height: 1.25;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
 .rk-glass-caption span {
   display: block;
   margin-top: 2px;
-  font-size: 0.79rem;
-  color: var(--rk-muted);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* Liquid Glass Play Button on Video Thumbnail */
+.rk-glass-play {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(22, 38, 29, 0.62), rgba(255, 255, 255, 0.28));
+  border: 1.5px solid rgba(255, 255, 255, 0.68);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #FFFFFF;
 }
 
 /* --------------------------------------------------------------------------
-   4. PAGE HEADER, EYEBROW & TYPOGRAPHY HIERARCHY
+   5. TYPOGRAPHY, EYEBROW & PAGE HEADERS
    -------------------------------------------------------------------------- */
 .rk-page-header {
-  padding-top: clamp(20px, 3vw, 36px);
-  padding-bottom: clamp(16px, 2.5vw, 28px);
+  padding-top: clamp(14px, 2.2vw, 24px);
+  padding-bottom: clamp(10px, 1.6vw, 18px);
 }
 
 .rk-breadcrumb {
   display: inline-flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
-  font-size: 0.82rem;
+  gap: 6px;
+  font-size: 0.84rem;
   font-weight: 500;
   color: var(--rk-muted);
-  margin-bottom: 10px;
-}
-
-.rk-breadcrumb a:hover {
-  color: var(--rk-ink);
-  text-decoration: underline;
+  margin-bottom: 8px;
 }
 
 .rk-eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-size: 0.84rem;
+  font-size: 0.88rem;
   font-weight: 600;
-  color: var(--rk-muted);
-  margin-bottom: 12px;
+  color: var(--rk-ink);
+  margin-bottom: 10px;
 }
 
 .rk-eyebrow-bar {
-  width: 24px;
+  width: 28px;
   height: 3px;
   border-radius: 99px;
   background: var(--rk-brass);
@@ -403,44 +377,23 @@
 }
 
 .rk-page-title {
-  font-size: clamp(1.85rem, 3.2vw, 2.65rem);
-  line-height: 1.14;
-  letter-spacing: -0.03em;
+  font-size: clamp(2rem, 3.4vw, 2.85rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
   color: var(--rk-ink);
 }
 
 .rk-page-lead {
-  margin-top: 10px;
-  max-width: 64ch;
-  font-size: clamp(0.96rem, 1.2vw, 1.06rem);
+  margin-top: 8px;
+  max-width: 62ch;
+  font-size: clamp(0.95rem, 1.15vw, 1.05rem);
   color: var(--rk-muted);
-  line-height: 1.65;
-}
-
-.rk-section-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: clamp(18px, 2.5vw, 26px);
-}
-
-.rk-section-title {
-  font-size: clamp(1.35rem, 2.3vw, 1.85rem);
-  line-height: 1.2;
-  letter-spacing: -0.025em;
-}
-
-.rk-section-subtitle {
-  margin-top: 6px;
-  font-size: 0.95rem;
-  color: var(--rk-muted);
-  max-width: 60ch;
+  line-height: 1.55;
 }
 
 /* --------------------------------------------------------------------------
-   5. FILTER BAR, PILLS & INSET FIELDS
+   6. FILTER BAR, 3D PILLS & RECESSED INSET INPUTS
    -------------------------------------------------------------------------- */
 .rk-filter-bar {
   display: flex;
@@ -448,7 +401,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .rk-filter-pills {
@@ -464,30 +417,29 @@
   justify-content: center;
   gap: 6px;
   min-height: 38px;
-  padding: 7px 15px;
+  padding: 7px 18px;
   border-radius: var(--rk-radius-pill);
-  border: 1px solid var(--rk-line);
-  background: var(--rk-surface);
-  color: var(--rk-muted);
-  font-size: 0.85rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  background: linear-gradient(155deg, #FAF9F5 0%, #EFF0EA 100%);
+  color: var(--rk-ink);
+  font-size: 0.86rem;
   font-weight: 600;
-  box-shadow: 0 2px 5px rgba(16, 41, 31, 0.05), -2px -2px 6px rgba(255, 255, 255, 0.8);
+  box-shadow: var(--rk-shadow-pill);
   cursor: pointer;
   transition: all 150ms ease;
 }
 
 .rk-pill:hover {
-  color: var(--rk-ink);
-  border-color: var(--rk-line-strong);
+  transform: translateY(-1px);
 }
 
 .rk-pill[aria-pressed="true"],
 .rk-pill[aria-selected="true"],
 .rk-pill.is-active {
-  background: var(--rk-pine);
+  background: linear-gradient(180deg, #1B3F2F 0%, #0E261C 100%);
   color: #F7F5F0;
-  border-color: var(--rk-pine);
-  box-shadow: 0 4px 10px rgba(16, 41, 31, 0.18);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: var(--rk-shadow-button);
 }
 
 .rk-field-group {
@@ -498,20 +450,20 @@
 }
 
 .rk-field-label {
-  font-size: 0.85rem;
+  font-size: 0.86rem;
   font-weight: 600;
   color: var(--rk-ink);
 }
 
 .rk-inset-control {
   width: 100%;
-  min-height: 44px;
-  padding: 10px 14px;
+  min-height: 42px;
+  padding: 9px 14px;
   border-radius: var(--rk-radius-control);
-  border: 1px solid rgba(16, 41, 31, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.85);
   background: var(--rk-surface-inset);
   color: var(--rk-ink);
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   box-shadow: var(--rk-shadow-inset);
   transition: border-color 150ms ease, background-color 150ms ease;
 }
@@ -523,121 +475,166 @@
 .rk-inset-control:focus {
   outline: none;
   border-color: var(--rk-pine);
-  background: #F4F5F0;
+  background: #F2F4EE;
 }
 
-textarea.rk-inset-control {
-  min-height: 112px;
-  resize: vertical;
+.rk-search-well {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
-.rk-filter-search {
-  flex: 1 1 260px;
-  max-width: 340px;
+.rk-search-well svg {
+  position: absolute;
+  left: 14px;
+  color: var(--rk-subtle);
+  pointer-events: none;
+}
+
+.rk-search-well .rk-inset-control {
+  padding-left: 38px;
+  border-radius: var(--rk-radius-pill);
 }
 
 /* --------------------------------------------------------------------------
-   6. HERO & GRID LAYOUTS
+   7. HERO & REFERENCE LAYOUT GRIDS
    -------------------------------------------------------------------------- */
 .rk-hero {
-  padding-top: clamp(18px, 3vw, 36px);
-  padding-bottom: clamp(28px, 4vw, 48px);
+  padding-top: clamp(6px, 1.2vw, 14px);
+  padding-bottom: clamp(10px, 1.6vw, 18px);
 }
 
 .rk-hero-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.18fr);
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.18fr);
   align-items: center;
-  gap: clamp(24px, 4vw, 48px);
+  gap: clamp(24px, 3.8vw, 44px);
 }
 
 .rk-hero-title {
-  font-size: clamp(2.1rem, 3.8vw, 3.25rem);
-  line-height: 1.11;
-  letter-spacing: -0.032em;
+  font-size: clamp(2.25rem, 4.1vw, 3.45rem);
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -0.038em;
   color: var(--rk-ink);
 }
 
 .rk-hero-lead {
-  margin-top: 16px;
-  font-size: clamp(0.98rem, 1.15vw, 1.06rem);
-  line-height: 1.68;
+  margin-top: 14px;
+  font-size: clamp(0.96rem, 1.15vw, 1.06rem);
+  line-height: 1.55;
   color: var(--rk-muted);
-  max-width: 54ch;
+  max-width: 44ch;
 }
 
 .rk-hero-actions {
-  margin-top: 24px;
+  margin-top: 20px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 18px;
+  gap: 20px;
 }
 
 .rk-hero-subnote {
-  margin-top: 18px;
+  margin-top: 16px;
   font-size: 0.84rem;
-  color: var(--rk-subtle);
+  color: var(--rk-muted);
+}
+
+/* Section heading with inline description (Matches 'Temukan ruangmu.' in 01) */
+.rk-inline-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.rk-inline-section-head h2 {
+  font-size: clamp(1.45rem, 2.2vw, 1.85rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.rk-inline-section-sep {
+  width: 1.5px;
+  height: 22px;
+  background: rgba(16, 41, 31, 0.18);
+}
+
+.rk-inline-section-head p {
+  font-size: 0.92rem;
+  color: var(--rk-muted);
 }
 
 .rk-grid-3 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
+  gap: 18px;
+}
+
+.rk-grid-5 {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
 }
 
 .rk-grid-2 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
-}
-
-.rk-grid-4 {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
 }
 
-.rk-split-60-40 {
+.rk-split-55-45 {
   display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.18fr) minmax(0, 1fr);
   gap: 24px;
-  align-items: start;
+  align-items: stretch;
 }
 
 .rk-split-40-60 {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr);
-  gap: 24px;
-  align-items: start;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: 22px;
+  align-items: stretch;
 }
 
 .rk-split-50-50 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
-  align-items: start;
+  gap: 22px;
+  align-items: center;
 }
 
-/* --------------------------------------------------------------------------
-   7. CARD CONTENT & EDITORIAL LISTS
-   -------------------------------------------------------------------------- */
+/* Service Cards on Home */
 .rk-service-card {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 16px;
-  min-height: 184px;
+  gap: 10px;
+  min-height: 136px;
+  padding: 16px 20px;
 }
 
 .rk-service-card h3 {
-  font-size: 1.18rem;
-  line-height: 1.3;
+  font-size: 1.2rem;
+  font-weight: 800;
 }
 
 .rk-service-card p {
-  font-size: 0.92rem;
-  line-height: 1.6;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.rk-card-link-right {
+  align-self: flex-end;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--rk-ink);
+  margin-top: auto;
 }
 
 .rk-card-link {
@@ -645,262 +642,43 @@ textarea.rk-inset-control {
   align-items: center;
   gap: 6px;
   font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--rk-ink);
-  margin-top: auto;
-}
-
-.rk-card-link:hover {
-  gap: 9px;
-}
-
-.rk-meta-line {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--rk-brass-text);
-}
-
-.rk-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 10px;
-  border-radius: var(--rk-radius-pill);
-  font-size: 0.76rem;
-  font-weight: 600;
-  background: var(--rk-surface-inset);
-  color: var(--rk-ink);
-  border: 1px solid var(--rk-line);
-}
-
-.rk-badge--brass {
-  background: var(--rk-brass-soft);
-  color: var(--rk-brass-text);
-  border-color: rgba(169, 145, 87, 0.28);
-}
-
-.rk-badge--pine {
-  background: var(--rk-pine);
-  color: #F7F5F0;
-}
-
-/* Featured News Card on Home */
-.rk-news-feature-card {
-  display: grid;
-  gap: 16px;
-}
-
-.rk-news-feature-thumb {
-  border-radius: 14px;
-  overflow: hidden;
-  aspect-ratio: 16 / 9;
-  background: var(--rk-surface-inset);
-  border: 1px solid var(--rk-line);
-}
-
-.rk-news-feature-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* Agenda Items in Home Inset Panel */
-.rk-agenda-mini-item {
-  padding-block: 14px;
-  border-bottom: 1px solid var(--rk-line);
-}
-
-.rk-agenda-mini-item:first-child {
-  padding-top: 0;
-}
-
-.rk-agenda-mini-item:last-of-type {
-  border-bottom: none;
-}
-
-.rk-agenda-mini-item h3 {
-  font-size: 1rem;
-  margin-top: 4px;
-  line-height: 1.35;
-}
-
-.rk-agenda-mini-item p {
-  font-size: 0.85rem;
-  margin-top: 2px;
-}
-
-/* Editorial List Row (News & Articles) */
-.rk-editorial-row {
-  display: grid;
-  grid-template-columns: 200px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 20px;
-}
-
-.rk-editorial-thumb {
-  border-radius: 14px;
-  overflow: hidden;
-  aspect-ratio: 16 / 10;
-  background: var(--rk-surface-inset);
-  border: 1px solid var(--rk-line);
-}
-
-.rk-editorial-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.rk-editorial-body {
-  display: grid;
-  gap: 6px;
-  min-width: 0;
-}
-
-.rk-editorial-body h3 {
-  font-size: 1.15rem;
-  line-height: 1.32;
-}
-
-.rk-editorial-body p {
-  font-size: 0.92rem;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.rk-editorial-arrow {
-  width: 38px;
-  height: 38px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--rk-surface-inset);
-  color: var(--rk-ink);
   font-weight: 700;
-  flex-shrink: 0;
-}
-
-/* Event Row (/events) */
-.rk-event-row {
-  display: grid;
-  grid-template-columns: 74px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 20px;
-}
-
-.rk-event-date-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 74px;
-  border-radius: 15px;
-  background: var(--rk-surface-inset);
-  border: 1px solid var(--rk-line);
-  box-shadow: var(--rk-shadow-inset);
-  text-align: center;
-  padding: 8px;
-}
-
-.rk-event-date-box strong {
-  font-size: 1.35rem;
-  line-height: 1.1;
   color: var(--rk-ink);
 }
 
-.rk-event-date-box span {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--rk-brass-text);
-  margin-top: 2px;
+/* Home Kabar dari ROKABA Split Row */
+.rk-home-news-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
 }
 
-/* School & Document Rows */
-.rk-school-row,
-.rk-document-row {
+/* Raised 3D Compact Horizontal Bar (Used in /berita, /articles, /consultation) */
+.rk-bar-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 18px;
-}
-
-.rk-document-info {
-  display: flex;
-  align-items: center;
   gap: 16px;
-  min-width: 0;
+  padding: 15px 22px;
+  border-radius: 15px;
+  background: linear-gradient(155deg, #FAF9F5 0%, #F1F2EC 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.92);
+  box-shadow: var(--rk-shadow-raised);
+  transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
-.rk-doc-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 54px;
-  height: 36px;
-  padding-inline: 10px;
-  border-radius: 10px;
-  background: var(--rk-surface-inset);
-  border: 1px solid var(--rk-line-strong);
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--rk-brass-text);
-  flex-shrink: 0;
+.rk-bar-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--rk-shadow-raised-hover);
 }
 
-/* Article Detail Reading Column & Sticky TOC */
+/* Article Detail Layout & TOC */
 .rk-article-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 290px;
-  gap: 28px;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 26px;
   align-items: start;
-}
-
-.rk-prose {
-  font-size: 1.02rem;
-  line-height: 1.78;
-  color: var(--rk-ink);
-}
-
-.rk-prose p {
-  color: var(--rk-muted);
-  margin-bottom: 18px;
-}
-
-.rk-prose .rk-lead-paragraph {
-  font-size: 1.12rem;
-  font-weight: 500;
-  color: var(--rk-ink);
-  line-height: 1.68;
-}
-
-.rk-prose h2,
-.rk-prose h3 {
-  margin-top: 28px;
-  margin-bottom: 10px;
-  font-size: 1.28rem;
-  color: var(--rk-ink);
-}
-
-.rk-quote-callout {
-  margin-block: 22px;
-  padding: 18px 22px;
-  border-radius: 16px;
-  background: var(--rk-surface-inset);
-  border-left: 4px solid var(--rk-brass);
-  box-shadow: var(--rk-shadow-inset);
-  font-weight: 600;
-  color: var(--rk-ink);
-}
-
-.rk-toc-card {
-  position: sticky;
-  top: 96px;
 }
 
 .rk-toc-list {
@@ -908,76 +686,142 @@ textarea.rk-inset-control {
   margin: 12px 0 0;
   padding: 0;
   display: grid;
-  gap: 8px;
+  gap: 6px;
 }
 
 .rk-toc-list a {
   display: block;
-  padding: 6px 10px;
-  border-radius: 9px;
-  font-size: 0.86rem;
-  font-weight: 500;
-  color: var(--rk-muted);
-  transition: background-color 140ms ease, color 140ms ease;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--rk-ink);
+  transition: background-color 140ms ease;
 }
 
+.rk-toc-list a.is-active,
 .rk-toc-list a:hover {
-  background: var(--rk-surface-inset);
+  background: var(--rk-surface-sage);
+}
+
+/* Event Row (/events) */
+.rk-event-row {
+  display: grid;
+  grid-template-columns: 62px 1px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 22px;
+}
+
+.rk-event-date-box {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: #EAE5D9;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: var(--rk-shadow-inset);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
   color: var(--rk-ink);
+}
+
+/* School Row (/schools) */
+.rk-school-row {
+  display: grid;
+  grid-template-columns: 72px 1px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 24px;
+}
+
+/* Document Row (/library) */
+.rk-document-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 15px 22px;
+}
+
+.rk-doc-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 12px;
+  border-radius: 8px;
+  background: #EBE5D8;
+  color: var(--rk-ink);
+  font-size: 0.78rem;
+  font-weight: 700;
+  box-shadow: var(--rk-shadow-inset);
 }
 
 /* Gallery Bento Grid */
 .rk-gallery-bento {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
-  gap: 20px;
+  grid-template-columns: minmax(0, 1.32fr) minmax(0, 1fr);
+  gap: 18px;
 }
 
 .rk-gallery-bento-side {
   display: grid;
   grid-template-rows: repeat(2, minmax(0, 1fr));
-  gap: 20px;
-}
-
-/* Program Spotlight Panel */
-.rk-program-spotlight {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-  gap: 28px;
-  align-items: center;
-}
-
-.rk-program-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 12px;
-}
-
-.rk-program-list li {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  font-size: 0.94rem;
-  font-weight: 500;
-  color: var(--rk-ink);
-}
-
-.rk-program-list li::before {
-  content: "•";
-  color: var(--rk-brass-text);
-  font-weight: 700;
+  gap: 18px;
 }
 
 /* --------------------------------------------------------------------------
-   8. DIALOG / MODAL & LIGHTBOX
+   8. SLEEK DEEP PINE FOOTER BAR (100% Matching 01, 02, 03)
+   -------------------------------------------------------------------------- */
+.rk-footer-wrap {
+  margin-top: auto;
+  width: 100%;
+}
+
+.rk-footer-bar {
+  width: 100%;
+  background: linear-gradient(180deg, #122E22 0%, #0C2118 100%);
+  color: #F7F5F0;
+  padding: 14px clamp(20px, 3.8vw, 44px);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.rk-footer-brand {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #F7F5F0;
+}
+
+.rk-footer-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #F7F5F0;
+}
+
+.rk-footer-divider {
+  width: 1px;
+  height: 18px;
+  background: rgba(247, 245, 240, 0.26);
+}
+
+/* --------------------------------------------------------------------------
+   9. DIALOG / MODAL
    -------------------------------------------------------------------------- */
 .rk-dialog-backdrop {
   position: fixed;
   inset: 0;
   z-index: 120;
-  background: rgba(7, 20, 14, 0.52);
+  background: rgba(7, 20, 14, 0.48);
   backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
@@ -987,14 +831,14 @@ textarea.rk-inset-control {
 
 .rk-dialog-panel {
   width: 100%;
-  max-width: 720px;
-  max-height: 88vh;
+  max-width: 700px;
+  max-height: 86vh;
   overflow-y: auto;
-  border-radius: 24px;
+  border-radius: 22px;
   background: var(--rk-surface);
-  border: 1px solid var(--rk-line-strong);
+  border: 2px solid rgba(255, 255, 255, 0.92);
   box-shadow: 0 24px 60px rgba(7, 20, 14, 0.28);
-  padding: clamp(20px, 3vw, 32px);
+  padding: clamp(20px, 3vw, 30px);
 }
 
 .rk-dialog-head {
@@ -1002,13 +846,13 @@ textarea.rk-inset-control {
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-  padding-bottom: 16px;
+  padding-bottom: 14px;
   border-bottom: 1px solid var(--rk-line);
 }
 
 .rk-dialog-close {
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   border-radius: 999px;
   border: 1px solid var(--rk-line);
   background: var(--rk-surface-inset);
@@ -1017,113 +861,21 @@ textarea.rk-inset-control {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  flex-shrink: 0;
 }
 
 /* --------------------------------------------------------------------------
-   9. FOOTER (COMPACT & STRUCTURED DEEP PINE)
-   -------------------------------------------------------------------------- */
-.rk-footer-wrap {
-  margin-top: auto;
-  padding-bottom: clamp(18px, 3vw, 32px);
-}
-
-.rk-footer-bar {
-  border-radius: 20px;
-  background: linear-gradient(180deg, #10291F 0%, #0A1B14 100%);
-  color: #F7F5F0;
-  padding: clamp(22px, 3vw, 32px);
-  box-shadow: 0 12px 30px rgba(7, 20, 14, 0.18);
-  display: grid;
-  gap: 22px;
-}
-
-.rk-footer-top {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.rk-footer-brand strong {
-  font-size: 1rem;
-  color: #F7F5F0;
-}
-
-.rk-footer-brand span {
-  display: block;
-  font-size: 0.84rem;
-  color: rgba(247, 245, 240, 0.74);
-  margin-top: 2px;
-}
-
-.rk-footer-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-  font-size: 0.88rem;
-  color: rgba(247, 245, 240, 0.86);
-}
-
-.rk-footer-meta a:hover {
-  color: #FFFFFF;
-  text-decoration: underline;
-}
-
-.rk-footer-links-row {
-  padding-top: 16px;
-  border-top: 1px solid rgba(247, 245, 240, 0.12);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.rk-footer-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px 20px;
-  font-size: 0.84rem;
-  color: rgba(247, 245, 240, 0.78);
-}
-
-.rk-footer-nav a:hover {
-  color: #FFFFFF;
-}
-
-/* --------------------------------------------------------------------------
-   10. EMPTY STATE
-   -------------------------------------------------------------------------- */
-.rk-empty-state {
-  text-align: center;
-  padding: clamp(28px, 4vw, 44px);
-  border-radius: var(--rk-radius-card);
-  background: var(--rk-surface-inset);
-  border: 1px dashed var(--rk-line-strong);
-}
-
-.rk-empty-state h3 {
-  font-size: 1.1rem;
-  margin-bottom: 6px;
-}
-
-/* --------------------------------------------------------------------------
-   11. MOBILE NAVIGATION & RESPONSIVE BREAKPOINTS (DOWN TO 360px)
+   10. MOBILE DRAWER & RESPONSIVE BREAKPOINTS
    -------------------------------------------------------------------------- */
 .rk-mobile-toggle {
   display: none;
   width: 42px;
   height: 42px;
-  border-radius: 12px;
-  border: 1px solid var(--rk-line);
-  background: var(--rk-surface);
+  border-radius: 11px;
+  border: 1px solid rgba(16, 41, 31, 0.12);
+  background: rgba(255, 255, 255, 0.55);
   color: var(--rk-ink);
   align-items: center;
   justify-content: center;
-  box-shadow: var(--rk-shadow-raised);
   cursor: pointer;
 }
 
@@ -1131,7 +883,7 @@ textarea.rk-inset-control {
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: rgba(7, 20, 14, 0.44);
+  background: rgba(7, 20, 14, 0.42);
   backdrop-filter: blur(6px);
   display: flex;
   justify-content: flex-end;
@@ -1139,12 +891,12 @@ textarea.rk-inset-control {
 }
 
 .rk-mobile-drawer-panel {
-  width: min(100%, 360px);
+  width: min(100%, 340px);
   height: 100%;
   overflow-y: auto;
   border-radius: 22px;
   background: var(--rk-surface);
-  border: 1px solid var(--rk-line-strong);
+  border: 1.5px solid rgba(255, 255, 255, 0.92);
   box-shadow: 0 20px 50px rgba(7, 20, 14, 0.25);
   padding: 20px;
   display: flex;
@@ -1157,13 +909,13 @@ textarea.rk-inset-control {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding-bottom: 16px;
+  padding-bottom: 14px;
   border-bottom: 1px solid var(--rk-line);
 }
 
 .rk-mobile-nav-list {
   display: grid;
-  gap: 6px;
+  gap: 8px;
   margin-block: 16px;
 }
 
@@ -1173,11 +925,11 @@ textarea.rk-inset-control {
   justify-content: space-between;
   padding: 11px 14px;
   border-radius: 12px;
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 0.94rem;
+  font-weight: 700;
   color: var(--rk-ink);
   background: var(--rk-surface-raised);
-  border: 1px solid var(--rk-line);
+  box-shadow: var(--rk-shadow-pill);
 }
 
 .rk-mobile-nav-list a[aria-current="page"] {
@@ -1187,29 +939,24 @@ textarea.rk-inset-control {
 
 @media (max-width: 1024px) {
   .rk-hero-grid,
-  .rk-split-60-40,
+  .rk-split-55-45,
   .rk-split-40-60,
   .rk-split-50-50,
   .rk-article-layout,
-  .rk-program-spotlight,
   .rk-gallery-bento {
     grid-template-columns: 1fr;
   }
 
-  .rk-grid-4 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .rk-grid-5 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .rk-grid-3 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
-  .rk-toc-card {
-    position: static;
-  }
 }
 
-@media (max-width: 860px) {
+@media (max-width: 820px) {
   .rk-nav-links {
     display: none;
   }
@@ -1217,56 +964,64 @@ textarea.rk-inset-control {
   .rk-mobile-toggle {
     display: inline-flex;
   }
+
+  .rk-inline-section-sep {
+    display: none;
+  }
 }
 
 @media (max-width: 640px) {
+  .rk-site {
+    padding: 8px;
+  }
+
+  .rk-board-shell {
+    border-radius: 22px;
+  }
+
+  .rk-brand-text small {
+    font-size: 0.72rem;
+    white-space: nowrap;
+  }
+
+  .rk-eyebrow {
+    font-size: 0.75rem;
+    gap: 8px;
+  }
+
+  .rk-eyebrow-bar {
+    width: 22px;
+  }
+
   .rk-grid-3,
   .rk-grid-2,
-  .rk-grid-4 {
+  .rk-grid-5,
+  .rk-home-news-row {
     grid-template-columns: 1fr;
-  }
-
-  .rk-editorial-row {
-    grid-template-columns: 1fr;
-  }
-
-  .rk-editorial-arrow {
-    display: none;
-  }
-
-  .rk-event-row {
-    grid-template-columns: 64px minmax(0, 1fr);
-  }
-
-  .rk-event-row > :last-child {
-    grid-column: 1 / -1;
-  }
-
-  .rk-school-row,
-  .rk-document-row {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .rk-filter-search {
-    max-width: 100%;
-    width: 100%;
   }
 
   .rk-hero-actions {
     flex-direction: column;
     align-items: stretch;
+    gap: 12px;
   }
 
-  .rk-hero-actions .rk-btn-primary,
-  .rk-hero-actions .rk-btn-secondary {
+  .rk-hero-actions .rk-btn-primary {
     width: 100%;
   }
 
-  .rk-glass-caption {
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    padding: 10px 12px;
+  .rk-hero-actions .rk-link-inline {
+    justify-content: center;
+  }
+
+  .rk-event-row,
+  .rk-school-row {
+    grid-template-columns: 58px 1px minmax(0, 1fr);
+  }
+
+  .rk-event-row > :last-child,
+  .rk-school-row > :last-child {
+    grid-column: 1 / -1;
+    justify-self: end;
   }
 }

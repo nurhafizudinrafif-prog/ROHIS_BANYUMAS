@@ -1,349 +1,208 @@
-import { useMemo, useState } from 'react';
-import { ChevronDown, Check } from 'lucide-react';
+import { useState } from 'react';
 import { useData } from '../context/DataContext';
 import {
+  AccessibleDialog,
   Container,
-  PageHeader,
-  SoftCard,
-  InsetField,
   PrimaryButton,
-  EmptyState,
-  formatIndonesianDate,
+  SoftCard,
 } from '../components/ui/SoftUI';
 
-const TOPIC_CATEGORIES = [
-  'Semua',
-  'Keislaman harian',
-  'Organisasi ROHIS',
-  'Belajar & pertemanan',
+const STORAGE_KEY = 'rokaba:consultations_submitted';
+
+const CURATED_QA = [
+  {
+    id: 'qa-1',
+    topic: 'Keislaman',
+    question:
+      'Bagaimana cara menjaga konsistensi ibadah di tengah padatnya jadwal sekolah dan organisasi?',
+    answer:
+      'Mulailah dari amalan yang paling ringan namun rutin, seperti menjaga shalat tepat waktu dan dzikir pagi-petang. Jadikan aktivitas belajar serta berorganisasi di ROHIS sebagai bagian dari niat ibadah menuntut ilmu.',
+  },
+  {
+    id: 'qa-2',
+    topic: 'Keseharian',
+    question:
+      'Bagaimana tips membagi waktu antara akademik, kegiatan ROHIS, dan istirahat?',
+    answer:
+      'Gunakan skala prioritas harian, catat tenggat tugas sekolah lebih awal, dan komunikasikan pembagian tugas secara terbuka bersama rekan satu tim di ROHIS agar tidak dipikul sendiri.',
+  },
 ];
 
 export default function Consultation() {
-  const { questions = [], settings = {} } = useData();
-  const officialEmail = settings?.contactEmail || 'rokaba.banyumas@gmail.com';
+  const { consultations } = useData();
+  const [topic, setTopic] = useState('Keislaman');
+  const [sender, setSender] = useState('');
+  const [question, setQuestion] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [qaOpen, setQaOpen] = useState(false);
 
-  const [activeCategory, setActiveCategory] = useState('Semua');
-  const [openQuestionId, setOpenQuestionId] = useState(null);
-
-  // State formulir pertanyaan
-  const [senderName, setSenderName] = useState('');
-  const [topic, setTopic] = useState('Organisasi ROHIS');
-  const [questionText, setQuestionText] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
-  const [statusMessage, setStatusMessage] = useState('');
-  const [copied, setCopied] = useState(false);
-
-  const answeredQuestions = useMemo(() => {
-    return questions.filter((q) => q.status === 'answered' && q.answer);
-  }, [questions]);
-
-  const filteredQuestions = useMemo(() => {
-    if (activeCategory === 'Semua') return answeredQuestions;
-    const target = activeCategory.toLowerCase();
-    return answeredQuestions.filter((q) => {
-      const cat = String(q.category || '').toLowerCase();
-      if (target === 'keislaman harian') {
-        return (
-          cat.includes('ibadah') ||
-          cat.includes('akhlak') ||
-          cat.includes('fiqih') ||
-          cat.includes('islam')
-        );
-      }
-      if (target === 'organisasi rohis') {
-        return (
-          cat.includes('organisasi') ||
-          cat.includes('rohis') ||
-          cat.includes('kader')
-        );
-      }
-      if (target === 'belajar & pertemanan') {
-        return (
-          cat.includes('remaja') ||
-          cat.includes('belajar') ||
-          cat.includes('teman') ||
-          cat.includes('motivasi')
-        );
-      }
-      return cat === target;
-    });
-  }, [answeredQuestions, activeCategory]);
-
-  const buildFormattedBody = () => {
-    const sender = senderName.trim() || 'Pelajar Banyumas (Tanpa Nama)';
-    return `Assalamu'alaikum Tim Pembina & Konsultasi ROKABA,\n\nNama / Inisial: ${sender}\nTopik: ${topic}\n\nPertanyaan:\n${questionText.trim()}\n\nTerima kasih.`;
-  };
+  const cmsQa =
+    Array.isArray(consultations) && consultations.length > 0
+      ? consultations
+      : CURATED_QA;
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!questionText.trim() || questionText.trim().length < 10) {
-      setErrorMsg(
-        'Mohon tuliskan pertanyaanmu minimal 10 karakter agar dapat dipahami dengan jelas.'
-      );
-      return;
-    }
-    setErrorMsg('');
+    if (!question.trim()) return;
 
-    const subject = `[Konsultasi ROKABA - ${topic}] Pertanyaan dari ${
-      senderName.trim() || 'Pelajar'
-    }`;
-    const body = buildFormattedBody();
-    const mailtoUrl = `mailto:${officialEmail}?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
-
-    setStatusMessage(
-      `Aplikasi email Anda telah disiapkan untuk mengirim pertanyaan ke ${officialEmail}. Jika belum terbuka otomatis, Anda dapat menyalin teks pertanyaan di bawah.`
-    );
-    window.location.href = mailtoUrl;
-  };
-
-  const handleCopyQuestion = async () => {
-    if (!questionText.trim()) {
-      setErrorMsg('Tuliskan pertanyaanmu terlebih dahulu sebelum menyalin.');
-      return;
-    }
-    setErrorMsg('');
     try {
-      await navigator.clipboard.writeText(buildFormattedBody());
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
+      const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      existing.unshift({
+        id: Date.now(),
+        sender: sender.trim() || 'Anonim',
+        topic,
+        question: question.trim(),
+        createdAt: new Date().toISOString(),
+      });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
     } catch {
-      setCopied(false);
+      // ignore storage errors
     }
+
+    setSender('');
+    setQuestion('');
+    setSubmitted(true);
   };
 
   return (
     <div className="rk-page">
-      <PageHeader
-        breadcrumb={[{ label: 'Beranda', to: '/' }, { label: 'Konsultasi' }]}
-        title="Ruang bertanya dan berbagi"
-        lead="Sampaikan pertanyaan seputar kegiatan ROHIS, belajar, atau keseharian pelajar dengan santun dan nyaman."
-      />
-
-      <section className="rk-section" aria-label="Ruang konsultasi dan tanya jawab pelajar">
+      {/* 1. HEADER */}
+      <section className="rk-page-header">
         <Container>
-          {/* Filter Kategori Topik */}
-          <div className="rk-filter-bar">
-            <div className="rk-filter-pills" role="group" aria-label="Topik konsultasi">
-              {TOPIC_CATEGORIES.map((cat) => (
+          <div className="rk-eyebrow" style={{ marginBottom: '8px' }}>
+            <span className="rk-eyebrow-bar" aria-hidden="true" />
+          </div>
+
+          <h1 className="rk-page-title">Ruang bertanya dan berbagi</h1>
+          <p className="rk-page-lead" style={{ marginTop: '6px' }}>
+            Sampaikan pertanyaanmu dengan nyaman.
+          </p>
+        </Container>
+      </section>
+
+      {/* 2. TOPIC PILLS + FORM CARD + JAWABAN TERPILIH BAR */}
+      <section className="rk-section" style={{ paddingTop: '6px' }}>
+        <Container>
+          <div className="rk-filter-bar" style={{ marginBottom: '16px' }}>
+            <div
+              className="rk-filter-pills"
+              role="group"
+              aria-label="Topik konsultasi"
+            >
+              {['Keislaman', 'Keseharian'].map((item) => (
                 <button
-                  key={cat}
+                  key={item}
                   type="button"
                   className="rk-pill"
-                  aria-pressed={activeCategory === cat}
-                  onClick={() => setActiveCategory(cat)}
+                  aria-pressed={topic === item}
+                  onClick={() => setTopic(item)}
                 >
-                  {cat}
+                  {item}
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="rk-split-50-50">
-            {/* Formulir Pertanyaan Jujur */}
-            <SoftCard as="section" aria-labelledby="rk-consult-form-title">
-              <h2
-                id="rk-consult-form-title"
-                style={{ fontSize: '1.25rem', marginBottom: '6px' }}
-              >
-                Sampaikan pertanyaanmu dengan nyaman.
-              </h2>
-              <p style={{ fontSize: '0.9rem', marginBottom: '18px' }}>
-                Pertanyaan akan dikirimkan melalui email resmi pengurus dan pembina ROKABA ({officialEmail}) untuk ditanggapi secara santun.
-              </p>
+          <SoftCard style={{ padding: 'clamp(18px, 2.4vw, 26px)' }}>
+            <form
+              onSubmit={handleSubmit}
+              style={{ display: 'grid', gap: '14px' }}
+            >
+              <input
+                type="text"
+                className="rk-inset-control"
+                placeholder="Nama atau anonim"
+                aria-label="Nama atau anonim"
+                value={sender}
+                onChange={(e) => {
+                  setSender(e.target.value);
+                  if (submitted) setSubmitted(false);
+                }}
+              />
 
-              <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '14px' }} noValidate>
-                <div className="rk-split-50-50" style={{ gap: '12px' }}>
-                  <InsetField
-                    id="rk-consult-name"
-                    label="Nama atau inisial (opsional)"
-                    placeholder="Contoh: Ahmad / Hamba Allah"
-                    value={senderName}
-                    onChange={(e) => setSenderName(e.target.value)}
-                  />
+              <textarea
+                rows={4}
+                required
+                className="rk-inset-control"
+                placeholder="Pertanyaan"
+                aria-label="Pertanyaan"
+                value={question}
+                onChange={(e) => {
+                  setQuestion(e.target.value);
+                  if (submitted) setSubmitted(false);
+                }}
+              />
 
-                  <InsetField
-                    as="select"
-                    id="rk-consult-topic"
-                    label="Topik bahasan"
-                    value={topic}
-                    onChange={(e) => setTopic(e.target.value)}
-                  >
-                    <option value="Keislaman harian">Keislaman harian</option>
-                    <option value="Organisasi ROHIS">Organisasi ROHIS</option>
-                    <option value="Belajar & pertemanan">Belajar & pertemanan</option>
-                  </InsetField>
-                </div>
+              <PrimaryButton type="submit" style={{ width: '100%' }}>
+                Kirim pertanyaan
+              </PrimaryButton>
 
-                <InsetField
-                  as="textarea"
-                  id="rk-consult-question"
-                  label="Pertanyaanmu"
-                  placeholder="Tuliskan pertanyaan atau hal yang ingin kamu diskusikan..."
-                  rows={4}
-                  required
-                  value={questionText}
-                  onChange={(e) => {
-                    setQuestionText(e.target.value);
-                    if (errorMsg) setErrorMsg('');
+              {submitted && (
+                <p
+                  role="status"
+                  style={{
+                    fontSize: '0.86rem',
+                    fontWeight: 600,
+                    color: 'var(--rk-pine)',
+                    textAlign: 'center',
                   }}
-                />
-
-                {errorMsg && (
-                  <p
-                    role="alert"
-                    style={{
-                      margin: 0,
-                      fontSize: '0.85rem',
-                      color: '#8C2D19',
-                      fontWeight: 600,
-                    }}
-                  >
-                    {errorMsg}
-                  </p>
-                )}
-
-                {statusMessage && (
-                  <div
-                    role="status"
-                    className="rk-inset-panel"
-                    style={{
-                      padding: '12px 14px',
-                      fontSize: '0.86rem',
-                      color: 'var(--rk-ink)',
-                    }}
-                  >
-                    {statusMessage}
-                  </div>
-                )}
-
-                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px', paddingTop: '4px' }}>
-                  <PrimaryButton type="submit">Kirim pertanyaan</PrimaryButton>
-                  <button
-                    type="button"
-                    className="rk-btn-secondary"
-                    onClick={handleCopyQuestion}
-                  >
-                    {copied ? <Check size={16} /> : null}
-                    <span>{copied ? 'Pertanyaan disalin' : 'Salin teks pertanyaan'}</span>
-                  </button>
-                </div>
-              </form>
-            </SoftCard>
-
-            {/* Daftar Jawaban Terpilih */}
-            <div style={{ display: 'grid', gap: '14px', alignContent: 'start' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <h2 style={{ fontSize: '1.2rem' }}>Jawaban terpilih</h2>
-                <span className="rk-badge">{filteredQuestions.length} diskusi</span>
-              </div>
-
-              {filteredQuestions.length === 0 ? (
-                <EmptyState
-                  title="Belum ada tanya-jawab pada topik ini"
-                  description="Pilih kategori Semua untuk membaca tanggapan yang telah dipublikasikan."
-                  action={
-                    <button
-                      type="button"
-                      className="rk-btn-secondary"
-                      onClick={() => setActiveCategory('Semua')}
-                    >
-                      Lihat semua topik
-                    </button>
-                  }
-                />
-              ) : (
-                filteredQuestions.map((item, idx) => {
-                  const isOpen =
-                    openQuestionId === item.id ||
-                    (openQuestionId === null && idx === 0);
-
-                  const questionTitle = item.question || item.query || '';
-                  const senderLabel = item.askerName || item.sender || 'Anonim';
-
-                  return (
-                    <SoftCard key={item.id} as="article" style={{ padding: '20px 22px' }}>
-                      <button
-                        type="button"
-                        aria-expanded={isOpen}
-                        onClick={() =>
-                          setOpenQuestionId(isOpen ? -1 : item.id)
-                        }
-                        style={{
-                          width: '100%',
-                          background: 'none',
-                          border: 'none',
-                          padding: 0,
-                          textAlign: 'left',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'flex-start',
-                          justifyContent: 'space-between',
-                          gap: '12px',
-                        }}
-                      >
-                        <div>
-                          <div className="rk-meta-line" style={{ marginBottom: '6px' }}>
-                            <span>{item.category || 'Diskusi Pelajar'}</span>
-                            <span>•</span>
-                            <span>Oleh {senderLabel}</span>
-                          </div>
-                          <h3
-                            style={{
-                              fontSize: '1.02rem',
-                              lineHeight: 1.4,
-                              color: 'var(--rk-ink)',
-                            }}
-                          >
-                            {questionTitle}
-                          </h3>
-                        </div>
-
-                        <ChevronDown
-                          size={18}
-                          style={{
-                            flexShrink: 0,
-                            marginTop: '4px',
-                            color: 'var(--rk-muted)',
-                            transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                            transition: 'transform 160ms ease',
-                          }}
-                        />
-                      </button>
-
-                      {isOpen && (
-                        <div
-                          className="rk-inset-panel"
-                          style={{
-                            marginTop: '14px',
-                            padding: '16px 18px',
-                          }}
-                        >
-                          <div
-                            style={{
-                              fontSize: '0.8rem',
-                              fontWeight: 700,
-                              color: 'var(--rk-brass-text)',
-                              marginBottom: '6px',
-                            }}
-                          >
-                            Tanggapan {item.answeredBy || 'Dewan Pembina ROKABA'} •{' '}
-                            {formatIndonesianDate(item.answeredAt || item.createdAt)}
-                          </div>
-                          <p style={{ fontSize: '0.92rem', color: 'var(--rk-ink)', lineHeight: 1.65 }}>
-                            {item.answer}
-                          </p>
-                        </div>
-                      )}
-                    </SoftCard>
-                  );
-                })
+                >
+                  Pertanyaanmu telah tercatat. Terima kasih telah berbagi.
+                </p>
               )}
-            </div>
-          </div>
+            </form>
+          </SoftCard>
+
+          <button
+            type="button"
+            className="rk-bar-card"
+            onClick={() => setQaOpen(true)}
+            style={{
+              marginTop: '14px',
+              width: '100%',
+              cursor: 'pointer',
+              textAlign: 'left',
+            }}
+          >
+            <strong style={{ fontSize: '1.02rem', color: 'var(--rk-ink)' }}>
+              Jawaban terpilih
+            </strong>
+            <span aria-hidden="true" style={{ fontWeight: 700 }}>
+              →
+            </span>
+          </button>
         </Container>
       </section>
+
+      <AccessibleDialog
+        open={qaOpen}
+        onClose={() => setQaOpen(false)}
+        eyebrow="Ruang Konsultasi Pelajar"
+        title="Jawaban terpilih"
+      >
+        <div style={{ display: 'grid', gap: '12px' }}>
+          {cmsQa.map((item, idx) => (
+            <div
+              key={item.id || idx}
+              className="rk-inset-panel"
+              style={{ padding: '14px 16px', borderRadius: '14px' }}
+            >
+              <strong
+                style={{
+                  display: 'block',
+                  fontSize: '0.94rem',
+                  color: 'var(--rk-ink)',
+                }}
+              >
+                {item.question || item.title}
+              </strong>
+              <p style={{ fontSize: '0.88rem', marginTop: '6px' }}>
+                {item.answer || item.response || item.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </AccessibleDialog>
     </div>
   );
 }

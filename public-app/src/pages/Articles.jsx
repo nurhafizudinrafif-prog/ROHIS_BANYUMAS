@@ -1,161 +1,156 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Search } from 'lucide-react';
 import { useData } from '../context/DataContext';
-import {
-  Container,
-  PageHeader,
-  SoftCard,
-  FilterBar,
-  InsetField,
-  SmartImage,
-  EmptyState,
-  ROKABA_REAL_PHOTOS,
-  formatIndonesianDate,
-} from '../components/ui/SoftUI';
+import { Container } from '../components/ui/SoftUI';
+
+const CATEGORIES = ['Semua', 'Refleksi', 'Pelajar'];
+
+const REFERENCE_ARTICLES = [
+  {
+    slug: 'bertumbuh-melalui-kebiasaan-baik',
+    title: 'Bertumbuh melalui kebiasaan baik',
+    excerpt:
+      'Refleksi sederhana tentang membangun kebiasaan positif dalam keseharian.',
+    category: 'Refleksi',
+  },
+  {
+    slug: 'menjaga-semangat-belajar-sebagai-pelajar-muslim',
+    title: 'Menjaga semangat belajar sebagai pelajar Muslim',
+    excerpt:
+      'Panduan singkat agar tetap semangat dan produktif dalam menuntut ilmu.',
+    category: 'Pelajar',
+  },
+  {
+    slug: 'peran-pelajar-dalam-lingkungan-sekitar',
+    title: 'Peran pelajar dalam lingkungan sekitar',
+    excerpt:
+      'Gagasan sederhana untuk memberi dampak positif di sekitar kita.',
+    category: 'Pelajar',
+  },
+];
 
 export default function Articles() {
-  const { articles = [] } = useData();
-  const [activeCategory, setActiveCategory] = useState('Semua');
-  const [searchQuery, setSearchQuery] = useState('');
+  const { articles } = useData();
+  const [activeCat, setActiveCat] = useState('Semua');
+  const [query, setQuery] = useState('');
 
-  const sortedArticles = useMemo(() => {
-    return [...articles].sort((a, b) =>
-      String(b.date || '').localeCompare(String(a.date || ''))
-    );
-  }, [articles]);
-
-  const categories = useMemo(() => {
-    const base = ['Semua', 'Aqidah & Akhlak', 'Kepemimpinan', 'Keseharian Pelajar'];
-    const set = new Set(base);
-    sortedArticles.forEach((art) => {
-      if (art.category) set.add(art.category);
-    });
-    return Array.from(set);
-  }, [sortedArticles]);
+  const cmsArticles = Array.isArray(articles) ? articles : [];
 
   const filteredArticles = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
-    return sortedArticles.filter((art) => {
-      const cat = String(art.category || '').toLowerCase();
-      const activeLower = activeCategory.toLowerCase();
-      const matchesCategory =
-        activeCategory === 'Semua' ||
-        cat === activeLower ||
-        (activeLower === 'aqidah & akhlak' &&
-          (cat.includes('aqidah') || cat.includes('akhlak') || cat.includes('ibadah'))) ||
-        (activeLower === 'keseharian pelajar' &&
-          (cat.includes('pelajar') ||
-            cat.includes('produktivitas') ||
-            cat.includes('motivasi') ||
-            cat.includes('sosial')));
-
-      const matchesSearch =
-        !q ||
-        String(art.title || '').toLowerCase().includes(q) ||
-        String(art.excerpt || '').toLowerCase().includes(q) ||
-        String(art.author || '').toLowerCase().includes(q);
-
-      return matchesCategory && matchesSearch;
+    const combined = [...REFERENCE_ARTICLES];
+    cmsArticles.forEach((item) => {
+      if (
+        item?.title &&
+        !combined.some(
+          (a) => a.slug === item.slug || a.title === item.title
+        )
+      ) {
+        combined.push({
+          slug: item.slug || String(item.id),
+          title: item.title,
+          excerpt:
+            item.excerpt ||
+            'Catatan dan refleksi keislaman bagi pelajar Muslim Banyumas.',
+          category: /refleksi|akhlak|hati/i.test(
+            `${item.category || ''} ${item.title || ''}`
+          )
+            ? 'Refleksi'
+            : 'Pelajar',
+        });
+      }
     });
-  }, [sortedArticles, activeCategory, searchQuery]);
+
+    return combined.filter((item) => {
+      const matchCat =
+        activeCat === 'Semua' ||
+        item.category.toLowerCase() === activeCat.toLowerCase();
+      const q = query.trim().toLowerCase();
+      const matchQuery =
+        !q ||
+        item.title.toLowerCase().includes(q) ||
+        item.excerpt.toLowerCase().includes(q);
+      return matchCat && matchQuery;
+    });
+  }, [cmsArticles, activeCat, query]);
 
   return (
     <div className="rk-page">
-      <PageHeader
-        breadcrumb={[{ label: 'Beranda', to: '/' }, { label: 'Artikel' }]}
-        title="Bacaan untuk bertumbuh"
-        lead="Kumpulan catatan keislaman, kepemimpinan, dan refleksi keseharian untuk menemani perjalanan belajar pelajar."
-      />
-
-      <section className="rk-section" aria-label="Daftar artikel pelajar">
+      {/* 1. HEADER */}
+      <section className="rk-page-header">
         <Container>
-          <FilterBar
-            categories={categories}
-            activeCategory={activeCategory}
-            onSelectCategory={setActiveCategory}
-            searchNode={
-              <InsetField
-                id="rk-article-search"
-                type="search"
-                aria-label="Cari artikel"
-                placeholder="Cari artikel..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            }
-          />
+          <div className="rk-eyebrow">
+            <span className="rk-eyebrow-bar" aria-hidden="true" />
+            <span>Artikel ROKABA</span>
+          </div>
 
-          {filteredArticles.length === 0 ? (
-            <EmptyState
-              title="Artikel belum ditemukan"
-              description="Coba gunakan kata kunci lain atau pilih kategori Semua untuk melihat seluruh bacaan."
-              action={
+          <h1 className="rk-page-title">Bacaan untuk bertumbuh</h1>
+        </Container>
+      </section>
+
+      {/* 2. FILTER BAR + STACKED 3D ARTICLE CARDS */}
+      <section className="rk-section" style={{ paddingTop: '8px' }}>
+        <Container>
+          <div className="rk-filter-bar">
+            <div
+              className="rk-filter-pills"
+              role="group"
+              aria-label="Filter kategori artikel"
+            >
+              {CATEGORIES.map((cat) => (
                 <button
+                  key={cat}
                   type="button"
-                  className="rk-btn-secondary"
-                  onClick={() => {
-                    setActiveCategory('Semua');
-                    setSearchQuery('');
-                  }}
+                  className="rk-pill"
+                  aria-pressed={activeCat === cat}
+                  onClick={() => setActiveCat(cat)}
                 >
-                  Tampilkan semua artikel
+                  {cat}
                 </button>
-              }
-            />
-          ) : (
-            <div style={{ display: 'grid', gap: '16px' }}>
-              {filteredArticles.map((art, idx) => (
-                <SoftCard key={art.id} as="article" interactive className="rk-editorial-row">
-                  <Link
-                    to={`/articles/${art.slug || art.id}`}
-                    className="rk-editorial-thumb"
-                  >
-                    <SmartImage
-                      src={
-                        art.image ||
-                        art.coverImage ||
-                        ROKABA_REAL_PHOTOS[idx % ROKABA_REAL_PHOTOS.length]
-                      }
-                      alt={art.title}
-                    />
-                  </Link>
-
-                  <div className="rk-editorial-body">
-                    <div className="rk-meta-line">
-                      <span>{art.category || 'Refleksi'}</span>
-                      <span>•</span>
-                      <span>{formatIndonesianDate(art.date)}</span>
-                      {art.readingTime && (
-                        <>
-                          <span>•</span>
-                          <span>{art.readingTime} baca</span>
-                        </>
-                      )}
-                    </div>
-
-                    <h3>
-                      <Link
-                        to={`/articles/${art.slug || art.id}`}
-                        style={{ color: 'inherit' }}
-                      >
-                        {art.title}
-                      </Link>
-                    </h3>
-
-                    <p>{art.excerpt}</p>
-                  </div>
-
-                  <Link
-                    to={`/articles/${art.slug || art.id}`}
-                    className="rk-editorial-arrow"
-                    aria-label={`Baca artikel ${art.title}`}
-                  >
-                    →
-                  </Link>
-                </SoftCard>
               ))}
             </div>
-          )}
+
+            <div className="rk-search-well" style={{ width: 'min(100%, 260px)' }}>
+              <Search size={16} aria-hidden="true" />
+              <input
+                type="search"
+                className="rk-inset-control"
+                placeholder="Cari artikel"
+                aria-label="Cari artikel"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gap: '14px' }}>
+            {filteredArticles
+              .slice(0, query.trim() ? 12 : 3)
+              .map((item) => (
+                <Link
+                  key={item.slug}
+                  to={`/articles/${item.slug}`}
+                  className="rk-bar-card"
+                  style={{ padding: '18px 24px' }}
+                >
+                  <div style={{ display: 'grid', gap: '4px' }}>
+                    <h2 style={{ fontSize: '1.14rem', fontWeight: 800 }}>
+                      {item.title}
+                    </h2>
+                    <p style={{ fontSize: '0.88rem', color: 'var(--rk-muted)' }}>
+                      {item.excerpt}
+                    </p>
+                  </div>
+
+                  <span
+                    aria-hidden="true"
+                    style={{ fontSize: '1.05rem', fontWeight: 700 }}
+                  >
+                    →
+                  </span>
+                </Link>
+              ))}
+          </div>
         </Container>
       </section>
     </div>

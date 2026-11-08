@@ -1,206 +1,191 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Search } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import {
   Container,
-  PageHeader,
-  SoftCard,
-  FilterBar,
-  InsetField,
-  SmartImage,
-  EmptyState,
+  PhotoFrame,
   ROKABA_REAL_PHOTOS,
-  formatIndonesianDate,
+  SoftCard,
 } from '../components/ui/SoftUI';
 
+const CATEGORIES = ['Semua', 'Organisasi', 'Kajian'];
+
+const REFERENCE_NEWS_BARS = [
+  {
+    slug: 'kajian-pelajar-tentang-adab-menuntut-ilmu',
+    title: 'Kajian pelajar tentang adab menuntut ilmu',
+    category: 'Kajian',
+  },
+  {
+    slug: 'forum-silaturahmi-pengurus-rohis-se-banyumas',
+    title: 'Forum silaturahmi pengurus ROHIS se-Banyumas',
+    category: 'Organisasi',
+  },
+];
+
 export default function News() {
-  const { news = [] } = useData();
-  const [activeCategory, setActiveCategory] = useState('Semua');
-  const [searchQuery, setSearchQuery] = useState('');
+  const { news } = useData();
+  const [activeCat, setActiveCat] = useState('Semua');
+  const [query, setQuery] = useState('');
 
-  // Urutkan sesuai order (jika ada) lalu tanggal terbaru
-  const sortedNews = useMemo(() => {
-    return [...news].sort((a, b) => {
-      const orderA = Number.isFinite(Number(a.order)) ? Number(a.order) : 999;
-      const orderB = Number.isFinite(Number(b.order)) ? Number(b.order) : 999;
-      if (orderA !== orderB) return orderA - orderB;
-      return String(b.date || '').localeCompare(String(a.date || ''));
+  const cmsNews = Array.isArray(news) ? news : [];
+  const featuredSlug = 'merawat-ukhuwah-lintas-sekolah';
+
+  const barItems = useMemo(() => {
+    const combined = [...REFERENCE_NEWS_BARS];
+    cmsNews.forEach((item) => {
+      if (
+        item?.title &&
+        !combined.some(
+          (b) => b.slug === item.slug || b.title === item.title
+        )
+      ) {
+        combined.push({
+          slug: item.slug || String(item.id),
+          title: item.title,
+          category: /kajian|ilmu|syiar/i.test(
+            `${item.category || ''} ${item.title || ''}`
+          )
+            ? 'Kajian'
+            : 'Organisasi',
+        });
+      }
     });
-  }, [news]);
 
-  const categories = useMemo(() => {
-    const unique = new Set(['Semua']);
-    sortedNews.forEach((item) => {
-      if (item.category) unique.add(item.category);
+    return combined.filter((item) => {
+      const matchCat =
+        activeCat === 'Semua' ||
+        item.category.toLowerCase() === activeCat.toLowerCase();
+      const q = query.trim().toLowerCase();
+      const matchQuery = !q || item.title.toLowerCase().includes(q);
+      return matchCat && matchQuery;
     });
-    return Array.from(unique);
-  }, [sortedNews]);
+  }, [cmsNews, activeCat, query]);
 
-  const filteredNews = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
-    return sortedNews.filter((item) => {
-      const matchesCat =
-        activeCategory === 'Semua' ||
-        String(item.category || '').toLowerCase() === activeCategory.toLowerCase();
-      const matchesQuery =
-        !q ||
-        String(item.title || '').toLowerCase().includes(q) ||
-        String(item.excerpt || '').toLowerCase().includes(q) ||
-        String(item.content || '').toLowerCase().includes(q);
-      return matchesCat && matchesQuery;
-    });
-  }, [sortedNews, activeCategory, searchQuery]);
-
-  const featuredItem = filteredNews[0] || null;
-  const listItems = filteredNews.slice(1);
+  const showFeatured =
+    (activeCat === 'Semua' || activeCat === 'Organisasi') &&
+    (!query.trim() ||
+      'merawat ukhuwah lintas sekolah'.includes(query.trim().toLowerCase()));
 
   return (
     <div className="rk-page">
-      <PageHeader
-        breadcrumb={[{ label: 'Beranda', to: '/' }, { label: 'Berita' }]}
-        title="Kabar dari ROKABA"
-        lead="Ikuti kegiatan, kolaborasi, dan catatan perjalanan ROHIS SMA, SMK, dan MA se-Kabupaten Banyumas."
-      />
-
-      <section className="rk-section" aria-label="Arsip berita ROKABA">
+      {/* 1. HEADER */}
+      <section className="rk-page-header">
         <Container>
-          <FilterBar
-            categories={categories}
-            activeCategory={activeCategory}
-            onSelectCategory={setActiveCategory}
-            searchNode={
-              <InsetField
-                id="rk-news-search"
-                type="search"
-                aria-label="Cari berita"
-                placeholder="Cari berita..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            }
-          />
+          <div className="rk-eyebrow">
+            <span className="rk-eyebrow-bar" aria-hidden="true" />
+            <span>Berita ROKABA</span>
+          </div>
 
-          {filteredNews.length === 0 ? (
-            <EmptyState
-              title="Berita tidak ditemukan"
-              description="Belum ada berita yang cocok dengan kata kunci atau kategori yang dipilih."
-              action={
+          <h1 className="rk-page-title">Kabar dari ROKABA</h1>
+        </Container>
+      </section>
+
+      {/* 2. FILTER BAR + FEATURED CARD + COMPACT BARS */}
+      <section className="rk-section" style={{ paddingTop: '8px' }}>
+        <Container>
+          <div className="rk-filter-bar">
+            <div
+              className="rk-filter-pills"
+              role="group"
+              aria-label="Filter kategori berita"
+            >
+              {CATEGORIES.map((cat) => (
                 <button
+                  key={cat}
                   type="button"
-                  className="rk-btn-secondary"
-                  onClick={() => {
-                    setActiveCategory('Semua');
-                    setSearchQuery('');
-                  }}
+                  className="rk-pill"
+                  aria-pressed={activeCat === cat}
+                  onClick={() => setActiveCat(cat)}
                 >
-                  Tampilkan semua berita
+                  {cat}
                 </button>
-              }
-            />
-          ) : (
-            <div style={{ display: 'grid', gap: '20px' }}>
-              {/* Berita Utama */}
-              {featuredItem && (
-                <SoftCard as="article" style={{ padding: 'clamp(20px, 3vw, 28px)' }}>
-                  <div className="rk-split-50-50" style={{ alignItems: 'center' }}>
-                    <Link
-                      to={`/berita/${featuredItem.slug || featuredItem.id}`}
-                      className="rk-news-feature-thumb"
-                      style={{ display: 'block', margin: 0 }}
-                    >
-                      <SmartImage
-                        src={featuredItem.image || ROKABA_REAL_PHOTOS[0]}
-                        alt={featuredItem.title}
-                        eager
-                      />
-                    </Link>
-
-                    <div>
-                      <div className="rk-meta-line">
-                        <span className="rk-badge rk-badge--brass">
-                          {featuredItem.category || 'Kegiatan'}
-                        </span>
-                        <span>•</span>
-                        <span>{formatIndonesianDate(featuredItem.date)}</span>
-                      </div>
-
-                      <h2
-                        style={{
-                          fontSize: 'clamp(1.3rem, 2.2vw, 1.7rem)',
-                          lineHeight: 1.25,
-                          marginTop: '10px',
-                          marginBottom: '10px',
-                        }}
-                      >
-                        <Link
-                          to={`/berita/${featuredItem.slug || featuredItem.id}`}
-                          style={{ color: 'inherit' }}
-                        >
-                          {featuredItem.title}
-                        </Link>
-                      </h2>
-
-                      <p style={{ marginBottom: '16px' }}>{featuredItem.excerpt}</p>
-
-                      <Link
-                        to={`/berita/${featuredItem.slug || featuredItem.id}`}
-                        className="rk-card-link"
-                      >
-                        <span>Baca selengkapnya</span>
-                        <span aria-hidden="true">→</span>
-                      </Link>
-                    </div>
-                  </div>
-                </SoftCard>
-              )}
-
-              {/* Daftar Berita Lainnya */}
-              {listItems.map((item, idx) => (
-                <SoftCard key={item.id} as="article" interactive className="rk-editorial-row">
-                  <Link
-                    to={`/berita/${item.slug || item.id}`}
-                    className="rk-editorial-thumb"
-                  >
-                    <SmartImage
-                      src={item.image || ROKABA_REAL_PHOTOS[(idx + 1) % ROKABA_REAL_PHOTOS.length]}
-                      alt={item.title}
-                    />
-                  </Link>
-
-                  <div className="rk-editorial-body">
-                    <div className="rk-meta-line">
-                      <span>{item.category || 'Kabar'}</span>
-                      <span>•</span>
-                      <span>{formatIndonesianDate(item.date)}</span>
-                      {item.author && (
-                        <>
-                          <span>•</span>
-                          <span>{item.author}</span>
-                        </>
-                      )}
-                    </div>
-                    <h3>
-                      <Link
-                        to={`/berita/${item.slug || item.id}`}
-                        style={{ color: 'inherit' }}
-                      >
-                        {item.title}
-                      </Link>
-                    </h3>
-                    <p>{item.excerpt}</p>
-                  </div>
-
-                  <Link
-                    to={`/berita/${item.slug || item.id}`}
-                    className="rk-editorial-arrow"
-                    aria-label={`Baca berita ${item.title}`}
-                  >
-                    →
-                  </Link>
-                </SoftCard>
               ))}
             </div>
+
+            <div className="rk-search-well" style={{ width: 'min(100%, 260px)' }}>
+              <Search size={16} aria-hidden="true" />
+              <input
+                type="search"
+                className="rk-inset-control"
+                placeholder="Cari berita"
+                aria-label="Cari berita"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Featured News Card */}
+          {showFeatured && (
+            <SoftCard style={{ padding: 'clamp(16px, 2vw, 22px)' }}>
+              <div className="rk-home-news-row">
+                <Link
+                  to={`/berita/${featuredSlug}`}
+                  aria-label="Merawat ukhuwah lintas sekolah"
+                >
+                  <PhotoFrame
+                    src={ROKABA_REAL_PHOTOS[0]}
+                    alt="Merawat ukhuwah lintas sekolah"
+                    aspect="16/9.4"
+                    eager
+                  />
+                </Link>
+
+                <div style={{ display: 'grid', gap: '8px' }}>
+                  <span
+                    style={{
+                      fontSize: '0.86rem',
+                      fontWeight: 700,
+                      color: 'var(--rk-brass-text)',
+                    }}
+                  >
+                    Kegiatan organisasi
+                  </span>
+
+                  <h2
+                    style={{
+                      fontSize: 'clamp(1.4rem, 2.2vw, 1.85rem)',
+                      lineHeight: 1.15,
+                    }}
+                  >
+                    <Link to={`/berita/${featuredSlug}`}>
+                      Merawat ukhuwah lintas sekolah
+                    </Link>
+                  </h2>
+
+                  <div style={{ marginTop: '4px' }}>
+                    <Link
+                      to={`/berita/${featuredSlug}`}
+                      className="rk-link-inline"
+                    >
+                      <span>Baca selengkapnya</span>
+                      <span aria-hidden="true">→</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </SoftCard>
           )}
+
+          {/* Stacked 3D Horizontal Bars */}
+          <div style={{ marginTop: '14px', display: 'grid', gap: '12px' }}>
+            {barItems.slice(0, query.trim() ? 10 : 2).map((item) => (
+              <Link
+                key={item.slug}
+                to={`/berita/${item.slug}`}
+                className="rk-bar-card"
+              >
+                <strong style={{ fontSize: '0.98rem', color: 'var(--rk-ink)' }}>
+                  {item.title}
+                </strong>
+                <span aria-hidden="true" style={{ fontWeight: 700 }}>
+                  →
+                </span>
+              </Link>
+            ))}
+          </div>
         </Container>
       </section>
     </div>

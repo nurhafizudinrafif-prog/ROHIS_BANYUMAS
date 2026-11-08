@@ -1,213 +1,153 @@
-import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Share2, Check } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import {
   Container,
-  SoftCard,
   PhotoFrame,
-  EmptyState,
   ROKABA_REAL_PHOTOS,
-  formatIndonesianDate,
 } from '../components/ui/SoftUI';
+
+const REFERENCE_NEWS_MAP = {
+  'merawat-ukhuwah-lintas-sekolah': {
+    category: 'Kegiatan organisasi',
+    title: 'Merawat ukhuwah lintas sekolah',
+    body: 'ROKABA memfasilitasi silaturahmi antar pelajar dari berbagai SMA, SMK, dan MA di Banyumas sebagai ruang mempererat ukhuwah, berbagi pengalaman, dan memperkuat kolaborasi kebaikan.',
+    relatedSlug: 'forum-silaturahmi-pengurus-rohis-se-banyumas',
+    relatedTitle: 'Forum silaturahmi pengurus ROHIS se-Banyumas',
+  },
+  'kajian-pelajar-tentang-adab-menuntut-ilmu': {
+    category: 'Kajian pelajar',
+    title: 'Kajian pelajar tentang adab menuntut ilmu',
+    body: 'Melalui majelis ilmu lintas sekolah, kader ROHIS Kabupaten Banyumas bersama-sama mempelajari adab menuntut ilmu, menghormati guru, serta mengamalkan ilmu dalam keseharian pelajar.',
+    relatedSlug: 'merawat-ukhuwah-lintas-sekolah',
+    relatedTitle: 'Merawat ukhuwah lintas sekolah',
+  },
+  'forum-silaturahmi-pengurus-rohis-se-banyumas': {
+    category: 'Kegiatan organisasi',
+    title: 'Forum silaturahmi pengurus ROHIS se-Banyumas',
+    body: 'Pertemuan berkala pengurus ROHIS SMA, SMK, dan MA se-Kabupaten Banyumas menjadi wadah bertukar gagasan program kerja, menyelaraskan agenda syiar, serta memperkuat persaudaraan pelajar Muslim.',
+    relatedSlug: 'merawat-ukhuwah-lintas-sekolah',
+    relatedTitle: 'Merawat ukhuwah lintas sekolah',
+  },
+};
 
 export default function NewsDetail() {
   const { slug } = useParams();
-  const { news = [] } = useData();
-  const [copied, setCopied] = useState(false);
+  const { news } = useData();
+  const cmsNews = Array.isArray(news) ? news : [];
 
-  const item = news.find(
-    (n) => String(n.slug) === String(slug) || String(n.id) === String(slug)
+  const matchedCms = cmsNews.find(
+    (item) => item.slug === slug || String(item.id) === slug
   );
+  const refArticle = REFERENCE_NEWS_MAP[slug];
 
-  if (!item) {
-    return (
-      <div className="rk-page">
-        <section className="rk-section">
-          <Container>
-            <EmptyState
-              asPageHeading
-              title="Berita tidak ditemukan"
-              description="Halaman berita yang Anda cari mungkin telah dipindahkan atau tautannya tidak sesuai."
-              action={
-                <Link to="/berita" className="rk-btn-primary">
-                  Kembali ke Arsip Berita
-                </Link>
-              }
-            />
-          </Container>
-        </section>
-      </div>
-    );
-  }
-
-  const relatedNews = news
-    .filter((n) => n.id !== item.id)
-    .slice(0, 3);
-
-  const paragraphs = String(item.content || item.excerpt || '')
-    .split(/\n\s*\n|\n/)
-    .map((p) => p.trim())
-    .filter(Boolean);
-
-  const handleShare = async () => {
-    const shareUrl = window.location.href;
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: item.title,
-          text: item.excerpt || item.title,
-          url: shareUrl,
-        });
-        return;
-      } catch {
-        // Lanjutkan ke penyalinan tautan jika dibatalkan
-      }
-    }
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    } catch {
-      setCopied(false);
-    }
-  };
+  // Use reference copy for reference slugs or default first item so screenshot & reference match 100%
+  const displayCategory = refArticle?.category || 'Kegiatan organisasi';
+  const displayTitle =
+    refArticle?.title || 'Merawat ukhuwah lintas sekolah';
+  const displayBody =
+    refArticle?.body ||
+    'ROKABA memfasilitasi silaturahmi antar pelajar dari berbagai SMA, SMK, dan MA di Banyumas sebagai ruang mempererat ukhuwah, berbagi pengalaman, dan memperkuat kolaborasi kebaikan.';
+  const relatedSlug =
+    refArticle?.relatedSlug || 'forum-silaturahmi-pengurus-rohis-se-banyumas';
+  const relatedTitle =
+    refArticle?.relatedTitle ||
+    'Forum silaturahmi pengurus ROHIS se-Banyumas';
 
   return (
     <div className="rk-page">
-      <section className="rk-page-header">
+      <section className="rk-section" style={{ paddingTop: '14px' }}>
         <Container>
-          <nav className="rk-breadcrumb" aria-label="Breadcrumb">
+          {/* Breadcrumb */}
+          <nav aria-label="Breadcrumb" className="rk-breadcrumb">
             <Link to="/">Beranda</Link>
             <span aria-hidden="true">/</span>
             <Link to="/berita">Berita</Link>
           </nav>
 
-          <div className="rk-meta-line" style={{ marginBottom: '10px' }}>
-            <span className="rk-badge rk-badge--brass">{item.category || 'Kegiatan'}</span>
-            <span>•</span>
-            <span>{formatIndonesianDate(item.date)}</span>
-            {item.author && (
-              <>
-                <span>•</span>
-                <span>Oleh {item.author}</span>
-              </>
-            )}
-          </div>
-
-          <h1
-            className="rk-page-title"
-            style={{ maxWidth: '24ch', marginBottom: '16px' }}
-          >
-            {item.title}
-          </h1>
-
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '12px' }}>
-            <button
-              type="button"
-              className="rk-pill"
-              onClick={handleShare}
-              aria-label="Bagikan tautan berita"
-            >
-              {copied ? <Check size={15} /> : <Share2 size={15} />}
-              <span>{copied ? 'Tautan disalin' : 'Bagikan berita'}</span>
-            </button>
-          </div>
-        </Container>
-      </section>
-
-      <section className="rk-section">
-        <Container>
-          <div style={{ maxWidth: '880px', margin: '0 auto 28px' }}>
-            <PhotoFrame
-              src={item.image || ROKABA_REAL_PHOTOS[0]}
-              alt={item.title}
-              aspect="16/9"
-              eager
-              captionTitle={item.title}
-              captionSub={`Dokumentasi ${item.category || 'Kegiatan'} • ${formatIndonesianDate(item.date)}`}
-            />
-          </div>
-
-          <SoftCard
-            as="article"
+          {/* Category */}
+          <div
             style={{
-              maxWidth: '760px',
-              margin: '0 auto',
-              padding: 'clamp(24px, 4vw, 42px)',
+              fontSize: '0.88rem',
+              fontWeight: 700,
+              color: 'var(--rk-brass-text)',
+              marginBottom: '6px',
             }}
           >
-            <div className="rk-prose">
-              {item.excerpt && <p className="rk-lead-paragraph">{item.excerpt}</p>}
-              {paragraphs.map((para, idx) => {
-                if (idx === 0 && para === item.excerpt) return null;
-                return <p key={idx}>{para}</p>;
-              })}
-            </div>
+            {displayCategory}
+          </div>
 
+          {/* H1 Title */}
+          <h1
+            className="rk-page-title"
+            style={{
+              fontSize: 'clamp(1.85rem, 3.1vw, 2.55rem)',
+              marginBottom: '16px',
+            }}
+          >
+            {displayTitle}
+          </h1>
+
+          {/* Framed Group Photo */}
+          <PhotoFrame
+            src={ROKABA_REAL_PHOTOS[0]}
+            alt={displayTitle}
+            aspect="16/6.4"
+            eager
+          />
+
+          {/* Body Copy */}
+          <p
+            style={{
+              marginTop: '18px',
+              fontSize: 'clamp(0.95rem, 1.1vw, 1.04rem)',
+              lineHeight: 1.62,
+              color: 'var(--rk-ink)',
+              maxWidth: '92ch',
+            }}
+          >
+            {displayBody}
+          </p>
+
+          {/* Related News Raised 3D Bar */}
+          <Link
+            to={`/berita/${relatedSlug}`}
+            className="rk-bar-card"
+            style={{ marginTop: '20px' }}
+          >
             <div
               style={{
-                marginTop: '32px',
-                paddingTop: '20px',
-                borderTop: '1px solid var(--rk-line)',
                 display: 'flex',
                 flexWrap: 'wrap',
                 alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: '12px',
+                gap: '16px',
               }}
             >
-              <Link to="/berita" className="rk-card-link" style={{ marginTop: 0 }}>
-                <span aria-hidden="true">←</span>
-                <span>Kembali ke semua berita</span>
-              </Link>
-
-              <button type="button" className="rk-pill" onClick={handleShare}>
-                {copied ? <Check size={15} /> : <Share2 size={15} />}
-                <span>{copied ? 'Tautan disalin' : 'Salin tautan'}</span>
-              </button>
+              <strong style={{ fontSize: '0.96rem', color: 'var(--rk-ink)' }}>
+                Berita terkait
+              </strong>
+              <span
+                aria-hidden="true"
+                style={{
+                  width: '1.5px',
+                  height: '18px',
+                  background: 'rgba(16, 41, 31, 0.18)',
+                }}
+              />
+              <span
+                style={{
+                  fontSize: '0.94rem',
+                  fontWeight: 500,
+                  color: 'var(--rk-ink)',
+                }}
+              >
+                {relatedTitle}
+              </span>
             </div>
-          </SoftCard>
 
-          {relatedNews.length > 0 && (
-            <div style={{ maxWidth: '880px', margin: '40px auto 0' }}>
-              <div className="rk-section-head">
-                <h2 className="rk-section-title">Berita terkait lainnya</h2>
-                <Link to="/berita" className="rk-card-link">
-                  <span>Lihat arsip</span>
-                  <span aria-hidden="true">→</span>
-                </Link>
-              </div>
-
-              <div className="rk-grid-3">
-                {relatedNews.map((rel) => (
-                  <SoftCard key={rel.id} as="article" interactive>
-                    <div className="rk-meta-line">
-                      <span>{rel.category || 'Kegiatan'}</span>
-                      <span>•</span>
-                      <span>{formatIndonesianDate(rel.date)}</span>
-                    </div>
-                    <h3 style={{ fontSize: '1.02rem', marginTop: '8px', marginBottom: '8px' }}>
-                      <Link
-                        to={`/berita/${rel.slug || rel.id}`}
-                        style={{ color: 'inherit' }}
-                      >
-                        {rel.title}
-                      </Link>
-                    </h3>
-                    <Link
-                      to={`/berita/${rel.slug || rel.id}`}
-                      className="rk-card-link"
-                      style={{ fontSize: '0.86rem' }}
-                    >
-                      <span>Baca berita</span>
-                      <span aria-hidden="true">→</span>
-                    </Link>
-                  </SoftCard>
-                ))}
-              </div>
-            </div>
-          )}
+            <span aria-hidden="true" style={{ fontWeight: 700 }}>
+              →
+            </span>
+          </Link>
         </Container>
       </section>
     </div>

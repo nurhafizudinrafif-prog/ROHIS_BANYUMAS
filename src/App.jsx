@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { DataProvider } from './context/DataContext';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
-import ScrollProgressBar from './components/layout/ScrollProgressBar';
 import Home from './pages/Home';
 import About from './pages/About';
 import News from './pages/News';
@@ -23,46 +22,46 @@ export default function App() {
     <ErrorBoundary>
       <DataProvider>
         <Router>
-          <ScrollProgressBar />
-          <div className="rk-site" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', width: '100%', maxWidth: '100vw', overflowX: 'clip' }}>
-          <Navbar />
-          <main id="main-content" style={{ flex: 1, width: '100%', maxWidth: '100vw', overflowX: 'clip' }}>
-            <Routes>
-              {/* Primary Routes */}
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/programs" element={<Programs />} />
-              <Route path="/berita" element={<News />} />
-              <Route path="/berita/:slug" element={<NewsDetail />} />
-              <Route path="/articles" element={<Articles />} />
-              <Route path="/articles/:slug" element={<ArticleDetail />} />
-              <Route path="/events" element={<Events />} />
-              <Route path="/schools" element={<Schools />} />
-              <Route path="/gallery" element={<Gallery />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/consultation" element={<Consultation />} />
-              <Route path="/library" element={<Library />} />
+          <div className="rk-site">
+            <div className="rk-board-shell">
+              <Navbar />
+              <main id="main-content" style={{ flex: 1, width: '100%' }}>
+                <Routes>
+                  {/* Primary Routes */}
+                  <Route path="/" element={<Home />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/programs" element={<Programs />} />
+                  <Route path="/berita" element={<News />} />
+                  <Route path="/berita/:slug" element={<NewsDetail />} />
+                  <Route path="/articles" element={<Articles />} />
+                  <Route path="/articles/:slug" element={<ArticleDetail />} />
+                  <Route path="/events" element={<Events />} />
+                  <Route path="/schools" element={<Schools />} />
+                  <Route path="/gallery" element={<Gallery />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/consultation" element={<Consultation />} />
+                  <Route path="/library" element={<Library />} />
 
-              {/* Backward-Compatible Indonesian URL Aliases */}
-              <Route path="/news" element={<Navigate to="/berita" replace />} />
-              <Route path="/tentang" element={<Navigate to="/about" replace />} />
-              <Route path="/program" element={<Programs />} />
-              <Route path="/agenda" element={<Events />} />
-              <Route path="/artikel" element={<Articles />} />
-              <Route path="/artikel/:slug" element={<ArticleDetail />} />
-              <Route path="/anggota" element={<Schools />} />
-              <Route path="/sekolah" element={<Schools />} />
-              <Route path="/rohis-anggota" element={<Schools />} />
-              <Route path="/galeri" element={<Gallery />} />
-              <Route path="/kontak" element={<Contact />} />
-              <Route path="/pendaftaran" element={<Contact />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
-      </Router>
-    </DataProvider>
+                  {/* Backward-Compatible Indonesian URL Aliases */}
+                  <Route path="/news" element={<Navigate to="/berita" replace />} />
+                  <Route path="/tentang" element={<Navigate to="/about" replace />} />
+                  <Route path="/program" element={<Programs />} />
+                  <Route path="/agenda" element={<Events />} />
+                  <Route path="/artikel" element={<Articles />} />
+                  <Route path="/artikel/:slug" element={<ArticleDetail />} />
+                  <Route path="/anggota" element={<Schools />} />
+                  <Route path="/sekolah" element={<Schools />} />
+                  <Route path="/rohis-anggota" element={<Schools />} />
+                  <Route path="/galeri" element={<Gallery />} />
+                  <Route path="/kontak" element={<Contact />} />
+                  <Route path="/pendaftaran" element={<Contact />} />
+                </Routes>
+              </main>
+              <Footer />
+            </div>
+          </div>
+        </Router>
+      </DataProvider>
     </ErrorBoundary>
   );
 }
-

@@ -2,78 +2,90 @@
 
 /* ==========================================================================
    ROKABA — ROHIS Kabupaten Banyumas
-   Design System: Soft UI × Liquid Glass (Tactile Warm Alabaster & Deep Pine)
+   100% Reference-Faithful Soft UI (Neumorphism) × Liquid Glass System
+   Acuan Visual: 01-beranda-desktop-mobile.png, 02-halaman-konten.png, 03-halaman-layanan.png
    ========================================================================== */
 
 :root {
-  /* Core Surfaces & Canvas */
-  --rk-canvas: #F1F2ED;
-  --rk-canvas-deep: #E8EAE3;
-  --rk-surface: #F7F5F0;
+  /* Core Palette from Reference Artboards */
+  --rk-outer-bg: #E5E7DF;
+  --rk-canvas: #EFF0EA;
+  --rk-canvas-deep: #E5E7DF;
+  --rk-surface: #F5F5F0;
   --rk-surface-raised: #FAF9F5;
-  --rk-surface-inset: #EAECE5;
-  --rk-inset: #EAECE5;
+  --rk-surface-inset: #E8EBE3;
+  --rk-surface-sage: #DCE7DF;
 
-  /* Typography & Ink */
+  /* Deep Banyumas Pine & Ink */
   --rk-ink: #10291F;
   --rk-pine: #10291F;
-  --rk-pine-deep: #07140E;
-  --rk-pine-hover: #173A2C;
-  --rk-muted: #495A51;
-  --rk-secondary: #495A51;
-  --rk-subtle: #5C6D64;
+  --rk-pine-deep: #0B1F17;
+  --rk-pine-light: #1A3C2D;
+  --rk-muted: #45564D;
+  --rk-subtle: #63736A;
 
-  /* Warm Accents */
-  --rk-brass: #A99157;
-  --rk-brass-text: #785E24;
-  --rk-brass-soft: rgba(169, 145, 87, 0.16);
-  --rk-terracotta: #B86B43;
+  /* Warm Brass Accent */
+  --rk-brass: #A68945;
+  --rk-brass-text: #8A6D2B;
+  --rk-brass-soft: #EDE6D5;
 
-  /* Hairlines & Dividers */
-  --rk-line: rgba(16, 41, 31, 0.10);
+  /* Borders & Specular Highlights */
+  --rk-line: rgba(16, 41, 31, 0.11);
   --rk-line-strong: rgba(16, 41, 31, 0.18);
-  --rk-border: rgba(16, 41, 31, 0.10);
-  --rk-highlight: rgba(255, 255, 255, 0.88);
+  --rk-specular: rgba(255, 255, 255, 0.92);
 
-  /* Soft UI 3D Shadows (Top-Left Light Source) */
+  /* Sculpted 3D Neumorphic Shadows (Top-Left Light Source) */
+  --rk-shadow-board:
+    0 24px 60px rgba(16, 33, 24, 0.15),
+    0 6px 18px rgba(16, 33, 24, 0.08),
+    -6px -6px 20px rgba(255, 255, 255, 0.90),
+    inset 0 2px 3px rgba(255, 255, 255, 0.96);
+
   --rk-shadow-raised:
-    0 2px 5px rgba(16, 41, 31, 0.06),
-    0 12px 26px rgba(16, 41, 31, 0.07),
-    -4px -4px 12px rgba(255, 255, 255, 0.82),
-    inset 0 1px 0 rgba(255, 255, 255, 0.90);
+    8px 12px 24px rgba(18, 36, 26, 0.12),
+    2px 4px 8px rgba(18, 36, 26, 0.07),
+    -6px -6px 16px rgba(255, 255, 255, 0.96),
+    inset 1.5px 1.5px 2px rgba(255, 255, 255, 0.98),
+    inset -1px -1px 2px rgba(16, 41, 31, 0.04);
 
   --rk-shadow-raised-hover:
-    0 4px 10px rgba(16, 41, 31, 0.09),
-    0 16px 32px rgba(16, 41, 31, 0.10),
-    -4px -4px 14px rgba(255, 255, 255, 0.90),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    10px 15px 28px rgba(18, 36, 26, 0.15),
+    3px 6px 12px rgba(18, 36, 26, 0.09),
+    -6px -6px 18px rgba(255, 255, 255, 1),
+    inset 1.5px 1.5px 2px rgba(255, 255, 255, 1);
+
+  --rk-shadow-pill:
+    4px 6px 14px rgba(18, 36, 26, 0.11),
+    1px 2px 4px rgba(18, 36, 26, 0.06),
+    -3px -3px 10px rgba(255, 255, 255, 0.95),
+    inset 1px 1px 1.5px rgba(255, 255, 255, 0.98);
 
   --rk-shadow-inset:
-    inset 2px 2px 6px rgba(16, 41, 31, 0.09),
-    inset -3px -3px 7px rgba(255, 255, 255, 0.82),
-    0 1px 0 rgba(255, 255, 255, 0.70);
+    inset 3px 3px 7px rgba(18, 36, 26, 0.12),
+    inset -3px -3px 7px rgba(255, 255, 255, 0.92),
+    0 1px 0 rgba(255, 255, 255, 0.88);
 
   --rk-shadow-button:
-    0 4px 10px rgba(16, 41, 31, 0.18),
-    0 10px 20px rgba(16, 41, 31, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    0 7px 16px rgba(14, 38, 28, 0.28),
+    0 2px 5px rgba(14, 38, 28, 0.18),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.34),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.25);
 
-  /* Radius Scale */
-  --rk-radius-card: 20px;
+  --rk-shadow-photo:
+    12px 16px 32px rgba(16, 35, 25, 0.20),
+    3px 6px 12px rgba(16, 35, 25, 0.11),
+    -6px -6px 16px rgba(255, 255, 255, 0.95);
+
+  /* Radii */
+  --rk-radius-board: 26px;
+  --rk-radius-card: 18px;
   --rk-radius-frame: 22px;
-  --rk-radius-control: 13px;
+  --rk-radius-btn: 12px;
+  --rk-radius-control: 12px;
   --rk-radius-pill: 999px;
 
-  /* Spacing Rhythm */
-  --rk-container-max: 1240px;
+  --rk-container-max: 1180px;
   --rk-font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-
-  /* Legacy Alias Compatibility */
-  --deep-pine: #10291F;
-  --warm-alabaster: #F7F5F0;
-  --antique-brass: #A99157;
-  --font-heading: var(--rk-font-sans);
-  --font-body: var(--rk-font-sans);
 }
 
 *,
@@ -84,7 +96,7 @@
 
 html {
   font-family: var(--rk-font-sans);
-  background-color: var(--rk-canvas);
+  background-color: var(--rk-outer-bg);
   color: var(--rk-ink);
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
@@ -97,13 +109,26 @@ body {
   padding: 0;
   min-height: 100vh;
   font-family: var(--rk-font-sans);
-  background-color: var(--rk-canvas);
+  background-color: var(--rk-outer-bg);
   background-image:
-    radial-gradient(circle at 12% 8%, rgba(255, 255, 255, 0.65) 0%, transparent 45%),
-    radial-gradient(circle at 88% 92%, rgba(226, 230, 220, 0.55) 0%, transparent 50%);
+    radial-gradient(circle at 15% 10%, rgba(255, 255, 255, 0.78) 0%, transparent 45%),
+    radial-gradient(circle at 82% 20%, rgba(203, 216, 203, 0.36) 0%, transparent 48%),
+    radial-gradient(circle at 50% 90%, rgba(215, 220, 209, 0.5) 0%, transparent 55%);
   color: var(--rk-ink);
-  line-height: 1.65;
+  line-height: 1.55;
   overflow-x: clip;
+  position: relative;
+}
+
+/* Tactile Matte Paper / Alabaster Micro-Texture */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.032;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
 img,
@@ -137,8 +162,8 @@ h6 {
   margin: 0;
   font-family: var(--rk-font-sans);
   color: var(--rk-ink);
-  font-weight: 700;
-  letter-spacing: -0.025em;
+  font-weight: 800;
+  letter-spacing: -0.03em;
 }
 
 p {
@@ -159,22 +184,11 @@ p {
   padding: 10px 16px;
   background: var(--rk-pine);
   color: #F7F5F0;
-  border-radius: var(--rk-radius-control);
+  border-radius: var(--rk-radius-btn);
   font-weight: 600;
   transition: top 0.2s ease;
 }
 
 .rk-skip:focus {
   top: 16px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
 }
