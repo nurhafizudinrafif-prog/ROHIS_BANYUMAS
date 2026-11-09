@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { User } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import {
   Container,
@@ -57,7 +58,7 @@ const LEADERS_DATA = [
     roleLine1: 'Ketua',
     roleLine2: 'Umum',
     name: 'Nama pengurus',
-    photo: '/leaders/ketua-umum.jpg',
+    photo: null,
     salutation: "Assalamu'alaikum warahmatullahi wabarakatuh.",
     paragraph1Desktop:
       'Selamat datang di portal resmi ROHIS SMA Negeri 4 Purwokerto. Ruang ini menjadi sarana informasi, silaturahmi, dan pengembangan potensi pelajar.',
@@ -79,7 +80,7 @@ const LEADERS_DATA = [
     roleLine1: 'Ketua',
     roleLine2: 'Akhwat',
     name: 'Nama pengurus',
-    photo: '/leaders/ketua-akhwat.jpg',
+    photo: null,
     salutation: "Assalamu'alaikum warahmatullahi wabarakatuh.",
     paragraph1Desktop:
       'Selamat datang di portal resmi ROHIS SMA Negeri 4 Purwokerto. Ruang ini menjadi sarana informasi, silaturahmi, dan pengembangan potensi pelajar muslimah.',
@@ -101,7 +102,7 @@ const LEADERS_DATA = [
     roleLine1: 'Ketua',
     roleLine2: 'Ikhwan',
     name: 'Nama pengurus',
-    photo: '/leaders/ketua-ikhwan.jpg',
+    photo: null,
     salutation: "Assalamu'alaikum warahmatullahi wabarakatuh.",
     paragraph1Desktop:
       'Selamat datang di portal resmi ROHIS SMA Negeri 4 Purwokerto. Ruang ini menjadi sarana informasi, silaturahmi, dan pengembangan potensi pelajar.',
@@ -369,11 +370,25 @@ export default function Home() {
                         className={`rk-leader-card ${isSelected ? 'rk-leader-card--active' : ''}`}
                       >
                         <div className="rk-leader-photo-frame">
-                          <img
-                            src={leader.photo}
-                            alt={`${leader.role} - ${leader.name}`}
-                            loading="lazy"
-                          />
+                          {leader.photo ? (
+                            <img
+                              src={leader.photo}
+                              alt={`${leader.role} - ${leader.name}`}
+                              loading="lazy"
+                            />
+                          ) : (
+                            <div
+                              className="rk-leader-placeholder"
+                              aria-label="Foto pengurus belum tersedia"
+                            >
+                              <User
+                                size={32}
+                                strokeWidth={1.5}
+                                className="rk-leader-placeholder-icon"
+                                aria-hidden="true"
+                              />
+                            </div>
+                          )}
                         </div>
 
                         <div className="rk-leader-role-desktop">{leader.role}</div>
@@ -396,7 +411,7 @@ export default function Home() {
               </div>
 
               <p className="rk-sambutan-note">
-                Potret ilustratif — diganti foto pengurus asli.
+                Foto pengurus asli akan segera diperbarui.
               </p>
 
               {/* Mobile Actions (Buttons placed below cards on mobile as shown in Image 1) */}
@@ -417,7 +432,7 @@ export default function Home() {
                 <div className="rk-mobile-footer-note">
                   <span className="rk-mobile-footer-org">ROHIS SMA Negeri 4 Purwokerto</span>
                   <span className="rk-mobile-footer-sub">
-                    Potret ilustratif; diganti foto pengurus asli.
+                    Foto pengurus asli akan segera diperbarui.
                   </span>
                 </div>
               </div>
