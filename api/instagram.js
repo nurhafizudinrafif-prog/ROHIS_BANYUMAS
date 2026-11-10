@@ -1,6 +1,6 @@
 // Vercel Serverless Function: Real-Time Auto-Sync Instagram Profile, Exact Likes/Comments & Live Feed
-const UPSTASH_URL = 'https://holy-gobbler-70550.upstash.io';
-const UPSTASH_TOKEN = 'gQAAAAAAAROWAAIgcDJlOTE0NTNiY2EyYjA0MjU3YmNjNjJkMzc3YmZmYjQ2NA';
+const UPSTASH_URL = process.env.UPSTASH_REDIS_REST_URL || 'https://holy-gobbler-70550.upstash.io';
+const UPSTASH_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || '';
 const CMS_KEY = 'rohis_cms_data';
 const USERNAME = 'rohis_banyumas';
 

@@ -1,68 +1,32 @@
 // ============================================
-// ROHIS Kabupaten Banyumas — Upstash Cloud Sync
-// Real-Time Cloud Database Synchronizer
+// ROHIS Kabupaten Banyumas — Secure Cloud Sync Adapter
+// Redirects to secure /api/sync with defense-in-depth sanitization
 // ============================================
 
-const UPSTASH_URL = 'https://holy-gobbler-70550.upstash.io';
-const UPSTASH_TOKEN = 'gQAAAAAAAROWAAIgcDJlOTE0NTNiY2EyYjA0MjU3YmNjNjJkMzc3YmZmYjQ2NA';
+import { fetchData, saveData } from '../../shared/services/cloudSync.js';
+import { sanitizeAndProtect } from '../../shared/services/securitySanitizer.js';
+
 const CMS_KEY = 'rohis_cms_data';
 
-// Helper to execute Upstash REST command
-async function upstashCommand(cmd) {
-  try {
-    const res = await fetch(UPSTASH_URL, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${UPSTASH_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(cmd),
-    });
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data.result;
-  } catch (err) {
-    console.warn('Cloud database sync error:', err);
-    return null;
-  }
-}
-
-// Fetch complete CMS data from Upstash Cloud
+// Fetch complete CMS data via secure API proxy
 export async function fetchCloudCMSData() {
   try {
-    const res = await fetch(`${UPSTASH_URL}/get/${CMS_KEY}`, {
-      headers: {
-        Authorization: `Bearer ${UPSTASH_TOKEN}`,
-      },
-    });
-    if (!res.ok) return null;
-    const data = await res.json();
-    let parsed = data.result;
-    while (typeof parsed === 'string') {
-      try {
-        parsed = JSON.parse(parsed);
-      } catch (e) {
-        break;
-      }
-    }
-    return parsed;
+    const data = await fetchData(CMS_KEY);
+    const { safeData } = sanitizeAndProtect(CMS_KEY, data);
+    return safeData;
   } catch (err) {
-    console.warn('Gagal memuat data dari Cloud Upstash:', err);
+    console.warn('Gagal memuat data dari Cloud:', err);
     return null;
   }
 }
 
-// Save complete CMS data to Upstash Cloud
+// Save complete CMS data via secure API proxy
 export async function saveCloudCMSData(payload) {
   try {
-    const jsonString = JSON.stringify({
-      ...payload,
-      updatedAt: new Date().toISOString(),
-    });
-    const result = await upstashCommand(['SET', CMS_KEY, jsonString]);
-    return result === 'OK';
+    const result = await saveData(CMS_KEY, payload);
+    return result?.success === true;
   } catch (err) {
-    console.error('Gagal menyimpan ke Cloud Upstash:', err);
+    console.error('Gagal menyimpan ke Cloud:', err);
     return false;
   }
 }
