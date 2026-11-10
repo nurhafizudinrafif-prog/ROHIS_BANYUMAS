@@ -2,143 +2,152 @@ import { useState, useMemo } from 'react';
 import { useData } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
 import {
-  Image as ImageIcon, Plus, Edit3, Trash2, Save, X, Search,
-  Video, Calendar, Star, ExternalLink, RefreshCw, Upload, Play
+  Image as ImageIcon,
+  Plus,
+  Edit3,
+  Trash2,
+  Save,
+  X,
+  Search,
+  Video,
+  ExternalLink,
+  Film,
+  Calendar,
 } from 'lucide-react';
 import ImageUploadField from '../components/ImageUploadField';
 import {
-  getDirectImageUrl, isVideoMedia, getMediaThumbnail,
-  normalizeMediaList, getMediaSummary, getCoverMedia
+  getDirectImageUrl,
+  isVideoMedia,
+  normalizeMediaList,
+  getMediaSummary,
+  getCoverMedia,
 } from '../utils/media';
 
 export default function GalleryManager() {
   const { gallery, updateData, addAuditLog } = useData();
   const { user } = useAuth();
 
+  const [mediaTypeTab, setMediaTypeTab] = useState('Foto'); // 'Foto' | 'Video' | 'Semua'
   const [search, setSearch] = useState('');
-  const [catFilter, setCatFilter] = useState('Semua');
   const [modalOpen, setModalOpen] = useState(false);
+  const [deleteConfirmItem, setDeleteConfirmItem] = useState(null);
   const [editingAlbum, setEditingAlbum] = useState(null);
 
-  // Form State for Album
+  // Form State for Album / Media Item
   const [albumForm, setAlbumForm] = useState({
     title: '',
-    category: 'Kajian',
+    category: 'Dokumentasi',
     date: '',
     description: '',
-    emoji: '📸',
+    type: 'Foto', // 'Foto' | 'Video'
     coverImage: '',
     media: [],
   });
 
-  // Working state for adding new media item to album
-  const [newMedia, setNewMedia] = useState({
-    type: 'image',
-    url: '',
-    caption: '',
-  });
-
-  const categories = ['Semua', 'Kajian', 'Pelatihan', 'Sosial', 'Organisasi', 'Lomba', 'Workshop', 'Dokumentasi'];
-
   const filteredAlbums = useMemo(() => {
-    return (gallery || []).filter(album => {
-      const matchCat = catFilter === 'Semua' || album.category === catFilter;
-      const matchSearch = (album.title || '').toLowerCase().includes(search.toLowerCase()) ||
-                          (album.description || '').toLowerCase().includes(search.toLowerCase());
-      return matchCat && matchSearch;
+    return (gallery || []).filter((album) => {
+      // Determine if album is video or photo based on its media or type property
+      const hasVideo =
+        album.type === 'video' ||
+        album.media?.some((m) => isVideoMedia(m.url) || m.type === 'video');
+      const matchesType =
+        mediaTypeTab === 'Semua'
+          ? true
+          : mediaTypeTab === 'Video'
+          ? hasVideo
+          : !hasVideo;
+
+      const matchesSearch =
+        (album.title || '').toLowerCase().includes(search.toLowerCase()) ||
+        (album.description || '').toLowerCase().includes(search.toLowerCase()) ||
+        (album.category || '').toLowerCase().includes(search.toLowerCase());
+
+      return matchesType && matchesSearch;
     });
-  }, [gallery, catFilter, search]);
+  }, [gallery, mediaTypeTab, search]);
 
   const handleOpenAdd = () => {
     setEditingAlbum(null);
     setAlbumForm({
       title: '',
-      category: 'Kajian',
-      date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
+      category: 'Dokumentasi',
+      date: new Date().toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      }),
       description: '',
-      emoji: '📸',
+      type: mediaTypeTab === 'Video' ? 'Video' : 'Foto',
       coverImage: '',
       media: [],
     });
-    setNewMedia({ type: 'image', url: '', caption: '' });
     setModalOpen(true);
   };
 
   const handleOpenEdit = (album) => {
     setEditingAlbum(album);
     const normalized = normalizeMediaList(album);
+    const isVid =
+      album.type === 'video' ||
+      album.media?.some((m) => isVideoMedia(m.url) || m.type === 'video');
+
     setAlbumForm({
       title: album.title || '',
       category: album.category || 'Dokumentasi',
       date: album.date || '',
       description: album.description || '',
-      emoji: album.emoji || '📸',
+      type: isVid ? 'Video' : 'Foto',
       coverImage: album.coverImage || album.image || '',
       media: normalized,
     });
-    setNewMedia({ type: 'image', url: '', caption: '' });
     setModalOpen(true);
   };
 
-  const handleDeleteAlbum = async (album) => {
-    if (!window.confirm(`Yakin ingin menghapus album "${album.title}" beserta seluruh foto/videonya?`)) return;
-    const updated = (gallery || []).filter(a => a.id !== album.id);
+  const confirmDelete = async () => {
+    if (!deleteConfirmItem) return;
+    const album = deleteConfirmItem;
+    const updated = (gallery || []).filter((a) => a.id !== album.id);
     await updateData('gallery', updated);
-    await addAuditLog(user.id, user.username, 'DELETE', 'gallery', `Deleted gallery album: ${album.title}`);
-  };
-
-  // Media list helpers in modal
-  const handleAddMediaItem = () => {
-    if (!newMedia.url.trim()) return;
-    const item = {
-      id: `m-${Date.now()}`,
-      type: newMedia.type,
-      url: newMedia.url.trim(),
-      caption: newMedia.caption.trim() || albumForm.title,
-    };
-
-    setAlbumForm(prev => {
-      const updatedMedia = [...prev.media, item];
-      return {
-        ...prev,
-        media: updatedMedia,
-        coverImage: prev.coverImage || item.url, // auto set first as cover if none
-      };
-    });
-
-    setNewMedia({ type: 'image', url: '', caption: '' });
-  };
-
-  const handleRemoveMediaItem = (idx) => {
-    setAlbumForm(prev => {
-      const updated = prev.media.filter((_, i) => i !== idx);
-      return { ...prev, media: updated };
-    });
-  };
-
-  const handleSetCover = (url) => {
-    setAlbumForm(prev => ({ ...prev, coverImage: url }));
+    if (addAuditLog && user) {
+      await addAuditLog(
+        user.id,
+        user.username,
+        'DELETE',
+        'gallery',
+        `Deleted gallery media: ${album.title}`
+      );
+    }
+    setDeleteConfirmItem(null);
+    setModalOpen(false);
   };
 
   const handleSaveAlbum = async (e) => {
     e.preventDefault();
-    if (!albumForm.title.trim()) return;
+    if (!albumForm.title.trim()) {
+      alert('Judul media wajib diisi!');
+      return;
+    }
 
     const payload = {
       id: editingAlbum ? editingAlbum.id : `gal-${Date.now()}`,
       title: albumForm.title.trim(),
-      category: albumForm.category,
+      category: albumForm.category || 'Dokumentasi',
       date: albumForm.date.trim(),
       description: albumForm.description.trim(),
-      emoji: albumForm.emoji.trim() || '📸',
-      coverImage: albumForm.coverImage || (albumForm.media[0]?.url || ''),
-      image: albumForm.coverImage || (albumForm.media[0]?.url || ''),
-      media: albumForm.media,
+      type: albumForm.type.toLowerCase(),
+      coverImage: albumForm.coverImage || '',
+      image: albumForm.coverImage || '',
+      media:
+        albumForm.media.length > 0
+          ? albumForm.media
+          : albumForm.coverImage
+          ? [{ url: albumForm.coverImage, type: albumForm.type.toLowerCase(), caption: albumForm.title }]
+          : [],
     };
 
     let updatedList;
     if (editingAlbum) {
-      updatedList = (gallery || []).map(a => a.id === editingAlbum.id ? payload : a);
+      updatedList = (gallery || []).map((a) => (a.id === editingAlbum.id ? payload : a));
     } else {
       updatedList = [payload, ...(gallery || [])];
     }
@@ -147,427 +156,437 @@ export default function GalleryManager() {
     setModalOpen(false);
 
     try {
-      if (addAuditLog) {
+      if (addAuditLog && user) {
         addAuditLog(
-          user?.id || 'admin',
-          user?.username || 'admin',
+          user.id,
+          user.username,
           editingAlbum ? 'UPDATE' : 'CREATE',
           'gallery',
-          `${editingAlbum ? 'Updated' : 'Created'} gallery album: ${payload.title} (${payload.media.length} media)`
+          `${editingAlbum ? 'Updated' : 'Created'} gallery media: ${payload.title}`
         ).catch(() => {});
       }
     } catch {}
   };
 
   return (
-    <div style={{ maxWidth: 1200, margin: '0 auto', paddingBottom: '4rem' }}>
-      {/* Header */}
-      <div className="reveal-on-scroll" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+    <div style={{ maxWidth: 1160, margin: '0 auto', paddingBottom: '3.5rem' }}>
+      {/* Header Bar matching Image 02 panel 4 */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.75rem)', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-            <ImageIcon size={26} color="var(--emerald)" /> Kelola Galeri & Dokumentasi Kegiatan
+          <h1 style={{ fontSize: 'clamp(1.35rem, 3vw, 1.75rem)', fontWeight: 800, color: 'var(--pine-dark)', margin: 0 }}>
+            Galeri
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginTop: '0.25rem' }}>
-            Kelola album foto dan video dokumentasi kegiatan, kajian akbar, pelatihan, dan bakti sosial ROHIS Banyumas.
+          <p className="text-secondary" style={{ fontSize: '0.88rem', marginTop: '0.2rem' }}>
+            Kelola dokumentasi foto dan video kegiatan ROHIS.
           </p>
         </div>
 
-        <button
-          onClick={handleOpenAdd}
-          className="btn btn-primary"
-          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-        >
-          <Plus size={16} /> Buat Album Baru
+        <button onClick={handleOpenAdd} className="btn btn-pine">
+          <Plus size={16} /> Tambah media
         </button>
       </div>
 
-      {/* Filter Categories */}
-      <div className="reveal-on-scroll delay-100" style={{
-        display: 'flex',
-        gap: '0.5rem',
-        overflowX: 'auto',
-        WebkitOverflowScrolling: 'touch',
-        scrollbarWidth: 'none',
-        padding: '0.5rem',
-        background: 'var(--bg-card)',
-        borderRadius: 'var(--radius-lg)',
-        border: '1px solid var(--border-glass)',
-        marginBottom: '1.5rem',
-      }}>
-        {categories.map(cat => (
-          <button
-            key={cat}
-            className={`btn ${catFilter === cat ? 'btn-primary' : 'btn-outline'}`}
-            style={{ padding: '0.45rem 1rem', fontSize: '0.85rem' }}
-            onClick={() => setCatFilter(cat)}
-          >
-            {cat}
-          </button>
-        ))}
+      {/* Filter Row: Foto / Video tabs & Search */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', background: 'var(--surface-bg)', padding: '0.25rem', borderRadius: 'var(--radius-full)', border: '1px solid var(--border-subtle)', boxShadow: 'var(--soft-shadow-sm)' }}>
+          {['Foto', 'Video', 'Semua'].map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              className={`btn btn-sm ${mediaTypeTab === tab ? 'btn-pine' : 'btn-secondary-soft'}`}
+              style={{
+                borderRadius: 'var(--radius-full)',
+                padding: '0.35rem 1rem',
+                border: mediaTypeTab === tab ? 'none' : 'transparent',
+                boxShadow: mediaTypeTab === tab ? '0 2px 6px rgba(16, 41, 31, 0.2)' : 'none',
+              }}
+              onClick={() => setMediaTypeTab(tab)}
+            >
+              {tab === 'Video' ? <Film size={13} style={{ marginRight: 4 }} /> : null}
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        <div style={{ position: 'relative', width: '100%', maxWidth: 320 }}>
+          <Search size={16} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+          <input
+            type="text"
+            className="form-input-soft"
+            style={{ paddingLeft: '2.4rem' }}
+            placeholder="Cari media..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
       </div>
 
-      {/* Search Input */}
-      <div className="reveal-on-scroll delay-150" style={{ position: 'relative', marginBottom: '1.5rem' }}>
-        <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>
-          <Search size={18} />
-        </span>
-        <input
-          type="text"
-          className="form-input"
-          style={{ paddingLeft: '2.75rem' }}
-          placeholder="Cari album dokumentasi kegiatan..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-        />
-      </div>
-
-      {/* Albums Grid */}
+      {/* Gallery Media Grid matching Image 02 panel 4 */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(min(240px, 100%), 1fr))',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
         gap: '1.25rem',
       }}>
-        {filteredAlbums.map((album, idx) => {
-          const summary = getMediaSummary(album);
+        {filteredAlbums.map((album) => {
           const cover = getCoverMedia(album);
+          const isVid =
+            album.type === 'video' ||
+            album.media?.some((m) => isVideoMedia(m.url) || m.type === 'video');
 
           return (
             <div
               key={album.id}
-              className={`glass-card reveal-scale delay-${Math.min((idx % 6 + 1) * 75, 400)}`}
+              className="admin-soft-card"
               style={{
-                overflow: 'hidden',
+                padding: '1rem',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
+                transition: 'transform 0.15s ease, box-shadow 0.15s ease',
               }}
             >
               <div>
-                {/* Cover Image */}
-                <div style={{ height: 180, position: 'relative', background: '#05080E', overflow: 'hidden' }}>
+                {/* Thumbnail Preview with Soft Rounded Border */}
+                <div style={{
+                  height: 180,
+                  width: '100%',
+                  borderRadius: 'var(--radius-md)',
+                  background: 'rgba(16, 41, 31, 0.05)',
+                  overflow: 'hidden',
+                  position: 'relative',
+                  marginBottom: '0.85rem',
+                  border: '1px solid var(--border-subtle)',
+                }}>
                   {cover ? (
                     <img
-                      src={cover}
+                      src={getDirectImageUrl(cover)}
                       alt={album.title}
-                      referrerPolicy="no-referrer"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      loading="lazy"
                     />
                   ) : (
-                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
-                      <ImageIcon size={32} />
+                    <div style={{
+                      width: '100%',
+                      height: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'var(--text-muted)',
+                      flexDirection: 'column',
+                      gap: '0.35rem',
+                    }}>
+                      {isVid ? <Film size={32} /> : <ImageIcon size={32} />}
+                      <span style={{ fontSize: '0.75rem', fontWeight: 600 }}>Tidak ada preview</span>
                     </div>
                   )}
 
-                  {/* Top Badges */}
-                  <div style={{
-                    position: 'absolute', top: '0.75rem', left: '0.75rem', right: '0.75rem',
-                    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  {/* Badge Type */}
+                  <span style={{
+                    position: 'absolute',
+                    top: '0.5rem',
+                    left: '0.5rem',
+                    background: 'rgba(7, 20, 14, 0.75)',
+                    backdropFilter: 'blur(8px)',
+                    color: '#FFFFFF',
+                    fontSize: '0.7rem',
+                    fontWeight: 700,
+                    padding: '0.15rem 0.5rem',
+                    borderRadius: 'var(--radius-full)',
                   }}>
-                    <span style={{
-                      fontSize: '0.72rem',
-                      fontWeight: 700,
-                      padding: '0.2rem 0.6rem',
-                      borderRadius: '999px',
-                      background: 'rgba(0, 0, 0, 0.7)',
-                      color: 'var(--emerald-light)',
-                      border: '1px solid rgba(16, 185, 129, 0.3)',
-                      backdropFilter: 'blur(4px)',
-                    }}>
-                      {album.category}
-                    </span>
-
-                    <span style={{
-                      fontSize: '0.72rem',
-                      fontWeight: 600,
-                      padding: '0.2rem 0.5rem',
-                      borderRadius: '6px',
-                      background: 'rgba(0, 0, 0, 0.75)',
-                      color: '#FFFFFF',
-                      backdropFilter: 'blur(4px)',
-                    }}>
-                      {summary.label}
-                    </span>
-                  </div>
+                    {isVid ? '.mp4' : '.jpg'}
+                  </span>
                 </div>
 
-                {/* Content */}
-                <div style={{ padding: '1.25rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.4rem' }}>
-                    <Calendar size={13} />
-                    <span>{album.date}</span>
-                  </div>
-
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: 700, lineHeight: 1.3, marginBottom: '0.5rem' }}>
-                    {album.title}
-                  </h3>
-
-                  <p style={{
-                    fontSize: '0.85rem',
-                    color: 'var(--text-secondary)',
-                    lineHeight: 1.5,
-                    display: '-webkit-box',
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden',
-                  }}>
-                    {album.description || 'Tidak ada deskripsi.'}
-                  </p>
+                {/* Title and Category */}
+                <h3 style={{
+                  fontSize: '0.98rem',
+                  fontWeight: 700,
+                  color: 'var(--pine-dark)',
+                  marginBottom: '0.25rem',
+                  lineHeight: 1.35,
+                }}>
+                  {album.title || 'Dokumentasi kegiatan'}
+                </h3>
+                <div style={{
+                  fontSize: '0.78rem',
+                  color: 'var(--text-secondary)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  marginBottom: '0.75rem',
+                }}>
+                  <span>{album.category || 'Dokumentasi'}</span>
+                  {album.date && (
+                    <>
+                      <span>•</span>
+                      <span>{album.date}</span>
+                    </>
+                  )}
                 </div>
               </div>
 
-              {/* Card Footer Actions */}
+              {/* Action row with Edit button matching Image 02 */}
               <div style={{
-                padding: '0.85rem 1.25rem',
-                borderTop: '1px solid var(--border-glass)',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                background: 'rgba(0, 0, 0, 0.15)',
+                paddingTop: '0.75rem',
+                borderTop: '1px solid var(--border-subtle)',
               }}>
                 <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                  ID: #{album.id}
+                  {isVid ? 'Video' : 'Foto'}
                 </span>
-
-                <div style={{ display: 'flex', gap: '0.45rem' }}>
-                  <button
-                    onClick={() => handleOpenEdit(album)}
-                    className="btn btn-outline btn-xs"
-                    style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}
-                  >
-                    <Edit3 size={13} /> Kelola Media
-                  </button>
-                  <button
-                    onClick={() => handleDeleteAlbum(album)}
-                    className="btn btn-danger-ghost btn-xs"
-                    title="Hapus Album"
-                  >
-                    <Trash2 size={13} />
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  className="btn btn-secondary-soft btn-sm"
+                  onClick={() => handleOpenEdit(album)}
+                  style={{ gap: '0.4rem', padding: '0.35rem 0.85rem' }}
+                >
+                  <Edit3 size={13} /> Edit
+                </button>
               </div>
             </div>
           );
         })}
+
+        {filteredAlbums.length === 0 && (
+          <div className="admin-soft-card" style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '3rem 1.5rem', color: 'var(--text-muted)' }}>
+            <ImageIcon size={36} style={{ margin: '0 auto 0.75rem', opacity: 0.5 }} />
+            <p style={{ margin: 0, fontWeight: 600, color: 'var(--pine-dark)' }}>Tidak ada media ditemukan</p>
+            <p style={{ fontSize: '0.85rem', marginTop: '0.25rem' }}>Klik tombol Tambah Media untuk menambahkan foto atau video baru.</p>
+          </div>
+        )}
       </div>
 
-      {filteredAlbums.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
-          Tidak ada album galeri yang cocok dengan pencarian / kategori ini.
+      {/* ═══════════════════════════════════════════════════════════════
+          RESPONSIVE MODAL: EDIT / TAMBAH MEDIA
+          ═══════════════════════════════════════════════════════════════ */}
+      {modalOpen && (
+        <div className="modal-backdrop-responsive" onClick={() => setModalOpen(false)}>
+          <div
+            className="modal-dialog-responsive"
+            style={{ maxWidth: 760 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="modal-header-responsive">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                <div style={{
+                  width: 34,
+                  height: 34,
+                  borderRadius: 'var(--radius-sm)',
+                  background: 'rgba(16, 41, 31, 0.08)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'var(--pine-dark)',
+                }}>
+                  {albumForm.type === 'Video' ? <Film size={18} /> : <ImageIcon size={18} />}
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--pine-dark)', margin: 0 }}>
+                    {editingAlbum ? 'Edit Media Galeri' : 'Tambah Media Baru'}
+                  </h3>
+                  <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', margin: 0 }}>
+                    Dokumentasi kegiatan dan arsip resmi ROHIS
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="btn-icon-soft"
+                onClick={() => setModalOpen(false)}
+                title="Tutup dialog"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Modal Scrollable Body */}
+            <form onSubmit={handleSaveAlbum}>
+              <div className="modal-body-responsive">
+                <div className="form-grid-2-soft">
+                  <div className="form-group-soft">
+                    <label className="form-label-soft">Judul media / kegiatan *</label>
+                    <input
+                      type="text"
+                      className="form-input-soft"
+                      value={albumForm.title}
+                      onChange={(e) => setAlbumForm({ ...albumForm, title: e.target.value })}
+                      placeholder="Contoh: Silaturahmi Pengurus ROHIS"
+                      required
+                    />
+                  </div>
+                  <div className="form-group-soft">
+                    <label className="form-label-soft">Kategori</label>
+                    <select
+                      className="form-select-soft"
+                      value={albumForm.category}
+                      onChange={(e) => setAlbumForm({ ...albumForm, category: e.target.value })}
+                    >
+                      <option value="Dokumentasi">Dokumentasi</option>
+                      <option value="Kajian">Kajian</option>
+                      <option value="Pelatihan">Pelatihan</option>
+                      <option value="Sosial">Sosial</option>
+                      <option value="Organisasi">Organisasi</option>
+                      <option value="Lomba">Lomba</option>
+                      <option value="Workshop">Workshop</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="form-grid-2-soft">
+                  <div className="form-group-soft">
+                    <label className="form-label-soft">Tipe Media</label>
+                    <select
+                      className="form-select-soft"
+                      value={albumForm.type}
+                      onChange={(e) => setAlbumForm({ ...albumForm, type: e.target.value })}
+                    >
+                      <option value="Foto">Foto</option>
+                      <option value="Video">Video</option>
+                    </select>
+                  </div>
+                  <div className="form-group-soft">
+                    <label className="form-label-soft">Tanggal Pelaksanaan</label>
+                    <input
+                      type="text"
+                      className="form-input-soft"
+                      value={albumForm.date}
+                      onChange={(e) => setAlbumForm({ ...albumForm, date: e.target.value })}
+                      placeholder="Contoh: 12 Januari 2025"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group-soft">
+                  <label className="form-label-soft">Deskripsi Singkat</label>
+                  <textarea
+                    rows={2}
+                    className="form-textarea-soft"
+                    value={albumForm.description}
+                    onChange={(e) => setAlbumForm({ ...albumForm, description: e.target.value })}
+                    placeholder="Keterangan singkat mengenai dokumentasi kegiatan ini..."
+                  />
+                </div>
+
+                {/* Cover File Upload */}
+                <div style={{ marginTop: '0.5rem' }}>
+                  <ImageUploadField
+                    label={albumForm.type === 'Video' ? 'Foto Sampul Video (Thumbnail)' : 'Foto Utama'}
+                    value={albumForm.coverImage}
+                    onChange={(val) => setAlbumForm({ ...albumForm, coverImage: val })}
+                    placeholder="Upload file atau tempel link Google Drive/URL..."
+                  />
+                </div>
+              </div>
+
+              {/* Modal Sticky Footer */}
+              <div className="modal-footer-responsive">
+                <div>
+                  {editingAlbum && (
+                    <button
+                      type="button"
+                      className="btn btn-secondary-soft"
+                      style={{ color: '#EF4444' }}
+                      onClick={() => setDeleteConfirmItem(editingAlbum)}
+                    >
+                      <Trash2 size={15} /> Hapus media
+                    </button>
+                  )}
+                </div>
+
+                <div style={{ display: 'flex', gap: '0.65rem' }}>
+                  <button
+                    type="button"
+                    className="btn btn-secondary-soft"
+                    onClick={() => setModalOpen(false)}
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="submit"
+                    className="btn btn-pine"
+                  >
+                    <Save size={15} />
+                    <span>{editingAlbum ? 'Simpan perubahan' : 'Tambah media'}</span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       )}
 
-      {/* Modal Add / Edit Album */}
-      {modalOpen && (
-        <div className="modal-overlay-responsive" onClick={(e) => { if (e.target === e.currentTarget) setModalOpen(false); }}>
-          <div className="glass-card modal-card-responsive animate-fade-in-up" style={{
-            maxWidth: 760,
-          }}>
-            <div className="modal-header-responsive">
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0 }}>
-                {editingAlbum ? 'Kelola Album Dokumentasi' : 'Buat Album Baru'}
+      {/* ═══════════════════════════════════════════════════════════════
+          DELETE CONFIRMATION DIALOG (Image 07)
+          ═══════════════════════════════════════════════════════════════ */}
+      {deleteConfirmItem && (
+        <div className="modal-backdrop-responsive" style={{ zIndex: 10000 }} onClick={() => setDeleteConfirmItem(null)}>
+          <div
+            className="admin-soft-card"
+            style={{
+              maxWidth: 420,
+              width: '90%',
+              margin: 'auto',
+              padding: '1.5rem',
+              boxShadow: 'var(--soft-shadow-lg)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--pine-dark)', margin: 0 }}>
+                Hapus konten?
               </h3>
-              <button onClick={() => setModalOpen(false)} className="btn btn-outline btn-xs" aria-label="Tutup">
+              <button
+                type="button"
+                className="btn-icon-soft"
+                onClick={() => setDeleteConfirmItem(null)}
+              >
                 <X size={16} />
               </button>
             </div>
 
-            <form onSubmit={handleSaveAlbum}>
-              <div className="modal-body-responsive" style={{ padding: '1.5rem 1.75rem' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(260px, 100%), 1fr))', gap: '1rem', marginBottom: '1rem' }}>
-                <div className="form-group">
-                  <label className="form-label">Judul Album / Kegiatan</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    value={albumForm.title}
-                    onChange={e => setAlbumForm({ ...albumForm, title: e.target.value })}
-                    placeholder="Contoh: Kajian Ahad Pagi Akbar 2026"
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Kategori</label>
-                  <select
-                    className="form-input"
-                    value={albumForm.category}
-                    onChange={e => setAlbumForm({ ...albumForm, category: e.target.value })}
-                  >
-                    {categories.filter(c => c !== 'Semua').map(c => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(200px, 100%), 1fr))', gap: '1rem', marginBottom: '1rem' }}>
-                <div className="form-group">
-                  <label className="form-label">Tanggal Pelaksanaan</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    value={albumForm.date}
-                    onChange={e => setAlbumForm({ ...albumForm, date: e.target.value })}
-                    placeholder="Contoh: 16 Februari 2026"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Emoji Ikon</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    value={albumForm.emoji}
-                    onChange={e => setAlbumForm({ ...albumForm, emoji: e.target.value })}
-                    placeholder="📸"
-                  />
-                </div>
-              </div>
-
-              <div className="form-group" style={{ marginBottom: '1.25rem' }}>
-                <label className="form-label">Deskripsi Album</label>
-                <textarea
-                  className="form-input"
-                  style={{ minHeight: 70 }}
-                  value={albumForm.description}
-                  onChange={e => setAlbumForm({ ...albumForm, description: e.target.value })}
-                  placeholder="Ceritakan rangkuman kegiatan dakwah atau keseruan acara ini..."
-                />
-              </div>
-
-              <ImageUploadField
-                label="Foto Sampul (Cover Image)"
-                value={albumForm.coverImage}
-                onChange={val => setAlbumForm({ ...albumForm, coverImage: val })}
-                placeholder="Tempel link foto atau klik Pilih Berkas Foto..."
-                aspectRatioHint="Landscape 16:9 disarankan"
-              />
-
-              {/* ═══ Multi-Media Album Manager ═══ */}
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem', marginBottom: '1.5rem' }}>
               <div style={{
-                background: 'rgba(0, 0, 0, 0.25)',
-                border: '1px solid var(--border-glass)',
-                borderRadius: 'var(--radius-md)',
-                padding: '1.25rem',
-                marginTop: '1.5rem',
-                marginBottom: '1.5rem',
+                width: 44,
+                height: 44,
+                borderRadius: 'var(--radius-sm)',
+                background: 'rgba(239, 68, 68, 0.1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#EF4444',
+                flexShrink: 0,
               }}>
-                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--emerald)', marginBottom: '0.35rem' }}>
-                  Isi Media Dalam Album ({albumForm.media.length} Media)
-                </h4>
-                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
-                  Tambahkan foto atau tautan video (YouTube, Instagram Reel, Google Drive) ke dalam album ini.
+                <Trash2 size={22} />
+              </div>
+              <div>
+                <strong style={{ display: 'block', fontSize: '0.92rem', color: 'var(--pine-dark)' }}>
+                  {deleteConfirmItem.title}
+                </strong>
+                <p style={{ margin: '0.25rem 0 0', fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                  Media ini akan dihapus secara permanen. Pastikan Anda sudah memeriksanya.
                 </p>
-
-                {/* Form Add New Media Item */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center', marginBottom: '1rem' }}>
-                  <select
-                    className="form-input"
-                    value={newMedia.type}
-                    onChange={e => setNewMedia({ ...newMedia, type: e.target.value })}
-                    style={{ width: '120px', flexShrink: 0 }}
-                  >
-                    <option value="image">📷 Foto</option>
-                    <option value="video">🎥 Video</option>
-                  </select>
-
-                  <input
-                    type="text"
-                    className="form-input"
-                    value={newMedia.url}
-                    onChange={e => setNewMedia({ ...newMedia, url: e.target.value })}
-                    placeholder="URL Media (Google Drive, YouTube, Web URL, dll)..."
-                    style={{ flex: '1 1 200px', minWidth: 0 }}
-                  />
-
-                  <button
-                    type="button"
-                    onClick={handleAddMediaItem}
-                    className="btn btn-primary"
-                    style={{ whiteSpace: 'nowrap', flexShrink: 0 }}
-                  >
-                    <Plus size={15} /> Tambah
-                  </button>
-                </div>
-
-                {/* Media Items List */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', maxHeight: 240, overflowY: 'auto' }}>
-                  {albumForm.media.map((m, idx) => {
-                    const isCover = albumForm.coverImage === m.url;
-                    const thumb = getMediaThumbnail(m);
-
-                    return (
-                      <div
-                        key={m.id || idx}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.75rem',
-                          flexWrap: 'wrap',
-                          background: isCover ? 'rgba(16, 185, 129, 0.1)' : 'var(--bg-card)',
-                          border: isCover ? '1px solid rgba(16, 185, 129, 0.4)' : '1px solid var(--border-glass)',
-                          padding: '0.5rem 0.75rem',
-                          borderRadius: 'var(--radius-sm)',
-                        }}
-                      >
-                        <div style={{ width: 44, height: 34, borderRadius: 4, overflow: 'hidden', background: '#000', flexShrink: 0 }}>
-                          {thumb ? (
-                            <img src={thumb} alt="thumb" referrerPolicy="no-referrer" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                          ) : (
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-                              {m.type === 'video' ? <Video size={16} /> : <ImageIcon size={16} />}
-                            </div>
-                          )}
-                        </div>
-
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontSize: '0.8rem', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                            {m.type === 'video' ? '🎥 Video' : '📷 Foto'}: {m.url}
-                          </div>
-                          {isCover && (
-                            <span style={{ fontSize: '0.7rem', color: 'var(--emerald)', fontWeight: 700 }}>
-                              ★ Sampul Utama Album
-                            </span>
-                          )}
-                        </div>
-
-                        <div style={{ display: 'flex', gap: '0.35rem', flexShrink: 0 }}>
-                          {!isCover && (
-                            <button
-                              type="button"
-                              onClick={() => handleSetCover(m.url)}
-                              className="btn btn-outline btn-xs"
-                              title="Jadikan Gambar Sampul Album"
-                            >
-                              <Star size={12} /> Set Sampul
-                            </button>
-                          )}
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveMediaItem(idx)}
-                            className="btn btn-danger-ghost btn-xs"
-                            title="Hapus media dari album"
-                          >
-                            <Trash2 size={12} />
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
               </div>
-              </div>
+            </div>
 
-              {/* Submit Buttons */}
-              <div className="modal-footer-responsive">
-                <button type="button" onClick={() => setModalOpen(false)} className="btn btn-outline" style={{ minWidth: 100 }}>
-                  Batal
-                </button>
-                <button type="submit" className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700 }}>
-                  <Save size={16} /> Simpan Seluruh Album
-                </button>
-              </div>
-            </form>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.65rem' }}>
+              <button
+                type="button"
+                className="btn btn-secondary-soft"
+                onClick={() => setDeleteConfirmItem(null)}
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                className="btn btn-danger-soft"
+                onClick={confirmDelete}
+              >
+                Hapus
+              </button>
+            </div>
           </div>
         </div>
       )}

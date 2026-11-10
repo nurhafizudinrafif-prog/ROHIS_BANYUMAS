@@ -1,115 +1,204 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useData } from '../context/DataContext';
-import { ClipboardList, Search, Download, Upload, Trash2 } from 'lucide-react';
+import {
+  ClipboardList,
+  Search,
+  Download,
+  Upload,
+  Trash2,
+  Clock,
+  Filter,
+} from 'lucide-react';
 
 export default function AuditLogs() {
-  const { auditLogs, updateData, articles, events, schools, questions, library, team, users, home } = useData();
-  const [search, setSearch] = useState('');
+  const { auditLogs, updateData } = useData();
 
-  const filtered = auditLogs.filter(log => {
-    const text = `${log.action} ${log.module} ${log.detail} ${log.username}`.toLowerCase();
-    return text.includes(search.toLowerCase());
-  });
+  const [userFilter, setUserFilter] = useState('Semua');
+  const [actionFilter, setActionFilter] = useState('Semua');
+  const [timeFilter, setTimeFilter] = useState('Semua');
 
-  const handleBackup = () => {
-    const backupData = {
-      exportedAt: new Date().toISOString(),
-      data: { home, articles, events, schools, questions, library, team, users, auditLogs },
-    };
-    const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `rokaba-full-backup-${new Date().toISOString().split('T')[0]}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+  // Unique usernames in logs
+  const usernames = useMemo(() => {
+    return [
+      'Semua',
+      ...new Set((auditLogs || []).map((l) => l.username).filter(Boolean)),
+    ];
+  }, [auditLogs]);
 
-  const handleRestore = async () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
-    input.onchange = async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      try {
-        const text = await file.text();
-        const backup = JSON.parse(text);
-        const d = backup.data || backup;
-        if (d.articles) await updateData('articles', d.articles);
-        if (d.events) await updateData('events', d.events);
-        if (d.schools) await updateData('schools', d.schools);
-        if (d.questions) await updateData('questions', d.questions);
-        if (d.library) await updateData('library', d.library);
-        if (d.team) await updateData('team', d.team);
-        if (d.home) await updateData('home', d.home);
-        alert('Data berhasil di-restore!');
-      } catch (err) {
-        alert('Gagal membaca file: ' + err.message);
+  // Unique actions in logs
+  const actions = useMemo(() => {
+    return [
+      'Semua',
+      ...new Set((auditLogs || []).map((l) => l.action).filter(Boolean)),
+    ];
+  }, [auditLogs]);
+
+  const filteredLogs = useMemo(() => {
+    const now = Date.now();
+    return (auditLogs || []).filter((log) => {
+      // User match
+      if (userFilter !== 'Semua' && log.username !== userFilter) return false;
+      // Action match
+      if (actionFilter !== 'Semua' && log.action !== actionFilter) return false;
+      // Time match
+      if (timeFilter !== 'Semua') {
+        const logTime = new Date(log.timestamp).getTime();
+        const diffHours = (now - logTime) / (1000 * 60 * 60);
+        if (timeFilter === 'today' && diffHours > 24) return false;
+        if (timeFilter === '7days' && diffHours > 24 * 7) return false;
+        if (timeFilter === '30days' && diffHours > 24 * 30) return false;
       }
-    };
-    input.click();
-  };
+      return true;
+    });
+  }, [auditLogs, userFilter, actionFilter, timeFilter]);
 
   const handleClearLogs = async () => {
-    if (!confirm('Hapus semua audit log?')) return;
+    if (!window.confirm('Yakin ingin membersihkan seluruh riwayat audit log?')) return;
     await updateData('audit_logs', []);
   };
 
-  const actionColors = {
-    CREATE: 'var(--emerald)',
-    UPDATE: 'var(--antique-brass)',
-    DELETE: '#EF4444',
-    ANSWER: '#3B82F6',
+  const formatActivitySummary = (log) => {
+    if (log.detail) return log.detail;
+    const actionLabel =
+      log.action === 'CREATE'
+        ? 'Menambahkan'
+        : log.action === 'UPDATE'
+        ? 'Memperbarui'
+        : log.action === 'DELETE'
+        ? 'Menghapus'
+        : log.action === 'ANSWER'
+        ? 'Menjawab'
+        : log.action;
+    return `${actionLabel} data pada modul ${log.module || 'sistem'}.`;
   };
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-        <h1 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.5rem)', fontWeight: 800 }}>Audit Log & Backup</h1>
-        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-          <button onClick={handleBackup} className="btn btn-sm btn-secondary"><Download size={14} /> Backup</button>
-          <button onClick={handleRestore} className="btn btn-sm btn-secondary"><Upload size={14} /> Restore</button>
-          <button onClick={handleClearLogs} className="btn btn-sm btn-danger"><Trash2 size={14} /> Clear Logs</button>
+    <div style={{ maxWidth: 1160, margin: '0 auto', paddingBottom: '3.5rem' }}>
+      {/* Header Bar matching Image 04 panel 3 */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '1rem' }}>
+        <div>
+          <h1 style={{ fontSize: 'clamp(1.35rem, 3vw, 1.75rem)', fontWeight: 800, color: 'var(--pine-dark)', margin: 0 }}>
+            Audit aktivitas
+          </h1>
+          <p className="text-secondary" style={{ fontSize: '0.88rem', marginTop: '0.2rem' }}>
+            Riwayat aktivitas penting di CMS ROKABA.
+          </p>
+        </div>
+
+        {auditLogs && auditLogs.length > 0 && (
+          <button
+            type="button"
+            className="btn btn-secondary-soft btn-sm"
+            style={{ color: '#EF4444' }}
+            onClick={handleClearLogs}
+          >
+            <Trash2 size={14} /> Bersihkan log
+          </button>
+        )}
+      </div>
+
+      {/* Filter Row matching Image 04 panel 3: Pengguna, Jenis aktivitas, Rentang waktu */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+        gap: '1rem',
+        marginBottom: '1.5rem',
+      }}>
+        <div className="form-group-soft" style={{ marginBottom: 0 }}>
+          <label className="form-label-soft">Pengguna</label>
+          <select
+            className="form-select-soft"
+            value={userFilter}
+            onChange={(e) => setUserFilter(e.target.value)}
+          >
+            {usernames.map((u) => (
+              <option key={u} value={u}>
+                {u === 'Semua' ? 'Semua pengguna' : u}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="form-group-soft" style={{ marginBottom: 0 }}>
+          <label className="form-label-soft">Jenis aktivitas</label>
+          <select
+            className="form-select-soft"
+            value={actionFilter}
+            onChange={(e) => setActionFilter(e.target.value)}
+          >
+            {actions.map((a) => (
+              <option key={a} value={a}>
+                {a === 'Semua' ? 'Semua aktivitas' : a}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="form-group-soft" style={{ marginBottom: 0 }}>
+          <label className="form-label-soft">Rentang waktu</label>
+          <select
+            className="form-select-soft"
+            value={timeFilter}
+            onChange={(e) => setTimeFilter(e.target.value)}
+          >
+            <option value="Semua">Semua waktu</option>
+            <option value="today">24 Jam Terakhir</option>
+            <option value="7days">7 Hari Terakhir</option>
+            <option value="30days">30 Hari Terakhir</option>
+          </select>
         </div>
       </div>
 
-      <div style={{ position: 'relative', marginBottom: '1.25rem' }}>
-        <Search size={16} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-        <input type="text" className="form-input" placeholder="Cari log..." style={{ paddingLeft: '2.5rem', maxWidth: 400, width: '100%' }}
-          value={search} onChange={e => setSearch(e.target.value)} />
-      </div>
-
-      <div className="admin-desktop-table glass-card table-responsive">
-        <table className="data-table" style={{ minWidth: 540 }}>
+      {/* Desktop Data Table matching Image 04 panel 3 */}
+      <div className="admin-desktop-table data-table-container-soft">
+        <table className="data-table-soft">
           <thead>
-            <tr><th>Waktu</th><th>User</th><th>Aksi</th><th>Modul</th><th>Detail</th></tr>
+            <tr>
+              <th style={{ width: 180 }}>Waktu</th>
+              <th style={{ width: 220 }}>Pengguna</th>
+              <th>Aktivitas</th>
+            </tr>
           </thead>
           <tbody>
-            {filtered.length > 0 ? filtered.map(log => (
+            {filteredLogs.map((log) => (
               <tr key={log.id}>
-                <td style={{ fontSize: '0.78rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
-                  {new Date(log.timestamp).toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
-                </td>
-                <td style={{ fontWeight: 500 }}>{log.username}</td>
+                {/* Waktu */}
                 <td>
-                  <span className="badge" style={{
-                    background: `${actionColors[log.action] || 'var(--emerald)'}15`,
-                    color: actionColors[log.action] || 'var(--emerald)',
-                    fontSize: '0.68rem',
-                  }}>
-                    {log.action}
+                  <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
+                    {log.timestamp
+                      ? new Date(log.timestamp).toLocaleString('id-ID', {
+                          day: '2-digit',
+                          month: 'short',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })
+                      : '—'}
                   </span>
                 </td>
-                <td style={{ fontSize: '0.82rem', textTransform: 'capitalize' }}>{log.module}</td>
-                <td style={{ fontSize: '0.82rem', maxWidth: 300, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {log.detail}
+
+                {/* Pengguna */}
+                <td>
+                  <strong style={{ color: 'var(--pine-dark)', fontWeight: 600 }}>
+                    {log.username || 'Admin'}
+                  </strong>
+                </td>
+
+                {/* Aktivitas */}
+                <td>
+                  <span style={{ color: 'var(--text-primary)', fontSize: '0.88rem' }}>
+                    {formatActivitySummary(log)}
+                  </span>
                 </td>
               </tr>
-            )) : (
-              <tr><td colSpan={5} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
-                <ClipboardList size={32} style={{ opacity: 0.3, marginBottom: '0.5rem' }} /><br />Tidak ada log
-              </td></tr>
+            ))}
+
+            {filteredLogs.length === 0 && (
+              <tr>
+                <td colSpan={3} style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--text-muted)' }}>
+                  Tidak ada riwayat aktivitas yang sesuai filter.
+                </td>
+              </tr>
             )}
           </tbody>
         </table>
@@ -117,36 +206,21 @@ export default function AuditLogs() {
 
       {/* Mobile Card List */}
       <div className="admin-mobile-cards">
-        {filtered.length > 0 ? (
-          filtered.map(log => (
-            <div key={log.id} className="admin-mobile-card">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span className="badge" style={{
-                  background: `${actionColors[log.action] || 'var(--emerald)'}15`,
-                  color: actionColors[log.action] || 'var(--emerald)',
-                  fontSize: '0.7rem',
-                  fontWeight: 700,
-                }}>
-                  {log.action} • {log.module}
-                </span>
-                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-                  {new Date(log.timestamp).toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
-                </span>
-              </div>
-              <div style={{ fontSize: '0.88rem', color: 'var(--text-primary)', fontWeight: 500 }}>
-                {log.detail}
-              </div>
-              <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
-                Oleh: <strong style={{ color: 'var(--text-secondary)' }}>{log.username}</strong>
-              </div>
+        {filteredLogs.map((log) => (
+          <div key={log.id} className="admin-mobile-card">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <strong style={{ color: 'var(--pine-dark)', fontSize: '0.92rem' }}>{log.username || 'Admin'}</strong>
+              <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
+                {log.timestamp
+                  ? new Date(log.timestamp).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' })
+                  : '—'}
+              </span>
             </div>
-          ))
-        ) : (
-          <div className="admin-mobile-card" style={{ textAlign: 'center', padding: '2rem 1rem', color: 'var(--text-muted)' }}>
-            <ClipboardList size={32} style={{ opacity: 0.3, margin: '0 auto 0.5rem', display: 'block' }} />
-            <p style={{ margin: 0, fontWeight: 600 }}>Tidak ada log ditemukan.</p>
+            <p style={{ margin: '0.35rem 0 0', fontSize: '0.84rem', color: 'var(--text-primary)', lineHeight: 1.45 }}>
+              {formatActivitySummary(log)}
+            </p>
           </div>
-        )}
+        ))}
       </div>
     </div>
   );

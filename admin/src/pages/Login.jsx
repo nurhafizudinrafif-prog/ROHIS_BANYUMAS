@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { BookOpen, Lock, User, KeyRound, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { AlertCircle, Eye, EyeOff } from 'lucide-react';
+import RohisLogo from '../components/RohisLogo';
 
 export default function Login() {
   const { login } = useAuth();
@@ -13,114 +14,162 @@ export default function Login() {
     e.preventDefault();
     setError('');
     setLoading(true);
-    await new Promise(r => setTimeout(r, 600)); // simulate
+    await new Promise((r) => setTimeout(r, 400));
     const result = login(form.username, form.password, form.pin);
     if (!result.success) setError(result.error);
     setLoading(false);
   };
 
   return (
-    <div style={{
-      minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
-      background: 'var(--bg-dark)', padding: '1.5rem',
-      position: 'relative', overflow: 'hidden',
-    }}>
-      {/* Background effects */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        background: `
-          radial-gradient(ellipse at 20% 30%, rgba(16,185,129,0.06) 0%, transparent 50%),
-          radial-gradient(ellipse at 80% 70%, rgba(181,141,79,0.04) 0%, transparent 40%)
-        `,
-        pointerEvents: 'none',
-      }} />
-      <div style={{
-        position: 'absolute', inset: 0,
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2310B981' fill-opacity='0.02'%3E%3Cpath d='M20 20h20v20H20zM0 0h20v20H0z'/%3E%3C/g%3E%3C/svg%3E")`,
-        pointerEvents: 'none',
-      }} />
-
-      <div className="animate-fade-in-up" style={{
-        width: '100%', maxWidth: 420, position: 'relative', zIndex: 1,
-      }}>
-        {/* Brand */}
-        <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <div style={{
-            width: 56, height: 56, borderRadius: '16px',
-            background: 'linear-gradient(135deg, var(--emerald), var(--emerald-dark))',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            margin: '0 auto 1.25rem', boxShadow: 'var(--shadow-emerald)',
-          }}>
-            <BookOpen size={28} color="white" />
+    <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'var(--canvas-bg)',
+        padding: '1.5rem',
+      }}
+    >
+      <div style={{ width: '100%', maxWidth: 440 }}>
+        {/* Login Card (Image 04 Panel 1) */}
+        <div
+          className="admin-soft-card"
+          style={{
+            padding: 'clamp(2rem, 5vw, 2.75rem)',
+            borderRadius: 'var(--radius-xl)',
+            boxShadow: 'var(--soft-shadow)',
+          }}
+        >
+          {/* Logo & Headings */}
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <div style={{ display: 'inline-flex', marginBottom: '1rem' }}>
+              <RohisLogo size={52} showGlow={false} />
+            </div>
+            <h1
+              style={{
+                fontSize: '1.5rem',
+                fontWeight: 800,
+                color: 'var(--pine-dark)',
+                letterSpacing: '-0.02em',
+                marginBottom: '0.25rem',
+              }}
+            >
+              Masuk ke ROKABA CMS
+            </h1>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem' }}>
+              ROHIS Kabupaten Banyumas
+            </p>
           </div>
-          <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.75rem', fontWeight: 800, marginBottom: '0.35rem' }}>
-            ROKABA <span style={{ color: 'var(--emerald)' }}>Admin</span>
-          </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}>
-            Content Management System
-          </p>
-        </div>
 
-        {/* Login Card */}
-        <div className="glass-card" style={{ padding: '2rem' }}>
+          {/* Inline Error Notice */}
           {error && (
-            <div style={{
-              display: 'flex', alignItems: 'center', gap: '0.65rem',
-              background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)',
-              borderRadius: 'var(--radius-md)', padding: '0.85rem 1rem',
-              marginBottom: '1.25rem', color: '#F87171', fontSize: '0.85rem',
-            }}>
-              <AlertCircle size={18} /> {error}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.65rem',
+                backgroundColor: 'var(--status-red-bg)',
+                border: '1px solid var(--status-red-border)',
+                borderRadius: 'var(--radius-md)',
+                padding: '0.75rem 1rem',
+                marginBottom: '1.25rem',
+                color: 'var(--status-red)',
+                fontSize: '0.84rem',
+              }}
+              role="alert"
+            >
+              <AlertCircle size={16} style={{ flexShrink: 0 }} />
+              <span>{error}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label className="form-label">Username</label>
-              <div style={{ position: 'relative' }}>
-                <User size={16} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-                <input type="text" className="form-input" placeholder="Masukkan username"
-                  style={{ paddingLeft: '2.5rem' }}
-                  value={form.username} onChange={e => setForm({ ...form, username: e.target.value })} required />
-              </div>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
+            <div>
+              <label className="form-label-soft" htmlFor="login-username">
+                Username
+              </label>
+              <input
+                id="login-username"
+                type="text"
+                className="form-input-soft"
+                placeholder="admin_contoh"
+                value={form.username}
+                onChange={(e) => setForm({ ...form, username: e.target.value })}
+                required
+                autoComplete="username"
+              />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Password</label>
+            <div>
+              <label className="form-label-soft" htmlFor="login-password">
+                Password
+              </label>
               <div style={{ position: 'relative' }}>
-                <Lock size={16} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-                <input type={showPass ? 'text' : 'password'} className="form-input" placeholder="Masukkan password"
-                  style={{ paddingLeft: '2.5rem', paddingRight: '2.5rem' }}
-                  value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} required />
-                <button type="button" onClick={() => setShowPass(!showPass)} style={{
-                  position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)',
-                  background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: '0.25rem',
-                }}>
+                <input
+                  id="login-password"
+                  type={showPass ? 'text' : 'password'}
+                  className="form-input-soft"
+                  placeholder="••••••••"
+                  value={form.password}
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                  required
+                  autoComplete="current-password"
+                  style={{ paddingRight: '2.5rem' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPass(!showPass)}
+                  style={{
+                    position: 'absolute',
+                    right: '0.75rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: 'var(--text-muted)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                  aria-label={showPass ? 'Sembunyikan password' : 'Lihat password'}
+                >
                   {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
             </div>
 
-            <div className="form-group">
-              <label className="form-label">PIN <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>(Opsional)</span></label>
-              <div style={{ position: 'relative' }}>
-                <KeyRound size={16} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-                <input type="password" className="form-input" placeholder="1234 (Opsional)"
-                  style={{ paddingLeft: '2.5rem' }} maxLength={6}
-                  value={form.pin} onChange={e => setForm({ ...form, pin: e.target.value })} />
-              </div>
+            <div>
+              <label className="form-label-soft" htmlFor="login-pin">
+                PIN (opsional)
+              </label>
+              <input
+                id="login-pin"
+                type="password"
+                className="form-input-soft"
+                placeholder=""
+                value={form.pin}
+                onChange={(e) => setForm({ ...form, pin: e.target.value })}
+                autoComplete="one-time-code"
+              />
             </div>
 
-            <button type="submit" className="btn btn-primary" disabled={loading}
-              style={{ width: '100%', padding: '0.85rem', fontSize: '0.9rem', marginTop: '0.5rem', opacity: loading ? 0.7 : 1 }}>
-              {loading ? 'Memverifikasi...' : 'Masuk ke Dashboard'}
+            <button
+              type="submit"
+              className="btn-pine"
+              disabled={loading}
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                fontSize: '0.94rem',
+                marginTop: '0.5rem',
+              }}
+            >
+              {loading ? 'Memproses...' : 'Masuk'}
             </button>
           </form>
         </div>
-
-        <p style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-          © {new Date().getFullYear()} ROKABA — Rohis Kabupaten Banyumas
-        </p>
       </div>
     </div>
   );

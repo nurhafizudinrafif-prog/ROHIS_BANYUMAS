@@ -2,23 +2,31 @@ import { useState, useMemo } from 'react';
 import { useData } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
 import {
-  Users, Plus, Edit3, Trash2, Save, X, Search, Shield,
-  GraduationCap, User, CheckCircle2, AlertCircle, RefreshCw
+  Users,
+  Plus,
+  Edit3,
+  Trash2,
+  Save,
+  X,
+  Search,
+  Shield,
+  GraduationCap,
+  User,
+  CheckCircle2,
 } from 'lucide-react';
 import ImageUploadField from '../components/ImageUploadField';
-import { InstagramIcon } from '../components/SocialIcons';
 import { getDirectImageUrl } from '../utils/media';
 
 export default function TeamManager() {
   const { team, updateData, addAuditLog } = useData();
   const { user } = useAuth();
 
-  const [activeTab, setActiveTab] = useState('all'); // 'all', 'bph', or division id/shortName
+  const [filterGroup, setFilterGroup] = useState('Semua');
   const [search, setSearch] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
+  const [deleteConfirmItem, setDeleteConfirmItem] = useState(null);
   const [editingMember, setEditingMember] = useState(null);
-  const [targetGroup, setTargetGroup] = useState('bph'); // 'bph' or division shortName
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [targetGroup, setTargetGroup] = useState('bph'); // 'bph' or division shortName/id
   const [formData, setFormData] = useState({
     name: '',
     role: '',
@@ -30,45 +38,53 @@ export default function TeamManager() {
   const bphList = useMemo(() => team?.bph || [], [team]);
   const divisionsList = useMemo(() => team?.divisions || [], [team]);
 
-  // Flatten all members for 'all' tab with division tag
+  // Flatten all members for unified table view matching Image 03 panel 2
   const allMembers = useMemo(() => {
     const list = [];
-    bphList.forEach(m => list.push({ ...m, groupKey: 'bph', groupName: 'Badan Pengurus Harian (BPH)' }));
-    divisionsList.forEach(div => {
-      (div.members || []).forEach(m => {
-        list.push({ ...m, groupKey: div.shortName || div.id, groupName: div.name });
+    bphList.forEach((m) =>
+      list.push({ ...m, groupKey: 'bph', groupName: 'BPH' })
+    );
+    divisionsList.forEach((div) => {
+      (div.members || []).forEach((m) => {
+        list.push({
+          ...m,
+          groupKey: div.shortName || div.id,
+          groupName: div.name || div.title,
+        });
       });
     });
     return list;
   }, [bphList, divisionsList]);
 
-  // Filtered members by tab & search
+  // Filtered members
   const filteredMembers = useMemo(() => {
     let list = allMembers;
-    if (activeTab === 'bph') {
-      list = allMembers.filter(m => m.groupKey === 'bph');
-    } else if (activeTab !== 'all') {
-      list = allMembers.filter(m => m.groupKey.toLowerCase() === activeTab.toLowerCase());
+    if (filterGroup !== 'Semua') {
+      list = list.filter((m) => {
+        if (filterGroup === 'bph') return m.groupKey === 'bph';
+        return m.groupKey.toLowerCase() === filterGroup.toLowerCase();
+      });
     }
 
     if (search.trim()) {
       const q = search.toLowerCase();
-      list = list.filter(m =>
-        (m.name || '').toLowerCase().includes(q) ||
-        (m.role || '').toLowerCase().includes(q) ||
-        (m.school || '').toLowerCase().includes(q) ||
-        (m.groupName || '').toLowerCase().includes(q)
+      list = list.filter(
+        (m) =>
+          (m.name || '').toLowerCase().includes(q) ||
+          (m.role || '').toLowerCase().includes(q) ||
+          (m.school || '').toLowerCase().includes(q) ||
+          (m.groupName || '').toLowerCase().includes(q)
       );
     }
     return list;
-  }, [allMembers, activeTab, search]);
+  }, [allMembers, filterGroup, search]);
 
-  const handleOpenAdd = (defaultGroup = 'bph') => {
+  const handleOpenAdd = () => {
     setEditingMember(null);
-    setTargetGroup(defaultGroup);
+    setTargetGroup('bph');
     setFormData({
       name: '',
-      role: defaultGroup === 'bph' ? 'Ketua Umum' : 'Staf Divisi',
+      role: 'Ketua Umum',
       school: '',
       instagram: '',
       photo: '',
@@ -78,7 +94,7 @@ export default function TeamManager() {
 
   const handleOpenEdit = (member) => {
     setEditingMember(member);
-    setTargetGroup(member.groupKey);
+    setTargetGroup(member.groupKey || 'bph');
     setFormData({
       name: member.name || '',
       role: member.role || '',
@@ -89,24 +105,28 @@ export default function TeamManager() {
     setModalOpen(true);
   };
 
-  const handleDelete = async (member) => {
-    if (!window.confirm(`Yakin ingin menghapus ${member.name} (${member.role}) dari kepengurusan?`)) return;
+  const confirmDelete = async () => {
+    if (!deleteConfirmItem) return;
+    const member = deleteConfirmItem;
 
     try {
       let updatedTeam;
       if (member.groupKey === 'bph') {
         updatedTeam = {
           ...team,
-          bph: (team.bph || []).filter(m => m.id !== member.id),
+          bph: (team.bph || []).filter((m) => m.id !== member.id),
         };
       } else {
         updatedTeam = {
           ...team,
-          divisions: (team.divisions || []).map(div => {
-            if ((div.shortName || div.id).toLowerCase() === member.groupKey.toLowerCase()) {
+          divisions: (team.divisions || []).map((div) => {
+            if (
+              div.shortName?.toLowerCase() === member.groupKey?.toLowerCase() ||
+              div.id === member.groupKey
+            ) {
               return {
                 ...div,
-                members: (div.members || []).filter(m => m.id !== member.id),
+                members: (div.members || []).filter((m) => m.id !== member.id),
               };
             }
             return div;
@@ -115,532 +135,552 @@ export default function TeamManager() {
       }
 
       await updateData('team', updatedTeam);
-      try {
-        if (addAuditLog) {
-          await addAuditLog(user?.id || 'admin', user?.username || 'admin', 'DELETE', 'team', `Deleted member: ${member.name}`);
-        }
-      } catch {}
+      if (addAuditLog && user) {
+        await addAuditLog(
+          user.id,
+          user.username,
+          'DELETE',
+          'team',
+          `Deleted member: ${member.name} (${member.role})`
+        );
+      }
     } catch (err) {
-      console.error('Delete member error:', err);
-      alert('Gagal menghapus data pengurus: ' + (err.message || 'Terjadi kesalahan sistem'));
+      console.error('Delete member failed:', err);
+    } finally {
+      setDeleteConfirmItem(null);
+      setModalOpen(false);
     }
   };
 
-  const handleSave = async (e) => {
+  const handleSaveMember = async (e) => {
     e.preventDefault();
-    if (!formData.name.trim()) return;
+    if (!formData.name.trim()) {
+      alert('Nama pengurus wajib diisi!');
+      return;
+    }
 
-    setIsSubmitting(true);
+    const payload = {
+      id: editingMember ? editingMember.id : `tm-${Date.now()}`,
+      name: formData.name.trim(),
+      role: formData.role.trim() || 'Pengurus',
+      school: formData.school.trim() || 'ROHIS Banyumas',
+      instagram: formData.instagram.trim(),
+      photo: formData.photo.trim(),
+    };
+
     try {
-      let updatedTeam = { ...team };
-
-      // Sanitize Google Drive URL if duplicated or pasted awkwardly
-      let cleanPhoto = (formData.photo || '').trim();
-      const driveMatch = cleanPhoto.match(/\/file\/d\/([a-zA-Z0-9_-]+)/i) || cleanPhoto.match(/[?&]id=([a-zA-Z0-9_-]+)/i);
-      if (driveMatch && driveMatch[1]) {
-        cleanPhoto = `https://drive.google.com/file/d/${driveMatch[1]}/view?usp=sharing`;
-      }
-
-      const memberPayload = {
-        id: editingMember ? editingMember.id : `member-${Date.now()}`,
-        name: formData.name.trim(),
-        role: formData.role.trim() || 'Anggota',
-        school: formData.school.trim() || '-',
-        instagram: (formData.instagram || '').trim().replace(/^@/, ''),
-        photo: cleanPhoto,
-      };
+      let updatedTeam;
 
       if (editingMember) {
-        // If group didn't change:
-        if (editingMember.groupKey === targetGroup) {
-          if (targetGroup === 'bph') {
-            updatedTeam.bph = (team.bph || []).map(m => m.id === editingMember.id ? { ...m, ...memberPayload } : m);
+        // Edit existing
+        if (targetGroup === 'bph') {
+          // If was bph, update in bph
+          const existsInBph = (team.bph || []).some((m) => m.id === editingMember.id);
+          if (existsInBph) {
+            updatedTeam = {
+              ...team,
+              bph: (team.bph || []).map((m) => (m.id === editingMember.id ? payload : m)),
+            };
           } else {
-            updatedTeam.divisions = (team.divisions || []).map(div => {
-              if ((div.shortName || div.id).toLowerCase() === targetGroup.toLowerCase()) {
-                return {
-                  ...div,
-                  members: (div.members || []).map(m => m.id === editingMember.id ? { ...m, ...memberPayload } : m),
-                };
-              }
-              return div;
-            });
+            // Moved to bph: remove from divisions and add to bph
+            updatedTeam = {
+              ...team,
+              bph: [...(team.bph || []), payload],
+              divisions: (team.divisions || []).map((div) => ({
+                ...div,
+                members: (div.members || []).filter((m) => m.id !== editingMember.id),
+              })),
+            };
           }
         } else {
-          // Group changed: remove from old, add to new
-          if (editingMember.groupKey === 'bph') {
-            updatedTeam.bph = (team.bph || []).filter(m => m.id !== editingMember.id);
-          } else {
-            updatedTeam.divisions = (team.divisions || []).map(div => {
-              if ((div.shortName || div.id).toLowerCase() === editingMember.groupKey.toLowerCase()) {
-                return { ...div, members: (div.members || []).filter(m => m.id !== editingMember.id) };
+          // Target is division
+          const existsInDiv = (team.divisions || []).some((d) =>
+            (d.members || []).some((m) => m.id === editingMember.id)
+          );
+          updatedTeam = {
+            ...team,
+            bph: (team.bph || []).filter((m) => m.id !== editingMember.id),
+            divisions: (team.divisions || []).map((div) => {
+              const isTarget =
+                div.shortName?.toLowerCase() === targetGroup.toLowerCase() ||
+                div.id === targetGroup;
+              const cleanMembers = (div.members || []).filter((m) => m.id !== editingMember.id);
+              if (isTarget) {
+                return { ...div, members: [...cleanMembers, payload] };
               }
-              return div;
-            });
-          }
-          // Add to new group
-          if (targetGroup === 'bph') {
-            updatedTeam.bph = [...(updatedTeam.bph || []), memberPayload];
-          } else {
-            updatedTeam.divisions = (updatedTeam.divisions || []).map(div => {
-              if ((div.shortName || div.id).toLowerCase() === targetGroup.toLowerCase()) {
-                return { ...div, members: [...(div.members || []), memberPayload] };
-              }
-              return div;
-            });
-          }
+              return { ...div, members: cleanMembers };
+            }),
+          };
         }
       } else {
-        // Create new
+        // Add new
         if (targetGroup === 'bph') {
-          updatedTeam.bph = [...(updatedTeam.bph || []), memberPayload];
+          updatedTeam = {
+            ...team,
+            bph: [...(team.bph || []), payload],
+          };
         } else {
-          updatedTeam.divisions = (updatedTeam.divisions || []).map(div => {
-            if ((div.shortName || div.id).toLowerCase() === targetGroup.toLowerCase()) {
-              return { ...div, members: [...(div.members || []), memberPayload] };
-            }
-            return div;
-          });
+          updatedTeam = {
+            ...team,
+            divisions: (team.divisions || []).map((div) => {
+              const isTarget =
+                div.shortName?.toLowerCase() === targetGroup.toLowerCase() ||
+                div.id === targetGroup;
+              if (isTarget) {
+                return { ...div, members: [...(div.members || []), payload] };
+              }
+              return div;
+            }),
+          };
         }
       }
 
       await updateData('team', updatedTeam);
-      setModalOpen(false);
-
-      try {
-        if (addAuditLog) {
-          addAuditLog(
-            user?.id || 'admin',
-            user?.username || 'admin',
-            editingMember ? 'UPDATE' : 'CREATE',
-            'team',
-            `${editingMember ? 'Updated' : 'Added'} member: ${memberPayload.name} (${targetGroup.toUpperCase()})`
-          );
-        }
-      } catch (logErr) {
-        console.warn('Audit log write failed:', logErr);
+      if (addAuditLog && user) {
+        await addAuditLog(
+          user.id,
+          user.username,
+          editingMember ? 'UPDATE' : 'CREATE',
+          'team',
+          `${editingMember ? 'Updated' : 'Added'} member: ${payload.name} (${payload.role})`
+        );
       }
+      setModalOpen(false);
     } catch (err) {
-      console.error('Save member error:', err);
-      alert('Gagal menyimpan data: ' + (err.message || 'Terjadi kendala jaringan.'));
-    } finally {
-      setIsSubmitting(false);
+      console.error('Save member failed:', err);
+      alert('Gagal menyimpan pengurus: ' + err.message);
     }
   };
 
   return (
-    <div style={{ maxWidth: 1200, margin: '0 auto', paddingBottom: '4rem' }}>
-      {/* Header */}
-      <div className="reveal-on-scroll" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+    <div style={{ maxWidth: 1160, margin: '0 auto', paddingBottom: '3.5rem' }}>
+      {/* Header Bar matching Image 03 panel 2 */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.75rem)', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-            <Users size={26} color="var(--emerald)" /> Struktur Kepengurusan ROKABA
+          <h1 style={{ fontSize: 'clamp(1.35rem, 3vw, 1.75rem)', fontWeight: 800, color: 'var(--pine-dark)', margin: 0 }}>
+            Pengurus
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginTop: '0.25rem' }}>
-            Kelola data pengurus Badan Pengurus Harian (BPH) dan 5 Divisi Gerakan ROHIS Kabupaten Banyumas.
+          <p className="text-secondary" style={{ fontSize: '0.88rem', marginTop: '0.2rem' }}>
+            Kelola struktur kepengurusan ROHIS Kabupaten Banyumas (ROKABA).
           </p>
         </div>
 
-        <button
-          onClick={() => handleOpenAdd(activeTab === 'all' ? 'bph' : activeTab)}
-          className="btn btn-primary"
-          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-        >
-          <Plus size={16} /> Tambah Pengurus
+        <button onClick={handleOpenAdd} className="btn btn-pine">
+          <Plus size={16} /> Tambah pengurus
         </button>
       </div>
 
-      {/* Tabs */}
-      <div className="reveal-on-scroll delay-100" style={{
-        display: 'flex',
-        gap: '0.5rem',
-        overflowX: 'auto',
-        WebkitOverflowScrolling: 'touch',
-        scrollbarWidth: 'none',
-        padding: '0.5rem',
-        background: 'var(--bg-card)',
-        borderRadius: 'var(--radius-lg)',
-        border: '1px solid var(--border-glass)',
-        marginBottom: '1.5rem',
-      }}>
-        <button
-          className={`btn ${activeTab === 'all' ? 'btn-primary' : 'btn-outline'}`}
-          style={{ padding: '0.45rem 1rem', fontSize: '0.85rem' }}
-          onClick={() => setActiveTab('all')}
+      {/* Filter Row matching Image 03 panel 2 */}
+      <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
+        <select
+          className="form-select-soft"
+          style={{ minWidth: 200, padding: '0.5rem 1rem' }}
+          value={filterGroup}
+          onChange={(e) => setFilterGroup(e.target.value)}
         >
-          Semua ({allMembers.length})
-        </button>
-        <button
-          className={`btn ${activeTab === 'bph' ? 'btn-primary' : 'btn-outline'}`}
-          style={{ padding: '0.45rem 1rem', fontSize: '0.85rem' }}
-          onClick={() => setActiveTab('bph')}
-        >
-          BPH ({bphList.length})
-        </button>
-        {divisionsList.map(div => {
-          const key = div.shortName || div.id;
-          const count = div.members?.length || 0;
-          return (
-            <button
-              key={div.id}
-              className={`btn ${activeTab.toLowerCase() === key.toLowerCase() ? 'btn-primary' : 'btn-outline'}`}
-              style={{ padding: '0.45rem 1rem', fontSize: '0.85rem', whiteSpace: 'nowrap' }}
-              onClick={() => setActiveTab(key)}
-            >
-              {div.shortName || div.name} ({count})
-            </button>
-          );
-        })}
+          <option value="Semua">Semua BPH/Divisi</option>
+          <option value="bph">Badan Pengurus Harian (BPH)</option>
+          {divisionsList.map((div) => (
+            <option key={div.id || div.shortName} value={div.shortName || div.id}>
+              {div.name || div.title}
+            </option>
+          ))}
+        </select>
+
+        <div style={{ position: 'relative', width: '100%', maxWidth: 320 }}>
+          <Search size={16} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+          <input
+            type="text"
+            className="form-input-soft"
+            style={{ paddingLeft: '2.4rem' }}
+            placeholder="Cari pengurus"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
       </div>
 
-      {/* Search Input */}
-      <div className="reveal-on-scroll delay-150" style={{ position: 'relative', marginBottom: '1.5rem' }}>
-        <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>
-          <Search size={18} />
-        </span>
-        <input
-          type="text"
-          className="form-input"
-          style={{ paddingLeft: '2.75rem' }}
-          placeholder="Cari nama pengurus, jabatan, atau asal sekolah..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-        />
-      </div>
+      {/* Desktop Data Table matching Image 03 panel 2 */}
+      <div className="admin-desktop-table data-table-container-soft">
+        <table className="data-table-soft">
+          <thead>
+            <tr>
+              <th style={{ width: 100 }}>Foto</th>
+              <th style={{ width: '22%' }}>Jabatan</th>
+              <th style={{ width: '28%' }}>Nama pengurus</th>
+              <th>Asal sekolah</th>
+              <th style={{ width: 90, textAlign: 'right' }}>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredMembers.map((member) => (
+              <tr key={member.id}>
+                {/* Foto Column: Avatar or neutral rounded box with user icon + "Foto" */}
+                <td>
+                  <div style={{
+                    width: 48,
+                    height: 56,
+                    borderRadius: 'var(--radius-sm)',
+                    background: 'rgba(16, 41, 31, 0.05)',
+                    border: '1px solid var(--border-subtle)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    overflow: 'hidden',
+                  }}>
+                    {member.photo ? (
+                      <img
+                        src={getDirectImageUrl(member.photo)}
+                        alt={member.name}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                    ) : (
+                      <>
+                        <User size={18} color="var(--text-muted)" />
+                        <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 2 }}>Foto</span>
+                      </>
+                    )}
+                  </div>
+                </td>
 
-      {/* Members Grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(min(260px, 100%), 1fr))',
-        gap: '1rem',
-      }}>
-        {filteredMembers.map((member, idx) => (
-          <div
-            key={member.id}
-            className={`glass-card reveal-on-scroll delay-${Math.min((idx % 8 + 1) * 50, 400)}`}
-            style={{
-              padding: '1.25rem',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              position: 'relative',
-            }}
-          >
-            <div>
-              {/* Badge Group */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-                <span style={{
-                  fontSize: '0.7rem',
-                  fontWeight: 700,
-                  padding: '0.15rem 0.5rem',
-                  borderRadius: '999px',
-                  background: member.groupKey === 'bph' ? 'rgba(181, 141, 79, 0.2)' : 'rgba(16, 185, 129, 0.15)',
-                  color: member.groupKey === 'bph' ? 'var(--antique-brass-light)' : 'var(--emerald)',
-                  border: member.groupKey === 'bph' ? '1px solid rgba(181, 141, 79, 0.35)' : '1px solid rgba(16, 185, 129, 0.25)',
-                }}>
-                  {member.groupKey === 'bph' ? 'BPH' : member.groupName}
-                </span>
+                {/* Jabatan */}
+                <td>
+                  <strong style={{ color: 'var(--pine-dark)', fontWeight: 700 }}>
+                    {member.role || 'Pengurus'}
+                  </strong>
+                </td>
 
-                <div style={{ display: 'flex', gap: '0.35rem' }}>
+                {/* Nama Pengurus */}
+                <td>
+                  <span style={{ fontWeight: 600, color: 'var(--pine-dark)' }}>
+                    {member.name}
+                  </span>
+                </td>
+
+                {/* Asal Sekolah */}
+                <td>
+                  <span style={{ color: 'var(--text-secondary)', fontSize: '0.88rem' }}>
+                    {member.school || 'ROHIS Banyumas'}
+                  </span>
+                </td>
+
+                {/* Aksi */}
+                <td style={{ textAlign: 'right' }}>
                   <button
+                    type="button"
+                    className="btn btn-secondary-soft btn-sm"
                     onClick={() => handleOpenEdit(member)}
-                    className="btn btn-outline btn-xs"
-                    title="Edit Pengurus"
+                    style={{ gap: '0.35rem', padding: '0.35rem 0.75rem' }}
                   >
-                    <Edit3 size={13} />
+                    <Edit3 size={13} /> Edit
                   </button>
-                  <button
-                    onClick={() => handleDelete(member)}
-                    className="btn btn-danger-ghost btn-xs"
-                    title="Hapus Pengurus"
-                  >
-                    <Trash2 size={13} />
-                  </button>
-                </div>
-              </div>
+                </td>
+              </tr>
+            ))}
 
-              {/* Avatar + Info */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '0.85rem' }}>
-                <div style={{
-                  width: 56,
-                  height: 68,
-                  borderRadius: '14px',
-                  background: 'linear-gradient(135deg, rgba(16,185,129,0.2), rgba(181,141,79,0.2))',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  overflow: 'hidden',
-                  flexShrink: 0,
-                  border: '1.5px solid rgba(255,255,255,0.12)',
-                }}>
-                  {member.photo ? (
-                    <img
-                      src={getDirectImageUrl(member.photo)}
-                      alt={member.name}
-                      referrerPolicy="no-referrer"
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }}
-                    />
-                  ) : (
-                    <User size={26} color="var(--emerald)" />
-                  )}
-                </div>
+            {filteredMembers.length === 0 && (
+              <tr>
+                <td colSpan={5} style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--text-muted)' }}>
+                  Tidak ada data pengurus yang cocok.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
-                <div>
-                  <h4 style={{ fontSize: '1.05rem', fontWeight: 700, margin: 0, lineHeight: 1.2 }}>{member.name}</h4>
-                  <span style={{ fontSize: '0.82rem', color: 'var(--emerald)', fontWeight: 600 }}>{member.role}</span>
-                </div>
-              </div>
-
-              {/* Meta items */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                {member.school && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                    <GraduationCap size={14} />
-                    <span>{member.school}</span>
-                  </div>
-                )}
-                {member.instagram && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                    <InstagramIcon size={14} />
-                    <a
-                      href={`https://instagram.com/${member.instagram}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ color: 'var(--antique-brass-light)' }}
-                    >
-                      @{member.instagram}
-                    </a>
-                  </div>
+      {/* Mobile Card List */}
+      <div className="admin-mobile-cards">
+        {filteredMembers.map((member) => (
+          <div key={member.id} className="admin-mobile-card">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+              <div style={{
+                width: 48,
+                height: 56,
+                borderRadius: 'var(--radius-sm)',
+                background: 'rgba(16, 41, 31, 0.05)',
+                border: '1px solid var(--border-subtle)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
+                flexShrink: 0,
+              }}>
+                {member.photo ? (
+                  <img
+                    src={getDirectImageUrl(member.photo)}
+                    alt={member.name}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                ) : (
+                  <>
+                    <User size={18} color="var(--text-muted)" />
+                    <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 2 }}>Foto</span>
+                  </>
                 )}
               </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <strong style={{ display: 'block', fontSize: '0.92rem', color: 'var(--pine-dark)' }}>
+                  {member.name}
+                </strong>
+                <span style={{ fontSize: '0.82rem', color: 'var(--pine-deep)', fontWeight: 600 }}>
+                  {member.role}
+                </span>
+                <span style={{ display: 'block', fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: 2 }}>
+                  {member.school || 'ROHIS Banyumas'}
+                </span>
+              </div>
+            </div>
+
+            <div className="admin-mobile-card-actions">
+              <button
+                type="button"
+                className="btn btn-secondary-soft btn-sm"
+                onClick={() => handleOpenEdit(member)}
+                style={{ flex: 1, justifyContent: 'center' }}
+              >
+                <Edit3 size={14} /> Edit
+              </button>
             </div>
           </div>
         ))}
       </div>
 
-      {filteredMembers.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
-          Tidak ada pengurus yang cocok dengan pencarian / tab ini.
-        </div>
-      )}
-
-      {/* Modal Add / Edit */}
+      {/* ═══════════════════════════════════════════════════════════════
+          RESPONSIVE MODAL: EDIT / TAMBAH PENGURUS
+          ═══════════════════════════════════════════════════════════════ */}
       {modalOpen && (
-        <div 
-          className="modal-overlay-responsive" 
-          onClick={(e) => { if (e.target === e.currentTarget) setModalOpen(false); }}
-        >
-          <div 
-            className="glass-card modal-card-responsive animate-fade-in-up" 
-            style={{ maxWidth: 700 }}
+        <div className="modal-backdrop-responsive" onClick={() => setModalOpen(false)}>
+          <div
+            className="modal-dialog-responsive"
+            style={{ maxWidth: 720 }}
+            onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
             <div className="modal-header-responsive">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
                 <div style={{
-                  width: 42,
-                  height: 42,
-                  borderRadius: '12px',
-                  background: 'rgba(200, 168, 91, 0.12)',
-                  border: '1px solid rgba(200, 168, 91, 0.28)',
-                  color: 'var(--antique-brass)',
+                  width: 34,
+                  height: 34,
+                  borderRadius: 'var(--radius-sm)',
+                  background: 'rgba(16, 41, 31, 0.08)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  flexShrink: 0,
+                  color: 'var(--pine-dark)',
                 }}>
-                  <Users size={22} />
+                  <Users size={18} />
                 </div>
                 <div>
-                  <h3 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0, color: 'var(--text-primary)', letterSpacing: '-0.015em' }}>
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--pine-dark)', margin: 0 }}>
                     {editingMember ? 'Edit Data Pengurus' : 'Tambah Pengurus Baru'}
                   </h3>
-                  <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                    {editingMember ? 'Perbarui informasi profil dan amanah kepengurusan' : 'Tambahkan personalia pengurus ke dalam struktur resmi'}
+                  <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', margin: 0 }}>
+                    Struktur kepengurusan resmi ROKABA
                   </p>
                 </div>
               </div>
-              <button 
+              <button
                 type="button"
-                onClick={() => setModalOpen(false)} 
-                className="btn btn-outline btn-xs"
-                style={{
-                  width: 34,
-                  height: 34,
-                  padding: 0,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: '10px',
-                  borderColor: 'rgba(255, 255, 255, 0.12)',
-                  color: 'var(--text-muted)',
-                }}
-                aria-label="Tutup Modal"
+                className="btn-icon-soft"
+                onClick={() => setModalOpen(false)}
+                title="Tutup dialog"
               >
                 <X size={18} />
               </button>
             </div>
 
-            <form onSubmit={handleSave}>
-              <div className="modal-body-responsive" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                {/* 2 Kolom: Divisi & Jabatan */}
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(min(260px, 100%), 1fr))',
-                  gap: '1.25rem',
-                }}>
-                  <div className="form-group" style={{ marginBottom: 0 }}>
-                    <label className="form-label" style={{ fontWeight: 600, fontSize: '0.85rem', color: 'var(--warm-alabaster)', marginBottom: '0.45rem' }}>
-                      Divisi / Bagian <span style={{ color: '#EF4444' }}>*</span>
-                    </label>
-                    <select
-                      className="form-input"
-                      value={targetGroup}
-                      onChange={e => setTargetGroup(e.target.value)}
+            {/* Modal Scrollable Body */}
+            <form onSubmit={handleSaveMember}>
+              <div className="modal-body-responsive">
+                <div className="form-grid-2-soft">
+                  <div className="form-group-soft">
+                    <label className="form-label-soft">Nama lengkap pengurus *</label>
+                    <input
+                      type="text"
+                      className="form-input-soft"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="Contoh: Muhammad Rayyan"
                       required
-                      style={{ padding: '0.75rem 1rem', fontSize: '0.9rem' }}
+                    />
+                  </div>
+
+                  <div className="form-group-soft">
+                    <label className="form-label-soft">Grup / Divisi *</label>
+                    <select
+                      className="form-select-soft"
+                      value={targetGroup}
+                      onChange={(e) => setTargetGroup(e.target.value)}
                     >
                       <option value="bph">Badan Pengurus Harian (BPH)</option>
-                      {divisionsList.map(d => (
-                        <option key={d.id} value={d.shortName || d.id}>
-                          {d.name} ({d.shortName})
+                      {divisionsList.map((div) => (
+                        <option key={div.id || div.shortName} value={div.shortName || div.id}>
+                          {div.name || div.title}
                         </option>
                       ))}
                     </select>
                   </div>
+                </div>
 
-                  <div className="form-group" style={{ marginBottom: 0 }}>
-                    <label className="form-label" style={{ fontWeight: 600, fontSize: '0.85rem', color: 'var(--warm-alabaster)', marginBottom: '0.45rem' }}>
-                      Jabatan / Amanah <span style={{ color: '#EF4444' }}>*</span>
-                    </label>
+                <div className="form-grid-2-soft">
+                  <div className="form-group-soft">
+                    <label className="form-label-soft">Jabatan / Amanah *</label>
                     <input
                       type="text"
-                      className="form-input"
+                      className="form-input-soft"
                       value={formData.role}
-                      onChange={e => setFormData({ ...formData, role: e.target.value })}
-                      placeholder="Contoh: Ketua Umum / Kadiv SDM / Anggota"
+                      onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                      placeholder="Contoh: Ketua Umum / Kadiv SDM"
                       required
-                      style={{ padding: '0.75rem 1rem', fontSize: '0.9rem' }}
-                    />
-                  </div>
-                </div>
-
-                {/* 2 Kolom: Nama Lengkap & Asal Sekolah */}
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(min(260px, 100%), 1fr))',
-                  gap: '1.25rem',
-                }}>
-                  <div className="form-group" style={{ marginBottom: 0 }}>
-                    <label className="form-label" style={{ fontWeight: 600, fontSize: '0.85rem', color: 'var(--warm-alabaster)', marginBottom: '0.45rem' }}>
-                      Nama Lengkap <span style={{ color: '#EF4444' }}>*</span>
-                    </label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      value={formData.name}
-                      onChange={e => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="Contoh: Muhammad Al-Fatih"
-                      required
-                      style={{ padding: '0.75rem 1rem', fontSize: '0.9rem' }}
                     />
                   </div>
 
-                  <div className="form-group" style={{ marginBottom: 0 }}>
-                    <label className="form-label" style={{ fontWeight: 600, fontSize: '0.85rem', color: 'var(--warm-alabaster)', marginBottom: '0.45rem' }}>
-                      Asal Sekolah
-                    </label>
+                  <div className="form-group-soft">
+                    <label className="form-label-soft">Asal Sekolah</label>
                     <input
                       type="text"
-                      className="form-input"
+                      className="form-input-soft"
                       value={formData.school}
-                      onChange={e => setFormData({ ...formData, school: e.target.value })}
-                      placeholder="Contoh: SMA Negeri 2 Purwokerto"
-                      style={{ padding: '0.75rem 1rem', fontSize: '0.9rem' }}
+                      onChange={(e) => setFormData({ ...formData, school: e.target.value })}
+                      placeholder="Contoh: SMAN 1 Purwokerto"
                     />
                   </div>
                 </div>
 
-                {/* Akun Instagram */}
-                <div className="form-group" style={{ marginBottom: 0 }}>
-                  <label className="form-label" style={{ fontWeight: 600, fontSize: '0.85rem', color: 'var(--warm-alabaster)', marginBottom: '0.45rem' }}>
-                    Akun Instagram <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 400 }}>(Opsional)</span>
-                  </label>
-                  <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                    <span style={{
-                      position: 'absolute',
-                      left: '0.9rem',
-                      color: 'var(--text-muted)',
-                      fontSize: '0.9rem',
-                      fontWeight: 700,
-                      pointerEvents: 'none',
-                    }}>
-                      @
-                    </span>
-                    <input
-                      type="text"
-                      className="form-input"
-                      value={formData.instagram}
-                      onChange={e => setFormData({ ...formData, instagram: e.target.value.replace(/^@/, '') })}
-                      placeholder="alfatih (tanpa @)"
-                      style={{ paddingLeft: '2.2rem', padding: '0.75rem 1rem 0.75rem 2.2rem', fontSize: '0.9rem' }}
-                    />
-                  </div>
+                <div className="form-group-soft">
+                  <label className="form-label-soft">Akun Instagram (Opsional)</label>
+                  <input
+                    type="text"
+                    className="form-input-soft"
+                    value={formData.instagram}
+                    onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
+                    placeholder="Contoh: @nama_kader"
+                  />
                 </div>
 
-                {/* Card Foto Profil */}
-                <div style={{
-                  padding: '1.25rem',
-                  borderRadius: 'var(--radius-lg)',
-                  background: 'rgba(255, 255, 255, 0.02)',
-                  border: '1px solid rgba(200, 168, 91, 0.16)',
-                }}>
+                {/* Foto Pengurus */}
+                <div style={{ marginTop: '0.5rem' }}>
                   <ImageUploadField
-                    label="Foto Profil Pengurus"
+                    label="Foto Resmi Pengurus"
                     value={formData.photo}
-                    onChange={val => setFormData({ ...formData, photo: val })}
-                    placeholder="Tempel URL foto atau klik Pilih Berkas Foto..."
-                    aspectRatioHint="Rasio 1:1 (Pas Foto / Persegi)"
-                    tip="Disarankan menggunakan foto resmi atau semi-formal berlatar rapi dengan rasio 1:1."
+                    onChange={(val) => setFormData({ ...formData, photo: val })}
+                    placeholder="Upload foto profil atau tempel Google Drive..."
+                    tip="Gunakan foto formal/semi-formal berbusana muslim rapi."
                   />
                 </div>
               </div>
 
-              {/* Modal Footer */}
+              {/* Modal Sticky Footer */}
               <div className="modal-footer-responsive">
-                <button
-                  type="button"
-                  onClick={() => setModalOpen(false)}
-                  className="btn btn-outline"
-                  disabled={isSubmitting}
-                  style={{ minWidth: 100, padding: '0.65rem 1.25rem' }}
-                >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  disabled={isSubmitting}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.55rem',
-                    padding: '0.65rem 1.4rem',
-                    fontWeight: 700,
-                  }}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <RefreshCw size={16} className="spin-icon" /> Menyimpan Data...
-                    </>
-                  ) : (
-                    <>
-                      <Save size={16} /> Simpan Data Pengurus
-                    </>
+                <div>
+                  {editingMember && (
+                    <button
+                      type="button"
+                      className="btn btn-secondary-soft"
+                      style={{ color: '#EF4444' }}
+                      onClick={() => setDeleteConfirmItem(editingMember)}
+                    >
+                      <Trash2 size={15} /> Hapus pengurus
+                    </button>
                   )}
-                </button>
+                </div>
+
+                <div style={{ display: 'flex', gap: '0.65rem' }}>
+                  <button
+                    type="button"
+                    className="btn btn-secondary-soft"
+                    onClick={() => setModalOpen(false)}
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="submit"
+                    className="btn btn-pine"
+                  >
+                    <Save size={15} />
+                    <span>{editingMember ? 'Simpan perubahan' : 'Tambah pengurus'}</span>
+                  </button>
+                </div>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ═══════════════════════════════════════════════════════════════
+          DELETE CONFIRMATION DIALOG (Image 07)
+          ═══════════════════════════════════════════════════════════════ */}
+      {deleteConfirmItem && (
+        <div className="modal-backdrop-responsive" style={{ zIndex: 10000 }} onClick={() => setDeleteConfirmItem(null)}>
+          <div
+            className="admin-soft-card"
+            style={{
+              maxWidth: 420,
+              width: '90%',
+              margin: 'auto',
+              padding: '1.5rem',
+              boxShadow: 'var(--soft-shadow-lg)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--pine-dark)', margin: 0 }}>
+                Hapus pengurus?
+              </h3>
+              <button
+                type="button"
+                className="btn-icon-soft"
+                onClick={() => setDeleteConfirmItem(null)}
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem', marginBottom: '1.5rem' }}>
+              <div style={{
+                width: 44,
+                height: 44,
+                borderRadius: 'var(--radius-sm)',
+                background: 'rgba(239, 68, 68, 0.1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#EF4444',
+                flexShrink: 0,
+              }}>
+                <Trash2 size={22} />
+              </div>
+              <div>
+                <strong style={{ display: 'block', fontSize: '0.92rem', color: 'var(--pine-dark)' }}>
+                  {deleteConfirmItem.name}
+                </strong>
+                <p style={{ margin: '0.25rem 0 0', fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                  {deleteConfirmItem.role} • {deleteConfirmItem.school || 'ROHIS Banyumas'}
+                  <br />
+                  Data pengurus ini akan dihapus dari kepengurusan.
+                </p>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.65rem' }}>
+              <button
+                type="button"
+                className="btn btn-secondary-soft"
+                onClick={() => setDeleteConfirmItem(null)}
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                className="btn btn-danger-soft"
+                onClick={confirmDelete}
+              >
+                Hapus
+              </button>
+            </div>
           </div>
         </div>
       )}

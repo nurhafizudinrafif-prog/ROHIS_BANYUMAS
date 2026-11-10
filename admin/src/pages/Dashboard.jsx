@@ -1,143 +1,470 @@
+import { useState, useMemo } from 'react';
 import { useData } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
-import { FileText, Calendar, School, MessageCircle, Library, Users, TrendingUp, Clock, Download, Upload, Image as ImageIcon, Newspaper } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
-function StatCard({ icon: Icon, value, label, color, link, index = 0 }) {
-  return (
-    <Link
-      to={link}
-      className={`glass-card reveal-scale delay-${Math.min((index + 1) * 50, 400)}`}
-      style={{
-        padding: '1.15rem 1rem', textDecoration: 'none',
-        display: 'flex', alignItems: 'center', gap: '0.85rem',
-        minWidth: 0,
-      }}
-    >
-      <div style={{
-        width: 42, height: 42, borderRadius: '12px',
-        background: `${color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-      }}>
-        <Icon size={20} style={{ color }} />
-      </div>
-      <div style={{ minWidth: 0, overflow: 'hidden' }}>
-        <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.6rem', lineHeight: 1 }}>{value}</div>
-        <div style={{ color: 'var(--text-muted)', fontSize: '0.76rem', marginTop: '0.25rem', fontWeight: 500, whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{label}</div>
-      </div>
-    </Link>
-  );
-}
+import {
+  FileText,
+  Calendar,
+  MessageCircle,
+  Edit3,
+  Search,
+  ArrowRight,
+  Info,
+  Layers,
+  Newspaper,
+  CheckCircle2,
+  CalendarDays,
+  HelpCircle,
+} from 'lucide-react';
 
 export default function Dashboard() {
-  const { news = [], articles = [], events, schools, gallery, questions, library, auditLogs, team, users } = useData();
+  const { news = [], articles = [], events = [], questions = [] } = useData();
   const { user } = useAuth();
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const pendingQA = questions.filter(q => q.status === 'pending').length;
-  const upcomingEvents = events.filter(e => e.status === 'upcoming').length;
-  const totalPengurus = Array.isArray(team)
-    ? team.length
-    : ((team?.bph?.length || 0) + (team?.divisions?.reduce((acc, d) => acc + (d.members?.length || 0), 0) || 0));
+  const pendingQuestions = questions.filter((q) => q.status === 'pending').length;
 
-  // Backup handler
-  const handleBackup = () => {
-    const backupData = { news, articles, events, schools, gallery, questions, library, team, users, auditLogs };
-    const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `rokaba-backup-${new Date().toISOString().split('T')[0]}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+  // Combine recent editorial items for the "Konten terbaru" table
+  const recentContent = useMemo(() => {
+    const list = [];
+
+    (news || []).slice(0, 4).forEach((item) => {
+      list.push({
+        id: `news-${item.id}`,
+        type: 'Berita',
+        icon: Newspaper,
+        title: item.title || 'Tanpa Judul',
+        date: item.date || item.publishedAt || '',
+        link: '/content/news',
+      });
+    });
+
+    (articles || []).slice(0, 3).forEach((item) => {
+      list.push({
+        id: `article-${item.id}`,
+        type: 'Artikel',
+        icon: FileText,
+        title: item.title || 'Tanpa Judul',
+        date: item.date || item.publishedAt || '',
+        link: '/content/articles',
+      });
+    });
+
+    (events || []).slice(0, 3).forEach((item) => {
+      list.push({
+        id: `event-${item.id}`,
+        type: 'Agenda',
+        icon: Calendar,
+        title: item.title || 'Tanpa Judul',
+        date: item.date || '',
+        link: '/content/events',
+      });
+    });
+
+    return list;
+  }, [news, articles, events]);
+
+  const filteredContent = useMemo(() => {
+    if (!searchTerm.trim()) return recentContent.slice(0, 6);
+    const q = searchTerm.toLowerCase();
+    return recentContent.filter(
+      (item) => item.title.toLowerCase().includes(q) || item.type.toLowerCase().includes(q)
+    );
+  }, [recentContent, searchTerm]);
 
   return (
-    <div>
-      <div className="reveal-on-scroll" style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{ fontSize: 'clamp(1.35rem, 4vw, 1.75rem)', fontWeight: 800, marginBottom: '0.35rem' }}>
-          Selamat Datang, <span style={{ color: 'var(--emerald)' }}>{user?.username}</span>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+      {/* ═══════ Page Header ═══════ */}
+      <div>
+        <div className="admin-eyebrow">
+          <span className="admin-eyebrow-bar" aria-hidden="true" />
+          <span className="admin-eyebrow-text">Dashboard CMS</span>
+        </div>
+        <h1 style={{ fontSize: 'clamp(1.6rem, 3vw, 2rem)', fontWeight: 800, color: 'var(--pine-dark)' }}>
+          Ringkasan
         </h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}>
-          Kelola seluruh konten ROKABA dari dashboard ini.
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.94rem', marginTop: '4px' }}>
+          Kelola informasi dan kegiatan ROKABA dari satu tempat.
         </p>
       </div>
 
-      {/* Stats Grid */}
-      <div style={{
-        display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(150px, 100%), 1fr))', gap: '0.85rem', marginBottom: '1.75rem',
-      }}>
-        <StatCard icon={Newspaper} value={news.length} label="Berita Terkini" color="var(--emerald)" link="/content/news" index={0} />
-        <StatCard icon={FileText} value={articles.length} label="Artikel Dakwah" color="#059669" link="/content/articles" index={1} />
-        <StatCard icon={Calendar} value={upcomingEvents} label="Agenda Mendatang" color="var(--antique-brass)" link="/content/events" index={2} />
-        <StatCard icon={ImageIcon} value={(gallery || []).length} label="Album Galeri" color="#06B6D4" link="/content/gallery" index={3} />
-        <StatCard icon={School} value={schools.length} label="Sekolah" color="#7C3AED" link="/content/schools" index={4} />
-        <StatCard icon={MessageCircle} value={pendingQA} label="Q&A Menunggu" color="#F59E0B" link="/qa" index={5} />
-        <StatCard icon={Library} value={library.length} label="Materi Library" color="#3B82F6" link="/library" index={6} />
-        <StatCard icon={Users} value={totalPengurus} label="Pengurus" color="#EC4899" link="/content/team" index={7} />
+      {/* ═══════ Three Modest Overview Cards (Image 01) ═══════ */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(260px, 100%), 1fr))',
+          gap: '1.25rem',
+        }}
+      >
+        {/* Card 1: Konten */}
+        <Link
+          to="/content/news"
+          className="admin-soft-card"
+          style={{
+            padding: '1.35rem 1.5rem',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '1rem',
+            textDecoration: 'none',
+          }}
+        >
+          <div
+            style={{
+              width: 44,
+              height: 44,
+              borderRadius: '12px',
+              backgroundColor: 'var(--surface-inset)',
+              border: '1px solid var(--border-default)',
+              boxShadow: 'var(--inset-shadow)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              color: 'var(--pine-dark)',
+            }}
+          >
+            <FileText size={20} />
+          </div>
+          <div>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--pine-dark)', marginBottom: '4px' }}>
+              Konten
+            </h3>
+            <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
+              Kelola berita, artikel, dan konten informasi ROKABA.
+            </p>
+          </div>
+        </Link>
+
+        {/* Card 2: Agenda */}
+        <Link
+          to="/content/events"
+          className="admin-soft-card"
+          style={{
+            padding: '1.35rem 1.5rem',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '1rem',
+            textDecoration: 'none',
+          }}
+        >
+          <div
+            style={{
+              width: 44,
+              height: 44,
+              borderRadius: '12px',
+              backgroundColor: 'var(--surface-inset)',
+              border: '1px solid var(--border-default)',
+              boxShadow: 'var(--inset-shadow)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              color: 'var(--pine-dark)',
+            }}
+          >
+            <Calendar size={20} />
+          </div>
+          <div>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--pine-dark)', marginBottom: '4px' }}>
+              Agenda
+            </h3>
+            <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
+              Atur dan perbarui jadwal kegiatan dan program ROKABA.
+            </p>
+          </div>
+        </Link>
+
+        {/* Card 3: Moderasi */}
+        <Link
+          to="/qa"
+          className="admin-soft-card"
+          style={{
+            padding: '1.35rem 1.5rem',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '1rem',
+            textDecoration: 'none',
+          }}
+        >
+          <div
+            style={{
+              width: 44,
+              height: 44,
+              borderRadius: '12px',
+              backgroundColor: 'var(--surface-inset)',
+              border: '1px solid var(--border-default)',
+              boxShadow: 'var(--inset-shadow)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              color: 'var(--pine-dark)',
+            }}
+          >
+            <MessageCircle size={20} />
+          </div>
+          <div>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--pine-dark)', marginBottom: '4px' }}>
+              Moderasi
+            </h3>
+            <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
+              Tinjau pertanyaan masuk dan pembahasan Q&A dari pengunjung.
+            </p>
+          </div>
+        </Link>
       </div>
 
-      {/* Quick Actions & Recent Logs */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(270px, 100%), 1fr))', gap: '1.25rem' }}>
-        {/* Quick Actions */}
-        <div className="glass-card reveal-left delay-100" style={{ padding: '1.5rem' }}>
-          <h3 style={{ fontSize: '1.05rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <TrendingUp size={18} style={{ color: 'var(--emerald)' }} /> Aksi Cepat
-          </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-            <Link to="/content/news" className="btn btn-secondary" style={{ justifyContent: 'flex-start' }}>
-              <Newspaper size={16} /> Tulis Berita Baru
-            </Link>
-            <Link to="/content/articles" className="btn btn-secondary" style={{ justifyContent: 'flex-start' }}>
-              <FileText size={16} /> Tulis Artikel Dakwah
-            </Link>
-            <Link to="/content/events" className="btn btn-secondary" style={{ justifyContent: 'flex-start' }}>
-              <Calendar size={16} /> Tambah Agenda Baru
-            </Link>
-            <Link to="/qa" className="btn btn-secondary" style={{ justifyContent: 'flex-start' }}>
-              <MessageCircle size={16} /> Moderasi Pertanyaan {pendingQA > 0 && <span className="badge badge-brass">{pendingQA}</span>}
-            </Link>
-            <Link to="/library" className="btn btn-secondary" style={{ justifyContent: 'flex-start' }}>
-              <Library size={16} /> Kelola E-Library ({library.length} Materi)
-            </Link>
-            <button onClick={handleBackup} className="btn btn-secondary" style={{ justifyContent: 'flex-start' }}>
-              <Download size={16} /> Backup Data (JSON)
-            </button>
+      {/* ═══════ Akses Cepat Task Panel (Image 01) ═══════ */}
+      <div className="admin-soft-card" style={{ padding: '1.5rem 1.75rem' }}>
+        <div style={{ marginBottom: '1rem' }}>
+          <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--pine-dark)' }}>
+            Akses cepat
+          </h2>
+          <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
+            Tindakan utama untuk pengelolaan konten dan kegiatan.
+          </p>
+        </div>
+
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '1rem',
+            alignItems: 'center',
+          }}
+        >
+          <Link
+            to="/content/home"
+            className="btn-secondary-soft"
+            style={{ padding: '0.7rem 1.25rem' }}
+          >
+            <Edit3 size={15} />
+            <span>Edit beranda</span>
+            <ArrowRight size={14} style={{ marginLeft: '4px' }} />
+          </Link>
+
+          <Link
+            to="/content/news"
+            className="btn-secondary-soft"
+            style={{ padding: '0.7rem 1.25rem' }}
+          >
+            <Newspaper size={15} />
+            <span>Tambah berita</span>
+            <ArrowRight size={14} style={{ marginLeft: '4px' }} />
+          </Link>
+
+          <Link
+            to="/content/events"
+            className="btn-secondary-soft"
+            style={{ padding: '0.7rem 1.25rem' }}
+          >
+            <CalendarDays size={15} />
+            <span>Kelola agenda</span>
+            <ArrowRight size={14} style={{ marginLeft: '4px' }} />
+          </Link>
+        </div>
+      </div>
+
+      {/* ═══════ Lower Section: Two Functional Panels (Image 01) ═══════ */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'minmax(0, 1.8fr) minmax(0, 1.2fr)',
+          gap: '1.5rem',
+        }}
+        className="admin-dashboard-split"
+      >
+        {/* Left: Konten Terbaru Table */}
+        <div className="admin-soft-card" style={{ padding: '1.5rem' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '1.25rem',
+              flexWrap: 'wrap',
+              gap: '0.75rem',
+            }}
+          >
+            <div>
+              <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--pine-dark)' }}>
+                Konten terbaru
+              </h2>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
+                Daftar konten yang baru ditambahkan atau diperbarui.
+              </p>
+            </div>
+
+            <div style={{ position: 'relative', width: '200px' }}>
+              <Search
+                size={14}
+                style={{
+                  position: 'absolute',
+                  left: '0.75rem',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  color: 'var(--text-muted)',
+                }}
+              />
+              <input
+                type="text"
+                placeholder="Cari judul konten..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="form-input-soft"
+                style={{
+                  padding: '0.45rem 0.65rem 0.45rem 2.2rem',
+                  fontSize: '0.8rem',
+                  borderRadius: 'var(--radius-sm)',
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="admin-soft-table-wrap">
+            <table className="admin-soft-table">
+              <thead>
+                <tr>
+                  <th style={{ width: '110px' }}>Jenis</th>
+                  <th>Judul</th>
+                  <th style={{ width: '70px', textAlign: 'right' }}>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredContent.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <tr key={item.id}>
+                      <td style={{ color: 'var(--text-secondary)', fontSize: '0.84rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <Icon size={14} style={{ color: 'var(--accent-brass-dark)' }} />
+                          <span>{item.type}</span>
+                        </div>
+                      </td>
+                      <td style={{ fontWeight: 600, color: 'var(--pine-dark)' }}>
+                        <span style={{ display: 'block', maxWidth: '320px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {item.title}
+                        </span>
+                      </td>
+                      <td style={{ textAlign: 'right' }}>
+                        <Link
+                          to={item.link}
+                          style={{
+                            fontSize: '0.84rem',
+                            fontWeight: 600,
+                            color: 'var(--pine-dark)',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '3px',
+                            textDecoration: 'underline',
+                          }}
+                        >
+                          <Edit3 size={13} />
+                          <span>Edit</span>
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })}
+                {filteredContent.length === 0 && (
+                  <tr>
+                    <td colSpan={3} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
+                      Belum ada konten yang ditemukan.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
 
-        {/* Recent Audit Logs */}
-        <div className="glass-card reveal-right delay-200" style={{ padding: '1.5rem' }}>
-          <h3 style={{ fontSize: '1.05rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Clock size={18} style={{ color: 'var(--antique-brass)' }} /> Aktivitas Terbaru
-          </h3>
-          {auditLogs.length > 0 ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              {auditLogs.slice(0, 6).map(log => (
-                <div key={log.id} style={{
-                  padding: '0.65rem 0.85rem', borderRadius: 'var(--radius-md)',
-                  background: 'var(--glass-bg)', fontSize: '0.82rem',
-                  borderLeft: '3px solid var(--emerald)',
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.15rem' }}>
-                    <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{log.action}</span>
-                    <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
-                      {new Date(log.timestamp).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
-                    </span>
-                  </div>
-                  <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>{log.detail}</span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', textAlign: 'center', padding: '2rem 0' }}>
-              Belum ada aktivitas tercatat
+        {/* Right: Perlu Ditinjau Panel */}
+        <div className="admin-soft-card" style={{ padding: '1.5rem' }}>
+          <div style={{ marginBottom: '1.25rem' }}>
+            <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--pine-dark)' }}>
+              Perlu ditinjau
+            </h2>
+            <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
+              Beberapa hal yang membutuhkan perhatian atau pembaruan.
             </p>
-          )}
-          {auditLogs.length > 6 && (
-            <Link to="/audit" style={{ display: 'block', textAlign: 'center', marginTop: '1rem', fontSize: '0.82rem', color: 'var(--emerald)' }}>
-              Lihat semua log →
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <Link
+              to="/qa"
+              className="admin-soft-card"
+              style={{
+                padding: '1.1rem 1.25rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                textDecoration: 'none',
+                boxShadow: 'var(--soft-shadow-sm)',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <MessageCircle size={18} style={{ color: 'var(--pine-dark)' }} />
+                <div>
+                  <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--pine-dark)' }}>
+                    Periksa pertanyaan masuk
+                  </span>
+                  {pendingQuestions > 0 && (
+                    <span
+                      style={{
+                        marginLeft: '8px',
+                        fontSize: '0.72rem',
+                        fontWeight: 700,
+                        backgroundColor: 'var(--status-amber-bg)',
+                        color: 'var(--status-amber)',
+                        padding: '2px 7px',
+                        borderRadius: '999px',
+                      }}
+                    >
+                      {pendingQuestions} baru
+                    </span>
+                  )}
+                </div>
+              </div>
+              <ArrowRight size={15} style={{ color: 'var(--text-secondary)' }} />
             </Link>
-          )}
+
+            <Link
+              to="/content/events"
+              className="admin-soft-card"
+              style={{
+                padding: '1.1rem 1.25rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                textDecoration: 'none',
+                boxShadow: 'var(--soft-shadow-sm)',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <Calendar size={18} style={{ color: 'var(--pine-dark)' }} />
+                <span style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--pine-dark)' }}>
+                  Perbarui informasi kegiatan
+                </span>
+              </div>
+              <ArrowRight size={15} style={{ color: 'var(--text-secondary)' }} />
+            </Link>
+          </div>
         </div>
+      </div>
+
+      {/* ═══════ Subtle Bottom Info Note (Image 01) ═══════ */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+          fontSize: '0.8rem',
+          color: 'var(--text-muted)',
+          marginTop: '0.5rem',
+        }}
+      >
+        <Info size={14} />
+        <span>Data ditampilkan sesuai akun dan hak akses ({user?.role || 'superadmin'}).</span>
       </div>
     </div>
   );

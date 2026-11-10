@@ -1,15 +1,15 @@
 import { useState, useRef } from 'react';
-import { Upload, X, Image as ImageIcon, RefreshCw } from 'lucide-react';
+import { Upload, Trash2, Image as ImageIcon, RefreshCw } from 'lucide-react';
 import { getDirectImageUrl, extractGoogleDriveId } from '../utils/media';
 
 export default function ImageUploadField({
   label,
   value,
   onChange,
-  placeholder = 'Tempel URL gambar / link Google Drive, atau klik tombol upload...',
+  placeholder = 'Tempel URL gambar / link Google Drive, atau klik Pilih Foto...',
   tip,
   required = false,
-  aspectRatioHint = 'Landscape / Rasio Bebas',
+  aspectRatioHint,
 }) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [loadError, setLoadError] = useState(false);
@@ -25,7 +25,7 @@ export default function ImageUploadField({
     }
 
     if (file.size > 8 * 1024 * 1024) {
-      alert('Ukuran berkas melebihi 8MB. Mohon gunakan foto dengan ukuran lebih kecil untuk performa optimal.');
+      alert('Ukuran berkas melebihi 8MB. Mohon gunakan foto dengan ukuran lebih kecil.');
       return;
     }
 
@@ -39,20 +39,18 @@ export default function ImageUploadField({
         return;
       }
 
-      // If SVG or already very small (< 50KB), keep as is
       if (file.type.includes('svg') || file.size < 50 * 1024) {
         onChange(rawData);
         setIsProcessing(false);
         return;
       }
 
-      // Automatically compress and resize client-side via HTML5 Canvas
       const img = new Image();
       img.onload = () => {
         try {
           let w = img.width;
           let h = img.height;
-          const maxDim = 800; // Optimal for web cards & avatar portraits
+          const maxDim = 800;
 
           if (w > maxDim || h > maxDim) {
             if (w > h) {
@@ -88,7 +86,7 @@ export default function ImageUploadField({
     };
     reader.onerror = () => {
       setIsProcessing(false);
-      alert('Gagal membaca berkas gambar. Silakan coba gambar lain.');
+      alert('Gagal membaca berkas gambar.');
     };
     reader.readAsDataURL(file);
     e.target.value = '';
@@ -103,25 +101,27 @@ export default function ImageUploadField({
     <div style={{ marginBottom: '1.25rem' }}>
       {label && (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-          <label className="form-label" style={{ marginBottom: 0 }}>
-            {label} {required && <span style={{ color: '#EF4444' }}>*</span>}
+          <label className={`form-label-soft ${required ? 'form-label-required' : ''}`} style={{ marginBottom: 0 }}>
+            {label}
           </label>
           {aspectRatioHint && (
-            <span style={{
-              fontSize: '0.72rem',
-              color: 'var(--antique-brass)',
-              background: 'rgba(181, 141, 79, 0.1)',
-              padding: '0.15rem 0.5rem',
-              borderRadius: '999px',
-              border: '1px solid rgba(181, 141, 79, 0.25)',
-            }}>
+            <span
+              style={{
+                fontSize: '0.72rem',
+                color: 'var(--accent-brass-dark)',
+                background: 'var(--accent-brass-light)',
+                padding: '0.15rem 0.5rem',
+                borderRadius: 'var(--radius-full)',
+                fontWeight: 600,
+              }}
+            >
               {aspectRatioHint}
             </span>
           )}
         </div>
       )}
 
-      {/* Input Group: URL text input + Upload Button */}
+      {/* Input Group: Inset URL text input + Pilih Foto Button */}
       <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
         <div style={{ position: 'relative', flex: '1 1 200px', minWidth: 0 }}>
           <span style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}>
@@ -129,8 +129,8 @@ export default function ImageUploadField({
           </span>
           <input
             type="text"
-            className="form-input"
-            style={{ paddingLeft: '2.5rem' }}
+            className="form-input-soft"
+            style={{ paddingLeft: '2.4rem' }}
             value={value || ''}
             onChange={(e) => {
               setLoadError(false);
@@ -143,27 +143,21 @@ export default function ImageUploadField({
 
         <button
           type="button"
-          className="btn"
-          style={{
-            background: 'linear-gradient(135deg, var(--antique-brass), #967035)',
-            color: '#FFFFFF',
-            whiteSpace: 'nowrap',
-            flexShrink: 0,
-            padding: '0.65rem 1rem',
-          }}
+          className="btn-secondary-soft"
+          style={{ padding: '0.65rem 1rem', flexShrink: 0 }}
           onClick={() => fileInputRef.current?.click()}
           disabled={isProcessing}
-          title="Pilih dan upload foto dari memori komputer atau smartphone"
+          title="Pilih foto dari perangkat"
         >
           {isProcessing ? (
             <>
-              <RefreshCw size={15} className="spin-icon" />
+              <RefreshCw size={14} className="animate-spin" />
               <span>Memuat...</span>
             </>
           ) : (
             <>
-              <Upload size={15} />
-              <span>Pilih Foto</span>
+              <Upload size={14} />
+              <span>Pilih foto</span>
             </>
           )}
         </button>
@@ -177,31 +171,33 @@ export default function ImageUploadField({
         />
       </div>
 
-      {/* Live Preview Card */}
+      {/* Preview Card matching Image 07 / Image 05 */}
       {value && typeof value === 'string' && value.trim().length > 0 && (
-        <div style={{
-          marginTop: '0.75rem',
-          background: 'var(--bg-card)',
-          border: '1px solid var(--border-glass)',
-          borderRadius: 'var(--radius-md)',
-          padding: '0.85rem',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.75rem',
-          flexWrap: 'wrap',
-        }}>
-          <div style={{
-            width: 80,
-            height: 60,
-            borderRadius: 'var(--radius-sm)',
-            overflow: 'hidden',
-            background: '#05080E',
-            flexShrink: 0,
+        <div
+          className="admin-soft-card"
+          style={{
+            marginTop: '0.75rem',
+            padding: '0.85rem 1rem',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            position: 'relative',
-          }}>
+            gap: '0.85rem',
+            flexWrap: 'wrap',
+          }}
+        >
+          <div
+            style={{
+              width: 80,
+              height: 56,
+              borderRadius: 'var(--radius-sm)',
+              overflow: 'hidden',
+              backgroundColor: 'var(--surface-inset)',
+              border: '1px solid var(--border-default)',
+              flexShrink: 0,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
             {!loadError ? (
               <img
                 src={displaySrc}
@@ -209,44 +205,46 @@ export default function ImageUploadField({
                 referrerPolicy="no-referrer"
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 onError={() => {
-                  if (driveId) {
-                    setLoadError(false);
-                  } else {
-                    setLoadError(true);
-                  }
+                  if (driveId) setLoadError(false);
+                  else setLoadError(true);
                 }}
               />
             ) : (
               <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
-                <ImageIcon size={20} />
+                <ImageIcon size={18} />
               </div>
             )}
           </div>
 
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
-              <span style={{
-                fontSize: '0.68rem',
-                fontWeight: 700,
-                padding: '0.1rem 0.4rem',
-                borderRadius: '4px',
-                background: isDataUrl ? 'rgba(59, 130, 246, 0.2)' : isDrive ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 255, 255, 0.1)',
-                color: isDataUrl ? '#60A5FA' : isDrive ? '#34D399' : '#CBD5E1',
-              }}>
-                {isDataUrl ? 'UPLOAD LOKAL' : isDrive ? 'GOOGLE DRIVE' : 'WEB URL'}
+              <span
+                style={{
+                  fontSize: '0.68rem',
+                  fontWeight: 700,
+                  padding: '0.1rem 0.4rem',
+                  borderRadius: '4px',
+                  background: isDataUrl ? 'rgba(16, 41, 31, 0.08)' : isDrive ? 'rgba(169, 145, 87, 0.15)' : 'rgba(16, 41, 31, 0.05)',
+                  color: isDataUrl ? 'var(--pine-dark)' : isDrive ? 'var(--accent-brass-dark)' : 'var(--text-secondary)',
+                }}
+              >
+                {isDataUrl ? 'UPLOAD LOKAL' : isDrive ? 'GOOGLE DRIVE' : 'LINK URL'}
               </span>
-              <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-primary)' }}>
-                {isDataUrl ? 'Foto Berhasil Disimpan' : isDrive ? 'Google Drive Terhubung' : 'Foto Online'}
+              <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--pine-dark)' }}>
+                {isDataUrl ? 'Foto Tersimpan' : isDrive ? 'Drive Terhubung' : 'Foto Online'}
               </span>
             </div>
-            <p style={{
-              fontSize: '0.75rem',
-              color: 'var(--text-muted)',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              margin: 0,
-            }} title={value}>
+            <p
+              style={{
+                fontSize: '0.74rem',
+                color: 'var(--text-muted)',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                margin: 0,
+              }}
+              title={value}
+            >
               {value}
             </p>
           </div>
@@ -254,31 +252,31 @@ export default function ImageUploadField({
           <div style={{ display: 'flex', gap: '0.4rem', flexShrink: 0 }}>
             <button
               type="button"
-              className="btn btn-outline"
-              style={{ padding: '0.35rem 0.65rem', fontSize: '0.75rem' }}
+              className="btn-secondary-soft"
+              style={{ padding: '0.4rem 0.65rem', fontSize: '0.75rem' }}
               onClick={() => fileInputRef.current?.click()}
-              title="Ganti dengan foto lain"
+              title="Ganti foto"
             >
               <RefreshCw size={12} /> Ganti
             </button>
             <button
               type="button"
-              className="btn"
-              style={{ padding: '0.35rem 0.65rem', fontSize: '0.75rem', background: 'rgba(239, 68, 68, 0.15)', color: '#F87171' }}
+              className="btn-secondary-soft"
+              style={{ padding: '0.4rem 0.65rem', fontSize: '0.75rem', color: 'var(--status-red)' }}
               onClick={() => {
                 onChange('');
                 setLoadError(false);
               }}
-              title="Hapus foto ini"
+              title="Hapus foto"
             >
-              <X size={12} /> Hapus
+              <Trash2 size={12} /> Hapus
             </button>
           </div>
         </div>
       )}
 
       {tip && (
-        <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.4rem', marginBotom: 0 }}>
+        <p style={{ fontSize: '0.76rem', color: 'var(--text-muted)', marginTop: '0.35rem', marginBottom: 0 }}>
           💡 {tip}
         </p>
       )}

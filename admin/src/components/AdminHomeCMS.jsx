@@ -21,6 +21,11 @@ import {
   FileText,
   ShieldCheck,
   User,
+  GripVertical,
+  ArrowUp,
+  ArrowDown,
+  Clock,
+  Eye,
 } from 'lucide-react';
 import ImageUploadField from './ImageUploadField';
 import { fallbackData } from '@shared/data/fallback.js';
@@ -38,9 +43,11 @@ export default function AdminHomeCMS({
   // Local working state
   const [formData, setFormData] = useState(() => homeContent || initialHomeContent);
   const [localPrograms, setLocalPrograms] = useState(() => (programs && programs.length > 0 ? programs : defaultPrograms));
-  const [activeSubTab, setActiveSubTab] = useState('hero'); // 'hero' | 'about' | 'programs' | 'timeline' | 'stats' | 'closing'
+  const [activeSubTab, setActiveSubTab] = useState('hero'); // 'hero' | 'sambutan' | 'about' | 'programs' | 'timeline' | 'stats' | 'closing' | 'sections'
   const [isSaving, setIsSaving] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
+  const [expandedDivisions, setExpandedDivisions] = useState({ 0: true });
+  const [expandedSections, setExpandedSections] = useState({ news: true });
 
   // Sync from parent ONLY if user does not have active unsaved edits
   useEffect(() => {
@@ -60,7 +67,7 @@ export default function AdminHomeCMS({
     setIsDirty(true);
     setFormData((prev) => ({
       ...prev,
-      hero: { ...prev.hero, [field]: val },
+      hero: { ...(prev.hero || {}), [field]: val },
     }));
   };
 
@@ -68,7 +75,7 @@ export default function AdminHomeCMS({
     setIsDirty(true);
     setFormData((prev) => ({
       ...prev,
-      about: { ...prev.about, [field]: val },
+      about: { ...(prev.about || {}), [field]: val },
     }));
   };
 
@@ -84,7 +91,7 @@ export default function AdminHomeCMS({
     setIsDirty(true);
     setFormData((prev) => ({
       ...prev,
-      closing: { ...prev.closing, [field]: val },
+      closing: { ...(prev.closing || {}), [field]: val },
     }));
   };
 
@@ -111,6 +118,22 @@ export default function AdminHomeCMS({
     });
   };
 
+  const handleAddStat = () => {
+    setIsDirty(true);
+    setFormData((prev) => ({
+      ...prev,
+      stats: [...(prev.stats || []), { value: 10, suffix: '+', label: 'Statistik Baru' }],
+    }));
+  };
+
+  const handleDeleteStat = (index) => {
+    setIsDirty(true);
+    setFormData((prev) => ({
+      ...prev,
+      stats: (prev.stats || []).filter((_, i) => i !== index),
+    }));
+  };
+
   // Timeline handlers
   const handleAddTimeline = () => {
     setIsDirty(true);
@@ -119,9 +142,9 @@ export default function AdminHomeCMS({
       id: newId,
       year: new Date().getFullYear().toString(),
       tag: 'FASE BARU',
-      title: 'Judul Jejak Langkah',
+      title: 'Judul Peristiwa',
       location: 'Kabupaten Banyumas',
-      desc: 'Tuliskan deskripsi peristiwa atau pencapaian bersejarah pada tahun ini...',
+      desc: 'Deskripsikan peristiwa atau pencapaian bersejarah pada tahun ini...',
     };
     setFormData((prev) => ({
       ...prev,
@@ -139,13 +162,26 @@ export default function AdminHomeCMS({
   };
 
   const handleDeleteTimeline = (index) => {
-    if (window.confirm('Yakin ingin menghapus jejak langkah ini?')) {
+    if (window.confirm('Yakin ingin menghapus peristiwa linimasa ini?')) {
       setIsDirty(true);
-      setFormData((prev) => {
-        const newTl = (prev.timeline || []).filter((_, i) => i !== index);
-        return { ...prev, timeline: newTl };
-      });
+      setFormData((prev) => ({
+        ...prev,
+        timeline: (prev.timeline || []).filter((_, i) => i !== index),
+      }));
     }
+  };
+
+  const handleMoveTimeline = (index, direction) => {
+    setIsDirty(true);
+    setFormData((prev) => {
+      const list = [...(prev.timeline || [])];
+      const targetIndex = direction === 'up' ? index - 1 : index + 1;
+      if (targetIndex < 0 || targetIndex >= list.length) return prev;
+      const temp = list[index];
+      list[index] = list[targetIndex];
+      list[targetIndex] = temp;
+      return { ...prev, timeline: list };
+    });
   };
 
   // Program / Divisi handlers
@@ -158,35 +194,28 @@ export default function AdminHomeCMS({
     });
   };
 
-  const updateProgramDetailItem = (pIndex, dIndex, val) => {
-    setIsDirty(true);
-    setLocalPrograms((prev) => {
-      const updated = [...prev];
-      const details = [...(updated[pIndex].details || [])];
-      details[dIndex] = val;
-      updated[pIndex] = { ...updated[pIndex], details };
-      return updated;
-    });
+  const toggleDivisionExpand = (idx) => {
+    setExpandedDivisions((prev) => ({ ...prev, [idx]: !prev[idx] }));
   };
 
-  const addProgramDetailItem = (pIndex) => {
-    setIsDirty(true);
-    setLocalPrograms((prev) => {
-      const updated = [...prev];
-      const details = [...(updated[pIndex].details || []), 'Program kerja baru...'];
-      updated[pIndex] = { ...updated[pIndex], details };
-      return updated;
-    });
+  const toggleSectionExpand = (key) => {
+    setExpandedSections((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const removeProgramDetailItem = (pIndex, dIndex) => {
-    setIsDirty(true);
-    setLocalPrograms((prev) => {
-      const updated = [...prev];
-      const details = (updated[pIndex].details || []).filter((_, i) => i !== dIndex);
-      updated[pIndex] = { ...updated[pIndex], details };
-      return updated;
-    });
+  const handleSaveIndividualProgram = async (prog) => {
+    setIsSaving(true);
+    try {
+      if (onSaveProgram) {
+        await onSaveProgram(prog.id, prog);
+      }
+      await saveData('rokaba:programs', localPrograms);
+      if (showToast) showToast(`Program "${prog.title || prog.name}" berhasil disimpan!`, 'success');
+    } catch (err) {
+      console.error('Error saving program:', err);
+      if (showToast) showToast('Gagal menyimpan program.', 'error');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   // Save All Changes
@@ -202,13 +231,12 @@ export default function AdminHomeCMS({
         });
       }
 
-      // Save home and programs
       await saveData('rokaba:home', formData);
       await saveData('rokaba:programs', localPrograms);
       setIsDirty(false);
 
       if (showToast) {
-        showToast('Seluruh teks dan foto Beranda berhasil disimpan ke Cloud & langsung tayang!', 'success');
+        showToast('Konten beranda berhasil disimpan ke Cloud & sinkron ke web publik!', 'success');
       }
     } catch (err) {
       console.error('Error saving home content:', err);
@@ -220,7 +248,6 @@ export default function AdminHomeCMS({
     }
   };
 
-  // Discard Unsaved Changes
   const handleReset = () => {
     if (window.confirm('Batalkan seluruh perubahan yang belum disimpan dan kembalikan ke data tersimpan?')) {
       setFormData(homeContent || initialHomeContent);
@@ -230,544 +257,319 @@ export default function AdminHomeCMS({
     }
   };
 
-  // Revert to Initial Defaults
-  const handleResetDefaults = () => {
-    if (window.confirm('PERINGATAN: Apakah Anda yakin ingin mereset seluruh teks dan foto beranda ke data bawaan awal?')) {
-      setFormData(initialHomeContent);
-      setLocalPrograms(defaultPrograms);
-      if (onSaveHomeContent) {
-        onSaveHomeContent(initialHomeContent);
-      }
-      defaultPrograms.forEach((prog) => {
-        if (onSaveProgram) onSaveProgram(prog.id, prog);
-      });
-      saveData('rokaba:home', initialHomeContent);
-      saveData('rokaba:programs', defaultPrograms);
-      if (showToast) {
-        showToast('Konten beranda berhasil dikembalikan ke standar awal!', 'info');
-      }
-    }
-  };
+  const subSectionsList = [
+    { id: 'hero', label: 'Hero & Headline', short: 'Hero' },
+    { id: 'sambutan', label: 'Pimpinan & Ketua', short: 'Sambutan & tiga ketua' },
+    { id: 'about', label: 'Tentang Kami', short: 'Tentang kami' },
+    { id: 'programs', label: 'Divisi & Program', short: 'Divisi & program' },
+    { id: 'timeline', label: 'Linimasa', short: 'Linimasa' },
+    { id: 'stats', label: 'Statistik', short: 'Statistik' },
+    { id: 'closing', label: 'Ajakan Bergabung', short: 'Ajakan bergabung' },
+    { id: 'sections', label: 'Judul Bagian', short: 'Judul bagian' },
+  ];
 
   return (
-    <div className="admin-home-cms-pane tab-pane">
-      {/* Header Bar */}
-      <div className="admin-header-row">
-        <div>
-          <div className="cms-badge-title">
-            <span className="badge badge-gold">
-              <Sparkles size={13} /> Visual & Editorial CMS
-            </span>
-          </div>
-          <h2>Kelola Konten & Foto Beranda (Homepage)</h2>
-          <p>
-            Ubah judul, narasi, foto utama, linimasa sejarah, program kerja, dan statistik website langsung dari panel ini.
-          </p>
-        </div>
-
-        <div className="home-cms-top-actions">
+    <div style={{ maxWidth: 1160, margin: '0 auto', paddingBottom: '3.5rem' }}>
+      {/* Header Bar matching Image 05 & 06 */}
+      <div className="admin-home-header">
+        <div className="admin-home-title-area">
+          <h1>Kelola beranda</h1>
           {isDirty && (
-            <span style={{
-              fontSize: '0.8rem',
-              fontWeight: 600,
-              color: '#F59E0B',
-              background: 'rgba(245, 158, 11, 0.12)',
-              padding: '0.35rem 0.75rem',
-              borderRadius: '9999px',
-              border: '1px solid rgba(245, 158, 11, 0.3)',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-            }}>
-              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#F59E0B', display: 'inline-block' }} />
-              Ada perubahan belum disimpan
+            <span className="admin-unsaved-badge">
+              <Clock size={13} />
+              Perubahan belum disimpan
             </span>
           )}
+        </div>
+
+        <div className="admin-home-actions">
           <a
             href="https://www.rohis-banyumas.web.id/"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-outline btn-sm"
+            className="btn btn-secondary-soft"
           >
-            <ExternalLink size={14} /> Lihat Beranda Publik
+            <ExternalLink size={14} /> Lihat web
           </a>
           {isDirty && (
             <button
               type="button"
-              className="btn btn-outline btn-sm"
+              className="btn btn-secondary-soft"
               onClick={handleReset}
               disabled={isSaving}
-              style={{ color: '#EF4444', borderColor: 'rgba(239, 68, 68, 0.35)' }}
+              style={{ color: '#EF4444' }}
             >
-              <RotateCcw size={14} /> Batalkan
+              <RotateCcw size={14} /> Batal
             </button>
           )}
           <button
             type="button"
-            className="btn btn-primary btn-sm btn-save-master"
+            className="btn btn-pine"
             onClick={handleSaveAll}
             disabled={isSaving}
           >
-            <Save size={16} />
-            <span>{isSaving ? 'Menyimpan...' : 'Simpan Perubahan'}</span>
+            <Save size={15} />
+            <span>{isSaving ? 'Menyimpan...' : 'Simpan perubahan'}</span>
           </button>
         </div>
       </div>
 
-      {/* Sub Navigation Bar */}
-      <div className="home-cms-subnav">
-        <button
-          type="button"
-          className={`subnav-btn ${activeSubTab === 'hero' ? 'active' : ''}`}
-          onClick={() => setActiveSubTab('hero')}
-        >
-          <Layout size={16} />
-          <span>1. Bagian Hero & Headline</span>
-        </button>
-        <button
-          type="button"
-          className={`subnav-btn ${activeSubTab === 'sambutan' ? 'active' : ''}`}
-          onClick={() => setActiveSubTab('sambutan')}
-        >
-          <ShieldCheck size={16} />
-          <span>2. Sambutan Pimpinan & 3 Ketua</span>
-        </button>
-        <button
-          type="button"
-          className={`subnav-btn ${activeSubTab === 'about' ? 'active' : ''}`}
-          onClick={() => setActiveSubTab('about')}
-        >
-          <Info size={16} />
-          <span>3. Tentang Kami (About)</span>
-        </button>
-        <button
-          type="button"
-          className={`subnav-btn ${activeSubTab === 'programs' ? 'active' : ''}`}
-          onClick={() => setActiveSubTab('programs')}
-        >
-          <Layers size={16} />
-          <span>3. 5 Divisi & Program Kerja</span>
-        </button>
-        <button
-          type="button"
-          className={`subnav-btn ${activeSubTab === 'timeline' ? 'active' : ''}`}
-          onClick={() => setActiveSubTab('timeline')}
-        >
-          <History size={16} />
-          <span>4. Historia & Linimasa ({formData.timeline?.length || 0})</span>
-        </button>
-        <button
-          type="button"
-          className={`subnav-btn ${activeSubTab === 'stats' ? 'active' : ''}`}
-          onClick={() => setActiveSubTab('stats')}
-        >
-          <BarChart3 size={16} />
-          <span>5. Statistik Angka</span>
-        </button>
-        <button
-          type="button"
-          className={`subnav-btn ${activeSubTab === 'closing' ? 'active' : ''}`}
-          onClick={() => setActiveSubTab('closing')}
-        >
-          <MessageSquare size={16} />
-          <span>6. Ajakan Bergabung (CTA)</span>
-        </button>
-        <button
-          type="button"
-          className={`subnav-btn ${activeSubTab === 'sections' ? 'active' : ''}`}
-          onClick={() => setActiveSubTab('sections')}
-        >
-          <Sparkles size={16} />
-          <span>7. Pengantar Berita, Agenda & Layanan</span>
-        </button>
+      {/* Local Sub-Navigation matching Image 05 & 06 */}
+      <div className="admin-section-nav-wrap">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+          <span className="admin-section-dropdown-label">Bagian beranda:</span>
+          <select
+            className="form-select-soft"
+            style={{ minWidth: 200, padding: '0.45rem 1rem', fontSize: '0.85rem' }}
+            value={activeSubTab}
+            onChange={(e) => setActiveSubTab(e.target.value)}
+          >
+            {subSectionsList.map((sec) => (
+              <option key={sec.id} value={sec.id}>
+                {sec.short}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="admin-section-pills">
+          {subSectionsList.map((sec) => (
+            <button
+              key={sec.id}
+              type="button"
+              className={`admin-section-pill ${activeSubTab === sec.id ? 'active' : ''}`}
+              onClick={() => setActiveSubTab(sec.id)}
+            >
+              {sec.label}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* SUB-TAB 1: HERO SECTION */}
+      {/* ═══════════════════════════════════════════════════════════════
+          SUB-TAB 1: HERO & HEADLINE (Image 05 panel 1)
+          ═══════════════════════════════════════════════════════════════ */}
       {activeSubTab === 'hero' && (
-        <div className="home-cms-section card">
-          <div className="cms-section-header">
+        <div className="admin-soft-card">
+          <div className="admin-editor-split">
+            {/* Left Form Inputs */}
             <div>
-              <h3>Pengaturan Hero Section (Header Utama)</h3>
-              <p className="text-muted">
-                Mengatur tampilan headline paling atas yang pertama kali dilihat oleh pengunjung website.
-              </p>
-            </div>
-            <span className="badge badge-primary">Bagian Paling Depan</span>
-          </div>
-
-          <div className="cms-form-grid">
-            <div className="form-group">
-              <label className="form-label">Tagline Kecil (Badge Atas)</label>
-              <input
-                type="text"
-                className="form-input"
-                value={formData.hero?.tag || ''}
-                onChange={(e) => updateHero('tag', e.target.value)}
-                placeholder="PELAJAR • PEMUDA • KABUPATEN BANYUMAS"
-              />
-            </div>
-
-            <div className="form-grid-2">
-              <div className="form-group">
-                <label className="form-label">Judul Utama Baris 1</label>
+              <div className="form-group-soft">
+                <label className="form-label-soft">Tagline</label>
                 <input
                   type="text"
-                  className="form-input"
+                  className="form-input-soft"
+                  value={formData.hero?.tag || ''}
+                  onChange={(e) => updateHero('tag', e.target.value)}
+                  placeholder="Forum Komunikasi ROHIS Kabupaten Banyumas"
+                />
+              </div>
+
+              <div className="form-group-soft">
+                <label className="form-label-soft">Judul baris 1</label>
+                <input
+                  type="text"
+                  className="form-input-soft"
                   value={formData.hero?.titleLine1 || ''}
                   onChange={(e) => updateHero('titleLine1', e.target.value)}
-                  placeholder="ROHIS"
+                  placeholder="Satu ukhuwah."
                 />
               </div>
-              <div className="form-group">
-                <label className="form-label">Judul Utama Baris 2 (Aksen Hijau-Emas)</label>
+
+              <div className="form-group-soft">
+                <label className="form-label-soft">Judul baris 2</label>
                 <input
                   type="text"
-                  className="form-input"
+                  className="form-input-soft"
                   value={formData.hero?.titleLine2 || ''}
                   onChange={(e) => updateHero('titleLine2', e.target.value)}
-                  placeholder="BANYUMAS"
+                  placeholder="Banyak langkah kebaikan."
                 />
+              </div>
+
+              <div className="form-group-soft">
+                <label className="form-label-soft">Deskripsi</label>
+                <textarea
+                  rows={3}
+                  className="form-textarea-soft"
+                  value={formData.hero?.narrative || ''}
+                  onChange={(e) => updateHero('narrative', e.target.value)}
+                  placeholder="Ruang bertumbuh bagi pelajar Muslim untuk belajar, berkarya, dan memberi manfaat bersama."
+                />
+              </div>
+
+              <div className="form-grid-2-soft">
+                <div className="form-group-soft">
+                  <label className="form-label-soft">Teks tombol</label>
+                  <input
+                    type="text"
+                    className="form-input-soft"
+                    value={formData.hero?.btnPrimaryText || ''}
+                    onChange={(e) => updateHero('btnPrimaryText', e.target.value)}
+                    placeholder="Mengenal ROKABA"
+                  />
+                </div>
+                <div className="form-group-soft">
+                  <label className="form-label-soft">Tautan tombol</label>
+                  <input
+                    type="text"
+                    className="form-input-soft"
+                    value={formData.hero?.btnPrimaryLink || ''}
+                    onChange={(e) => updateHero('btnPrimaryLink', e.target.value)}
+                    placeholder="/tentang"
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Sub-Headline Editorial (Lead Phrase)</label>
-              <input
-                type="text"
-                className="form-input"
-                value={formData.hero?.leadPhrase || ''}
-                onChange={(e) => updateHero('leadPhrase', e.target.value)}
-                placeholder="Ruang belajar, bertumbuh, dan berkontribusi bersama."
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Paragraf Narasi / Deskripsi Singkat</label>
-              <textarea
-                rows={3}
-                className="form-textarea"
-                value={formData.hero?.narrative || ''}
-                onChange={(e) => updateHero('narrative', e.target.value)}
-                placeholder="Wadah silaturahmi, kaderisasi kepemimpinan, dan sinergi dakwah..."
-              />
-            </div>
-
-            <div className="form-grid-2">
-              <div className="form-group">
-                <label className="form-label">Teks Tombol Utama</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.hero?.btnPrimaryText || ''}
-                  onChange={(e) => updateHero('btnPrimaryText', e.target.value)}
-                  placeholder="Kenali ROHIS Lebih Dekat"
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Tautan / Link Tombol Utama</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.hero?.btnPrimaryLink || ''}
-                  onChange={(e) => updateHero('btnPrimaryLink', e.target.value)}
-                  placeholder="/tentang"
-                />
-              </div>
-            </div>
-
-            <div className="form-grid-2">
-              <div className="form-group">
-                <label className="form-label">Teks Tombol Kedua</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.hero?.btnSecondaryText || ''}
-                  onChange={(e) => updateHero('btnSecondaryText', e.target.value)}
-                  placeholder="Anggota ROHIS"
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Tautan / Link Tombol Kedua</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.hero?.btnSecondaryLink || ''}
-                  onChange={(e) => updateHero('btnSecondaryLink', e.target.value)}
-                  placeholder="/schools"
-                />
-              </div>
-            </div>
-
-            {/* FOTO HERO SECTION */}
-            <div className="cms-sub-box">
-              <h4 className="sub-box-title">📸 Foto Dokumentasi Utama Hero</h4>
-              <p className="text-muted sub-box-desc">
-                Upload foto dari komputer Anda atau tempel link gambar. Foto ini menjadi visual utama beranda.
-              </p>
-
+            {/* Right Photo Upload */}
+            <div>
               <ImageUploadField
-                label="Foto Sampul Hero"
+                label="Foto utama"
                 value={formData.hero?.photoUrl || ''}
                 onChange={(val) => updateHero('photoUrl', val)}
-                placeholder="Pilih berkas foto dari laptop/HP atau tempel URL Unsplash/Drive..."
-                tip="Rekomendasi orientasi horizontal/landscape (resolusi 1200x800 ke atas) untuk tampilan sinematik terbaik."
+                placeholder="Pilih file foto atau tempel URL..."
+                tip="Foto landscape utama beranda (dokumentasi kegiatan ROKABA)."
               />
-
-              <div className="form-grid-2" style={{ marginTop: '1rem' }}>
-                <div className="form-group">
-                  <label className="form-label">Label Stempel Arsip (Pojok Foto)</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    value={formData.hero?.photoStamp || ''}
-                    onChange={(e) => updateHero('photoStamp', e.target.value)}
-                    placeholder="ARCHIVE REF #01"
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Label Lokasi Foto</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    value={formData.hero?.photoLoc || ''}
-                    onChange={(e) => updateHero('photoLoc', e.target.value)}
-                    placeholder="MASJID AGUNG BAITUSSALAM"
-                  />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Judul Caption Foto</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.hero?.photoTitle || ''}
-                  onChange={(e) => updateHero('photoTitle', e.target.value)}
-                  placeholder="Sinergi Kader Dakwah Pelajar se-Banyumas"
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Keterangan / Subtitle Foto</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.hero?.photoSub || ''}
-                  onChange={(e) => updateHero('photoSub', e.target.value)}
-                  placeholder="Pertemuan akbar perwakilan pengurus rohis sekolah..."
-                />
-              </div>
-            </div>
-
-            {/* INFO BAR HERO */}
-            <div className="cms-sub-box">
-              <h4 className="sub-box-title">ℹ️ Bilah Keterangan Bawah (Status Bar)</h4>
-              <div className="form-grid-3">
-                <div className="form-group">
-                  <label className="form-label">Status Organisasi</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    value={formData.hero?.metaStatus || ''}
-                    onChange={(e) => updateHero('metaStatus', e.target.value)}
-                    placeholder="RESMI • DAKWAH SEKOLAH"
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Sejak Tahun & Wilayah</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    value={formData.hero?.metaSince || ''}
-                    onChange={(e) => updateHero('metaSince', e.target.value)}
-                    placeholder="2017 • PURWOKERTO"
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Jejaring Sekolah</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    value={formData.hero?.metaNetwork || ''}
-                    onChange={(e) => updateHero('metaNetwork', e.target.value)}
-                    placeholder="15+ SMA / SMK / MA"
-                  />
-                </div>
-              </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* SUB-TAB: SAMBUTAN PIMPINAN SECTION */}
+      {/* ═══════════════════════════════════════════════════════════════
+          SUB-TAB 2: SAMBUTAN & TIGA KETUA (Image 05 panel 2)
+          ═══════════════════════════════════════════════════════════════ */}
       {activeSubTab === 'sambutan' && (
-        <div className="home-cms-section card">
-          <div className="cms-section-header">
+        <div className="admin-soft-card">
+          <div className="admin-editor-split">
+            {/* Left Column: Teks Sambutan */}
             <div>
-              <h3>Bagian Sambutan Pimpinan & 3 Ketua</h3>
-              <p className="text-muted">
-                Atur salam pembuka, teks pidato sambutan, tombol aksi, serta foto profil resmi 3 pimpinan utama (Ketua Umum, Ketua Ikhwan, dan Ketua Akhwat).
-              </p>
-            </div>
-            <span className="badge badge-gold">Leadership Speech</span>
-          </div>
-
-          <div className="cms-form-grid">
-            <div className="form-grid-2">
-              <div className="form-group">
-                <label className="form-label">Badge / Tag Bagian</label>
+              <div className="form-group-soft">
+                <label className="form-label-soft">Judul sambutan</label>
                 <input
                   type="text"
-                  className="form-input"
-                  value={formData.sambutan?.tag || ''}
-                  onChange={(e) => updateSambutan('tag', e.target.value)}
-                  placeholder="SAMBUTAN PIMPINAN"
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Teks Periode (Bawah Kartu)</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.sambutan?.periodText || ''}
-                  onChange={(e) => updateSambutan('periodText', e.target.value)}
-                  placeholder="PERIODE 2025/2026"
-                />
-              </div>
-            </div>
-
-            <div className="form-grid-2">
-              <div className="form-group">
-                <label className="form-label">Judul Baris 1</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.sambutan?.titleLine1 || ''}
+                  className="form-input-soft"
+                  value={formData.sambutan?.titleLine1 || formData.sambutan?.title || ''}
                   onChange={(e) => updateSambutan('titleLine1', e.target.value)}
-                  placeholder="Sambutan"
+                  placeholder="Sambutan pimpinan ROHIS Banyumas"
                 />
               </div>
-              <div className="form-group">
-                <label className="form-label">Judul Baris 2 (Warna Sorotan Emas)</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.sambutan?.titleLine2 || ''}
-                  onChange={(e) => updateSambutan('titleLine2', e.target.value)}
-                  placeholder="Pimpinan ROKABA"
+
+              <div className="form-group-soft">
+                <label className="form-label-soft">Isi sambutan (Paragraf 1)</label>
+                <textarea
+                  rows={4}
+                  className="form-textarea-soft"
+                  value={formData.sambutan?.paragraph1 || ''}
+                  onChange={(e) => updateSambutan('paragraph1', e.target.value)}
+                  placeholder="Alhamdulillah, ROKABA hadir sebagai ruang kolaborasi ROHIS SMA, SMK, dan MA di Kabupaten Banyumas..."
                 />
               </div>
-            </div>
 
-            <div className="form-group">
-              <label className="form-label">Salam Pembuka</label>
-              <input
-                type="text"
-                className="form-input"
-                value={formData.sambutan?.greeting || ''}
-                onChange={(e) => updateSambutan('greeting', e.target.value)}
-                placeholder="Assalamu'alaikum warahmatullahi wabarakatuh."
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Paragraf Sambutan 1 (Selamat Datang & Visi Organisasi)</label>
-              <textarea
-                className="form-input form-textarea"
-                rows={4}
-                value={formData.sambutan?.paragraph1 || ''}
-                onChange={(e) => updateSambutan('paragraph1', e.target.value)}
-                placeholder="Tuliskan paragraf pengantar sambutan..."
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Paragraf Sambutan 2 (Harapan & Ajakan Kolaborasi)</label>
-              <textarea
-                className="form-input form-textarea"
-                rows={4}
-                value={formData.sambutan?.paragraph2 || ''}
-                onChange={(e) => updateSambutan('paragraph2', e.target.value)}
-                placeholder="Tuliskan paragraf harapan dan pesan ukhuwah..."
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Salam Penutup</label>
-              <input
-                type="text"
-                className="form-input"
-                value={formData.sambutan?.closingGreeting || ''}
-                onChange={(e) => updateSambutan('closingGreeting', e.target.value)}
-                placeholder="Wassalamu'alaikum warahmatullahi wabarakatuh."
-              />
-            </div>
-
-            <div className="form-grid-2">
-              <div className="form-group">
-                <label className="form-label">Teks Tombol Aksi</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.sambutan?.btnText || ''}
-                  onChange={(e) => updateSambutan('btnText', e.target.value)}
-                  placeholder="Selengkapnya"
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Tautan / Link Tombol</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.sambutan?.btnLink || ''}
-                  onChange={(e) => updateSambutan('btnLink', e.target.value)}
-                  placeholder="/about"
+              <div className="form-group-soft">
+                <label className="form-label-soft">Isi sambutan (Paragraf 2 - Harapan & Ajakan)</label>
+                <textarea
+                  rows={4}
+                  className="form-textarea-soft"
+                  value={formData.sambutan?.paragraph2 || ''}
+                  onChange={(e) => updateSambutan('paragraph2', e.target.value)}
+                  placeholder="Mari bersama memperkuat ukhuwah, menebar manfaat, dan menghadirkan kebaikan di lingkungan sekolah dan masyarakat."
                 />
               </div>
             </div>
 
-            {/* FOTO 3 PIMPINAN UTAMA */}
-            <div className="cms-sub-box">
-              <h4 className="sub-box-title">👑 Foto Profil 3 Pimpinan Utama (Kartu Kanan)</h4>
-              <p className="text-muted sub-box-desc">
-                Upload foto profil atau tempel link Google Drive/URL gambar untuk masing-masing ketua. Jika link kosong, sistem otomatis memakai foto dari menu Tim/Pengurus atau lambang inisial resmi.
-              </p>
+            {/* Right Column: Foto dan Nama Tiga Ketua */}
+            <div>
+              <label className="form-label-soft" style={{ marginBottom: '0.85rem' }}>
+                Foto dan nama tiga ketua
+              </label>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginTop: '1rem' }}>
-                <div style={{ background: 'rgba(200, 168, 91, 0.05)', padding: '1rem', borderRadius: '12px', border: '1px solid rgba(200, 168, 91, 0.16)' }}>
-                  <div style={{ fontWeight: 700, fontSize: '0.88rem', color: 'var(--antique-brass-light)', marginBottom: '0.5rem' }}>
-                    1. Ketua Umum (M. Rayyan Alfarabi)
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {/* 1. Ketua Umum */}
+                <div style={{
+                  background: 'var(--surface-bg)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: 'var(--radius-md)',
+                  padding: '1rem',
+                  boxShadow: 'var(--soft-shadow-sm)',
+                }}>
+                  <div style={{ fontWeight: 700, fontSize: '0.88rem', color: 'var(--pine-dark)', marginBottom: '0.65rem' }}>
+                    Ketua Umum
                   </div>
                   <ImageUploadField
                     label="Foto Ketua Umum"
                     value={formData.sambutan?.ketuaUmumPhoto || ''}
                     onChange={(val) => updateSambutan('ketuaUmumPhoto', val)}
-                    placeholder="Link Google Drive foto Ketua Umum..."
+                    placeholder="Link / upload foto Ketua Umum..."
                   />
-                </div>
-
-                <div style={{ background: 'rgba(16, 185, 129, 0.05)', padding: '1rem', borderRadius: '12px', border: '1px solid rgba(16, 185, 129, 0.16)' }}>
-                  <div style={{ fontWeight: 700, fontSize: '0.88rem', color: 'var(--emerald-light)', marginBottom: '0.5rem' }}>
-                    2. Ketua Ikhwan (Muhammad Raif Ramadhan)
+                  <div className="form-group-soft" style={{ marginTop: '0.65rem', marginBottom: 0 }}>
+                    <label className="form-label-soft" style={{ fontSize: '0.78rem' }}>Nama Ketua Umum</label>
+                    <input
+                      type="text"
+                      className="form-input-soft"
+                      value={formData.sambutan?.ketuaUmumName || ''}
+                      onChange={(e) => updateSambutan('ketuaUmumName', e.target.value)}
+                      placeholder="Ketua Umum ROKABA"
+                    />
                   </div>
-                  <ImageUploadField
-                    label="Foto Ketua Ikhwan"
-                    value={formData.sambutan?.ketuaIkhwanPhoto || ''}
-                    onChange={(val) => updateSambutan('ketuaIkhwanPhoto', val)}
-                    placeholder="Link Google Drive foto Ketua Ikhwan..."
-                  />
                 </div>
 
-                <div style={{ background: 'rgba(217, 119, 6, 0.05)', padding: '1rem', borderRadius: '12px', border: '1px solid rgba(217, 119, 6, 0.16)' }}>
-                  <div style={{ fontWeight: 700, fontSize: '0.88rem', color: '#FBBF24', marginBottom: '0.5rem' }}>
-                    3. Ketua Akhwat (Neesa Azkia Shafa)
+                {/* 2. Ketua Akhwat */}
+                <div style={{
+                  background: 'var(--surface-bg)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: 'var(--radius-md)',
+                  padding: '1rem',
+                  boxShadow: 'var(--soft-shadow-sm)',
+                }}>
+                  <div style={{ fontWeight: 700, fontSize: '0.88rem', color: 'var(--pine-dark)', marginBottom: '0.65rem' }}>
+                    Ketua Akhwat
                   </div>
                   <ImageUploadField
                     label="Foto Ketua Akhwat"
                     value={formData.sambutan?.ketuaAkhwatPhoto || ''}
                     onChange={(val) => updateSambutan('ketuaAkhwatPhoto', val)}
-                    placeholder="Link Google Drive foto Ketua Akhwat..."
+                    placeholder="Link / upload foto Ketua Akhwat..."
                   />
+                  <div className="form-group-soft" style={{ marginTop: '0.65rem', marginBottom: 0 }}>
+                    <label className="form-label-soft" style={{ fontSize: '0.78rem' }}>Nama Ketua Akhwat</label>
+                    <input
+                      type="text"
+                      className="form-input-soft"
+                      value={formData.sambutan?.ketuaAkhwatName || ''}
+                      onChange={(e) => updateSambutan('ketuaAkhwatName', e.target.value)}
+                      placeholder="Ketua Akhwat ROKABA"
+                    />
+                  </div>
+                </div>
+
+                {/* 3. Ketua Ikhwan */}
+                <div style={{
+                  background: 'var(--surface-bg)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: 'var(--radius-md)',
+                  padding: '1rem',
+                  boxShadow: 'var(--soft-shadow-sm)',
+                }}>
+                  <div style={{ fontWeight: 700, fontSize: '0.88rem', color: 'var(--pine-dark)', marginBottom: '0.65rem' }}>
+                    Ketua Ikhwan
+                  </div>
+                  <ImageUploadField
+                    label="Foto Ketua Ikhwan"
+                    value={formData.sambutan?.ketuaIkhwanPhoto || ''}
+                    onChange={(val) => updateSambutan('ketuaIkhwanPhoto', val)}
+                    placeholder="Link / upload foto Ketua Ikhwan..."
+                  />
+                  <div className="form-group-soft" style={{ marginTop: '0.65rem', marginBottom: 0 }}>
+                    <label className="form-label-soft" style={{ fontSize: '0.78rem' }}>Nama Ketua Ikhwan</label>
+                    <input
+                      type="text"
+                      className="form-input-soft"
+                      value={formData.sambutan?.ketuaIkhwanName || ''}
+                      onChange={(e) => updateSambutan('ketuaIkhwanName', e.target.value)}
+                      placeholder="Ketua Ikhwan ROKABA"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -775,777 +577,743 @@ export default function AdminHomeCMS({
         </div>
       )}
 
-      {/* SUB-TAB 2: ABOUT SECTION */}
+      {/* ═══════════════════════════════════════════════════════════════
+          SUB-TAB 3: TENTANG KAMI (Image 05 panel 3)
+          ═══════════════════════════════════════════════════════════════ */}
       {activeSubTab === 'about' && (
-        <div className="home-cms-section card">
-          <div className="cms-section-header">
+        <div className="admin-soft-card">
+          <div className="admin-editor-split">
+            {/* Left Inputs */}
             <div>
-              <h3>Bagian Tentang Kami (Tentang ROKABA)</h3>
-              <p className="text-muted">
-                Ubah teks filosofi, poin keunggulan dakwah, kutipan inspiratif, serta foto dokumentasi kegiatan.
-              </p>
-            </div>
-            <span className="badge badge-gold">Editorial Section</span>
-          </div>
-
-          <div className="cms-form-grid">
-            <div className="form-group">
-              <label className="form-label">Tagline Bagian</label>
-              <input
-                type="text"
-                className="form-input"
-                value={formData.about?.tag || ''}
-                onChange={(e) => updateAbout('tag', e.target.value)}
-                placeholder="TENTANG KAMI"
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Judul Utama</label>
-              <input
-                type="text"
-                className="form-input"
-                value={formData.about?.title || ''}
-                onChange={(e) => updateAbout('title', e.target.value)}
-                placeholder="Bukan sekadar sebuah organisasi."
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Kalimat Pembuka (Lead Paragraph)</label>
-              <textarea
-                rows={2}
-                className="form-textarea"
-                value={formData.about?.lead || ''}
-                onChange={(e) => updateAbout('lead', e.target.value)}
-                placeholder="Didirikan pada tahun 2017 di Purwokerto..."
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Paragraf 1 (Visi & Nilai Gerakan)</label>
-              <textarea
-                rows={3}
-                className="form-textarea"
-                value={formData.about?.paragraph1 || ''}
-                onChange={(e) => updateAbout('paragraph1', e.target.value)}
-                placeholder="Kami hadir bukan sekadar menyusun struktur formal..."
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Paragraf 2 (Aksi Lapangan & Sinergi)</label>
-              <textarea
-                rows={3}
-                className="form-textarea"
-                value={formData.about?.paragraph2 || ''}
-                onChange={(e) => updateAbout('paragraph2', e.target.value)}
-                placeholder="Dari kajian akbar di masjid-masjid agung hingga..."
-              />
-            </div>
-
-            <div className="form-grid-2">
-              <div className="cms-sub-box">
-                <h4 className="sub-box-title">Poin Unggulan 1</h4>
-                <div className="form-group">
-                  <label className="form-label">Judul Poin 1</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    value={formData.about?.point1Title || ''}
-                    onChange={(e) => updateAbout('point1Title', e.target.value)}
-                    placeholder="Sinergi Lintas Sekolah"
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Keterangan Poin 1</label>
-                  <textarea
-                    rows={2}
-                    className="form-textarea"
-                    value={formData.about?.point1Desc || ''}
-                    onChange={(e) => updateAbout('point1Desc', e.target.value)}
-                    placeholder="Mengikis sekat sekolah, menghubungkan puluhan rohis..."
-                  />
-                </div>
-              </div>
-
-              <div className="cms-sub-box">
-                <h4 className="sub-box-title">Poin Unggulan 2</h4>
-                <div className="form-group">
-                  <label className="form-label">Judul Poin 2</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    value={formData.about?.point2Title || ''}
-                    onChange={(e) => updateAbout('point2Title', e.target.value)}
-                    placeholder="Kaderisasi Berjenjang"
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Keterangan Poin 2</label>
-                  <textarea
-                    rows={2}
-                    className="form-textarea"
-                    value={formData.about?.point2Desc || ''}
-                    onChange={(e) => updateAbout('point2Desc', e.target.value)}
-                    placeholder="Mencetak generasi muda yang kritis, berakhlak mulia..."
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* FOTO TENTANG KAMI */}
-            <div className="cms-sub-box">
-              <h4 className="sub-box-title">📸 Foto Dokumentasi Bagian Tentang Kami</h4>
-              <ImageUploadField
-                label="Foto Dokumentasi Tentang Kami"
-                value={formData.about?.photoUrl || ''}
-                onChange={(val) => updateAbout('photoUrl', val)}
-                placeholder="Upload berkas foto atau tempel URL..."
-                tip="Foto pembinaan santri/pelajar dalam kegiatan kajian atau pelatihan."
-              />
-
-              <div className="form-grid-2" style={{ marginTop: '1rem' }}>
-                <div className="form-group">
-                  <label className="form-label">Label Foto Atas</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    value={formData.about?.photoTag || ''}
-                    onChange={(e) => updateAbout('photoTag', e.target.value)}
-                    placeholder="DOKUMENTASI KADERISASI • PURWOKERTO"
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Badge Est. Tahun</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    value={formData.about?.photoEst || ''}
-                    onChange={(e) => updateAbout('photoEst', e.target.value)}
-                    placeholder="EST. 2017"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* KUTIPAN INSPIRATIF */}
-            <div className="cms-sub-box">
-              <h4 className="sub-box-title">💬 Kutipan Inspiratif (Quote Card)</h4>
-              <div className="form-group">
-                <label className="form-label">Isi Kutipan</label>
-                <textarea
-                  rows={2}
-                  className="form-textarea"
-                  value={formData.about?.quoteText || ''}
-                  onChange={(e) => updateAbout('quoteText', e.target.value)}
-                  placeholder='"Di sini kami belajar bahwa dakwah terbaik..."'
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Nama Pengutip / Sumber</label>
+              <div className="form-group-soft">
+                <label className="form-label-soft">Judul bagian</label>
                 <input
                   type="text"
-                  className="form-input"
-                  value={formData.about?.quoteAuthor || ''}
-                  onChange={(e) => updateAbout('quoteAuthor', e.target.value)}
-                  placeholder="— Catatan Lapangan Kader Pelajar, Banyumas"
+                  className="form-input-soft"
+                  value={formData.about?.title || ''}
+                  onChange={(e) => updateAbout('title', e.target.value)}
+                  placeholder="Tentang ROKABA"
                 />
               </div>
-            </div>
-          </div>
-        </div>
-      )}
 
-      {/* SUB-TAB 3: 5 PILAR PROGRAM KERJA */}
-      {activeSubTab === 'programs' && (
-        <div className="home-cms-section card">
-          <div className="cms-section-header">
-            <div>
-              <h3>5 Pilar Gerakan & Program Kerja Divisi</h3>
-              <p className="text-muted">
-                Sesuaikan nama divisi, deskripsi misi, dan daftar program kerja unggulan masing-masing divisi.
-              </p>
-            </div>
-            <span className="badge badge-emerald">5 Divisi Aktif</span>
-          </div>
+              <div className="form-group-soft">
+                <label className="form-label-soft">Pengantar</label>
+                <textarea
+                  rows={2}
+                  className="form-textarea-soft"
+                  value={formData.about?.lead || ''}
+                  onChange={(e) => updateAbout('lead', e.target.value)}
+                  placeholder="Forum Komunikasi ROHIS Kabupaten Banyumas (ROKABA) adalah wadah kolaborasi ROHIS di tingkat SMA, SMK, dan MA se-Kabupaten Banyumas."
+                />
+              </div>
 
-          <div className="programs-accordion-list">
-            {localPrograms.map((prog, pIdx) => (
-              <div key={prog.id || pIdx} className="cms-sub-box program-edit-card">
-                <div className="program-edit-header">
-                  <div className="program-title-group">
-                    <span className="badge badge-outline">{prog.division || `Divisi ${pIdx + 1}`}</span>
-                    <h4>{prog.title}</h4>
-                  </div>
-                  <span className="text-muted" style={{ fontSize: '0.8rem' }}>
-                    {prog.details?.length || 0} Butir Agenda
-                  </span>
-                </div>
+              <div className="form-group-soft">
+                <label className="form-label-soft">Paragraf profil</label>
+                <textarea
+                  rows={4}
+                  className="form-textarea-soft"
+                  value={formData.about?.paragraph1 || ''}
+                  onChange={(e) => updateAbout('paragraph1', e.target.value)}
+                  placeholder="ROKABA berkomitmen menjadi ruang silaturahmi, berbagi inspirasi, menguatkan kapasitas pelajar Muslim, serta mendorong lahirnya program-program kebaikan yang berdampak di sekolah dan masyarakat."
+                />
+              </div>
 
-                <div className="form-group" style={{ marginTop: '0.8rem' }}>
-                  <label className="form-label">Judul Lengkap Divisi</label>
+              <div className="form-grid-2-soft">
+                <div className="form-group-soft">
+                  <label className="form-label-soft">Nilai pertama</label>
                   <input
                     type="text"
-                    className="form-input"
-                    value={prog.title || ''}
-                    onChange={(e) => updateProgramField(pIdx, 'title', e.target.value)}
-                    placeholder="Divisi SDM (Sumber Daya Manusia)"
+                    className="form-input-soft"
+                    value={formData.about?.point1Title || ''}
+                    onChange={(e) => updateAbout('point1Title', e.target.value)}
+                    placeholder="Kolaborasi"
                   />
                 </div>
-
-                <div className="form-group">
-                  <label className="form-label">Deskripsi Gerakan Divisi</label>
-                  <textarea
-                    rows={2}
-                    className="form-textarea"
-                    value={prog.description || ''}
-                    onChange={(e) => updateProgramField(pIdx, 'description', e.target.value)}
-                    placeholder="Fokus pada pembinaan karakter..."
+                <div className="form-group-soft">
+                  <label className="form-label-soft">Nilai kedua</label>
+                  <input
+                    type="text"
+                    className="form-input-soft"
+                    value={formData.about?.point2Title || ''}
+                    onChange={(e) => updateAbout('point2Title', e.target.value)}
+                    placeholder="Kepedulian"
                   />
-                </div>
-
-                <div className="program-details-manager">
-                  <label className="form-label">Daftar Butir Program Kerja Unggulan:</label>
-                  {(prog.details || []).map((item, dIdx) => (
-                    <div key={dIdx} className="program-detail-edit-row">
-                      <span className="detail-idx-badge">{dIdx + 1}</span>
-                      <input
-                        type="text"
-                        className="form-input"
-                        value={item}
-                        onChange={(e) => updateProgramDetailItem(pIdx, dIdx, e.target.value)}
-                        placeholder="Nama program kerja..."
-                      />
-                      <button
-                        type="button"
-                        className="btn-icon btn-icon-delete"
-                        onClick={() => removeProgramDetailItem(pIdx, dIdx)}
-                        title="Hapus butir program ini"
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
-                  ))}
-
-                  <button
-                    type="button"
-                    className="btn btn-outline btn-xs"
-                    style={{ marginTop: '0.5rem' }}
-                    onClick={() => addProgramDetailItem(pIdx)}
-                  >
-                    <Plus size={13} /> Tambah Butir Agenda Kerja
-                  </button>
                 </div>
               </div>
-            ))}
+            </div>
+
+            {/* Right Photo */}
+            <div>
+              <ImageUploadField
+                label="Foto dokumentasi"
+                value={formData.about?.photoUrl || ''}
+                onChange={(val) => updateAbout('photoUrl', val)}
+                placeholder="Pilih file foto atau tempel URL..."
+                tip="Foto dokumentasi pembinaan santri/pelajar dan kebersamaan."
+              />
+            </div>
           </div>
         </div>
       )}
 
-      {/* SUB-TAB 4: HISTORIA & LINIMASA */}
+      {/* ═══════════════════════════════════════════════════════════════
+          SUB-TAB 4: DIVISI & PROGRAM (Image 05 panel 4)
+          ═══════════════════════════════════════════════════════════════ */}
+      {activeSubTab === 'programs' && (
+        <div className="admin-soft-card">
+          <p className="text-secondary" style={{ fontSize: '0.88rem', marginBottom: '1.25rem' }}>
+            Kelola nama program dan deskripsi program kerja untuk 5 divisi resmi ROKABA.
+          </p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+            {localPrograms.map((prog, pIdx) => {
+              const isExpanded = !!expandedDivisions[pIdx];
+              return (
+                <div key={prog.id || pIdx} className="admin-accordion-card">
+                  <div
+                    className="admin-accordion-header"
+                    onClick={() => toggleDivisionExpand(pIdx)}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                      {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                      <h3>{prog.division || prog.title || `Divisi ${pIdx + 1}`}</h3>
+                    </div>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                      {(prog.details || []).length} Butir Agenda
+                    </span>
+                  </div>
+
+                  {isExpanded && (
+                    <div className="admin-accordion-body">
+                      <div className="form-group-soft">
+                        <label className="form-label-soft">Nama program</label>
+                        <input
+                          type="text"
+                          className="form-input-soft"
+                          value={prog.title || ''}
+                          onChange={(e) => updateProgramField(pIdx, 'title', e.target.value)}
+                          placeholder="SDM (Sumber Daya Manusia)"
+                        />
+                      </div>
+
+                      <div className="form-group-soft">
+                        <label className="form-label-soft">Deskripsi program</label>
+                        <textarea
+                          rows={3}
+                          className="form-textarea-soft"
+                          value={prog.description || ''}
+                          onChange={(e) => updateProgramField(pIdx, 'description', e.target.value)}
+                          placeholder="Program pengembangan kapasitas dan pembinaan kader ROHIS di Kabupaten Banyumas."
+                        />
+                      </div>
+
+                      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+                        <button
+                          type="button"
+                          className="btn btn-pine"
+                          style={{ padding: '0.45rem 1.25rem' }}
+                          onClick={() => handleSaveIndividualProgram(prog)}
+                          disabled={isSaving}
+                        >
+                          Simpan program
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ═══════════════════════════════════════════════════════════════
+          SUB-TAB 5: LINIMASA ORGANISASI (Image 06 panel 1)
+          ═══════════════════════════════════════════════════════════════ */}
       {activeSubTab === 'timeline' && (
-        <div className="home-cms-section card">
-          <div className="cms-section-header">
+        <div className="admin-soft-card">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '1rem' }}>
             <div>
-              <h3>Historia & Linimasa Jejak Langkah</h3>
-              <p className="text-muted">
-                Peristiwa bersejarah, fase transformasi, dan tonggak penting perjalanan ROHIS Banyumas.
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--pine-dark)', margin: 0 }}>
+                Linimasa organisasi
+              </h2>
+              <p className="text-secondary" style={{ fontSize: '0.85rem', marginTop: '0.2rem' }}>
+                Kelola urutan peristiwa penting perjalanan organisasi di ROKABA.
               </p>
             </div>
+
             <button
               type="button"
-              className="btn btn-gold btn-sm"
+              className="btn btn-pine"
               onClick={handleAddTimeline}
             >
-              <Plus size={15} /> Tambah Linimasa Baru
+              <Plus size={15} /> Tambah peristiwa
             </button>
           </div>
 
-          <div className="timeline-edit-list">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {(formData.timeline || []).map((item, index) => (
-              <div key={item.id || index} className="cms-sub-box timeline-edit-card">
-                <div className="timeline-card-top">
-                  <div className="timeline-badge-row">
-                    <span className="timeline-year-tag">{item.year}</span>
-                    <span className="badge badge-gold">{item.tag || 'FASE'}</span>
+              <div key={item.id || index} className="admin-timeline-item-card">
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem' }}>
+                  <div style={{ color: 'var(--text-muted)', paddingTop: '0.5rem', cursor: 'grab' }}>
+                    <GripVertical size={20} />
                   </div>
+
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr 1fr', gap: '0.85rem', marginBottom: '0.75rem' }}>
+                      <div className="form-group-soft" style={{ marginBottom: 0 }}>
+                        <label className="form-label-soft">Tahun</label>
+                        <input
+                          type="text"
+                          className="form-input-soft"
+                          value={item.year || ''}
+                          onChange={(e) => updateTimelineItem(index, 'year', e.target.value)}
+                          placeholder="Tahun"
+                        />
+                      </div>
+                      <div className="form-group-soft" style={{ marginBottom: 0 }}>
+                        <label className="form-label-soft">Judul</label>
+                        <input
+                          type="text"
+                          className="form-input-soft"
+                          value={item.title || ''}
+                          onChange={(e) => updateTimelineItem(index, 'title', e.target.value)}
+                          placeholder="Judul peristiwa"
+                        />
+                      </div>
+                      <div className="form-group-soft" style={{ marginBottom: 0 }}>
+                        <label className="form-label-soft">Lokasi</label>
+                        <input
+                          type="text"
+                          className="form-input-soft"
+                          value={item.location || ''}
+                          onChange={(e) => updateTimelineItem(index, 'location', e.target.value)}
+                          placeholder="Lokasi kegiatan"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="form-group-soft" style={{ marginBottom: '0.85rem' }}>
+                      <label className="form-label-soft">Deskripsi</label>
+                      <textarea
+                        rows={2}
+                        className="form-textarea-soft"
+                        value={item.desc || ''}
+                        onChange={(e) => updateTimelineItem(index, 'desc', e.target.value)}
+                        placeholder="Deskripsikan peristiwa ini secara singkat."
+                      />
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '0.85rem' }}>
+                      <button
+                        type="button"
+                        className="btn btn-secondary-soft"
+                        style={{ padding: '0.35rem 0.75rem', fontSize: '0.8rem' }}
+                        onClick={() => handleMoveTimeline(index, 'up')}
+                        disabled={index === 0}
+                      >
+                        <ArrowUp size={13} /> Pindah naik
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-secondary-soft"
+                        style={{ padding: '0.35rem 0.75rem', fontSize: '0.8rem' }}
+                        onClick={() => handleMoveTimeline(index, 'down')}
+                        disabled={index === (formData.timeline?.length || 0) - 1}
+                      >
+                        <ArrowDown size={13} /> Pindah turun
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-secondary-soft"
+                        style={{ padding: '0.35rem 0.75rem', fontSize: '0.8rem', color: '#EF4444' }}
+                        onClick={() => handleDeleteTimeline(index)}
+                      >
+                        <Trash2 size={13} /> Hapus
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ═══════════════════════════════════════════════════════════════
+          SUB-TAB 6: STATISTIK BERANDA (Image 06 panel 2)
+          ═══════════════════════════════════════════════════════════════ */}
+      {activeSubTab === 'stats' && (
+        <div className="admin-soft-card">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '1rem' }}>
+            <div>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--pine-dark)', margin: 0 }}>
+                Statistik beranda
+              </h2>
+              <p className="text-secondary" style={{ fontSize: '0.85rem', marginTop: '0.2rem' }}>
+                Kelola daftar statistik ringkas yang ditampilkan di beranda.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              className="btn btn-pine"
+              onClick={handleAddStat}
+            >
+              <Plus size={15} /> Tambah statistik
+            </button>
+          </div>
+
+          <div className="admin-desktop-table data-table-container-soft">
+            <table className="data-table-soft">
+              <thead>
+                <tr>
+                  <th style={{ width: 40 }}></th>
+                  <th style={{ width: '22%' }}>Nilai</th>
+                  <th style={{ width: '22%' }}>Sufiks</th>
+                  <th>Label</th>
+                  <th style={{ width: 90, textAlign: 'right' }}>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(formData.stats || []).map((stat, sIdx) => (
+                  <tr key={sIdx}>
+                    <td style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
+                      <GripVertical size={16} />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        className="form-input-soft"
+                        style={{ width: '100%' }}
+                        value={stat.value ?? ''}
+                        onChange={(e) => updateStat(sIdx, 'value', Number(e.target.value))}
+                        placeholder="Jumlah"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        className="form-input-soft"
+                        style={{ width: '100%' }}
+                        value={stat.suffix || ''}
+                        onChange={(e) => updateStat(sIdx, 'suffix', e.target.value)}
+                        placeholder="Contoh: +"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="text"
+                        className="form-input-soft"
+                        style={{ width: '100%' }}
+                        value={stat.label || ''}
+                        onChange={(e) => updateStat(sIdx, 'label', e.target.value)}
+                        placeholder="Label statistik"
+                      />
+                    </td>
+                    <td style={{ textAlign: 'right' }}>
+                      <button
+                        type="button"
+                        className="btn btn-secondary-soft"
+                        style={{ color: '#EF4444', padding: '0.35rem 0.65rem' }}
+                        onClick={() => handleDeleteStat(sIdx)}
+                        title="Hapus baris statistik"
+                      >
+                        <Trash2 size={14} /> Hapus
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* ═══════════════════════════════════════════════════════════════
+          SUB-TAB 7: AJAKAN BERGABUNG (Image 06 panel 3)
+          ═══════════════════════════════════════════════════════════════ */}
+      {activeSubTab === 'closing' && (
+        <div className="admin-soft-card">
+          <div style={{ marginBottom: '1.25rem' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--pine-dark)', margin: 0 }}>
+              Ajakan bergabung
+            </h2>
+            <p className="text-secondary" style={{ fontSize: '0.85rem', marginTop: '0.2rem' }}>
+              Atur teks dan tautan ajakan untuk bergabung di beranda.
+            </p>
+          </div>
+
+          <div className="admin-editor-split">
+            {/* Left Form */}
+            <div>
+              <div className="form-group-soft">
+                <label className="form-label-soft">Judul</label>
+                <input
+                  type="text"
+                  className="form-input-soft"
+                  value={formData.closing?.headline || ''}
+                  onChange={(e) => updateClosing('headline', e.target.value)}
+                  placeholder="Judul ajakan bergabung"
+                />
+              </div>
+
+              <div className="form-group-soft">
+                <label className="form-label-soft">Deskripsi</label>
+                <textarea
+                  rows={3}
+                  className="form-textarea-soft"
+                  value={formData.closing?.lead || ''}
+                  onChange={(e) => updateClosing('lead', e.target.value)}
+                  placeholder="Deskripsi singkat ajakan bergabung."
+                />
+              </div>
+
+              <div className="form-grid-2-soft">
+                <div className="form-group-soft">
+                  <label className="form-label-soft">Teks tombol utama</label>
+                  <input
+                    type="text"
+                    className="form-input-soft"
+                    value={formData.closing?.btnPrimaryText || ''}
+                    onChange={(e) => updateClosing('btnPrimaryText', e.target.value)}
+                    placeholder="Contoh: Gabung Sekarang"
+                  />
+                </div>
+                <div className="form-group-soft">
+                  <label className="form-label-soft">Tautan utama</label>
+                  <input
+                    type="text"
+                    className="form-input-soft"
+                    value={formData.closing?.btnPrimaryLink || ''}
+                    onChange={(e) => updateClosing('btnPrimaryLink', e.target.value)}
+                    placeholder="https://"
+                  />
+                </div>
+              </div>
+
+              <div className="form-grid-2-soft">
+                <div className="form-group-soft">
+                  <label className="form-label-soft">Teks tombol kedua</label>
+                  <input
+                    type="text"
+                    className="form-input-soft"
+                    value={formData.closing?.btnSecondaryText || ''}
+                    onChange={(e) => updateClosing('btnSecondaryText', e.target.value)}
+                    placeholder="Contoh: Pelajari Lebih Lanjut"
+                  />
+                </div>
+                <div className="form-group-soft">
+                  <label className="form-label-soft">Tautan kedua</label>
+                  <input
+                    type="text"
+                    className="form-input-soft"
+                    value={formData.closing?.btnSecondaryLink || ''}
+                    onChange={(e) => updateClosing('btnSecondaryLink', e.target.value)}
+                    placeholder="https://"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Contoh Tampilan Preview */}
+            <div>
+              <label className="form-label-soft" style={{ marginBottom: '0.85rem' }}>
+                Contoh tampilan
+              </label>
+
+              <div className="admin-join-preview-card">
+                <h3 style={{
+                  fontSize: '1.35rem',
+                  fontWeight: 800,
+                  color: 'var(--pine-dark)',
+                  lineHeight: 1.25,
+                  marginBottom: '0.65rem',
+                }}>
+                  {formData.closing?.headline || 'Ayo bergabung bersama ROKABA'}
+                </h3>
+                <p style={{
+                  fontSize: '0.88rem',
+                  color: 'var(--text-secondary)',
+                  lineHeight: 1.5,
+                  marginBottom: '1.5rem',
+                  maxWidth: 320,
+                }}>
+                  {formData.closing?.lead || 'Menjadi bagian dari gerakan kebaikan pelajar Muslim di Banyumas.'}
+                </p>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', width: '100%', maxWidth: 260 }}>
                   <button
                     type="button"
-                    className="btn-icon btn-icon-delete"
-                    onClick={() => handleDeleteTimeline(index)}
-                    title="Hapus tonggak sejarah ini"
+                    className="btn btn-pine"
+                    style={{ width: '100%', justifyContent: 'center' }}
                   >
-                    <Trash2 size={15} />
+                    {formData.closing?.btnPrimaryText || 'Gabung Sekarang'}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary-soft"
+                    style={{ width: '100%', justifyContent: 'center' }}
+                  >
+                    {formData.closing?.btnSecondaryText || 'Pelajari Lebih Lanjut'}
                   </button>
                 </div>
-
-                <div className="form-grid-3" style={{ marginTop: '0.8rem' }}>
-                  <div className="form-group">
-                    <label className="form-label">Tahun</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      value={item.year || ''}
-                      onChange={(e) => updateTimelineItem(index, 'year', e.target.value)}
-                      placeholder="2017"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">Kategori / Tag</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      value={item.tag || ''}
-                      onChange={(e) => updateTimelineItem(index, 'tag', e.target.value)}
-                      placeholder="AWAL JEJAK"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">Lokasi Peristiwa</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      value={item.location || ''}
-                      onChange={(e) => updateTimelineItem(index, 'location', e.target.value)}
-                      placeholder="Purwokerto"
-                    />
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Judul Tonggak Sejarah</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    value={item.title || ''}
-                    onChange={(e) => updateTimelineItem(index, 'title', e.target.value)}
-                    placeholder="Inisiasi & Silaturahmi Perdana"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Uraian / Narasi Jejak</label>
-                  <textarea
-                    rows={2}
-                    className="form-textarea"
-                    value={item.desc || ''}
-                    onChange={(e) => updateTimelineItem(index, 'desc', e.target.value)}
-                    placeholder="Tuliskan catatan sejarah..."
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* SUB-TAB 5: STATISTIK ANGKA */}
-      {activeSubTab === 'stats' && (
-        <div className="home-cms-section card">
-          <div className="cms-section-header">
-            <div>
-              <h3>Statistik & Metrik Dampak Gerakan</h3>
-              <p className="text-muted">
-                Angka-angka pencapaian yang tampil di baris counter beranda.
-              </p>
-            </div>
-            <span className="badge badge-primary">4 Metrik Utama</span>
-          </div>
-
-          <div className="stats-edit-grid">
-            {(formData.stats || []).map((stat, sIdx) => (
-              <div key={sIdx} className="cms-sub-box stat-edit-card">
-                <h4 className="sub-box-title">Metrik #{sIdx + 1}</h4>
-                <div className="form-grid-2">
-                  <div className="form-group">
-                    <label className="form-label">Angka / Nilai</label>
-                    <input
-                      type="number"
-                      className="form-input"
-                      value={stat.value ?? ''}
-                      onChange={(e) => updateStat(sIdx, 'value', Number(e.target.value))}
-                      placeholder="15"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label className="form-label">Suffix (Simbol)</label>
-                    <input
-                      type="text"
-                      className="form-input"
-                      value={stat.suffix || ''}
-                      onChange={(e) => updateStat(sIdx, 'suffix', e.target.value)}
-                      placeholder="+"
-                    />
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label">Label Keterangan</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    value={stat.label || ''}
-                    onChange={(e) => updateStat(sIdx, 'label', e.target.value)}
-                    placeholder="Dari Sekolah Kab. Banyumas"
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* SUB-TAB 6: CLOSING CTA */}
-      {activeSubTab === 'closing' && (
-        <div className="home-cms-section card">
-          <div className="cms-section-header">
-            <div>
-              <h3>Bagian Penutup & Ajakan Bergabung (CTA)</h3>
-              <p className="text-muted">
-                Mengatur kalimat ajakan di bagian paling bawah halaman sebelum footer.
-              </p>
-            </div>
-            <span className="badge badge-gold">Closing Banner</span>
-          </div>
-
-          <div className="cms-form-grid">
-            <div className="form-group">
-              <label className="form-label">Badge Tagline</label>
-              <input
-                type="text"
-                className="form-input"
-                value={formData.closing?.tag || ''}
-                onChange={(e) => updateClosing('tag', e.target.value)}
-                placeholder="MARI BERGABUNG"
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Judul Besar Penutup</label>
-              <input
-                type="text"
-                className="form-input"
-                value={formData.closing?.headline || ''}
-                onChange={(e) => updateClosing('headline', e.target.value)}
-                placeholder="Mari Tumbuh Bersama."
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Kalimat Narasi Penutup</label>
-              <textarea
-                rows={3}
-                className="form-textarea"
-                value={formData.closing?.lead || ''}
-                onChange={(e) => updateClosing('lead', e.target.value)}
-                placeholder="Pintu selalu terbuka bagi pelajar yang ingin belajar..."
-              />
-            </div>
-
-            <div className="form-grid-2">
-              <div className="form-group">
-                <label className="form-label">Teks Tombol Utama (Opsional)</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.closing?.btnPrimaryText || ''}
-                  onChange={(e) => updateClosing('btnPrimaryText', e.target.value)}
-                  placeholder="Kosongkan jika hanya tombol Hubungi Pengurus"
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Link Tombol Utama</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.closing?.btnPrimaryLink || ''}
-                  onChange={(e) => updateClosing('btnPrimaryLink', e.target.value)}
-                  placeholder="/pendaftaran"
-                />
-              </div>
-            </div>
-
-            <div className="form-grid-2">
-              <div className="form-group">
-                <label className="form-label">Teks Tombol Kedua</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.closing?.btnSecondaryText || ''}
-                  onChange={(e) => updateClosing('btnSecondaryText', e.target.value)}
-                  placeholder="Hubungi Pengurus"
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Link Tombol Kedua</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.closing?.btnSecondaryLink || ''}
-                  onChange={(e) => updateClosing('btnSecondaryLink', e.target.value)}
-                  placeholder="/kontak"
-                />
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* SUB-TAB 7: SECTION INTRO (ARTIKEL, AGENDA, LAYANAN) */}
+      {/* ═══════════════════════════════════════════════════════════════
+          SUB-TAB 8: JUDUL DAN DESKRIPSI BAGIAN (Image 06 panel 4)
+          ═══════════════════════════════════════════════════════════════ */}
       {activeSubTab === 'sections' && (
-        <div className="home-cms-section card">
-          <div className="cms-section-header">
-            <div>
-              <h3>Pengaturan Pengantar Bagian Beranda</h3>
-              <p className="text-muted">
-                Atur judul, badge, deskripsi pengantar, dan teks tombol untuk bagian Berita Terkini, Agenda & Kajian, serta Layanan & Direktori di halaman beranda.
-              </p>
-            </div>
-            <span className="badge badge-primary">Beranda Dinamis</span>
+        <div className="admin-soft-card">
+          <div style={{ marginBottom: '1.25rem' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--pine-dark)', margin: 0 }}>
+              Judul dan deskripsi bagian
+            </h2>
+            <p className="text-secondary" style={{ fontSize: '0.85rem', marginTop: '0.2rem' }}>
+              Atur judul, deskripsi, dan teks tautan untuk beberapa bagian di beranda.
+            </p>
           </div>
 
-          {/* 1. Pengantar Bagian Berita */}
-          <div style={{ marginBottom: '2.5rem', paddingBottom: '2rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '0.5rem' }}>
-              <h4 style={{ color: 'var(--accent-gold, #E6C587)', fontSize: '1.05rem', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                📰 1. Bagian Berita Terkini (Homepage News)
-              </h4>
-              <Link to="/content/news" className="btn btn-outline btn-sm" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: 'var(--emerald)' }}>
-                <Newspaper size={14} /> Kelola Daftar Berita Terkini (CRUD) →
-              </Link>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+            {/* 1. Berita */}
+            <div className="admin-accordion-card">
+              <div
+                className="admin-accordion-header"
+                onClick={() => toggleSectionExpand('news')}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                  {expandedSections.news ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                  <Newspaper size={17} color="var(--pine-dark)" />
+                  <h3>Berita</h3>
+                </div>
+              </div>
+
+              {expandedSections.news && (
+                <div className="admin-accordion-body">
+                  <div className="form-grid-2-soft">
+                    <div className="form-group-soft">
+                      <label className="form-label-soft">Label</label>
+                      <input
+                        type="text"
+                        className="form-input-soft"
+                        value={formData.sections?.news?.tag || ''}
+                        onChange={(e) => updateSection('news', 'tag', e.target.value)}
+                        placeholder="Contoh: Kabar dari ROKABA"
+                      />
+                    </div>
+                    <div className="form-group-soft">
+                      <label className="form-label-soft">Judul</label>
+                      <input
+                        type="text"
+                        className="form-input-soft"
+                        value={formData.sections?.news?.title || ''}
+                        onChange={(e) => updateSection('news', 'title', e.target.value)}
+                        placeholder="Contoh: Berita Terkini"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-grid-2-soft">
+                    <div className="form-group-soft">
+                      <label className="form-label-soft">Deskripsi</label>
+                      <textarea
+                        rows={2}
+                        className="form-textarea-soft"
+                        value={formData.sections?.news?.desc || ''}
+                        onChange={(e) => updateSection('news', 'desc', e.target.value)}
+                        placeholder="Deskripsi singkat bagian berita."
+                      />
+                    </div>
+                    <div className="form-group-soft">
+                      <label className="form-label-soft">Teks tautan</label>
+                      <input
+                        type="text"
+                        className="form-input-soft"
+                        value={formData.sections?.news?.btnText || ''}
+                        onChange={(e) => updateSection('news', 'btnText', e.target.value)}
+                        placeholder="Contoh: Lihat Semua"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-            <p className="text-muted" style={{ fontSize: '0.85rem', marginBottom: '1.25rem' }}>
-              Teks pengantar yang tampil di atas deretan kartu berita terbaru di halaman beranda.
-            </p>
 
-            <div className="cms-form-grid">
-              <div className="form-group">
-                <label className="form-label">Badge / Tagline Kecil</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.sections?.news?.tag || ''}
-                  onChange={(e) => updateSection('news', 'tag', e.target.value)}
-                  placeholder="Berita Terkini"
-                />
+            {/* 2. Artikel */}
+            <div className="admin-accordion-card">
+              <div
+                className="admin-accordion-header"
+                onClick={() => toggleSectionExpand('articles')}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                  {expandedSections.articles ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                  <FileText size={17} color="var(--pine-dark)" />
+                  <h3>Artikel</h3>
+                </div>
               </div>
 
-              <div className="form-group">
-                <label className="form-label">Judul Utama Bagian Berita</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.sections?.news?.title || ''}
-                  onChange={(e) => updateSection('news', 'title', e.target.value)}
-                  placeholder="Berita Terkini"
-                />
-              </div>
+              {expandedSections.articles && (
+                <div className="admin-accordion-body">
+                  <div className="form-grid-2-soft">
+                    <div className="form-group-soft">
+                      <label className="form-label-soft">Label</label>
+                      <input
+                        type="text"
+                        className="form-input-soft"
+                        value={formData.sections?.articles?.tag || ''}
+                        onChange={(e) => updateSection('articles', 'tag', e.target.value)}
+                        placeholder="Contoh: Opini & Inspirasi"
+                      />
+                    </div>
+                    <div className="form-group-soft">
+                      <label className="form-label-soft">Judul</label>
+                      <input
+                        type="text"
+                        className="form-input-soft"
+                        value={formData.sections?.articles?.title || ''}
+                        onChange={(e) => updateSection('articles', 'title', e.target.value)}
+                        placeholder="Contoh: Artikel Dakwah & Pendidikan"
+                      />
+                    </div>
+                  </div>
 
-              <div className="form-group">
-                <label className="form-label">Teks Tombol Aksi</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.sections?.news?.btnText || ''}
-                  onChange={(e) => updateSection('news', 'btnText', e.target.value)}
-                  placeholder="Lihat Semua Berita"
-                />
-              </div>
-
-              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-                <label className="form-label">Deskripsi Pengantar Berita</label>
-                <textarea
-                  className="form-textarea"
-                  rows={2}
-                  value={formData.sections?.news?.desc || ''}
-                  onChange={(e) => updateSection('news', 'desc', e.target.value)}
-                  placeholder="Informasi, warta, dan kabar terbaru seputar kegiatan dakwah dan kepemudaan ROHIS se-Banyumas."
-                />
-              </div>
+                  <div className="form-grid-2-soft">
+                    <div className="form-group-soft">
+                      <label className="form-label-soft">Deskripsi</label>
+                      <textarea
+                        rows={2}
+                        className="form-textarea-soft"
+                        value={formData.sections?.articles?.desc || ''}
+                        onChange={(e) => updateSection('articles', 'desc', e.target.value)}
+                        placeholder="Deskripsi singkat bagian artikel."
+                      />
+                    </div>
+                    <div className="form-group-soft">
+                      <label className="form-label-soft">Teks tautan</label>
+                      <input
+                        type="text"
+                        className="form-input-soft"
+                        value={formData.sections?.articles?.btnText || ''}
+                        onChange={(e) => updateSection('articles', 'btnText', e.target.value)}
+                        placeholder="Contoh: Baca Artikel Lainnya"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
 
-          {/* 2. Pengantar Bagian Artikel Dakwah */}
-          <div style={{ marginBottom: '2.5rem', paddingBottom: '2rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '0.5rem' }}>
-              <h4 style={{ color: 'var(--accent-gold, #E6C587)', fontSize: '1.05rem', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                📖 2. Bagian Artikel Dakwah (Homepage Articles)
-              </h4>
-              <Link to="/content/articles" className="btn btn-outline btn-sm" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: 'var(--antique-brass-light)' }}>
-                <FileText size={14} /> Kelola Daftar Artikel Dakwah (CRUD) →
-              </Link>
+            {/* 3. Agenda */}
+            <div className="admin-accordion-card">
+              <div
+                className="admin-accordion-header"
+                onClick={() => toggleSectionExpand('agenda')}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                  {expandedSections.agenda ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                  <Clock size={17} color="var(--pine-dark)" />
+                  <h3>Agenda</h3>
+                </div>
+              </div>
+
+              {expandedSections.agenda && (
+                <div className="admin-accordion-body">
+                  <div className="form-grid-2-soft">
+                    <div className="form-group-soft">
+                      <label className="form-label-soft">Label</label>
+                      <input
+                        type="text"
+                        className="form-input-soft"
+                        value={formData.sections?.events?.tag || ''}
+                        onChange={(e) => updateSection('events', 'tag', e.target.value)}
+                        placeholder="Contoh: Jadwal Kegiatan"
+                      />
+                    </div>
+                    <div className="form-group-soft">
+                      <label className="form-label-soft">Judul</label>
+                      <input
+                        type="text"
+                        className="form-input-soft"
+                        value={formData.sections?.events?.title || ''}
+                        onChange={(e) => updateSection('events', 'title', e.target.value)}
+                        placeholder="Contoh: Agenda & Kajian Pelajar"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-grid-2-soft">
+                    <div className="form-group-soft">
+                      <label className="form-label-soft">Deskripsi</label>
+                      <textarea
+                        rows={2}
+                        className="form-textarea-soft"
+                        value={formData.sections?.events?.desc || ''}
+                        onChange={(e) => updateSection('events', 'desc', e.target.value)}
+                        placeholder="Deskripsi singkat bagian agenda."
+                      />
+                    </div>
+                    <div className="form-group-soft">
+                      <label className="form-label-soft">Teks tautan</label>
+                      <input
+                        type="text"
+                        className="form-input-soft"
+                        value={formData.sections?.events?.btnText || ''}
+                        onChange={(e) => updateSection('events', 'btnText', e.target.value)}
+                        placeholder="Contoh: Lihat Semua Agenda"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-            <p className="text-muted" style={{ fontSize: '0.85rem', marginBottom: '1.25rem' }}>
-              Teks pengantar yang tampil di atas grid 3 artikel dakwah terbaru di halaman beranda.
-            </p>
 
-            <div className="cms-form-grid">
-              <div className="form-group">
-                <label className="form-label">Badge / Tagline Kecil</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.sections?.articles?.tag || ''}
-                  onChange={(e) => updateSection('articles', 'tag', e.target.value)}
-                  placeholder="Artikel & Opini"
-                />
+            {/* 4. Layanan */}
+            <div className="admin-accordion-card">
+              <div
+                className="admin-accordion-header"
+                onClick={() => toggleSectionExpand('services')}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                  {expandedSections.services ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                  <Sparkles size={17} color="var(--pine-dark)" />
+                  <h3>Layanan</h3>
+                </div>
               </div>
 
-              <div className="form-group">
-                <label className="form-label">Judul Utama Bagian Artikel</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.sections?.articles?.title || ''}
-                  onChange={(e) => updateSection('articles', 'title', e.target.value)}
-                  placeholder="Literasi Dakwah Moderat"
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Teks Tombol Aksi</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.sections?.articles?.btnText || ''}
-                  onChange={(e) => updateSection('articles', 'btnText', e.target.value)}
-                  placeholder="Buka Semua Artikel"
-                />
-              </div>
-
-              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-                <label className="form-label">Deskripsi Pengantar Artikel</label>
-                <textarea
-                  className="form-textarea"
-                  rows={2}
-                  value={formData.sections?.articles?.desc || ''}
-                  onChange={(e) => updateSection('articles', 'desc', e.target.value)}
-                  placeholder="Bacaan Islami berkualitas untuk memperluas wawasan dan memperkuat iman pemuda."
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* 3. Pengantar Bagian Agenda */}
-          <div style={{ marginBottom: '2.5rem', paddingBottom: '2rem', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-            <h4 style={{ color: 'var(--accent-gold, #E6C587)', fontSize: '1.05rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              📅 3. Bagian Agenda & Kajian (Homepage Events)
-            </h4>
-            <p className="text-muted" style={{ fontSize: '0.85rem', marginBottom: '1.25rem' }}>
-              Teks pengantar yang tampil di atas daftar agenda kegiatan rohis mendatang.
-            </p>
-
-            <div className="cms-form-grid">
-              <div className="form-group">
-                <label className="form-label">Badge / Tagline Kecil</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.sections?.events?.tag || ''}
-                  onChange={(e) => updateSection('events', 'tag', e.target.value)}
-                  placeholder="AGENDA MENDATANG"
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Judul Utama Bagian Agenda</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.sections?.events?.title || ''}
-                  onChange={(e) => updateSection('events', 'title', e.target.value)}
-                  placeholder="Agenda & Kajian Pelajar Muslim"
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label">Teks Tombol Aksi</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.sections?.events?.btnText || ''}
-                  onChange={(e) => updateSection('events', 'btnText', e.target.value)}
-                  placeholder="Jelajahi Semua Agenda"
-                />
-              </div>
-
-              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-                <label className="form-label">Deskripsi Pengantar Agenda</label>
-                <textarea
-                  className="form-textarea"
-                  rows={2}
-                  value={formData.sections?.events?.desc || ''}
-                  onChange={(e) => updateSection('events', 'desc', e.target.value)}
-                  placeholder="Ikuti beragam kegiatan inspiratif, pelatihan kepemimpinan, dan kajian ilmiah remaja bersama ROKABA Banyumas."
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* 3. Pengantar Bagian Layanan & Direktori */}
-          <div>
-            <h4 style={{ color: 'var(--accent-gold, #E6C587)', fontSize: '1.05rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              🏛️ 3. Bagian Layanan & Direktori (Homepage Services)
-            </h4>
-            <p className="text-muted" style={{ fontSize: '0.85rem', marginBottom: '1.25rem' }}>
-              Teks pengantar untuk kartu direktori & layanan fitur (Tentang, Berita, Artikel, Agenda, Anggota, E-Library, Galeri).
-            </p>
-
-            <div className="cms-form-grid">
-              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-                <label className="form-label">Judul Utama Bagian Layanan</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={formData.sections?.services?.title || ''}
-                  onChange={(e) => updateSection('services', 'title', e.target.value)}
-                  placeholder="Layanan & Program Unggulan Kami"
-                />
-              </div>
-
-              <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-                <label className="form-label">Deskripsi Pengantar Layanan</label>
-                <textarea
-                  className="form-textarea"
-                  rows={2}
-                  value={formData.sections?.services?.desc || ''}
-                  onChange={(e) => updateSection('services', 'desc', e.target.value)}
-                  placeholder="ROKABA hadir sebagai wadah sinergi dan kolaborasi bagi seluruh Rohis sekolah di Banyumas dengan berbagai program terintegrasi."
-                />
-              </div>
+              {expandedSections.services && (
+                <div className="admin-accordion-body">
+                  <div className="form-grid-2-soft">
+                    <div className="form-group-soft">
+                      <label className="form-label-soft">Judul</label>
+                      <input
+                        type="text"
+                        className="form-input-soft"
+                        value={formData.sections?.services?.title || ''}
+                        onChange={(e) => updateSection('services', 'title', e.target.value)}
+                        placeholder="Layanan & Program Unggulan Kami"
+                      />
+                    </div>
+                    <div className="form-group-soft">
+                      <label className="form-label-soft">Deskripsi</label>
+                      <textarea
+                        rows={2}
+                        className="form-textarea-soft"
+                        value={formData.sections?.services?.desc || ''}
+                        onChange={(e) => updateSection('services', 'desc', e.target.value)}
+                        placeholder="ROKABA hadir sebagai wadah sinergi dan kolaborasi bagi seluruh Rohis sekolah di Banyumas."
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
       )}
-
-      {/* Floating Bottom Sticky Bar */}
-      <div className="home-cms-sticky-footer">
-        <div className="sticky-footer-info">
-          <CheckCircle2 size={18} className="text-success" />
-          <span>Perubahan disimpan otomatis di memori lokal dan Upstash Cloud Sync saat Anda klik Simpan.</span>
-        </div>
-
-        <div className="sticky-footer-actions">
-          <button
-            type="button"
-            className="btn btn-outline btn-sm"
-            onClick={handleResetDefaults}
-            title="Kembalikan semua teks beranda ke versi awal"
-          >
-            <RotateCcw size={14} /> Reset ke Awal
-          </button>
-          <button
-            type="button"
-            className="btn btn-primary btn-save-master"
-            onClick={handleSaveAll}
-            disabled={isSaving}
-          >
-            <Save size={16} />
-            <span>{isSaving ? 'Menyimpan...' : 'Simpan Seluruh Konten Beranda'}</span>
-          </button>
-        </div>
-      </div>
     </div>
   );
 }

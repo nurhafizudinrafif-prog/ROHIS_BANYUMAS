@@ -1,62 +1,207 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useData } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
-import { Shield, Plus, Edit3, Trash2, Save, X, Users } from 'lucide-react';
+import {
+  Shield,
+  Plus,
+  Edit3,
+  Trash2,
+  Save,
+  X,
+  Users,
+  Search,
+} from 'lucide-react';
 
 export default function UserManager() {
   const { users, schools, updateData, addAuditLog } = useData();
   const { user } = useAuth();
+
+  const [search, setSearch] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [deleteConfirmItem, setDeleteConfirmItem] = useState(null);
   const [editing, setEditing] = useState(null);
   const [isNew, setIsNew] = useState(false);
+  const [password, setPassword] = useState('');
 
-  const handleNew = () => {
-    setEditing({ id: `user-${Date.now()}`, username: '', role: 'editor_sekolah', schoolId: '', lastLogin: null });
+  const filteredUsers = useMemo(() => {
+    return (users || []).filter((u) => {
+      const q = search.toLowerCase();
+      const schoolName = (schools.find((s) => s.id === u.schoolId)?.name || u.schoolId || '').toLowerCase();
+      return (
+        (u.username || '').toLowerCase().includes(q) ||
+        (u.role || '').toLowerCase().includes(q) ||
+        schoolName.includes(q)
+      );
+    });
+  }, [users, schools, search]);
+
+  const handleOpenNew = () => {
+    setEditing({
+      id: `user-${Date.now()}`,
+      username: '',
+      role: 'editor_sekolah',
+      schoolId: schools[0]?.id || '',
+      lastLogin: null,
+    });
+    setPassword('');
     setIsNew(true);
+    setModalOpen(true);
   };
 
-  const handleSave = async () => {
-    if (!editing || !editing.username) return;
-    const updated = isNew ? [...users, editing] : users.map(u => u.id === editing.id ? editing : u);
-    await updateData('users', updated);
-    await addAuditLog(user.id, user.username, isNew ? 'CREATE' : 'UPDATE', 'users', `${isNew ? 'Created' : 'Updated'} user: ${editing.username}`);
-    setEditing(null);
+  const handleOpenEdit = (u) => {
+    setEditing({ ...u });
+    setPassword('');
     setIsNew(false);
+    setModalOpen(true);
   };
 
-  const handleDelete = async (u) => {
-    if (u.role === 'superadmin') return alert('Tidak bisa menghapus Super Admin');
-    if (!confirm(`Hapus user "${u.username}"?`)) return;
-    await updateData('users', users.filter(item => item.id !== u.id));
-    await addAuditLog(user.id, user.username, 'DELETE', 'users', `Deleted user: ${u.username}`);
+  const handleSave = async (e) => {
+    e.preventDefault();
+    if (!editing || !editing.username.trim()) {
+      alert('Username wajib diisi!');
+      return;
+    }
+
+    const payload = {
+      ...editing,
+      username: editing.username.trim(),
+    };
+    if (password.trim()) {
+      payload.password = password.trim();
+    }
+
+    const updated = isNew
+      ? [...(users || []), payload]
+      : (users || []).map((u) => (u.id === editing.id ? payload : u));
+
+    await updateData('users', updated);
+    if (addAuditLog && user) {
+      addAuditLog(
+        user.id,
+        user.username,
+        isNew ? 'CREATE' : 'UPDATE',
+        'users',
+        `${isNew ? 'Created' : 'Updated'} user: ${editing.username}`
+      ).catch(() => {});
+    }
+    setModalOpen(false);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteConfirmItem) return;
+    const u = deleteConfirmItem;
+    if (u.role === 'superadmin') {
+      alert('Tidak bisa menghapus akun Super Admin');
+      return;
+    }
+    const updated = (users || []).filter((item) => item.id !== u.id);
+    await updateData('users', updated);
+    if (addAuditLog && user) {
+      await addAuditLog(
+        user.id,
+        user.username,
+        'DELETE',
+        'users',
+        `Deleted user: ${u.username}`
+      );
+    }
+    setDeleteConfirmItem(null);
+    setModalOpen(false);
   };
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-        <h1 style={{ fontSize: 'clamp(1.25rem, 4vw, 1.5rem)', fontWeight: 800 }}>Manajemen User</h1>
-        <button onClick={handleNew} className="btn btn-primary"><Plus size={16} /> Tambah User</button>
+    <div style={{ maxWidth: 1160, margin: '0 auto', paddingBottom: '3.5rem' }}>
+      {/* Header Bar matching Image 04 panel 2 */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '1rem' }}>
+        <div>
+          <h1 style={{ fontSize: 'clamp(1.35rem, 3vw, 1.75rem)', fontWeight: 800, color: 'var(--pine-dark)', margin: 0 }}>
+            Pengguna
+          </h1>
+          <p className="text-secondary" style={{ fontSize: '0.88rem', marginTop: '0.2rem' }}>
+            Kelola akun pengguna CMS ROKABA.
+          </p>
+        </div>
+
+        <button onClick={handleOpenNew} className="btn btn-pine">
+          <Plus size={16} /> Tambah pengguna
+        </button>
       </div>
 
-      <div className="admin-desktop-table glass-card table-responsive">
-        <table className="data-table" style={{ minWidth: 540 }}>
+      {/* Search Input matching Image 04 panel 2 */}
+      <div style={{ position: 'relative', width: '100%', maxWidth: 420, marginBottom: '1.25rem' }}>
+        <Search size={16} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+        <input
+          type="text"
+          className="form-input-soft"
+          style={{ paddingLeft: '2.4rem' }}
+          placeholder="Cari username atau sekolah..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+
+      {/* Desktop Data Table matching Image 04 panel 2 */}
+      <div className="admin-desktop-table data-table-container-soft">
+        <table className="data-table-soft">
           <thead>
-            <tr><th>Username</th><th>Role</th><th>Sekolah</th><th>Login Terakhir</th><th style={{ textAlign: 'right' }}>Aksi</th></tr>
+            <tr>
+              <th style={{ width: '25%' }}>Username</th>
+              <th style={{ width: '20%' }}>Peran</th>
+              <th>Sekolah</th>
+              <th style={{ width: 90, textAlign: 'right' }}>Aksi</th>
+            </tr>
           </thead>
           <tbody>
-            {users.map(u => (
-              <tr key={u.id}>
-                <td style={{ fontWeight: 600 }}>{u.username}</td>
-                <td><span className={`badge ${u.role === 'superadmin' ? 'badge-emerald' : 'badge-brass'}`}>{u.role}</span></td>
-                <td>{u.schoolId ? (schools.find(s => s.id === u.schoolId)?.name || u.schoolId) : '—'}</td>
-                <td style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{u.lastLogin ? new Date(u.lastLogin).toLocaleDateString('id-ID') : '—'}</td>
-                <td style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
-                  <button onClick={() => { setEditing({ ...u }); setIsNew(false); }} className="btn btn-sm btn-ghost" style={{ color: 'var(--emerald)' }}><Edit3 size={14} /></button>
-                  <button onClick={() => handleDelete(u)} className="btn btn-sm btn-ghost" style={{ color: '#F87171' }}><Trash2 size={14} /></button>
+            {filteredUsers.map((u) => {
+              const school = schools.find((s) => s.id === u.schoolId);
+              return (
+                <tr key={u.id}>
+                  {/* Username */}
+                  <td>
+                    <strong style={{ color: 'var(--pine-dark)', fontWeight: 700 }}>
+                      {u.username}
+                    </strong>
+                  </td>
+
+                  {/* Peran */}
+                  <td>
+                    <span style={{
+                      fontSize: '0.8rem',
+                      fontWeight: 600,
+                      color: u.role === 'superadmin' ? 'var(--pine-deep)' : 'var(--text-secondary)',
+                    }}>
+                      {u.role}
+                    </span>
+                  </td>
+
+                  {/* Sekolah */}
+                  <td>
+                    <span style={{ color: 'var(--text-secondary)', fontSize: '0.88rem' }}>
+                      {school ? school.name : u.role === 'superadmin' ? 'ROHIS Kabupaten Banyumas' : '—'}
+                    </span>
+                  </td>
+
+                  {/* Aksi */}
+                  <td style={{ textAlign: 'right' }}>
+                    <button
+                      type="button"
+                      className="btn btn-secondary-soft btn-sm"
+                      onClick={() => handleOpenEdit(u)}
+                      style={{ gap: '0.35rem', padding: '0.35rem 0.75rem' }}
+                    >
+                      <Edit3 size={13} /> Edit
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+
+            {filteredUsers.length === 0 && (
+              <tr>
+                <td colSpan={4} style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--text-muted)' }}>
+                  Tidak ada data pengguna.
                 </td>
               </tr>
-            ))}
-            {users.length === 0 && (
-              <tr><td colSpan={5} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>Tidak ada user</td></tr>
             )}
           </tbody>
         </table>
@@ -64,81 +209,245 @@ export default function UserManager() {
 
       {/* Mobile Card List */}
       <div className="admin-mobile-cards">
-        {users.length > 0 ? (
-          users.map(u => (
+        {filteredUsers.map((u) => {
+          const school = schools.find((s) => s.id === u.schoolId);
+          return (
             <div key={u.id} className="admin-mobile-card">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontWeight: 700, fontSize: '0.98rem', color: 'var(--text-primary)' }}>{u.username}</span>
-                <span className={`badge ${u.role === 'superadmin' ? 'badge-emerald' : 'badge-brass'}`} style={{ fontSize: '0.68rem' }}>
+                <strong style={{ fontSize: '0.95rem', color: 'var(--pine-dark)' }}>{u.username}</strong>
+                <span className="badge badge-outline" style={{ fontSize: '0.72rem' }}>
                   {u.role}
                 </span>
               </div>
-              <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
-                Sekolah: <strong style={{ color: 'var(--text-primary)' }}>{u.schoolId ? (schools.find(s => s.id === u.schoolId)?.name || u.schoolId) : '—'}</strong>
-              </div>
-              <div style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
-                Login Terakhir: {u.lastLogin ? new Date(u.lastLogin).toLocaleDateString('id-ID') : 'Belum pernah login'}
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
+                Sekolah: <strong>{school ? school.name : u.role === 'superadmin' ? 'ROHIS Kabupaten Banyumas' : '—'}</strong>
               </div>
               <div className="admin-mobile-card-actions">
-                <button onClick={() => { setEditing({ ...u }); setIsNew(false); }} className="btn btn-primary">
-                  <Edit3 size={15} /> Edit User
-                </button>
-                <button onClick={() => handleDelete(u)} className="btn btn-secondary" style={{ color: '#F87171', borderColor: 'rgba(239, 68, 68, 0.35)' }}>
-                  <Trash2 size={15} /> Hapus
+                <button
+                  type="button"
+                  className="btn btn-secondary-soft btn-sm"
+                  onClick={() => handleOpenEdit(u)}
+                  style={{ flex: 1, justifyContent: 'center' }}
+                >
+                  <Edit3 size={14} /> Edit
                 </button>
               </div>
             </div>
-          ))
-        ) : (
-          <div className="admin-mobile-card" style={{ textAlign: 'center', padding: '2rem 1rem', color: 'var(--text-muted)' }}>
-            <p style={{ margin: '0 0 1rem', fontWeight: 600 }}>Tidak ada user terdaftar.</p>
-            <button onClick={handleNew} className="btn btn-primary btn-sm" style={{ margin: '0 auto', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-              <Plus size={14} /> Tambah User Baru
-            </button>
-          </div>
-        )}
+          );
+        })}
       </div>
 
-      {/* Edit Modal */}
-      {editing && (
-        <div className="modal-overlay-responsive" onClick={(e) => { if (e.target === e.currentTarget) { setEditing(null); setIsNew(false); } }}>
-          <div className="glass-card modal-card-responsive animate-fade-in-up" style={{ maxWidth: 450 }}>
+      {/* ═══════════════════════════════════════════════════════════════
+          RESPONSIVE MODAL: EDIT / TAMBAH PENGGUNA
+          ═══════════════════════════════════════════════════════════════ */}
+      {modalOpen && editing && (
+        <div className="modal-backdrop-responsive" onClick={() => setModalOpen(false)}>
+          <div
+            className="modal-dialog-responsive"
+            style={{ maxWidth: 720 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
             <div className="modal-header-responsive">
-              <h2 style={{ fontSize: '1.15rem', margin: 0, fontWeight: 700 }}>{isNew ? 'Tambah' : 'Edit'} User</h2>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                <div style={{
+                  width: 34,
+                  height: 34,
+                  borderRadius: 'var(--radius-sm)',
+                  background: 'rgba(16, 41, 31, 0.08)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'var(--pine-dark)',
+                }}>
+                  <Users size={18} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--pine-dark)', margin: 0 }}>
+                    {isNew ? 'Tambah Pengguna CMS' : 'Edit Pengguna CMS'}
+                  </h3>
+                  <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', margin: 0 }}>
+                    Hak akses dan peran administrator sistem
+                  </p>
+                </div>
+              </div>
               <button
                 type="button"
-                onClick={() => { setEditing(null); setIsNew(false); }}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: '0.4rem', display: 'flex', alignItems: 'center' }}
-                aria-label="Tutup"
+                className="btn-icon-soft"
+                onClick={() => setModalOpen(false)}
+                title="Tutup dialog"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
-            <div className="modal-body-responsive">
-              <div className="form-group">
-                <label className="form-label">Username</label>
-                <input type="text" className="form-input" value={editing.username} onChange={e => setEditing({ ...editing, username: e.target.value })} />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Role</label>
-                <select className="form-input" value={editing.role} onChange={e => setEditing({ ...editing, role: e.target.value })}>
-                  <option value="superadmin">Super Admin</option>
-                  <option value="editor_sekolah">Editor Sekolah</option>
-                </select>
-              </div>
-              {editing.role === 'editor_sekolah' && (
-                <div className="form-group">
-                  <label className="form-label">Sekolah</label>
-                  <select className="form-input" value={editing.schoolId || ''} onChange={e => setEditing({ ...editing, schoolId: e.target.value })}>
-                    <option value="">Pilih sekolah...</option>
-                    {schools.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-                  </select>
+
+            {/* Modal Scrollable Body */}
+            <form onSubmit={handleSave}>
+              <div className="modal-body-responsive">
+                <div className="form-grid-2-soft">
+                  <div className="form-group-soft">
+                    <label className="form-label-soft">Username *</label>
+                    <input
+                      type="text"
+                      className="form-input-soft"
+                      value={editing.username || ''}
+                      onChange={(e) => setEditing({ ...editing, username: e.target.value })}
+                      placeholder="Contoh: admin_rohissma1"
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group-soft">
+                    <label className="form-label-soft">Peran / Role *</label>
+                    <select
+                      className="form-select-soft"
+                      value={editing.role}
+                      onChange={(e) => setEditing({ ...editing, role: e.target.value })}
+                    >
+                      <option value="editor_sekolah">editor_sekolah (Pengelola Sekolah)</option>
+                      <option value="superadmin">superadmin (Akses Penuh)</option>
+                    </select>
+                  </div>
                 </div>
-              )}
+
+                <div className="form-grid-2-soft">
+                  <div className="form-group-soft">
+                    <label className="form-label-soft">Afiliasi Sekolah</label>
+                    <select
+                      className="form-select-soft"
+                      value={editing.schoolId || ''}
+                      onChange={(e) => setEditing({ ...editing, schoolId: e.target.value })}
+                    >
+                      <option value="">ROHIS Kabupaten Banyumas (Induk)</option>
+                      {schools.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="form-group-soft">
+                    <label className="form-label-soft">
+                      {isNew ? 'Password Akun *' : 'Ganti Password (Kosongkan jika tidak diubah)'}
+                    </label>
+                    <input
+                      type="password"
+                      className="form-input-soft"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder={isNew ? 'Masukkan password baru' : '••••••••'}
+                      required={isNew}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Modal Sticky Footer */}
+              <div className="modal-footer-responsive">
+                <div>
+                  {!isNew && editing.role !== 'superadmin' && (
+                    <button
+                      type="button"
+                      className="btn btn-secondary-soft"
+                      style={{ color: '#EF4444' }}
+                      onClick={() => setDeleteConfirmItem(editing)}
+                    >
+                      <Trash2 size={15} /> Hapus pengguna
+                    </button>
+                  )}
+                </div>
+
+                <div style={{ display: 'flex', gap: '0.65rem' }}>
+                  <button
+                    type="button"
+                    className="btn btn-secondary-soft"
+                    onClick={() => setModalOpen(false)}
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="submit"
+                    className="btn btn-pine"
+                  >
+                    <Save size={15} />
+                    <span>{isNew ? 'Tambah pengguna' : 'Simpan perubahan'}</span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ═══════════════════════════════════════════════════════════════
+          DELETE CONFIRMATION DIALOG (Image 07)
+          ═══════════════════════════════════════════════════════════════ */}
+      {deleteConfirmItem && (
+        <div className="modal-backdrop-responsive" style={{ zIndex: 10000 }} onClick={() => setDeleteConfirmItem(null)}>
+          <div
+            className="admin-soft-card"
+            style={{
+              maxWidth: 420,
+              width: '90%',
+              margin: 'auto',
+              padding: '1.5rem',
+              boxShadow: 'var(--soft-shadow-lg)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--pine-dark)', margin: 0 }}>
+                Hapus pengguna?
+              </h3>
+              <button
+                type="button"
+                className="btn-icon-soft"
+                onClick={() => setDeleteConfirmItem(null)}
+              >
+                <X size={16} />
+              </button>
             </div>
-            <div className="modal-footer-responsive">
-              <button type="button" onClick={handleSave} className="btn btn-primary" style={{ flex: 1, padding: '0.75rem 1rem', fontWeight: 700 }}><Save size={16} /> Simpan</button>
-              <button type="button" onClick={() => { setEditing(null); setIsNew(false); }} className="btn btn-secondary" style={{ padding: '0.75rem 1.25rem' }}>Batal</button>
+
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem', marginBottom: '1.5rem' }}>
+              <div style={{
+                width: 44,
+                height: 44,
+                borderRadius: 'var(--radius-sm)',
+                background: 'rgba(239, 68, 68, 0.1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#EF4444',
+                flexShrink: 0,
+              }}>
+                <Trash2 size={22} />
+              </div>
+              <div>
+                <strong style={{ display: 'block', fontSize: '0.92rem', color: 'var(--pine-dark)' }}>
+                  {deleteConfirmItem.username}
+                </strong>
+                <p style={{ margin: '0.25rem 0 0', fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                  Akun pengguna ini akan dihapus dan tidak lagi dapat mengakses panel CMS.
+                </p>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.65rem' }}>
+              <button
+                type="button"
+                className="btn btn-secondary-soft"
+                onClick={() => setDeleteConfirmItem(null)}
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                className="btn btn-danger-soft"
+                onClick={confirmDelete}
+              >
+                Hapus
+              </button>
             </div>
           </div>
         </div>
