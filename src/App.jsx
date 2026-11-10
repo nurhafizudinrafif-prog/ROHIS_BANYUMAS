@@ -13,7 +13,6 @@ import Schools from './pages/Schools';
 import Gallery from './pages/Gallery';
 import Contact from './pages/Contact';
 import Consultation from './pages/Consultation';
-import Library from './pages/Library';
 import Programs from './pages/Programs';
 import ErrorBoundary from './components/common/ErrorBoundary';
 
@@ -40,7 +39,7 @@ export default function App() {
                   <Route path="/gallery" element={<Gallery />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/consultation" element={<Consultation />} />
-                  <Route path="/library" element={<Library />} />
+                  <Route path="/library" element={<Navigate to="/" replace />} />
 
                   {/* Backward-Compatible Indonesian URL Aliases */}
                   <Route path="/news" element={<Navigate to="/berita" replace />} />

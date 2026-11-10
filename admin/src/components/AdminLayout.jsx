@@ -10,7 +10,6 @@ import {
   Image as ImageIcon,
   School,
   Users,
-  BookOpen,
   MessageCircle,
   Shield,
   ClipboardList,
@@ -170,11 +169,6 @@ export default function AdminLayout() {
               <NavLink to="/content/team" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
                 <Users size={17} />
                 <span>Pengurus</span>
-              </NavLink>
-
-              <NavLink to="/library" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
-                <BookOpen size={17} />
-                <span>E-Library</span>
               </NavLink>
 
               <div className="admin-nav-divider" />

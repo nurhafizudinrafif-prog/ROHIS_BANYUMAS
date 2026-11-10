@@ -26,12 +26,6 @@ const DISCOVER_CARDS = [
     to: '/schools',
   },
   {
-    title: 'Perpustakaan',
-    description:
-      'Koleksi modul kaderisasi LKRO, panduan shalat lengkap, materi kajian, dan slide etika digital Islami.',
-    to: '/library',
-  },
-  {
     title: 'Artikel & literasi',
     description:
       'Bacaan Islami moderat tentang kepemimpinan, ukhuwah remaja, tips istiqomah ibadah, dan dakwah era digital.',

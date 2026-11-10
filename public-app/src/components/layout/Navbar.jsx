@@ -14,7 +14,6 @@ const PRIMARY_LINKS = [
 const MORE_LINKS = [
   ['/articles', 'Artikel & Opini'],
   ['/gallery', 'Galeri Kegiatan'],
-  ['/library', 'Perpustakaan'],
   ['/consultation', 'Ruang Konsultasi'],
 ];
 
@@ -27,7 +26,6 @@ const ALL_MOBILE_LINKS = [
   ['/schools', 'Sekolah Anggota'],
   ['/articles', 'Artikel & Opini'],
   ['/gallery', 'Galeri Kegiatan'],
-  ['/library', 'Perpustakaan'],
   ['/consultation', 'Ruang Konsultasi'],
   ['/contact', 'Kontak & Sekretariat'],
 ];

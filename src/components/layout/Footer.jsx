@@ -51,7 +51,6 @@ export default function Footer() {
             <Link to="/schools">Sekolah</Link>
             <Link to="/articles">Artikel</Link>
             <Link to="/gallery">Galeri</Link>
-            <Link to="/library">Perpustakaan</Link>
             <Link to="/consultation">Konsultasi</Link>
             <a href={instagramUrl} target="_blank" rel="noopener noreferrer">
               Instagram ↗
