@@ -3,15 +3,16 @@
 
 import { fallbackData } from '../data/fallback.js';
 
-// Suspicious defacement and attack signatures
+// Suspicious defacement and attack signatures (handles underscore/symbol separators as well)
 const DEFACEMENT_PATTERNS = [
-  /\b(hacked|hacked\s+by|hacker|zell_?id|zell|deface|defaced|pwned|owned|010101)\b/i,
-  /\b(israel\s+haram|cyber\s+attack|cyber\s+army|root\s+access|security\s+breach)\b/i,
+  /(?:^|[^a-z0-9])(hacked|hacker|zell|zell_id|deface|defaced|pwned|owned|010101|01010101|bjorka|anonsec)(?:$|[^a-z0-9])/i,
+  /(?:hacked\s*by|by\s*_?\s*zell|zell\s*_?\s*id|israel\s+haram|cyber\s+attack|cyber\s+army|root\s+access|security\s+breach)/i,
   /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+  /<(?:iframe|object|embed|applet|meta|link|style|form)\b/i,
   /javascript\s*:/i,
-  /data:text\/html/i,
-  /on(?:error|load|click|mouseover|focus|blur)\s*=/i,
-  /base64\s*,/i,
+  /vbscript\s*:/i,
+  /data\s*:\s*(?:text\/html|application\/javascript|text\/javascript|application\/x-javascript)/i,
+  /on(?:error|load|click|mouseover|mouseenter|focus|blur|submit|change|keyup|keydown)\s*=/i,
 ];
 
 // Suspicious or defacement image hosting domains
@@ -26,6 +27,7 @@ const SUSPICIOUS_IMAGE_DOMAINS = [
   'catbox.moe',
   'pomf2.lain.la',
   '0x0.st',
+  'prnt.sc',
 ];
 
 /**
@@ -34,18 +36,25 @@ const SUSPICIOUS_IMAGE_DOMAINS = [
  * @returns {{ isSafe: boolean, pattern?: string }}
  */
 export function checkStringSafety(str) {
-  if (typeof str !== 'string') return { isSafe: true };
+  if (typeof str !== 'string' || str.length === 0) return { isSafe: true };
+
+  // Allow valid base64 image data URLs (from legitimate admin photo uploads)
+  if (/^data:image\/(?:png|jpeg|jpg|webp|gif|svg\+xml);base64,[A-Za-z0-9+/=\s]+$/i.test(str)) {
+    return { isSafe: true };
+  }
 
   for (const pattern of DEFACEMENT_PATTERNS) {
+    pattern.lastIndex = 0;
     if (pattern.test(str)) {
       return { isSafe: false, pattern: pattern.toString() };
     }
   }
 
   // Check for suspicious external image domains
+  const lower = str.toLowerCase();
   for (const domain of SUSPICIOUS_IMAGE_DOMAINS) {
-    if (str.toLowerCase().includes(domain.toLowerCase())) {
-      return { isSafe: false, pattern: `Suspicious image domain: ${domain}` };
+    if (lower.includes(domain.toLowerCase())) {
+      return { isSafe: false, pattern: `Suspicious external domain: ${domain}` };
     }
   }
 
@@ -80,12 +89,10 @@ export function scanValueForThreats(val) {
 
   if (typeof val === 'object') {
     for (const [k, v] of Object.entries(val)) {
-      // Check keys
       const keyCheck = checkStringSafety(k);
       if (!keyCheck.isSafe) {
         return { isSafe: false, reason: `Object key "${k}" threat: ${keyCheck.pattern}` };
       }
-      // Check values
       const valCheck = scanValueForThreats(v);
       if (!valCheck.isSafe) {
         return { isSafe: false, reason: `Field "${k}" threat: ${valCheck.reason}` };
@@ -98,16 +105,40 @@ export function scanValueForThreats(val) {
 }
 
 /**
- * Sanitize plain string (strip script tags and HTML control characters)
+ * Sanitize plain string (strip script tags, dangerous HTML, and control characters)
  * @param {string} str
  * @returns {string}
  */
 export function sanitizeString(str) {
   if (typeof str !== 'string') return str;
+  if (/^data:image\/(?:png|jpeg|jpg|webp|gif|svg\+xml);base64,/i.test(str)) {
+    return str;
+  }
   return str
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-    .replace(/javascript:/gi, '')
-    .trim();
+    .replace(/<\/?(?:iframe|object|embed|applet|meta|link|style|form)\b[^>]*>/gi, '')
+    .replace(/javascript\s*:/gi, '')
+    .replace(/on(?:error|load|click|mouseover|focus|blur)\s*=/gi, '');
+}
+
+/**
+ * Recursively sanitize all strings in a value
+ * @param {any} val
+ * @returns {any}
+ */
+export function deepSanitizeValue(val) {
+  if (typeof val === 'string') return sanitizeString(val);
+  if (Array.isArray(val)) return val.map(deepSanitizeValue);
+  if (val && typeof val === 'object') {
+    const out = {};
+    const sensitiveFields = ['adminPassword', 'adminPin', 'password', 'secretToken'];
+    for (const [k, v] of Object.entries(val)) {
+      if (sensitiveFields.includes(k)) continue;
+      out[sanitizeString(k)] = deepSanitizeValue(v);
+    }
+    return out;
+  }
+  return val;
 }
 
 /**
@@ -119,7 +150,6 @@ export function sanitizeString(str) {
 export function validateSchema(key, data) {
   if (data === null || data === undefined) return false;
 
-  // Expected array keys
   const arrayKeys = [
     'rokaba:news',
     'rokaba:articles',
@@ -129,22 +159,56 @@ export function validateSchema(key, data) {
     'rokaba:questions',
     'rokaba:library',
     'rokaba:programs',
+    'rokaba:users',
+    'rokaba:audit_logs',
   ];
 
   if (arrayKeys.includes(key)) {
     if (!Array.isArray(data)) return false;
-    // If news, must have valid items with title & date or slug
+
     if (key === 'rokaba:news' && data.length > 0) {
-      const valid = data.every(
-        (item) => item && typeof item === 'object' && (item.title || item.slug)
+      return data.every(
+        (item) =>
+          item &&
+          typeof item === 'object' &&
+          typeof item.title === 'string' &&
+          item.title.trim().length > 0
       );
-      if (!valid) return false;
     }
+
+    if (key === 'rokaba:articles' && data.length > 0) {
+      return data.every(
+        (item) =>
+          item &&
+          typeof item === 'object' &&
+          typeof item.title === 'string' &&
+          item.title.trim().length > 0
+      );
+    }
+
+    if (key === 'rokaba:users' && data.length > 0) {
+      return data.every(
+        (item) =>
+          item &&
+          typeof item === 'object' &&
+          typeof item.username === 'string' &&
+          ['superadmin', 'editor_sekolah', 'admin'].includes(item.role)
+      );
+    }
+
     return true;
   }
 
-  // Expected object keys
-  const objectKeys = ['rokaba:home', 'rokaba:settings', 'rokaba:team'];
+  if (key === 'rokaba:home') {
+    return (
+      typeof data === 'object' &&
+      !Array.isArray(data) &&
+      data.hero &&
+      typeof data.hero === 'object'
+    );
+  }
+
+  const objectKeys = ['rokaba:settings', 'rokaba:team'];
   if (objectKeys.includes(key)) {
     return typeof data === 'object' && !Array.isArray(data);
   }
@@ -154,7 +218,7 @@ export function validateSchema(key, data) {
 
 /**
  * Central Data Sanitizer & Firewall:
- * Scans, verifies schema, and quarantines bad data by falling back to verified fallbackData
+ * Scans, verifies schema, sanitizes strings, and quarantines bad data by falling back to verified fallbackData
  * @param {string} key
  * @param {any} rawData
  * @returns {{ safeData: any, wasQuarantined: boolean, reason?: string }}
@@ -190,8 +254,9 @@ export function sanitizeAndProtect(key, rawData) {
     };
   }
 
+  // 3. Deep String Sanitization
   return {
-    safeData: rawData,
+    safeData: deepSanitizeValue(rawData),
     wasQuarantined: false,
   };
 }

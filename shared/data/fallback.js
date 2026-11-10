@@ -1303,8 +1303,6 @@ export const fallbackData = {
     }
   ],
   "rokaba:settings": {
-    "adminUsername": "rohis banyumas",
-    "adminPassword": "rbk banyumas",
     "email": "info@rohisbanyumas.id",
     "phone": "+62 812-3456-7890",
     "whatsapp": "+62 812-3456-7890",
@@ -2317,8 +2315,6 @@ export const fallbackData = {
       }
     ],
     "siteSettings": {
-      "adminUsername": "rohis banyumas",
-      "adminPassword": "rbk banyumas",
       "email": "info@rohisbanyumas.id",
       "phone": "+62 812-3456-7890",
       "whatsapp": "+62 812-3456-7890",

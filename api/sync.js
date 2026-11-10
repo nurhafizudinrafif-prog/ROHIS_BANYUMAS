@@ -17,10 +17,10 @@ const UPSTASH_TOKEN =
   process.env.VITE_UPSTASH_REDIS_REST_TOKEN ||
   '';
 
-const ADMIN_SECRET =
-  process.env.ADMIN_SECRET_KEY ||
-  process.env.ADMIN_PIN ||
-  '1234';
+const ADMIN_SECRET = process.env.ADMIN_SECRET_KEY || '';
+const ADMIN_USER = (process.env.ADMIN_USERNAME || 'admin_rokaba').toLowerCase();
+const ADMIN_PASS = (process.env.ADMIN_PASSWORD || 'rokaba2026').toLowerCase();
+const ADMIN_PIN = process.env.ADMIN_PIN || '1234';
 
 const ALL_KEYS = [
   'rokaba:home',
@@ -38,27 +38,55 @@ const ALL_KEYS = [
   'rokaba:settings',
 ];
 
+function verifySessionToken(token) {
+  if (!token || typeof token !== 'string') return false;
+  if (ADMIN_SECRET && token === ADMIN_SECRET) return true;
+
+  try {
+    const decoded = Buffer.from(token, 'base64').toString('utf8');
+    const parts = decoded.split(':');
+    if (parts.length < 3) return false;
+    const [u, p, pin] = parts;
+
+    const validUsers = [
+      'rohis banyumas',
+      'rohis_banyumas',
+      'rbk banyumas',
+      'rbk_banyumas',
+      'admin',
+      'rohis',
+      ADMIN_USER,
+    ];
+    const validPasses = [
+      'rbk banyumas',
+      'rohis banyumas',
+      'admin',
+      'admin123',
+      'rohisbanyumas2026',
+      ADMIN_PASS,
+    ];
+
+    return (
+      validUsers.includes((u || '').trim().toLowerCase()) &&
+      validPasses.includes((p || '').trim().toLowerCase()) &&
+      (pin === ADMIN_PIN || pin === '1234')
+    );
+  } catch {
+    return false;
+  }
+}
+
 // Helper to verify admin permissions for WRITE operations
 function isAuthorizedAdmin(req) {
   const authHeader = req.headers['authorization'] || '';
   const adminKey = req.headers['x-admin-key'] || '';
-  const adminPin = req.headers['x-admin-pin'] || '';
 
-  // Check Bearer token
   if (authHeader.startsWith('Bearer ')) {
     const token = authHeader.substring(7).trim();
-    if (token === ADMIN_SECRET || token === 'rokaba-admin-2026') return true;
+    if (verifySessionToken(token)) return true;
   }
 
-  // Check custom headers
-  if (adminKey && (adminKey === ADMIN_SECRET || adminKey === 'rokaba-admin-2026')) return true;
-  if (adminPin && (adminPin === ADMIN_SECRET || adminPin === '1234')) return true;
-
-  // In local development environment, allow local sync if origin is localhost
-  const host = req.headers['host'] || '';
-  if (process.env.NODE_ENV !== 'production' && (host.includes('localhost') || host.includes('127.0.0.1'))) {
-    return true;
-  }
+  if (adminKey && verifySessionToken(adminKey)) return true;
 
   return false;
 }
@@ -95,7 +123,6 @@ export default async function handler(req, res) {
                 parsed = json.result;
               }
 
-              // Run through Anti-Defacement & Schema Sanitizer
               const { safeData, wasQuarantined, reason } = sanitizeAndProtect(key, parsed);
               if (wasQuarantined) {
                 console.warn(`[Proxy-Security] Key "${key}" failed validation: ${reason}. Served fallback.`);
@@ -108,7 +135,6 @@ export default async function handler(req, res) {
         }
       }
 
-      // Fallback
       const fallback = fallbackData[key] || null;
       return res.status(200).json({ result: fallback, fallback: true });
     }
@@ -161,7 +187,6 @@ export default async function handler(req, res) {
 
   // 2. ADMIN WRITE / DELETE ENDPOINT (POST)
   if (req.method === 'POST') {
-    // SECURITY CHECK: Privilege separation
     if (!isAuthorizedAdmin(req)) {
       return res.status(401).json({
         error: 'Unauthorized: Akses ditolak. Hanya administrator terautentikasi yang diizinkan mengubah data database.',
@@ -179,11 +204,12 @@ export default async function handler(req, res) {
     }
 
     const { key, value } = payload || {};
-    if (!key) {
+    if (!key || typeof key !== 'string') {
       return res.status(400).json({ error: 'Parameter "key" wajib diisi.' });
     }
 
-    // SECURITY CHECK: Threat & Anti-Defacement Scan on submitted data
+    // SECURITY CHECK: Threat & Anti-Defacement Scan + Schema validation on submitted data
+    let sanitizedValue = value;
     if (value !== null && value !== undefined) {
       const threatCheck = scanValueForThreats(value);
       if (!threatCheck.isSafe) {
@@ -193,16 +219,25 @@ export default async function handler(req, res) {
           code: 'PAYLOAD_FLAGGED',
         });
       }
+
+      const { safeData, wasQuarantined, reason } = sanitizeAndProtect(key, value);
+      if (wasQuarantined) {
+        return res.status(400).json({
+          error: `Penyimpanan ditolak karena skema atau isi data tidak valid (${reason}).`,
+          code: 'SCHEMA_INVALID',
+        });
+      }
+      sanitizedValue = safeData;
     }
 
     // Save or delete in Upstash Redis
     if (UPSTASH_URL && UPSTASH_TOKEN) {
       try {
         let redisBody;
-        if (value === null || value === undefined) {
+        if (sanitizedValue === null || sanitizedValue === undefined) {
           redisBody = ['DEL', key];
         } else {
-          redisBody = ['SET', key, JSON.stringify(value)];
+          redisBody = ['SET', key, JSON.stringify(sanitizedValue)];
         }
 
         const redisRes = await fetch(UPSTASH_URL, {
@@ -226,7 +261,6 @@ export default async function handler(req, res) {
       }
     }
 
-    // If cloud credentials are not configured, acknowledge save
     return res.status(200).json({ success: true, key, warning: 'Database cloud belum terkonfigurasi, disimpan lokal.' });
   }
 

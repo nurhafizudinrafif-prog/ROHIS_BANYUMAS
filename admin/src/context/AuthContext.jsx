@@ -6,6 +6,14 @@ const ADMIN_USER = import.meta.env.VITE_ADMIN_USERNAME || 'admin_rokaba';
 const ADMIN_PASS = import.meta.env.VITE_ADMIN_PASSWORD || 'rokaba2026';
 const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '1234';
 
+function buildSessionToken(u, p, pin) {
+  try {
+    return btoa(`${u}:${p}:${pin || '1234'}`);
+  } catch {
+    return '';
+  }
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     try {
@@ -45,8 +53,10 @@ export function AuthProvider({ children }) {
 
     if (isUserValid && isPassValid && isPinValid) {
       const userData = { id: 'user-001', username: username.trim(), role: 'superadmin', schoolId: null };
+      const sessionToken = buildSessionToken(u, p, pinStr || '1234');
       setUser(userData);
       sessionStorage.setItem('rokaba_admin_user', JSON.stringify(userData));
+      sessionStorage.setItem('rokaba_admin_token', sessionToken);
       return { success: true, user: userData };
     }
     return { success: false, error: 'Username atau password tidak sesuai. Gunakan Username: "rohis banyumas" & Password: "rbk banyumas".' };
@@ -55,6 +65,7 @@ export function AuthProvider({ children }) {
   const logout = useCallback(() => {
     setUser(null);
     sessionStorage.removeItem('rokaba_admin_user');
+    sessionStorage.removeItem('rokaba_admin_token');
   }, []);
 
   const isAuthorized = useCallback((module, schoolId) => {
