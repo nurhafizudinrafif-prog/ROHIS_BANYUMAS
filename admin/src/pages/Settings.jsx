@@ -246,7 +246,7 @@ export default function Settings() {
       </div>
 
       {/* Split Layout: Left vertical nav, Right content matching Image 04 panel 4 */}
-      <div style={{
+      <div className="admin-settings-grid" style={{
         display: 'grid',
         gridTemplateColumns: 'minmax(200px, 240px) 1fr',
         gap: '1.5rem',

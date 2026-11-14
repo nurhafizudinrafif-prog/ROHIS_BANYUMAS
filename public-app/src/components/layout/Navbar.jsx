@@ -1,6 +1,20 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown } from 'lucide-react';
+import {
+  Menu,
+  X,
+  ChevronDown,
+  Home,
+  Info,
+  Compass,
+  Newspaper,
+  Calendar,
+  School,
+  BookOpen,
+  Image as ImageIcon,
+  MessageCircle,
+  Phone,
+} from 'lucide-react';
 import logo from '../../assets/logo.png';
 
 const PRIMARY_LINKS = [
@@ -18,16 +32,16 @@ const MORE_LINKS = [
 ];
 
 const ALL_MOBILE_LINKS = [
-  ['/', 'Beranda'],
-  ['/about', 'Tentang ROKABA'],
-  ['/programs', 'Program & Divisi'],
-  ['/berita', 'Berita Kegiatan'],
-  ['/events', 'Agenda Bersama'],
-  ['/schools', 'Sekolah Anggota'],
-  ['/articles', 'Artikel & Opini'],
-  ['/gallery', 'Galeri Kegiatan'],
-  ['/consultation', 'Ruang Konsultasi'],
-  ['/contact', 'Kontak & Sekretariat'],
+  ['/', 'Beranda', Home],
+  ['/about', 'Tentang ROKABA', Info],
+  ['/programs', 'Program & Divisi', Compass],
+  ['/berita', 'Berita Kegiatan', Newspaper],
+  ['/events', 'Agenda Bersama', Calendar],
+  ['/schools', 'Sekolah Anggota', School],
+  ['/articles', 'Artikel & Opini', BookOpen],
+  ['/gallery', 'Galeri Kegiatan', ImageIcon],
+  ['/consultation', 'Ruang Konsultasi', MessageCircle],
+  ['/contact', 'Kontak & Sekretariat', Phone],
 ];
 
 export function Brand({ onClick }) {
@@ -237,13 +251,16 @@ export default function Navbar() {
               </div>
 
               <nav className="rk-mobile-nav-list" aria-label="Menu seluler">
-                {ALL_MOBILE_LINKS.map(([path, label]) => (
+                {ALL_MOBILE_LINKS.map(([path, label, Icon]) => (
                   <Link
                     key={path}
                     to={path}
                     aria-current={isRouteActive(path) ? 'page' : undefined}
                   >
-                    <span>{label}</span>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '10px' }}>
+                      {Icon && <Icon size={17} aria-hidden="true" />}
+                      <span>{label}</span>
+                    </span>
                     <span aria-hidden="true">→</span>
                   </Link>
                 ))}
@@ -253,7 +270,7 @@ export default function Navbar() {
             <div style={{ marginTop: '16px', display: 'grid', gap: '10px' }}>
               <Link
                 to="/contact"
-                className="rk-btn-primary"
+                className="rk-btn-secondary"
                 style={{ width: '100%' }}
                 onClick={() => setMobileOpen(false)}
               >
@@ -263,8 +280,8 @@ export default function Navbar() {
                 style={{
                   margin: 0,
                   textAlign: 'center',
-                  fontSize: '0.8rem',
-                  color: 'var(--rk-muted)',
+                  fontSize: '0.78rem',
+                  color: 'rgba(247, 245, 240, 0.72)',
                 }}
               >
                 Kabupaten Banyumas • rokaba.banyumas@gmail.com

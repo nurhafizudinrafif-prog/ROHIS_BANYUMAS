@@ -15,10 +15,11 @@ import {
   CheckCircle2,
   CalendarDays,
   HelpCircle,
+  Image as ImageIcon,
 } from 'lucide-react';
 
 export default function Dashboard() {
-  const { news = [], articles = [], events = [], questions = [] } = useData();
+  const { news = [], articles = [], events = [], gallery = [], questions = [] } = useData();
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -88,130 +89,63 @@ export default function Dashboard() {
         </p>
       </div>
 
-      {/* ═══════ Three Modest Overview Cards (Image 01) ═══════ */}
+      {/* ═══════ 4 Real Count Summary Cards (Image 05-admin-ringkasan-login & 14-hp-admin) ═══════ */}
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(min(260px, 100%), 1fr))',
-          gap: '1.25rem',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(200px, 100%), 1fr))',
+          gap: '1.15rem',
         }}
       >
-        {/* Card 1: Konten */}
-        <Link
-          to="/content/news"
-          className="admin-soft-card"
-          style={{
-            padding: '1.35rem 1.5rem',
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: '1rem',
-            textDecoration: 'none',
-          }}
-        >
-          <div
+        {[
+          { label: 'Berita', count: news.length, sub: 'Kabar & kegiatan', to: '/content/news', Icon: Newspaper },
+          { label: 'Artikel', count: articles.length, sub: 'Dakwah & literasi', to: '/content/articles', Icon: FileText },
+          { label: 'Agenda', count: events.length, sub: 'Jadwal & kajian', to: '/content/events', Icon: Calendar },
+          { label: 'Galeri', count: gallery.length, sub: 'Foto & video', to: '/content/gallery', Icon: ImageIcon },
+        ].map(({ label, count, sub, to, Icon }) => (
+          <Link
+            key={label}
+            to={to}
+            className="admin-soft-card"
             style={{
-              width: 44,
-              height: 44,
-              borderRadius: '12px',
-              backgroundColor: 'var(--surface-inset)',
-              border: '1px solid var(--border-default)',
-              boxShadow: 'var(--inset-shadow)',
+              padding: '1.25rem 1.4rem',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-              color: 'var(--pine-dark)',
+              justifyContent: 'space-between',
+              gap: '1rem',
+              textDecoration: 'none',
             }}
           >
-            <FileText size={20} />
-          </div>
-          <div>
-            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--pine-dark)', marginBottom: '4px' }}>
-              Konten
-            </h3>
-            <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
-              Kelola berita, artikel, dan konten informasi ROKABA.
-            </p>
-          </div>
-        </Link>
-
-        {/* Card 2: Agenda */}
-        <Link
-          to="/content/events"
-          className="admin-soft-card"
-          style={{
-            padding: '1.35rem 1.5rem',
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: '1rem',
-            textDecoration: 'none',
-          }}
-        >
-          <div
-            style={{
-              width: 44,
-              height: 44,
-              borderRadius: '12px',
-              backgroundColor: 'var(--surface-inset)',
-              border: '1px solid var(--border-default)',
-              boxShadow: 'var(--inset-shadow)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-              color: 'var(--pine-dark)',
-            }}
-          >
-            <Calendar size={20} />
-          </div>
-          <div>
-            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--pine-dark)', marginBottom: '4px' }}>
-              Agenda
-            </h3>
-            <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
-              Atur dan perbarui jadwal kegiatan dan program ROKABA.
-            </p>
-          </div>
-        </Link>
-
-        {/* Card 3: Moderasi */}
-        <Link
-          to="/qa"
-          className="admin-soft-card"
-          style={{
-            padding: '1.35rem 1.5rem',
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: '1rem',
-            textDecoration: 'none',
-          }}
-        >
-          <div
-            style={{
-              width: 44,
-              height: 44,
-              borderRadius: '12px',
-              backgroundColor: 'var(--surface-inset)',
-              border: '1px solid var(--border-default)',
-              boxShadow: 'var(--inset-shadow)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-              color: 'var(--pine-dark)',
-            }}
-          >
-            <MessageCircle size={20} />
-          </div>
-          <div>
-            <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--pine-dark)', marginBottom: '4px' }}>
-              Moderasi
-            </h3>
-            <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
-              Tinjau pertanyaan masuk dan pembahasan Q&A dari pengunjung.
-            </p>
-          </div>
-        </Link>
+            <div>
+              <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '0.2rem' }}>
+                {label}
+              </div>
+              <div style={{ fontSize: '1.85rem', fontWeight: 800, color: 'var(--pine-dark)', lineHeight: 1.1 }}>
+                {count}
+              </div>
+              <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
+                {sub}
+              </div>
+            </div>
+            <div
+              style={{
+                width: 44,
+                height: 44,
+                borderRadius: '12px',
+                backgroundColor: 'var(--surface-inset)',
+                border: '1px solid var(--border-default)',
+                boxShadow: 'var(--inset-shadow)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+                color: 'var(--pine-dark)',
+              }}
+            >
+              <Icon size={20} />
+            </div>
+          </Link>
+        ))}
       </div>
 
       {/* ═══════ Akses Cepat Task Panel (Image 01) ═══════ */}

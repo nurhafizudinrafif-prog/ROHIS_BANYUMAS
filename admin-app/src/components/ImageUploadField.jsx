@@ -174,7 +174,7 @@ export default function ImageUploadField({
       {/* Preview Card matching Image 07 / Image 05 */}
       {value && typeof value === 'string' && value.trim().length > 0 && (
         <div
-          className="admin-soft-card"
+          className="admin-soft-card admin-media-preview"
           style={{
             marginTop: '0.75rem',
             padding: '0.85rem 1rem',

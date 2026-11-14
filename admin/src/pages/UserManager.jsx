@@ -237,6 +237,37 @@ export default function UserManager() {
         })}
       </div>
 
+      {/* Role Permissions Summary Card (Image 10 Panel B) */}
+      <div
+        className="admin-soft-card"
+        style={{
+          marginTop: '1.5rem',
+          padding: '1.25rem 1.5rem',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(260px, 100%), 1fr))',
+          gap: '1.25rem',
+        }}
+      >
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+          <Shield size={18} style={{ color: 'var(--pine-dark)', flexShrink: 0, marginTop: '2px' }} />
+          <div>
+            <strong style={{ fontSize: '0.88rem', color: 'var(--pine-dark)' }}>Peran superadmin</strong>
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.2rem', lineHeight: 1.45 }}>
+              Akses penuh ke seluruh modul: Kelola Beranda, Berita, Artikel, Agenda, Galeri, Sekolah, Pengurus, Moderasi Q&amp;A, Pengguna, Audit Log, dan Pengaturan.
+            </p>
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+          <Users size={18} style={{ color: 'var(--accent-brass-dark)', flexShrink: 0, marginTop: '2px' }} />
+          <div>
+            <strong style={{ fontSize: '0.88rem', color: 'var(--pine-dark)' }}>Peran editor_sekolah</strong>
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.2rem', lineHeight: 1.45 }}>
+              Akses terbatas untuk pengelolaan konten Berita, Artikel, Agenda, Galeri, Sekolah, dan Moderasi Q&amp;A sesuai afiliasi sekolah.
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* ═══════════════════════════════════════════════════════════════
           RESPONSIVE MODAL: EDIT / TAMBAH PENGGUNA
           ═══════════════════════════════════════════════════════════════ */}

@@ -16,17 +16,32 @@ import {
   Settings as SettingsIcon,
   RefreshCw,
   ExternalLink,
-  User as UserIcon,
   LogOut,
   Menu,
   X,
   ChevronDown,
+  ChevronRight,
   CheckCircle2,
   AlertCircle,
 } from 'lucide-react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import RohisLogo from './RohisLogo';
 import './AdminLayout.css';
+
+const ROUTE_BREADCRUMBS = {
+  '/': { group: 'Dashboard', label: 'Ringkasan' },
+  '/content/home': { group: 'Konten', label: 'Beranda' },
+  '/content/news': { group: 'Konten', label: 'Berita' },
+  '/content/articles': { group: 'Konten', label: 'Artikel' },
+  '/content/events': { group: 'Konten', label: 'Agenda' },
+  '/content/gallery': { group: 'Direktori & Media', label: 'Galeri' },
+  '/content/schools': { group: 'Direktori & Media', label: 'Sekolah' },
+  '/content/team': { group: 'Direktori & Media', label: 'Pengurus' },
+  '/qa': { group: 'Direktori & Media', label: 'Moderasi Q&A' },
+  '/users': { group: 'Sistem', label: 'Pengguna' },
+  '/audit': { group: 'Sistem', label: 'Audit Log' },
+  '/settings': { group: 'Sistem', label: 'Pengaturan' },
+};
 
 export default function AdminLayout() {
   const { user, logout } = useAuth();
@@ -38,6 +53,20 @@ export default function AdminLayout() {
   const [isSyncing, setIsSyncing] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
   const dropdownRef = useRef(null);
+
+  const currentCrumb = useMemo(() => {
+    return (
+      ROUTE_BREADCRUMBS[location.pathname] || {
+        group: 'Admin ROKABA',
+        label: 'Panel CMS',
+      }
+    );
+  }, [location.pathname]);
+
+  const userInitials = useMemo(() => {
+    const raw = (user?.username || 'AD').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+    return raw.slice(0, 2) || 'AD';
+  }, [user?.username]);
 
   // Close sidebar and dropdown on route change
   useEffect(() => {
@@ -112,8 +141,8 @@ export default function AdminLayout() {
         <div className="admin-sidebar-header">
           <RohisLogo size={34} showGlow={false} />
           <div className="admin-sidebar-brand">
-            <h2>ROKABA CMS</h2>
-            <span>ROHIS Kabupaten Banyumas</span>
+            <h2>ROKABA</h2>
+            <span>Admin CMS</span>
           </div>
           <button
             className="admin-sidebar-mobile-close"
@@ -132,9 +161,11 @@ export default function AdminLayout() {
 
           {!isEditorSekolah && (
             <>
+              <div className="admin-nav-group-label">Konten</div>
+
               <NavLink to="/content/home" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
                 <Home size={17} />
-                <span>Kelola Beranda</span>
+                <span>Beranda</span>
               </NavLink>
 
               <NavLink to="/content/news" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
@@ -151,12 +182,16 @@ export default function AdminLayout() {
                 <Calendar size={17} />
                 <span>Agenda</span>
               </NavLink>
-
-              <NavLink to="/content/gallery" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
-                <ImageIcon size={17} />
-                <span>Galeri</span>
-              </NavLink>
             </>
+          )}
+
+          <div className="admin-nav-group-label">Direktori & Media</div>
+
+          {!isEditorSekolah && (
+            <NavLink to="/content/gallery" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
+              <ImageIcon size={17} />
+              <span>Galeri</span>
+            </NavLink>
           )}
 
           <NavLink to="/content/schools" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
@@ -171,12 +206,12 @@ export default function AdminLayout() {
                 <span>Pengurus</span>
               </NavLink>
 
-              <div className="admin-nav-divider" />
-
               <NavLink to="/qa" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
                 <MessageCircle size={17} />
                 <span>Moderasi Q&A</span>
               </NavLink>
+
+              <div className="admin-nav-group-label">Sistem</div>
 
               <NavLink to="/users" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
                 <Shield size={17} />
@@ -197,12 +232,23 @@ export default function AdminLayout() {
         </nav>
 
         <div className="admin-sidebar-footer">
-          <div className="admin-sidebar-user">
-            <div>
-              <div className="admin-user-name">{user?.username || 'Admin'}</div>
-            </div>
-            <span className="admin-user-role">{user?.role === 'superadmin' ? 'Superadmin' : 'Editor'}</span>
-          </div>
+          <a
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="admin-sidebar-footer-btn"
+          >
+            <ExternalLink size={15} />
+            <span>Lihat website</span>
+          </a>
+          <button
+            type="button"
+            onClick={logout}
+            className="admin-sidebar-footer-btn logout"
+          >
+            <LogOut size={15} />
+            <span>Keluar</span>
+          </button>
         </div>
       </aside>
 
@@ -218,11 +264,18 @@ export default function AdminLayout() {
               <Menu size={18} />
             </button>
             <div className="admin-topbar-title-wrap">
-              <span className="admin-topbar-title">Admin ROKABA</span>
+              <Home size={15} style={{ color: 'var(--text-muted)', flexShrink: 0 }} aria-hidden="true" />
+              <ChevronRight size={14} style={{ color: 'var(--text-muted)', flexShrink: 0 }} aria-hidden="true" />
+              <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>
+                {currentCrumb.group}
+              </span>
+              <span style={{ color: 'var(--border-default)' }} aria-hidden="true">/</span>
+              <span className="admin-topbar-title">{currentCrumb.label}</span>
+
               <span className="admin-topbar-sep" aria-hidden="true">|</span>
               <div className="admin-sync-indicator">
                 <span className={`admin-sync-dot ${isSyncing || saving ? 'syncing' : ''}`} />
-                <span>{isSyncing || saving ? 'Menyinkronkan...' : 'Status sinkronisasi'}</span>
+                <span>{isSyncing || saving ? 'Menyinkronkan...' : 'Tersinkron'}</span>
               </div>
             </div>
           </div>
@@ -246,8 +299,8 @@ export default function AdminLayout() {
               className="topbar-btn"
               title="Buka Website Publik ROKABA"
             >
-              <ExternalLink size={14} />
-              <span>Lihat web</span>
+              <span>Lihat website</span>
+              <ExternalLink size={13} />
             </a>
 
             {/* Admin Profile Dropdown */}
@@ -258,22 +311,29 @@ export default function AdminLayout() {
                 onClick={() => setUserDropdownOpen(!userDropdownOpen)}
                 aria-expanded={userDropdownOpen}
                 aria-label="Menu Pengguna"
+                style={{ paddingLeft: '0.45rem', gap: '0.5rem' }}
               >
-                <UserIcon size={14} />
+                <span className="admin-avatar-pill" aria-hidden="true">
+                  {userInitials}
+                </span>
                 <span>{user?.username || 'Admin'}</span>
                 <ChevronDown size={13} />
               </button>
 
               {userDropdownOpen && (
                 <div className="admin-user-dropdown" role="menu">
-                  <div style={{ padding: '0.4rem 0.75rem', borderBottom: '1px solid var(--border-subtle)', marginBottom: '0.2rem' }}>
+                  <div style={{ padding: '0.45rem 0.75rem', borderBottom: '1px solid var(--border-subtle)', marginBottom: '0.2rem' }}>
                     <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--pine-dark)' }}>{user?.username}</div>
-                    <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>{user?.role || 'Administrator'}</div>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
+                      {user?.role === 'superadmin' ? 'Superadmin' : 'Editor Sekolah'}
+                    </div>
                   </div>
-                  <NavLink to="/settings" className="admin-user-dropdown-item" role="menuitem">
-                    <SettingsIcon size={14} />
-                    <span>Pengaturan Akun</span>
-                  </NavLink>
+                  {!isEditorSekolah && (
+                    <NavLink to="/settings" className="admin-user-dropdown-item" role="menuitem">
+                      <SettingsIcon size={14} />
+                      <span>Pengaturan Akun</span>
+                    </NavLink>
+                  )}
                   <button
                     type="button"
                     className="admin-user-dropdown-item logout"

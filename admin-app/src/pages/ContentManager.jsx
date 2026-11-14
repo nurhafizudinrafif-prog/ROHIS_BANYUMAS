@@ -386,8 +386,8 @@ export default function ContentManager() {
         </span>
       </div>
 
-      {/* ═══════ Desktop Table (Image 02 / 03) ═══════ */}
-      <div className="admin-soft-card" style={{ padding: '0.5rem', overflow: 'hidden' }}>
+      {/* ═══════ Desktop Table (Image 08 / 09) ═══════ */}
+      <div className="admin-soft-card admin-desktop-table" style={{ padding: '0.5rem', overflow: 'hidden' }}>
         <div className="admin-soft-table-wrap" style={{ border: 'none' }}>
           <table className="admin-soft-table">
             <thead>
@@ -595,6 +595,96 @@ export default function ContentManager() {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* ═══════ Mobile Cards View (Image 14-hp-admin Panel C) ═══════ */}
+      <div className="admin-mobile-cards">
+        {filtered.map((item) => {
+          const imgUrl = item.image ? getDirectImageUrl(item.image) : '';
+          return (
+            <div
+              key={item.id}
+              className="admin-soft-card"
+              style={{
+                padding: '1rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.85rem',
+              }}
+            >
+              <div style={{ display: 'flex', gap: '0.85rem', alignItems: 'flex-start' }}>
+                {type === 'news' && (
+                  <div
+                    style={{
+                      width: 72,
+                      height: 54,
+                      borderRadius: '10px',
+                      overflow: 'hidden',
+                      backgroundColor: 'var(--surface-inset)',
+                      border: '1px solid var(--border-default)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {imgUrl ? (
+                      <img src={imgUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} referrerPolicy="no-referrer" />
+                    ) : (
+                      <Newspaper size={18} style={{ color: 'var(--text-muted)' }} />
+                    )}
+                  </div>
+                )}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 700, fontSize: '0.94rem', color: 'var(--pine-dark)', lineHeight: 1.35, marginBottom: '0.35rem' }}>
+                    {item.title || item.name}
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', alignItems: 'center' }}>
+                    {type === 'news' && <span className="badge-soft-brass">{item.category || 'Organisasi'}</span>}
+                    {type === 'articles' && <span className="badge-soft-brass">{item.category || 'Motivasi'}</span>}
+                    {type === 'events' && (
+                      <span className={item.status === 'completed' ? 'badge-soft-brass' : 'badge-soft-pine'}>
+                        {item.status === 'completed' ? 'Selesai' : 'Mendatang'}
+                      </span>
+                    )}
+                    {type === 'schools' && <span className="badge-soft-pine">{item.type || 'SMA'}</span>}
+                    <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+                      {item.date || item.author || item.pembina || item.location || ''}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', borderTop: '1px solid var(--border-subtle)', paddingTop: '0.65rem' }}>
+                <button
+                  type="button"
+                  className="btn-secondary-soft"
+                  style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem' }}
+                  onClick={() => {
+                    setEditing({ ...item });
+                    setIsNew(false);
+                  }}
+                >
+                  <Edit3 size={13} />
+                  <span>Edit</span>
+                </button>
+                <button
+                  type="button"
+                  className="btn-secondary-soft"
+                  style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem', color: 'var(--status-red)' }}
+                  onClick={() => setItemToDelete(item)}
+                >
+                  <Trash2 size={13} />
+                  <span>Hapus</span>
+                </button>
+              </div>
+            </div>
+          );
+        })}
+        {filtered.length === 0 && (
+          <div className="admin-soft-card" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
+            Tidak ada {schema.label.toLowerCase()} yang ditemukan.
+          </div>
+        )}
       </div>
 
       {/* ═══════ Responsive Edit Modal (Image 07 Upper Left) ═══════ */}

@@ -74,27 +74,16 @@ export default function AuditLogs() {
 
   return (
     <div style={{ maxWidth: 1160, margin: '0 auto', paddingBottom: '3.5rem' }}>
-      {/* Header Bar matching Image 04 panel 3 */}
+      {/* Header Bar matching Image 10 panel C (Read-only Audit Log) */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1 style={{ fontSize: 'clamp(1.35rem, 3vw, 1.75rem)', fontWeight: 800, color: 'var(--pine-dark)', margin: 0 }}>
             Audit aktivitas
           </h1>
           <p className="text-secondary" style={{ fontSize: '0.88rem', marginTop: '0.2rem' }}>
-            Riwayat aktivitas penting di CMS ROKABA.
+            Riwayat aktivitas penting di CMS ROKABA (hanya-baca).
           </p>
         </div>
-
-        {auditLogs && auditLogs.length > 0 && (
-          <button
-            type="button"
-            className="btn btn-secondary-soft btn-sm"
-            style={{ color: '#EF4444' }}
-            onClick={handleClearLogs}
-          >
-            <Trash2 size={14} /> Bersihkan log
-          </button>
-        )}
       </div>
 
       {/* Filter Row matching Image 04 panel 3: Pengguna, Jenis aktivitas, Rentang waktu */}

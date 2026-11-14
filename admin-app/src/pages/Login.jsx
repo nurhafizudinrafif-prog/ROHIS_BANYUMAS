@@ -168,6 +168,21 @@ export default function Login() {
             >
               {loading ? 'Memproses...' : 'Masuk'}
             </button>
+
+            <a
+              href="https://www.rohis-banyumas.web.id/"
+              className="btn-secondary-soft"
+              style={{
+                width: '100%',
+                padding: '0.68rem',
+                fontSize: '0.86rem',
+                textAlign: 'center',
+                justifyContent: 'center',
+                textDecoration: 'none',
+              }}
+            >
+              Kembali ke website
+            </a>
           </form>
         </div>
       </div>

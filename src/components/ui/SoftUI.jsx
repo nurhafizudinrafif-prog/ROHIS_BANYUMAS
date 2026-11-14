@@ -186,10 +186,12 @@ export function SmartImage({
   const [tier, setTier] = useState(0);
 
   // Replace generic stock unsplash URLs with real ROKABA documentation photos
-  const normalizedSrc =
+  const localDocumentation = typeof src === 'string' && (src.includes('1PUOOkf_OLutx7LItdz6_7U7cNRtd1XrB') ? '/documentation/hero.jpg' : src.includes('1FSPbsFV9dStzLQsxXRi3VdOj_FfE-BKJ') ? '/documentation/about.jpg' : null);
+  const normalizedSrc = localDocumentation || (
     typeof src === 'string' && src.includes('unsplash.com')
-      ? ROKABA_REAL_PHOTOS[0]
-      : src;
+      ? '/documentation/hero.jpg'
+      : src
+  );
 
   const driveId = extractDriveId(normalizedSrc);
   const candidates = driveId
@@ -398,6 +400,22 @@ export function PrimaryButton({
 }
 
 /**
+ * SecondaryButton — Soft UI raised secondary button
+ */
+export function SecondaryButton({
+  as: Component = 'button',
+  className = '',
+  children,
+  ...props
+}) {
+  return (
+    <Component className={`rk-btn-secondary ${className}`.trim()} {...props}>
+      {children}
+    </Component>
+  );
+}
+
+/**
  * InsetField — Recessed Soft UI input, select, or textarea with visible label
  */
 export function InsetField({
@@ -558,6 +576,7 @@ export function PhotoFrame({
 
         {(captionTitle || captionSub) && (
           <div className="rk-glass-caption">
+            <div className="rk-caption-lens" aria-hidden="true"><SmartImage src={src} alt="" eager={eager} /></div>
             {captionTitle && <strong>{captionTitle}</strong>}
             {captionSub && <span>{captionSub}</span>}
           </div>

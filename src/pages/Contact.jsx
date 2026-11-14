@@ -225,18 +225,21 @@ export default function Contact() {
                 </PrimaryButton>
 
                 {submitted && (
-                  <p
+                  <div
                     role="status"
+                    className="rk-inset-panel"
                     style={{
-                      fontSize: '0.86rem',
+                      padding: '12px 14px',
+                      fontSize: '0.84rem',
                       fontWeight: 600,
                       color: 'var(--rk-pine)',
-                      textAlign: 'center',
+                      lineHeight: 1.5,
                     }}
                   >
-                    Pesan berhasil disimpan. Terima kasih telah menghubungi
-                    ROKABA.
-                  </p>
+                    Catatan pesan berhasil disimpan pada penyimpanan lokal browser di perangkat ini. Untuk korespondensi langsung dengan pengurus sekretariat, silakan hubungi email resmi{' '}
+                    <strong>rokaba.banyumas@gmail.com</strong> atau Instagram{' '}
+                    <strong>@rohis_banyumas</strong>.
+                  </div>
                 )}
               </form>
             </SoftCard>

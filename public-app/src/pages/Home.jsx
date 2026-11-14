@@ -1,14 +1,22 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { User } from 'lucide-react';
+import {
+  User,
+  Compass,
+  School,
+  BookOpen,
+  Image as ImageIcon,
+  MessageCircle,
+} from 'lucide-react';
 import { useData } from '../context/DataContext';
 import {
   Container,
   PhotoFrame,
   PrimaryButton,
+  SecondaryButton,
   ROKABA_REAL_PHOTOS,
   SoftCard,
-  formatIndonesianDate,
+  SmartImage,
   formatShortDayMonth,
 } from '../components/ui/SoftUI';
 
@@ -18,99 +26,35 @@ const DISCOVER_CARDS = [
     description:
       '5 divisi utama (SDM, Dakwah, Humas, Jurnalistik, Danus) serta ajang tahunan Rohis Banyumas Competition (RBC).',
     to: '/programs',
+    icon: Compass,
   },
   {
     title: 'Sekolah anggota',
     description:
       'Wadah kolaborasi 17+ ROHIS dari berbagai SMA, SMK, dan MA negeri maupun swasta se-Kabupaten Banyumas.',
     to: '/schools',
+    icon: School,
   },
   {
     title: 'Artikel & literasi',
     description:
       'Bacaan Islami moderat tentang kepemimpinan, ukhuwah remaja, tips istiqomah ibadah, dan dakwah era digital.',
     to: '/articles',
+    icon: BookOpen,
   },
   {
     title: 'Galeri dokumentasi',
     description:
       'Rekam jejak foto dan video kegiatan Kajian Akbar, LDK ROHIS, Bakti Sosial Ramadhan, Muskerda, dan RBC.',
     to: '/gallery',
+    icon: ImageIcon,
   },
   {
     title: 'Ruang konsultasi',
     description:
       'Tempat bertanya dengan nyaman seputar fiqih ibadah, motivasi belajar, dan dinamika organisasi pelajar.',
     to: '/consultation',
-  },
-];
-
-const LEADERS_DATA = [
-  {
-    id: 'ketua-umum',
-    role: 'Ketua Umum',
-    roleLine1: 'Ketua',
-    roleLine2: 'Umum',
-    name: 'Nama pengurus',
-    photo: null,
-    salutation: "Assalamu'alaikum warahmatullahi wabarakatuh.",
-    paragraph1Desktop:
-      'Selamat datang di portal resmi ROHIS SMA Negeri 4 Purwokerto. Ruang ini menjadi sarana informasi, silaturahmi, dan pengembangan potensi pelajar.',
-    paragraph1Mobile:
-      'Selamat datang di portal resmi ROHIS SMA Negeri 4 Purwokerto. Ruang ini menjadi tempat berbagi informasi, belajar, dan bertumbuh bersama.',
-    paragraph2:
-      'Bersama seluruh pengurus, kami ingin menghadirkan kegiatan yang menguatkan iman, menumbuhkan kepemimpinan, dan memberi manfaat bagi lingkungan sekolah.',
-    paragraph3Desktop:
-      'Mari merawat ukhuwah, saling mendukung dalam belajar, dan mengambil bagian dalam setiap langkah kebaikan.',
-    paragraph3Mobile:
-      'Mari merawat ukhuwah dan saling mendukung dalam setiap langkah kebaikan.',
-    closing: "Wassalamu'alaikum warahmatullahi wabarakatuh.",
-    nextId: 'ketua-akhwat',
-    nextButtonText: 'Sambutan Ketua Akhwat',
-  },
-  {
-    id: 'ketua-akhwat',
-    role: 'Ketua Akhwat',
-    roleLine1: 'Ketua',
-    roleLine2: 'Akhwat',
-    name: 'Nama pengurus',
-    photo: null,
-    salutation: "Assalamu'alaikum warahmatullahi wabarakatuh.",
-    paragraph1Desktop:
-      'Selamat datang di portal resmi ROHIS SMA Negeri 4 Purwokerto. Ruang ini menjadi sarana informasi, silaturahmi, dan pengembangan potensi pelajar muslimah.',
-    paragraph1Mobile:
-      'Selamat datang di portal resmi ROHIS SMA Negeri 4 Purwokerto. Ruang ini menjadi tempat berbagi informasi, belajar, dan bertumbuh bersama.',
-    paragraph2:
-      'Bersama seluruh pengurus, kami ingin menghadirkan kegiatan yang menguatkan iman, menumbuhkan kepemimpinan, dan memberi manfaat bagi lingkungan sekolah.',
-    paragraph3Desktop:
-      'Mari merawat ukhuwah, saling mendukung dalam belajar, dan mengambil bagian dalam setiap langkah kebaikan.',
-    paragraph3Mobile:
-      'Mari merawat ukhuwah dan saling mendukung dalam setiap langkah kebaikan.',
-    closing: "Wassalamu'alaikum warahmatullahi wabarakatuh.",
-    nextId: 'ketua-ikhwan',
-    nextButtonText: 'Sambutan Ketua Ikhwan',
-  },
-  {
-    id: 'ketua-ikhwan',
-    role: 'Ketua Ikhwan',
-    roleLine1: 'Ketua',
-    roleLine2: 'Ikhwan',
-    name: 'Nama pengurus',
-    photo: null,
-    salutation: "Assalamu'alaikum warahmatullahi wabarakatuh.",
-    paragraph1Desktop:
-      'Selamat datang di portal resmi ROHIS SMA Negeri 4 Purwokerto. Ruang ini menjadi sarana informasi, silaturahmi, dan pengembangan potensi pelajar.',
-    paragraph1Mobile:
-      'Selamat datang di portal resmi ROHIS SMA Negeri 4 Purwokerto. Ruang ini menjadi tempat berbagi informasi, belajar, dan bertumbuh bersama.',
-    paragraph2:
-      'Bersama seluruh pengurus, kami ingin menghadirkan kegiatan yang menguatkan iman, menumbuhkan kepemimpinan, dan memberi manfaat bagi lingkungan sekolah.',
-    paragraph3Desktop:
-      'Mari merawat ukhuwah, saling mendukung dalam belajar, dan mengambil bagian dalam setiap langkah kebaikan.',
-    paragraph3Mobile:
-      'Mari merawat ukhuwah dan saling mendukung dalam setiap langkah kebaikan.',
-    closing: "Wassalamu'alaikum warahmatullahi wabarakatuh.",
-    nextId: 'ketua-umum',
-    nextButtonText: 'Sambutan Ketua Umum',
+    icon: MessageCircle,
   },
 ];
 
@@ -118,14 +62,71 @@ export default function Home() {
   const { home, news, events } = useData();
   const [activeLeaderId, setActiveLeaderId] = useState('ketua-umum');
 
+  const sambutanCms = home?.sambutan || {};
+
+  const leadersData = useMemo(
+    () => [
+      {
+        id: 'ketua-umum',
+        role: 'Ketua Umum',
+        name: sambutanCms.ketuaUmumName || 'Ketua Umum ROKABA',
+        photo: sambutanCms.ketuaUmumPhoto || null,
+        salutation: "Assalamu'alaikum warahmatullahi wabarakatuh.",
+        paragraphs: [
+          sambutanCms.paragraph1 ||
+            'Selamat datang di portal resmi Forum Komunikasi ROHIS Kabupaten Banyumas (ROKABA). Ruang ini hadir sebagai sarana informasi, silaturahmi, dan pengembangan potensi pelajar Muslim SMA, SMK, dan MA se-Kabupaten Banyumas.',
+          sambutanCms.paragraph2 ||
+            'Bersama seluruh pengurus lintas sekolah, kami berkomitmen menghadirkan kegiatan yang menguatkan iman, menumbuhkan kepemimpinan yang amanah, serta memberi manfaat nyata bagi lingkungan sekolah dan masyarakat.',
+          sambutanCms.quote
+            ? String(sambutanCms.quote).replace(/^"+|"+$/g, '')
+            : 'Mari merawat ukhuwah, saling mendukung dalam belajar, dan mengambil bagian dalam setiap langkah kebaikan bersama ROKABA.',
+        ],
+        closing: "Wassalamu'alaikum warahmatullahi wabarakatuh.",
+        nextId: 'ketua-akhwat',
+        nextButtonText: 'Sambutan Ketua Akhwat',
+      },
+      {
+        id: 'ketua-akhwat',
+        role: 'Ketua Akhwat',
+        name: sambutanCms.ketuaAkhwatName || 'Ketua Akhwat ROKABA',
+        photo: sambutanCms.ketuaAkhwatPhoto || null,
+        salutation: "Assalamu'alaikum warahmatullahi wabarakatuh.",
+        paragraphs: [
+          'Selamat datang di ruang bersama ROHIS Kabupaten Banyumas (ROKABA). Kami menyambut hangat setiap pelajar muslimah dari berbagai SMA, SMK, dan MA untuk saling mengenal, belajar, dan bertumbuh dalam kebaikan.',
+          'Melalui kajian keakhwatan, pembinaan adab, literasi kreatif, serta program kepedulian sosial, kami ingin menghadirkan suasana ukhuwah yang teduh, suportif, dan menginspirasi.',
+          'Semoga setiap langkah kecil yang kita ikhtiarkan bersama menjadi amal jariyah dan membawa keberkahan bagi sekolah serta masyarakat.',
+        ],
+        closing: "Wassalamu'alaikum warahmatullahi wabarakatuh.",
+        nextId: 'ketua-ikhwan',
+        nextButtonText: 'Sambutan Ketua Ikhwan',
+      },
+      {
+        id: 'ketua-ikhwan',
+        role: 'Ketua Ikhwan',
+        name: sambutanCms.ketuaIkhwanName || 'Ketua Ikhwan ROKABA',
+        photo: sambutanCms.ketuaIkhwanPhoto || null,
+        salutation: "Assalamu'alaikum warahmatullahi wabarakatuh.",
+        paragraphs: [
+          'Alhamdulillah, portal resmi ROHIS Kabupaten Banyumas (ROKABA) ini menjadi jembatan kolaborasi bagi kader pelajar Muslim lintas sekolah di seluruh Kabupaten Banyumas.',
+          'Kami mengajak rekan-rekan pelajar untuk aktif menempa diri melalui latihan kepemimpinan, halaqah keilmuan, syiar kreatif, dan aksi bakti sosial yang terkoordinasi bersama.',
+          'Mari jadikan masa muda di bangku sekolah sebagai momentum terbaik untuk menguatkan akhlak, memperluas persaudaraan, dan menebar manfaat.',
+        ],
+        closing: "Wassalamu'alaikum warahmatullahi wabarakatuh.",
+        nextId: 'ketua-umum',
+        nextButtonText: 'Sambutan Ketua Umum',
+      },
+    ],
+    [sambutanCms]
+  );
+
   const activeLeader =
-    LEADERS_DATA.find((l) => l.id === activeLeaderId) || LEADERS_DATA[0];
+    leadersData.find((l) => l.id === activeLeaderId) || leadersData[0];
 
   const stats =
     Array.isArray(home?.stats) && home.stats.length > 0
       ? home.stats
       : [
-          { value: 15, suffix: '+', label: 'Dari Sekolah Kab. Banyumas' },
+          { value: 17, suffix: '+', label: 'Sekolah Anggota Kab. Banyumas' },
           { value: 53, suffix: '+', label: 'Anggota & Pengurus Aktif' },
           { value: 7, suffix: '+', label: 'Event Besar Kabupaten' },
           { value: 2017, suffix: '', label: 'Tahun Berdiri di Purwokerto' },
@@ -138,13 +139,28 @@ export default function Home() {
     paragraph1:
       'Kami hadir bukan sekadar menyusun struktur jabatan formal, melainkan membangun ruang perjumpaan yang hangat—tempat setiap pelajar Muslim dapat belajar memahami nilai-nilai Islam yang rahmatan lil alamin, mengasah kepemimpinan, dan menyalurkan kepedulian nyata bagi masyarakat.',
     point1Title: 'Sinergi Lintas Sekolah',
-    point1Desc: 'Mengikis sekat sekolah, menghubungkan puluhan rohis di Kabupaten Banyumas.',
+    point1Desc:
+      'Mengikis sekat sekolah, menghubungkan puluhan ROHIS SMA, SMK, dan MA di Kabupaten Banyumas.',
     point2Title: 'Kaderisasi Berjenjang',
-    point2Desc: 'Mencetak generasi muda yang kritis, berakhlak mulia, dan siap memimpin.',
+    point2Desc:
+      'Mencetak generasi muda yang kritis, berakhlak mulia, dan siap memimpin.',
+    photoUrl: ROKABA_REAL_PHOTOS[1],
     quoteText:
       '"Di sini kami belajar bahwa dakwah terbaik tidak diukur dari megahnya panggung, melainkan dari keteladanan akhlak dan keikhlasan melayani sesama pelajar."',
     quoteAuthor: '— Catatan Lapangan Kader Pelajar, Banyumas',
   };
+
+  const closingData = home?.closing || {
+    title: 'Mari bergerak bersama dalam kebaikan.',
+    description:
+      'Terbuka untuk kolaborasi kegiatan ROHIS antar sekolah, delegasi kader, maupun ruang konsultasi pelajar Muslim se-Kabupaten Banyumas.',
+    btnPrimaryText: 'Hubungi kami',
+    btnPrimaryLink: '/contact',
+    btnSecondaryText: 'Ruang konsultasi',
+    btnSecondaryLink: '/consultation',
+  };
+
+  const sectionsMeta = home?.sections || {};
 
   const newsList = Array.isArray(news) ? news : [];
   const featuredNews = newsList[0] || {
@@ -171,11 +187,15 @@ export default function Home() {
             <div>
               <div className="rk-eyebrow">
                 <span className="rk-eyebrow-bar" aria-hidden="true" />
-                <span>Forum Komunikasi ROHIS Kabupaten Banyumas</span>
+                <span>
+                  {home?.hero?.tagline ||
+                    'Forum Komunikasi ROHIS Kabupaten Banyumas'}
+                </span>
               </div>
 
               <h1 className="rk-hero-title">
-                Satu ukhuwah. Banyak langkah kebaikan.
+                {home?.hero?.headlineLine1 || 'Satu ukhuwah.'}{' '}
+                {home?.hero?.headlineAccent || 'Banyak langkah kebaikan.'}
               </h1>
 
               <p className="rk-hero-lead" style={{ maxWidth: '50ch' }}>
@@ -184,12 +204,19 @@ export default function Home() {
               </p>
 
               <div className="rk-hero-actions">
-                <PrimaryButton as={Link} to="/about">
-                  Mengenal ROKABA
+                <PrimaryButton
+                  as={Link}
+                  to={home?.hero?.ctaPrimaryLink || '/about'}
+                >
+                  <span>{home?.hero?.ctaPrimaryText || 'Mengenal ROKABA'}</span>
+                  <span aria-hidden="true">→</span>
                 </PrimaryButton>
 
-                <Link to="/programs" className="rk-link-inline">
-                  <span>Jelajahi program</span>
+                <Link
+                  to={home?.hero?.ctaSecondaryLink || '/programs'}
+                  className="rk-link-inline"
+                >
+                  <span>{home?.hero?.ctaSecondaryText || 'Jelajahi program'}</span>
                   <span aria-hidden="true">→</span>
                 </Link>
               </div>
@@ -206,13 +233,13 @@ export default function Home() {
                 alt="Kebersamaan kader ROHIS Kabupaten Banyumas"
                 aspect="16/9.6"
                 captionTitle="Kebersamaan kader ROHIS Banyumas"
-                captionSub="Dokumentasi ROKABA • RBC X PECETIKAH SMAN 2 Purwokerto"
+                captionSub="Dokumentasi ROKABA • Forum Komunikasi ROHIS SMA/SMK/MA"
                 eager
               />
             </div>
           </div>
 
-          {/* 4 STATISTIK UTAMA DARI ROHIS-BANYUMAS.WEB.ID */}
+          {/* 4 STATISTIK UTAMA */}
           <div className="rk-grid-4" style={{ marginTop: '22px' }}>
             {stats.map((st, idx) => (
               <SoftCard
@@ -257,111 +284,66 @@ export default function Home() {
         </Container>
       </section>
 
-      {/* 2. SAMBUTAN PIMPINAN ROHIS (100% REFERENCE-FAITHFUL — PLACED BEFORE TEMUKAN RUANGMU) */}
-      <section className="rk-sambutan-section">
+      {/* 2. SAMBUTAN PENGURUS (SPEECH FIRST, 3 PORTRAIT CARDS BELOW, NEXT BUTTON AT BOTTOM) */}
+      <section id="sambutan" className="rk-sambutan-section">
         <Container>
           <div className="rk-sambutan-header">
             <h2 className="rk-sambutan-title">
-              <span className="rk-show-mobile">Sambutan pengurus</span>
-              <span className="rk-show-desktop">Sambutan Pimpinan ROHIS</span>
+              {sambutanCms.title || 'Sambutan pengurus'}
             </h2>
             <div className="rk-sambutan-eyebrow">
               <span className="rk-sambutan-eyebrow-bar" aria-hidden="true" />
-              <span>Bersama merawat ukhuwah dan menggerakkan kebaikan.</span>
+              <span>
+                {sambutanCms.subtitle ||
+                  'Bersama merawat ukhuwah dan menggerakkan kebaikan.'}
+              </span>
             </div>
-          </div>
-
-          {/* Desktop Tabs with Status Indicator Dot */}
-          <div
-            className="rk-sambutan-tabs"
-            role="tablist"
-            aria-label="Pilih sambutan pimpinan"
-          >
-            {LEADERS_DATA.map((l) => {
-              const isActive = activeLeaderId === l.id;
-              return (
-                <button
-                  key={l.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  className={`rk-sambutan-tab ${isActive ? 'rk-sambutan-tab--active' : ''}`}
-                  onClick={() => setActiveLeaderId(l.id)}
-                >
-                  <span className="rk-sambutan-tab-dot" aria-hidden="true" />
-                  <span>{l.role}</span>
-                </button>
-              );
-            })}
           </div>
 
           <div className="rk-sambutan-grid">
-            {/* Left Column: Mobile Info Header + Body + Actions */}
+            {/* 1. Active Role Badge + Speech Content */}
             <div className="rk-sambutan-content">
-              {/* Mobile-only current leader information (from Image 1) */}
-              <div className="rk-mobile-leader-info">
-                <strong className="rk-mobile-leader-name">{activeLeader.name}</strong>
-                <span className="rk-mobile-leader-role">{activeLeader.role}</span>
-                <hr className="rk-mobile-leader-divider" />
+              <div className="rk-sambutan-active-header">
+                <span className="rk-sambutan-role-pill">
+                  <span className="rk-sambutan-role-dot" aria-hidden="true" />
+                  <span>{activeLeader.role}</span>
+                </span>
+                <span className="rk-sambutan-active-name">
+                  {activeLeader.name}
+                </span>
               </div>
 
               <div className="rk-sambutan-body">
-                <p className="rk-sambutan-salutation">{activeLeader.salutation}</p>
-                <p>
-                  <span className="rk-show-desktop">{activeLeader.paragraph1Desktop}</span>
-                  <span className="rk-show-mobile">{activeLeader.paragraph1Mobile}</span>
+                <p className="rk-sambutan-salutation">
+                  {activeLeader.salutation}
                 </p>
-                <p>{activeLeader.paragraph2}</p>
-                <p>
-                  <span className="rk-show-desktop">{activeLeader.paragraph3Desktop}</span>
-                  <span className="rk-show-mobile">{activeLeader.paragraph3Mobile}</span>
-                </p>
+                {activeLeader.paragraphs.map((para, idx) => (
+                  <p key={idx}>{para}</p>
+                ))}
                 <p className="rk-sambutan-closing">{activeLeader.closing}</p>
-              </div>
-
-              {/* Desktop Actions (Side-by-side buttons in left column) */}
-              <div className="rk-sambutan-desktop-actions">
-                <button
-                  type="button"
-                  className="rk-sambutan-btn-next"
-                  onClick={() => setActiveLeaderId(activeLeader.nextId)}
-                >
-                  <span>{activeLeader.nextButtonText}</span>
-                  <span aria-hidden="true">→</span>
-                </button>
-
-                <Link to="/about" className="rk-sambutan-btn-profile">
-                  Profil pengurus
-                </Link>
               </div>
             </div>
 
-            {/* Right Column: Deck of 3 Leader Cards */}
+            {/* 2. Three Portrait Selector Cards (Placed Below Speech Text) */}
             <div className="rk-sambutan-deck-wrap">
-              <div className="rk-sambutan-deck-eyebrow">
-                <span className="rk-sambutan-deck-eyebrow-bar">|</span>
-                <span>Pilih pengurus untuk membaca sambutan</span>
-              </div>
-
-              <h3 className="rk-mobile-selector-head">Pilih sambutan pengurus</h3>
-
               <div className="rk-sambutan-deck-panel">
-                <div className="rk-sambutan-cards-grid">
-                  {LEADERS_DATA.map((leader) => {
+                <div
+                  className="rk-sambutan-cards-grid"
+                  role="tablist"
+                  aria-label="Pilih sambutan ketua"
+                >
+                  {leadersData.map((leader) => {
                     const isSelected = activeLeaderId === leader.id;
                     return (
-                      <div
+                      <button
                         key={leader.id}
-                        role="button"
-                        tabIndex={0}
+                        type="button"
+                        role="tab"
+                        aria-selected={isSelected}
                         onClick={() => setActiveLeaderId(leader.id)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            setActiveLeaderId(leader.id);
-                          }
-                        }}
-                        className={`rk-leader-card ${isSelected ? 'rk-leader-card--active' : ''}`}
+                        className={`rk-leader-card ${
+                          isSelected ? 'rk-leader-card--active' : ''
+                        }`}
                       >
                         <div className="rk-leader-photo-frame">
                           {leader.photo ? (
@@ -376,204 +358,231 @@ export default function Home() {
                               aria-label="Foto pengurus belum tersedia"
                             >
                               <User
-                                size={32}
-                                strokeWidth={1.5}
+                                size={28}
+                                strokeWidth={1.6}
                                 className="rk-leader-placeholder-icon"
                                 aria-hidden="true"
                               />
+                              <span className="rk-leader-placeholder-text">
+                                Foto belum tersedia
+                              </span>
                             </div>
                           )}
                         </div>
 
-                        <div className="rk-leader-role-desktop">{leader.role}</div>
-                        <div className="rk-leader-role-mobile">
-                          <span>{leader.roleLine1}</span>
-                          <span>{leader.roleLine2}</span>
-                        </div>
-
-                        <span className="rk-leader-card-name">{leader.name}</span>
-
-                        {isSelected && (
-                          <span className="rk-leader-active-badge">
-                            Sambutan ditampilkan
-                          </span>
-                        )}
-                      </div>
+                        <span className="rk-leader-role-title">
+                          {leader.role}
+                        </span>
+                        <span className="rk-leader-card-name">
+                          {leader.name}
+                        </span>
+                      </button>
                     );
                   })}
                 </div>
               </div>
+            </div>
 
-              <p className="rk-sambutan-note">
-                Foto pengurus asli akan segera diperbarui.
-              </p>
+            {/* 3. Next Speech Button & Profile Link */}
+            <div className="rk-sambutan-actions-bar">
+              <button
+                type="button"
+                className="rk-sambutan-btn-next"
+                onClick={() => setActiveLeaderId(activeLeader.nextId)}
+              >
+                <span>{activeLeader.nextButtonText}</span>
+                <span aria-hidden="true">→</span>
+              </button>
 
-              {/* Mobile Actions (Buttons placed below cards on mobile as shown in Image 1) */}
-              <div className="rk-sambutan-mobile-actions-wrap">
-                <button
-                  type="button"
-                  className="rk-sambutan-btn-next"
-                  onClick={() => setActiveLeaderId(activeLeader.nextId)}
-                >
-                  <span>{activeLeader.nextButtonText}</span>
-                  <span aria-hidden="true">→</span>
-                </button>
-
-                <Link to="/about" className="rk-sambutan-btn-profile">
-                  Lihat profil pengurus
-                </Link>
-
-                <div className="rk-mobile-footer-note">
-                  <span className="rk-mobile-footer-org">ROHIS SMA Negeri 4 Purwokerto</span>
-                  <span className="rk-mobile-footer-sub">
-                    Foto pengurus asli akan segera diperbarui.
-                  </span>
-                </div>
-              </div>
+              <Link to="/about" className="rk-sambutan-btn-profile">
+                <span>Lihat profil pengurus</span>
+              </Link>
             </div>
           </div>
         </Container>
       </section>
 
-      {/* 3. TEMUKAN RUANGMU (6 LAYANAN & DIREKTORI LENGKAP) */}
+      {/* 3. RUANG UNTUK BERTUMBUH (5 LAYANAN UTAMA) */}
       <section className="rk-section">
         <Container>
           <div className="rk-inline-section-head">
-            <h2>Temukan ruangmu.</h2>
+            <h2>{sectionsMeta.services?.title || 'Ruang untuk bertumbuh.'}</h2>
             <span className="rk-inline-section-sep" aria-hidden="true" />
             <p>
-              Berbagai layanan, literasi, dan direktori untuk mendukung langkah
-              kebaikanmu di ROKABA.
+              {sectionsMeta.services?.description ||
+                'Kegiatan, literasi, dan layanan utama untuk mendukung langkah kebaikanmu di ROKABA.'}
             </p>
           </div>
 
-          <div className="rk-grid-3">
-            {DISCOVER_CARDS.map((card) => (
-              <SoftCard
-                key={card.to}
-                as={Link}
-                to={card.to}
-                interactive
-                className="rk-service-card"
-              >
-                <div style={{ display: 'grid', gap: '6px' }}>
-                  <h3>{card.title}</h3>
-                  <p>{card.description}</p>
-                </div>
+          <div className="rk-discover-grid">
+            {DISCOVER_CARDS.map((card) => {
+              const Icon = card.icon;
+              return (
+                <SoftCard
+                  key={card.to}
+                  as={Link}
+                  to={card.to}
+                  interactive
+                  className="rk-service-card"
+                >
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                    <span className="rk-service-icon-badge" aria-hidden="true">
+                      <Icon size={18} />
+                    </span>
+                    <div style={{ display: 'grid', gap: '4px', minWidth: 0 }}>
+                      <h3>{card.title}</h3>
+                      <p>{card.description}</p>
+                    </div>
+                  </div>
 
-                <span className="rk-card-link-right">
-                  <span>Jelajahi</span>
-                  <span aria-hidden="true">→</span>
-                </span>
-              </SoftCard>
-            ))}
+                  <span className="rk-card-link-right">
+                    <span>Jelajahi</span>
+                    <span aria-hidden="true">→</span>
+                  </span>
+                </SoftCard>
+              );
+            })}
           </div>
         </Container>
       </section>
 
-      {/* 4. TENTANG KAMI & KABAR DARI ROKABA */}
+      {/* 4. TENTANG KAMI (2-COLUMN EDITORIAL SPLIT WITH PHOTO) */}
       <section className="rk-section">
         <Container>
-          <SoftCard style={{ padding: 'clamp(20px, 2.5vw, 28px)' }}>
-            <div className="rk-eyebrow" style={{ marginBottom: 0 }}>
-              <span className="rk-eyebrow-bar" aria-hidden="true" />
-              <span>{aboutData.tag || 'TENTANG KAMI'} • EST. 2017</span>
-            </div>
+          <SoftCard style={{ padding: 'clamp(20px, 2.8vw, 32px)' }}>
+            <div className="rk-split-55-45" style={{ alignItems: 'center' }}>
+              <div>
+                <div className="rk-eyebrow" style={{ marginBottom: 0 }}>
+                  <span className="rk-eyebrow-bar" aria-hidden="true" />
+                  <span>{aboutData.tag || 'TENTANG KAMI'} • EST. 2017</span>
+                </div>
 
-            <h2 style={{ fontSize: 'clamp(1.35rem, 2vw, 1.7rem)', marginTop: '8px' }}>
-              {aboutData.title}
-            </h2>
-
-            <p style={{ fontSize: '0.9rem', lineHeight: 1.6, marginTop: '8px' }}>
-              {aboutData.lead}
-            </p>
-
-            <p style={{ fontSize: '0.9rem', lineHeight: 1.6, marginTop: '6px' }}>
-              {aboutData.paragraph1}
-            </p>
-
-            <div className="rk-grid-2" style={{ marginTop: '14px', gap: '12px' }}>
-              <div className="rk-inset-panel" style={{ padding: '12px 14px' }}>
-                <strong
+                <h2
                   style={{
-                    display: 'block',
-                    fontSize: '0.88rem',
-                    color: 'var(--rk-ink)',
+                    fontSize: 'clamp(1.4rem, 2.2vw, 1.85rem)',
+                    marginTop: '8px',
                   }}
                 >
-                  {aboutData.point1Title}
-                </strong>
-                <span
-                  style={{
-                    display: 'block',
-                    fontSize: '0.8rem',
-                    color: 'var(--rk-muted)',
-                    marginTop: '3px',
-                  }}
+                  {aboutData.title}
+                </h2>
+
+                <p style={{ fontSize: '0.92rem', lineHeight: 1.62, marginTop: '10px' }}>
+                  {aboutData.lead}
+                </p>
+
+                <p style={{ fontSize: '0.9rem', lineHeight: 1.62, marginTop: '8px' }}>
+                  {aboutData.paragraph1}
+                </p>
+
+                <div
+                  className="rk-grid-2"
+                  style={{ marginTop: '16px', gap: '12px' }}
                 >
-                  {aboutData.point1Desc}
-                </span>
+                  <div className="rk-inset-panel" style={{ padding: '12px 14px' }}>
+                    <strong
+                      style={{
+                        display: 'block',
+                        fontSize: '0.88rem',
+                        color: 'var(--rk-ink)',
+                      }}
+                    >
+                      {aboutData.point1Title || 'Sinergi Lintas Sekolah'}
+                    </strong>
+                    <span
+                      style={{
+                        display: 'block',
+                        fontSize: '0.8rem',
+                        color: 'var(--rk-muted)',
+                        marginTop: '3px',
+                      }}
+                    >
+                      {aboutData.point1Desc ||
+                        'Menghubungkan ROHIS SMA, SMK, dan MA di Kabupaten Banyumas.'}
+                    </span>
+                  </div>
+
+                  <div className="rk-inset-panel" style={{ padding: '12px 14px' }}>
+                    <strong
+                      style={{
+                        display: 'block',
+                        fontSize: '0.88rem',
+                        color: 'var(--rk-ink)',
+                      }}
+                    >
+                      {aboutData.point2Title || 'Kaderisasi Berjenjang'}
+                    </strong>
+                    <span
+                      style={{
+                        display: 'block',
+                        fontSize: '0.8rem',
+                        color: 'var(--rk-muted)',
+                        marginTop: '3px',
+                      }}
+                    >
+                      {aboutData.point2Desc ||
+                        'Mencetak generasi muda berakhlak mulia dan siap memimpin.'}
+                    </span>
+                  </div>
+                </div>
+
+                <div style={{ marginTop: '16px' }}>
+                  <Link to="/about" className="rk-link-inline">
+                    <span>Selengkapnya tentang ROKABA</span>
+                    <span aria-hidden="true">→</span>
+                  </Link>
+                </div>
               </div>
 
-              <div className="rk-inset-panel" style={{ padding: '12px 14px' }}>
-                <strong
-                  style={{
-                    display: 'block',
-                    fontSize: '0.88rem',
-                    color: 'var(--rk-ink)',
-                  }}
-                >
-                  {aboutData.point2Title}
-                </strong>
-                <span
-                  style={{
-                    display: 'block',
-                    fontSize: '0.8rem',
-                    color: 'var(--rk-muted)',
-                    marginTop: '3px',
-                  }}
-                >
-                  {aboutData.point2Desc}
-                </span>
-              </div>
-            </div>
+              <div style={{ display: 'grid', gap: '12px' }}>
+                <PhotoFrame
+                  src={aboutData.photoUrl || ROKABA_REAL_PHOTOS[1]}
+                  alt="Kegiatan pengurus dan kader ROKABA"
+                  aspect="16/10"
+                  captionTitle="Silaturahmi & Pembinaan Pelajar"
+                  captionSub="Wadah kolaborasi ROHIS SMA, SMK, dan MA se-Kabupaten Banyumas"
+                />
 
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'stretch',
-                gap: '12px',
-                paddingTop: '14px',
-              }}
-            >
-              <span
-                aria-hidden="true"
-                style={{
-                  width: '3px',
-                  borderRadius: '99px',
-                  background: 'var(--rk-brass)',
-                  flexShrink: 0,
-                }}
-              />
-              <p
-                style={{
-                  fontSize: '0.84rem',
-                  fontStyle: 'italic',
-                  color: 'var(--rk-ink)',
-                }}
-              >
-                {aboutData.quoteText}{' '}
-                <strong style={{ fontStyle: 'normal' }}>
-                  {aboutData.quoteAuthor}
-                </strong>
-              </p>
+                {aboutData.quoteText && (
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'stretch',
+                      gap: '12px',
+                      paddingTop: '4px',
+                    }}
+                  >
+                    <span
+                      aria-hidden="true"
+                      style={{
+                        width: '3px',
+                        borderRadius: '99px',
+                        background: 'var(--rk-brass)',
+                        flexShrink: 0,
+                      }}
+                    />
+                    <p
+                      style={{
+                        fontSize: '0.84rem',
+                        fontStyle: 'italic',
+                        color: 'var(--rk-ink)',
+                        margin: 0,
+                      }}
+                    >
+                      {aboutData.quoteText}{' '}
+                      <strong style={{ fontStyle: 'normal' }}>
+                        {aboutData.quoteAuthor}
+                      </strong>
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           </SoftCard>
         </Container>
       </section>
 
       {/* 5. KABAR DARI ROKABA & AGENDA BERSAMA */}
-      <section className="rk-section" style={{ paddingBottom: '16px' }}>
+      <section className="rk-section">
         <Container>
           <div className="rk-split-55-45">
             {/* Left: Kabar dari ROKABA */}
@@ -587,10 +596,10 @@ export default function Home() {
                 }}
               >
                 <h2 style={{ fontSize: 'clamp(1.45rem, 2.2vw, 1.85rem)' }}>
-                  Kabar dari ROKABA
+                  {sectionsMeta.news?.title || 'Kabar dari ROKABA'}
                 </h2>
                 <Link to="/berita" className="rk-card-link">
-                  <span>Semua berita</span>
+                  <span>{sectionsMeta.news?.linkText || 'Semua berita'}</span>
                   <span aria-hidden="true">→</span>
                 </Link>
               </div>
@@ -612,7 +621,7 @@ export default function Home() {
                       minHeight: '120px',
                     }}
                   >
-                    <img
+                    <SmartImage
                       src={featuredNews.image || ROKABA_REAL_PHOTOS[0]}
                       alt={featuredNews.title}
                       style={{
@@ -704,10 +713,10 @@ export default function Home() {
                 }}
               >
                 <h2 style={{ fontSize: 'clamp(1.45rem, 2.2vw, 1.85rem)' }}>
-                  Agenda bersama
+                  {sectionsMeta.events?.title || 'Agenda bersama'}
                 </h2>
                 <Link to="/events" className="rk-card-link">
-                  <span>Semua agenda</span>
+                  <span>{sectionsMeta.events?.linkText || 'Semua agenda'}</span>
                   <span aria-hidden="true">→</span>
                 </Link>
               </div>
@@ -726,6 +735,7 @@ export default function Home() {
                       as={Link}
                       to="/events"
                       interactive
+                      className="rk-home-event"
                       style={{
                         padding: '12px 16px',
                         display: 'flex',
@@ -798,6 +808,52 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </Container>
+      </section>
+
+      {/* 6. AJAKAN BERGABUNG / CLOSING CTA BANNER (01-publik-beranda.png) */}
+      <section className="rk-section" style={{ paddingBottom: '24px' }}>
+        <Container>
+          <SoftCard
+            style={{
+              padding: 'clamp(22px, 3vw, 34px)',
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '20px',
+            }}
+          >
+            <div style={{ maxWidth: '58ch', display: 'grid', gap: '6px' }}>
+              <div className="rk-eyebrow" style={{ marginBottom: 0 }}>
+                <span className="rk-eyebrow-bar" aria-hidden="true" />
+                <span>KOLABORASI & UKHUWAH PELAJAR</span>
+              </div>
+              <h2 style={{ fontSize: 'clamp(1.35rem, 2.2vw, 1.8rem)' }}>
+                {closingData.title || 'Mari bergerak bersama dalam kebaikan.'}
+              </h2>
+              <p style={{ fontSize: '0.92rem', lineHeight: 1.58 }}>
+                {closingData.description ||
+                  'Terbuka untuk kolaborasi kegiatan ROHIS antar sekolah, delegasi kader, maupun ruang konsultasi pelajar Muslim se-Kabupaten Banyumas.'}
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+              <PrimaryButton
+                as={Link}
+                to={closingData.btnPrimaryLink || '/contact'}
+              >
+                <span>{closingData.btnPrimaryText || 'Hubungi kami'}</span>
+                <span aria-hidden="true">→</span>
+              </PrimaryButton>
+              <SecondaryButton
+                as={Link}
+                to={closingData.btnSecondaryLink || '/consultation'}
+              >
+                <span>{closingData.btnSecondaryText || 'Ruang konsultasi'}</span>
+              </SecondaryButton>
+            </div>
+          </SoftCard>
         </Container>
       </section>
     </div>

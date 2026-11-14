@@ -43,10 +43,10 @@
   --status-red-border: rgba(239, 68, 68, 0.22);
 
   /* Soft UI Shadows */
-  --soft-shadow: 5px 5px 14px rgba(25, 43, 32, 0.06), -3px -3px 10px rgba(255, 255, 255, 0.85);
-  --soft-shadow-sm: 3px 3px 8px rgba(25, 43, 32, 0.05), -2px -2px 6px rgba(255, 255, 255, 0.8);
+  --soft-shadow: 8px 12px 24px #26322120, 0 2px 3px #26322115, -4px -4px 12px #ffffffd9, inset 0 1px 1px white;
+  --soft-shadow-sm: 3px 5px 9px #26322120, -2px -2px 6px #ffffffdd, inset 0 1px 1px white;
   --soft-shadow-hover: 7px 7px 18px rgba(25, 43, 32, 0.09), -4px -4px 12px rgba(255, 255, 255, 0.95);
-  --inset-shadow: inset 2px 2px 5px rgba(25, 43, 32, 0.05), inset -1px -1px 3px rgba(255, 255, 255, 0.8);
+  --inset-shadow: inset 2px 3px 6px #26322120, inset -2px -2px 4px #ffffffdd;
   --modal-shadow: 0 24px 60px rgba(16, 41, 31, 0.16), 0 4px 14px rgba(16, 41, 31, 0.08);
 
   /* Glassmorphism */
@@ -118,7 +118,7 @@ h1, h2, h3, h4, h5, h6 {
 /* ═══════ Soft UI Panel / Cards ═══════ */
 .admin-soft-card {
   background: var(--surface-bg);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid rgba(255,255,255,.95);
   border-radius: var(--radius-lg);
   box-shadow: var(--soft-shadow);
   transition: box-shadow 0.2s ease, border-color 0.2s ease;
@@ -150,11 +150,11 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-sans);
   font-size: 0.88rem;
   font-weight: 600;
-  background-color: var(--pine-dark);
+  background: linear-gradient(180deg,#24533c,#0d2a1e);
   color: #FFFFFF !important;
   border: 1px solid var(--pine-deep);
   border-radius: var(--radius-md);
-  box-shadow: 0 2px 6px rgba(16, 41, 31, 0.2);
+  box-shadow: 0 5px 10px #10291f40, inset 0 2px 2px #ffffff50, inset 0 -2px 2px #0003;
   cursor: pointer;
   transition: all 0.15s ease;
   text-decoration: none;
@@ -460,3 +460,20 @@ h1, h2, h3, h4, h5, h6 {
     padding: 1rem 1.25rem;
   }
 }
+
+/* Shared interaction and responsive surface rules. */
+:focus-visible{outline:3px solid #A99157;outline-offset:3px}
+.admin-soft-card{padding:24px;min-width:0}
+.admin-soft-table th{background:#e7ecdf;color:#243b2e}
+.admin-soft-table td{padding-block:18px}
+.form-input-soft,.form-select-soft,.form-textarea-soft{min-height:44px;background:#f6f5ef;box-shadow:var(--inset-shadow)}
+.modal-card-responsive{border:1px solid white;border-radius:22px;box-shadow:var(--modal-shadow),inset 0 1px 1px white}
+.modal-header-responsive,.modal-footer-responsive{background:#f7f5f0dc;backdrop-filter:blur(18px) saturate(1.2)}
+@media(max-width:640px){.admin-soft-card{padding:18px}.modal-card-responsive{max-height:calc(100dvh - 24px)}.modal-footer-responsive{padding-bottom:max(16px,env(safe-area-inset-bottom))}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+.admin-settings-grid>*,.admin-qa-grid>*,.admin-dashboard-split>*{min-width:0}
+.data-table-container-soft{max-width:100%;overflow-x:auto}
+@media(max-width:1050px){.admin-settings-grid,.admin-qa-grid{grid-template-columns:minmax(0,1fr)!important}}
+@media(max-width:640px){.admin-dashboard-split{grid-template-columns:minmax(0,1fr)!important}.admin-dashboard-split table{display:block;max-width:100%;overflow-x:auto}.form-grid-2-soft{grid-template-columns:minmax(0,1fr)}.admin-soft-card{overflow-wrap:anywhere}.admin-home-workspace .admin-save-dock{font-size:.78rem}.admin-save-dock button{padding:10px;font-size:.8rem}}
+.admin-media-preview>div:nth-child(2){flex:1 1 160px!important}.admin-media-preview>div:nth-child(2)>div{flex-wrap:wrap}.admin-media-preview button{white-space:nowrap}

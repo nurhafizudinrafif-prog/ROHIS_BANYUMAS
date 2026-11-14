@@ -167,7 +167,7 @@ export default function QAModeration() {
       </div>
 
       {/* 2-Column Layout matching Image 03 panel 4 */}
-      <div style={{
+      <div className="admin-qa-grid" style={{
         display: 'grid',
         gridTemplateColumns: 'minmax(280px, 1fr) minmax(340px, 1.8fr)',
         gap: '1.5rem',

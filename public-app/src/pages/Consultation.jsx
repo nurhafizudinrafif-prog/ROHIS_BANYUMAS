@@ -171,17 +171,19 @@ export default function Consultation() {
               </PrimaryButton>
 
               {submitted && (
-                <p
+                <div
                   role="status"
+                  className="rk-inset-panel"
                   style={{
-                    fontSize: '0.86rem',
+                    padding: '12px 14px',
+                    fontSize: '0.84rem',
                     fontWeight: 600,
                     color: 'var(--rk-pine)',
-                    textAlign: 'center',
+                    lineHeight: 1.5,
                   }}
                 >
-                  Pertanyaanmu telah tercatat. Terima kasih telah berbagi.
-                </p>
+                  Pertanyaanmu telah dicatat pada penyimpanan lokal browser di perangkat ini. Kamu juga dapat membaca daftar tanya jawab pilihan di bawah ini.
+                </div>
               )}
             </form>
           </SoftCard>

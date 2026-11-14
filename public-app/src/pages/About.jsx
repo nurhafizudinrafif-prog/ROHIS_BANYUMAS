@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Compass, CheckCircle2 } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import {
   Container,
@@ -159,6 +160,71 @@ export default function About() {
                 </p>
               </SoftCard>
             </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* 1B. VISI & MISI ROKABA (Matching 02-publik-tentang-program.png) */}
+      <section className="rk-section">
+        <Container>
+          <div className="rk-inline-section-head">
+            <h2>Visi & misi organisasi</h2>
+            <span className="rk-inline-section-sep" aria-hidden="true" />
+            <p>
+              Arah gerak pembinaan dan kolaborasi ROHIS SMA, SMK, dan MA se-Kabupaten Banyumas.
+            </p>
+          </div>
+
+          <div className="rk-grid-2">
+            <SoftCard style={{ padding: '22px 24px', display: 'grid', gap: '10px', alignContent: 'start' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <span className="rk-service-icon-badge" aria-hidden="true">
+                  <Compass size={18} />
+                </span>
+                <div>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--rk-brass-text)' }}>
+                    VISI UTAMA
+                  </span>
+                  <h3 style={{ fontSize: '1.18rem', fontWeight: 800 }}>
+                    Pelajar berakhlak, inklusif, dan berdaya
+                  </h3>
+                </div>
+              </div>
+              <p style={{ fontSize: '0.9rem', lineHeight: 1.62 }}>
+                Menjadi wadah kolaborasi pelajar Muslim SMA, SMK, dan MA di Kabupaten Banyumas yang menguatkan keimanan, menumbuhkan kepemimpinan amanah, dan menghadirkan dakwah sekolah yang sejuk serta bermanfaat.
+              </p>
+            </SoftCard>
+
+            <SoftCard style={{ padding: '22px 24px', display: 'grid', gap: '10px', alignContent: 'start' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <span className="rk-service-icon-badge" aria-hidden="true">
+                  <CheckCircle2 size={18} />
+                </span>
+                <div>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--rk-brass-text)' }}>
+                    MISI GERAKAN
+                  </span>
+                  <h3 style={{ fontSize: '1.18rem', fontWeight: 800 }}>
+                    Langkah bersama lintas sekolah
+                  </h3>
+                </div>
+              </div>
+              <ul
+                style={{
+                  margin: 0,
+                  paddingLeft: '18px',
+                  display: 'grid',
+                  gap: '6px',
+                  fontSize: '0.88rem',
+                  lineHeight: 1.55,
+                  color: 'var(--rk-ink)',
+                }}
+              >
+                <li>Mempererat ukhuwah dan komunikasi antar ROHIS SMA, SMK, dan MA se-Kabupaten Banyumas.</li>
+                <li>Menyelenggarakan pembinaan keislaman, latihan kepemimpinan, dan literasi kreatif pelajar.</li>
+                <li>Mendorong program kepedulian sosial dan kolaborasi kegiatan positif di lingkungan sekolah.</li>
+              </ul>
+            </SoftCard>
           </div>
         </Container>
       </section>

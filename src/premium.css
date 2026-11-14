@@ -4,37 +4,16 @@
 
 /* 1. OUTER 3D BOARD SHELL (Matches the framed board in 01, 02, 03) */
 .rk-site {
-  min-height: 100vh;
-  padding: clamp(12px, 2.2vw, 28px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  min-height:100vh; padding:0; display:flex; flex-direction:column; align-items:center;
 }
 
 .rk-board-shell {
-  width: 100%;
-  max-width: 1240px;
-  min-height: calc(100vh - clamp(24px, 4.4vw, 56px));
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border-radius: var(--rk-radius-board);
-  background:
-    radial-gradient(circle at 28% 6%, rgba(188, 208, 190, 0.28) 0%, transparent 38%),
-    radial-gradient(circle at 85% 18%, rgba(255, 255, 255, 0.75) 0%, transparent 45%),
-    linear-gradient(165deg, #F6F7F2 0%, #ECEEE7 100%);
-  border: 2px solid rgba(255, 255, 255, 0.92);
-  box-shadow: var(--rk-shadow-board);
-  overflow: hidden;
-  position: relative;
+  width:100%; min-height:100vh; display:flex; flex-direction:column; background:#F7F5F0; position:relative;
 }
 
 .rk-container,
 .rk-wrap {
-  width: 100%;
-  max-width: var(--rk-container-max);
-  margin-inline: auto;
-  padding-inline: clamp(20px, 3.8vw, 44px);
+  width:100%; max-width:1280px; margin-inline:auto; padding-inline:clamp(20px,4vw,48px);
 }
 
 .rk-page {
@@ -43,42 +22,22 @@
 }
 
 .rk-section {
-  padding-block: clamp(10px, 1.5vw, 18px);
+  padding-block:clamp(28px,4vw,56px);
 }
 
 /* --------------------------------------------------------------------------
    2. LIQUID GLASS NAVIGATION BAR (With Refractive Green-White Sheen)
    -------------------------------------------------------------------------- */
 .rk-header-shell {
-  padding-top: clamp(16px, 2.2vw, 26px);
-  padding-bottom: 10px;
-  position: sticky;
-  top: 0;
-  z-index: 60;
+  padding-top:20px; padding-bottom:16px; position:sticky; top:0; z-index:60;
 }
 
 .rk-glass-nav {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  min-height: 70px;
-  padding: 10px 18px 10px 22px;
-  border-radius: 18px;
-  background:
-    radial-gradient(150px 70px at 27% 50%, rgba(126, 166, 128, 0.34) 0%, transparent 78%),
-    radial-gradient(220px 80px at 56% 35%, rgba(255, 255, 255, 0.72) 0%, transparent 82%),
-    linear-gradient(135deg, rgba(251, 251, 247, 0.84) 0%, rgba(235, 239, 231, 0.74) 100%);
-  border: 1.5px solid rgba(255, 255, 255, 0.92);
-  box-shadow:
-    0 12px 26px rgba(16, 38, 27, 0.12),
-    0 3px 8px rgba(16, 38, 27, 0.06),
-    -4px -4px 12px rgba(255, 255, 255, 0.92),
-    inset 0 2px 2px rgba(255, 255, 255, 0.98),
-    inset 0 -1px 2px rgba(16, 41, 31, 0.05);
-  backdrop-filter: blur(20px) saturate(165%);
-  -webkit-backdrop-filter: blur(20px) saturate(165%);
+  position:relative; isolation:isolate; display:flex; align-items:center; justify-content:space-between; gap:16px;
+  min-height:74px; padding:12px 20px; border-radius:22px;
+  background:linear-gradient(125deg,rgba(255,255,255,.74),rgba(222,233,216,.58));
+  border:1px solid rgba(255,255,255,.96); box-shadow:0 14px 24px #24322122,0 3px 4px #24322114,inset 0 2px 2px #fff,inset 0 -2px 3px #314d291a;
+  backdrop-filter:blur(20px) saturate(1.25); -webkit-backdrop-filter:blur(20px) saturate(1.25);
 }
 
 .rk-brand {
@@ -319,25 +278,10 @@
 
 /* True Smoked Frosted Liquid Glass Caption (Matches 01 & 03) */
 .rk-glass-caption {
-  position: absolute;
-  left: 14px;
-  bottom: 14px;
-  width: fit-content;
-  max-width: calc(100% - 28px);
-  padding: 10px 18px;
-  border-radius: 13px;
-  background: linear-gradient(
-    135deg,
-    rgba(22, 38, 29, 0.58) 0%,
-    rgba(50, 70, 58, 0.42) 100%
-  );
-  border: 1px solid rgba(255, 255, 255, 0.46);
-  box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.24),
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(16px) saturate(165%);
-  -webkit-backdrop-filter: blur(16px) saturate(165%);
-  color: #FFFFFF;
+  position:absolute; isolation:isolate; overflow:hidden; left:14px; right:14px; bottom:14px; padding:16px 20px; border-radius:18px;
+  background:linear-gradient(125deg,#ffffff22,#14291f75); border:1px solid #ffffffb8;
+  box-shadow:0 7px 16px #0003,inset 0 2px 2px #ffffffb0,inset 0 -2px 3px #152d263b;
+  backdrop-filter:blur(12px) saturate(1.2); -webkit-backdrop-filter:blur(12px) saturate(1.2); color:white;
 }
 
 .rk-glass-caption strong {
@@ -346,7 +290,7 @@
   font-weight: 700;
   color: #FFFFFF;
   line-height: 1.25;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  text-shadow: none;
 }
 
 .rk-glass-caption span {
@@ -380,8 +324,7 @@
    5. TYPOGRAPHY, EYEBROW & PAGE HEADERS
    -------------------------------------------------------------------------- */
 .rk-page-header {
-  padding-top: clamp(14px, 2.2vw, 24px);
-  padding-bottom: clamp(10px, 1.6vw, 18px);
+  padding-top:36px; padding-bottom:32px;
 }
 
 .rk-breadcrumb {
@@ -537,8 +480,7 @@
    7. HERO & REFERENCE LAYOUT GRIDS
    -------------------------------------------------------------------------- */
 .rk-hero {
-  padding-top: clamp(6px, 1.2vw, 14px);
-  padding-bottom: clamp(10px, 1.6vw, 18px);
+  padding-top:24px; padding-bottom:32px;
 }
 
 .rk-hero-grid {
@@ -549,19 +491,11 @@
 }
 
 .rk-hero-title {
-  font-size: clamp(2.25rem, 4.1vw, 3.45rem);
-  font-weight: 800;
-  line-height: 1.06;
-  letter-spacing: -0.038em;
-  color: var(--rk-ink);
+  font-size:clamp(2.4rem,4.3vw,3.8rem); font-weight:800; line-height:1.07; letter-spacing:-.045em; color:var(--rk-ink); max-width:12ch; text-wrap:balance;
 }
 
 .rk-hero-lead {
-  margin-top: 14px;
-  font-size: clamp(0.96rem, 1.15vw, 1.06rem);
-  line-height: 1.55;
-  color: var(--rk-muted);
-  max-width: 44ch;
+  margin-top:24px; font-size:1.05rem; line-height:1.7; color:var(--rk-muted); max-width:46ch;
 }
 
 .rk-hero-actions {
@@ -926,25 +860,27 @@
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: rgba(7, 20, 14, 0.42);
-  backdrop-filter: blur(6px);
+  background: rgba(7, 20, 14, 0.52);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   justify-content: flex-end;
   padding: 12px;
 }
 
 .rk-mobile-drawer-panel {
-  width: min(100%, 340px);
+  width: min(100%, 348px);
   height: 100%;
   overflow-y: auto;
-  border-radius: 22px;
-  background: var(--rk-surface);
-  border: 1.5px solid rgba(255, 255, 255, 0.92);
-  box-shadow: 0 20px 50px rgba(7, 20, 14, 0.25);
+  border-radius: 24px;
+  background: linear-gradient(170deg, #10291F 0%, #0A1D15 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 24px 60px rgba(7, 20, 14, 0.48), inset 0 1px 1px rgba(255, 255, 255, 0.14);
   padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  color: #F7F5F0;
 }
 
 .rk-mobile-drawer-top {
@@ -953,12 +889,30 @@
   justify-content: space-between;
   gap: 12px;
   padding-bottom: 14px;
-  border-bottom: 1px solid var(--rk-line);
+  border-bottom: 1px solid rgba(247, 245, 240, 0.14);
+}
+
+.rk-mobile-drawer-panel .rk-brand-text strong {
+  color: #F7F5F0;
+}
+
+.rk-mobile-drawer-panel .rk-brand-text small {
+  color: rgba(247, 245, 240, 0.72);
+}
+
+.rk-mobile-drawer-panel .rk-brand-divider {
+  background: rgba(247, 245, 240, 0.22);
+}
+
+.rk-mobile-drawer-panel .rk-mobile-toggle {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #F7F5F0;
 }
 
 .rk-mobile-nav-list {
   display: grid;
-  gap: 8px;
+  gap: 6px;
   margin-block: 16px;
 }
 
@@ -966,18 +920,28 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   padding: 11px 14px;
-  border-radius: 12px;
-  font-size: 0.94rem;
-  font-weight: 700;
-  color: var(--rk-ink);
-  background: var(--rk-surface-raised);
-  box-shadow: var(--rk-shadow-pill);
+  border-radius: 13px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: rgba(247, 245, 240, 0.88);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 150ms ease;
+}
+
+.rk-mobile-nav-list a:hover {
+  background: rgba(255, 255, 255, 0.09);
+  color: #FFFFFF;
 }
 
 .rk-mobile-nav-list a[aria-current="page"] {
-  background: var(--rk-pine);
-  color: #F7F5F0;
+  background: linear-gradient(125deg, rgba(214, 228, 204, 0.92), rgba(191, 207, 184, 0.78));
+  border-color: rgba(255, 255, 255, 0.75);
+  color: #10291F;
+  font-weight: 700;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.85);
 }
 
 @media (max-width: 1024px) {
@@ -1073,29 +1037,24 @@
 
 /* ==========================================================================
    SAMBUTAN PIMPINAN SECTION (100% Reference-Faithful Desktop & Mobile)
+   Matches references/03-acuan-hp.png, 01-publik-beranda.png, 11-hp-beranda-sambutan.png
    ========================================================================== */
 .rk-sambutan-section {
-  padding-block: clamp(16px, 2.5vw, 28px);
+  padding-block: clamp(28px, 4.5vw, 56px);
 }
 
 .rk-sambutan-header {
-  margin-bottom: clamp(12px, 1.8vw, 18px);
+  max-width: 860px;
+  margin: 0 auto 22px;
 }
 
 .rk-sambutan-title {
   font-size: clamp(1.65rem, 2.6vw, 2.25rem);
   font-weight: 800;
-  line-height: 1.2;
+  line-height: 1.18;
   color: var(--rk-ink);
-  letter-spacing: -0.02em;
-  margin: 0 0 6px 0;
-}
-
-.rk-show-desktop {
-  display: inline;
-}
-.rk-show-mobile {
-  display: none;
+  letter-spacing: -0.025em;
+  margin: 0 0 8px 0;
 }
 
 .rk-sambutan-eyebrow {
@@ -1115,200 +1074,121 @@
   flex-shrink: 0;
 }
 
-/* Tabs on Desktop */
-.rk-sambutan-tabs {
-  display: inline-flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 16px;
-  margin-bottom: 20px;
-}
-
-.rk-sambutan-tab {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 18px;
-  border-radius: 9999px;
-  font-size: 0.88rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  background: var(--rk-surface);
-  color: var(--rk-ink);
-  box-shadow: var(--rk-shadow-card);
-}
-
-.rk-sambutan-tab:hover {
-  transform: translateY(-1px);
-}
-
-.rk-sambutan-tab--active {
-  background: var(--rk-pine);
-  color: #FFFFFF;
-  border-color: var(--rk-pine);
-  box-shadow: 0 4px 14px rgba(13, 35, 25, 0.22);
-}
-
-.rk-sambutan-tab-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #9CA3AF;
-  display: inline-block;
-  transition: background 0.2s ease;
-}
-
-.rk-sambutan-tab--active .rk-sambutan-tab-dot {
-  background: #4ADE80;
-}
-
-/* Two-column layout on Desktop */
+/* Single Raised Card Container for Sambutan (speech above, 3 portrait cards below) */
 .rk-sambutan-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
-  gap: clamp(24px, 3.5vw, 44px);
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: clamp(22px, 3.6vw, 40px);
+  border-radius: 22px;
+  background: linear-gradient(155deg, #FAF9F5 0%, #F1F2EC 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.94);
+  box-shadow: var(--rk-shadow-raised);
 }
 
-/* Left content */
 .rk-sambutan-content {
   display: flex;
   flex-direction: column;
 }
 
+/* Active Leader Role Pill & Name Header inside Sambutan Card */
+.rk-sambutan-active-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--rk-line);
+}
+
+.rk-sambutan-role-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: linear-gradient(125deg, #D6E4CC 0%, #C4D6BA 100%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  color: var(--rk-pine);
+  font-size: 0.84rem;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(16, 41, 31, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+.rk-sambutan-role-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--rk-pine);
+}
+
+.rk-sambutan-active-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--rk-muted);
+}
+
 .rk-sambutan-body {
   color: var(--rk-ink);
-  font-size: clamp(0.9rem, 1.15vw, 0.96rem);
-  line-height: 1.65;
+  font-size: 0.98rem;
+  line-height: 1.78;
   display: grid;
-  gap: 14px;
+  gap: 16px;
+  max-width: 72ch;
 }
 
 .rk-sambutan-salutation {
-  font-weight: 700;
+  font-weight: 800;
   color: var(--rk-ink);
-  font-size: 0.98rem;
+  font-size: 1.02rem;
   margin: 0;
 }
 
 .rk-sambutan-closing {
-  font-weight: 700;
+  font-weight: 800;
   color: var(--rk-ink);
-  font-size: 0.98rem;
+  font-size: 1.02rem;
   margin: 4px 0 0 0;
 }
 
-/* Desktop Actions */
-.rk-sambutan-desktop-actions {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-top: 24px;
-  flex-wrap: wrap;
-}
-
-.rk-sambutan-btn-next {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 10px 22px;
-  border-radius: 12px;
-  background: var(--rk-pine);
-  color: #FFFFFF;
-  font-size: 0.9rem;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(13, 35, 25, 0.24);
-  transition: all 0.2s ease;
-  min-height: 44px;
-  text-decoration: none;
-}
-
-.rk-sambutan-btn-next:hover {
-  background: var(--rk-pine-hover);
-  transform: translateY(-1px);
-}
-
-.rk-sambutan-btn-profile {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 20px;
-  border-radius: 12px;
-  background: var(--rk-surface);
-  color: var(--rk-ink);
-  font-size: 0.9rem;
-  font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: var(--rk-shadow-card);
-  text-decoration: none;
-  min-height: 44px;
-  transition: all 0.2s ease;
-}
-
-.rk-sambutan-btn-profile:hover {
-  color: var(--rk-pine);
-  transform: translateY(-1px);
-}
-
-/* Mobile Actions Wrap (hidden on desktop) */
-.rk-sambutan-mobile-actions-wrap {
-  display: none;
-}
-
-/* Right column - Deck of Cards */
+/* Portrait Selector Deck Placed Below Closing Salutation */
 .rk-sambutan-deck-wrap {
   display: flex;
   flex-direction: column;
-}
-
-.rk-sambutan-deck-eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--rk-ink);
-  margin-bottom: 12px;
-}
-
-.rk-sambutan-deck-eyebrow-bar {
-  color: #C8A85B;
-  font-weight: 800;
+  margin-top: 4px;
 }
 
 .rk-sambutan-deck-panel {
-  background: #F8F7F2;
-  border-radius: 24px;
-  padding: 16px;
-  box-shadow:
-    0 10px 28px rgba(16, 38, 27, 0.06),
-    inset 0 1px 1px rgba(255, 255, 255, 0.9);
-  border: 1.5px solid rgba(255, 255, 255, 0.88);
+  padding: 12px;
+  border-radius: 20px;
+  background: var(--rk-surface-inset);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: var(--rk-shadow-inset);
+  width: 100%;
 }
 
 .rk-sambutan-cards-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  gap: 14px;
 }
 
 .rk-leader-card {
-  background: #FFFFFF;
+  background: linear-gradient(155deg, #FFFFFF 0%, #F5F6F1 100%);
   border-radius: 16px;
   padding: 10px;
-  border: 1.5px solid transparent;
-  box-shadow: var(--rk-shadow-card);
+  border: 1.5px solid rgba(255, 255, 255, 0.92);
+  box-shadow: var(--rk-shadow-pill);
   cursor: pointer;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
   position: relative;
   width: 100%;
 }
@@ -1318,17 +1198,17 @@
 }
 
 .rk-leader-card--active {
-  background: #EDF5EF;
+  background: linear-gradient(155deg, #E8F2EA 0%, #D9E8DC 100%);
   border-color: #2D6A4F;
-  box-shadow:
-    0 4px 18px rgba(45, 106, 79, 0.16),
-    var(--rk-shadow-card);
+  outline: 2px solid rgba(169, 145, 87, 0.55);
+  outline-offset: 1px;
+  box-shadow: 0 6px 18px rgba(16, 41, 31, 0.14);
 }
 
 .rk-leader-photo-frame {
   width: 100%;
-  aspect-ratio: 120 / 146;
-  border-radius: 11px;
+  aspect-ratio: 4 / 4.6;
+  border-radius: 12px;
   overflow: hidden;
   background: transparent;
   margin-bottom: 8px;
@@ -1345,47 +1225,48 @@
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 6px;
+  padding: 8px;
   background: linear-gradient(160deg, #E8EBE3 0%, #DCE0D6 100%);
-  color: #7D887B;
+  color: #6B786B;
   border-radius: 11px;
-  border: 1px dashed rgba(16, 38, 27, 0.2);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.rk-leader-card:hover .rk-leader-placeholder {
-  background: linear-gradient(160deg, #EDF2EC 0%, #E1E8DE 100%);
-  color: var(--rk-pine);
-  border-color: rgba(45, 106, 79, 0.35);
+  border: 1px dashed rgba(16, 38, 27, 0.22);
+  transition: all 0.2s ease;
 }
 
 .rk-leader-card--active .rk-leader-placeholder {
   background: linear-gradient(160deg, #E2EDE4 0%, #D2DFD3 100%);
-  color: #2D6A4F;
+  color: #1F4E39;
   border: 1.5px dashed #2D6A4F;
 }
 
 .rk-leader-placeholder-icon {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   opacity: 0.85;
 }
 
-.rk-leader-role-desktop {
+.rk-leader-placeholder-text {
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: inherit;
+  opacity: 0.85;
+}
+
+.rk-leader-role-title {
   display: block;
   font-size: 0.9rem;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--rk-ink);
   line-height: 1.2;
 }
 
-.rk-leader-role-mobile {
-  display: none;
-}
-
 .rk-leader-card-name {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 500;
   color: var(--rk-muted);
   margin-top: 3px;
@@ -1395,195 +1276,119 @@
   width: 100%;
 }
 
-.rk-leader-active-badge {
-  margin-top: 6px;
-  background: #0D2319;
-  color: #FFFFFF;
-  font-size: 0.68rem;
-  font-weight: 600;
-  padding: 3px 8px;
-  border-radius: 9999px;
-  display: inline-block;
-  white-space: nowrap;
+/* Sambutan Bottom Action Bar (Next Button + Profile Link) */
+.rk-sambutan-actions-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 4px;
 }
 
-.rk-sambutan-note {
-  font-size: 0.76rem;
-  font-style: italic;
-  color: var(--rk-muted);
-  text-align: right;
-  margin-top: 10px;
+.rk-sambutan-btn-next {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 22px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #1B3F2F 0%, #0E261C 100%);
+  color: #F7F5F0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  cursor: pointer;
+  box-shadow: var(--rk-shadow-button);
+  transition: all 0.18s ease;
+  min-height: 46px;
+  flex: 1 1 260px;
 }
 
-/* Mobile-only elements hidden on desktop */
-.rk-mobile-leader-info,
-.rk-mobile-selector-head,
-.rk-mobile-footer-note {
-  display: none;
+.rk-sambutan-btn-next:hover {
+  background: linear-gradient(180deg, #214B38 0%, #112E22 100%);
+  transform: translateY(-1px);
 }
 
-/* --------------------------------------------------------------------------
-   RESPONSIVE (Matching Image 1 on Mobile <= 768px)
-   -------------------------------------------------------------------------- */
-@media (max-width: 768px) {
-  .rk-show-desktop {
-    display: none;
-  }
-  .rk-show-mobile {
-    display: inline;
-  }
-
-  /* Hide desktop tabs, desktop actions, deck eyebrow, and desktop note */
-  .rk-sambutan-tabs,
-  .rk-sambutan-desktop-actions,
-  .rk-sambutan-deck-eyebrow,
-  .rk-sambutan-note {
-    display: none;
-  }
-
-  .rk-sambutan-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  /* Mobile leader info right under title & eyebrow */
-  .rk-mobile-leader-info {
-    display: block;
-    margin-top: 14px;
-    margin-bottom: 8px;
-  }
-
-  .rk-mobile-leader-name {
-    display: block;
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: var(--rk-ink);
-  }
-
-  .rk-mobile-leader-role {
-    display: block;
-    font-size: 0.85rem;
-    color: var(--rk-muted);
-    font-weight: 500;
-    margin-top: 2px;
-  }
-
-  .rk-mobile-leader-divider {
-    border: none;
-    height: 1px;
-    background: var(--rk-line);
-    margin: 10px 0 16px 0;
-  }
-
-  /* Deck of 3 cards placed after text on mobile */
-  .rk-sambutan-deck-wrap {
-    order: 2;
-    margin-top: 12px;
-  }
-
-  .rk-mobile-selector-head {
-    display: block;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--rk-ink);
-    margin-bottom: 12px;
-  }
-
-  .rk-sambutan-deck-panel {
-    padding: 10px;
-    border-radius: 18px;
-  }
-
-  .rk-sambutan-cards-grid {
-    gap: 8px;
-  }
-
-  .rk-leader-card {
-    padding: 8px 4px;
-    border-radius: 14px;
-  }
-
-  .rk-leader-photo-frame {
-    border-radius: 10px;
-    margin-bottom: 6px;
-  }
-
-  .rk-leader-placeholder {
-    border-radius: 9px;
-  }
-
-  .rk-leader-placeholder-icon {
-    width: 24px;
-    height: 24px;
-  }
-
-  .rk-leader-role-desktop {
-    display: none;
-  }
-
-  .rk-leader-role-mobile {
-    display: flex;
-    flex-direction: column;
-    font-size: 0.82rem;
-    font-weight: 700;
-    color: var(--rk-ink);
-    line-height: 1.15;
-  }
-
-  .rk-leader-card-name {
-    display: none;
-  }
-
-  .rk-leader-active-badge {
-    display: none;
-  }
-
-  /* Mobile Actions (Buttons placed below the cards) */
-  .rk-sambutan-mobile-actions-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    margin-top: 18px;
-    width: 100%;
-  }
-
-  .rk-sambutan-mobile-actions-wrap .rk-sambutan-btn-next {
-    width: 100%;
-    min-height: 46px;
-    border-radius: 12px;
-  }
-
-  .rk-sambutan-mobile-actions-wrap .rk-sambutan-btn-profile {
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    text-decoration: underline;
-    font-size: 0.92rem;
-    color: var(--rk-ink);
-    padding: 4px;
-    min-height: auto;
-  }
-
-  .rk-mobile-footer-note {
-    display: block;
-    text-align: center;
-    margin-top: 16px;
-  }
-
-  .rk-mobile-footer-org {
-    display: block;
-    font-size: 0.88rem;
-    font-weight: 500;
-    color: var(--rk-ink);
-  }
-
-  .rk-mobile-footer-sub {
-    display: block;
-    font-size: 0.76rem;
-    font-style: italic;
-    color: var(--rk-muted);
-    margin-top: 3px;
-  }
+.rk-sambutan-btn-profile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 14px;
+  background: linear-gradient(155deg, #FAF9F5 0%, #EFF0EA 100%);
+  color: var(--rk-ink);
+  font-size: 0.9rem;
+  font-weight: 700;
+  border: 1.5px solid rgba(255, 255, 255, 0.92);
+  box-shadow: var(--rk-shadow-pill);
+  text-decoration: none;
+  min-height: 46px;
+  transition: all 0.18s ease;
 }
 
+.rk-sambutan-btn-profile:hover {
+  color: var(--rk-pine);
+  transform: translateY(-1px);
+}
+
+.rk-service-icon-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: var(--rk-surface-inset);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: var(--rk-shadow-inset);
+  color: var(--rk-pine);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Decorative photo lens is isolated from accessible content. */
+.rk-caption-lens{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none;opacity:.65}
+.rk-photo-inner .rk-caption-lens img{position:absolute;left:0;bottom:-14px;width:100%;height:auto;min-height:100%;transform:scale(1.14);transform-origin:center bottom;filter:blur(5px) saturate(1.1)}
+.rk-glass-caption::after{content:'';position:absolute;inset:2px;border-radius:inherit;border:1px solid #ffffff40;pointer-events:none}
+.rk-glass-caption strong,.rk-glass-caption span{position:relative}
+.rk-hero .rk-grid-4{gap:0;border-radius:18px;background:var(--rk-surface);box-shadow:var(--rk-shadow-inset);padding:12px}
+.rk-hero .rk-grid-4>.rk-soft-card{background:transparent;border:0;border-radius:0;box-shadow:none}
+.rk-hero .rk-grid-4>.rk-soft-card+*{border-left:1px solid var(--rk-line)}
+.rk-filter-bar{margin-bottom:28px}
+.rk-article-layout{gap:40px}
+.rk-glass-nav::before{content:'';position:absolute;inset:3px;border-radius:inherit;border-top:1px solid #fff9;border-bottom:1px solid #53674b26;pointer-events:none}
+@media(max-width:768px){
+  .rk-site{padding:0}
+  .rk-board-shell{border-radius:0}
+  .rk-header-shell{padding-top:12px}
+  .rk-glass-nav{min-height:64px;padding:10px 14px}
+  .rk-hero{padding-top:16px}
+  .rk-hero-title{font-size:clamp(2.25rem,9vw,3.1rem);max-width:15ch}
+  .rk-hero-lead{font-size:1rem;margin-top:18px}
+  .rk-hero-grid{gap:28px}
+  .rk-hero .rk-grid-4{grid-template-columns:1fr 1fr}
+  .rk-hero .rk-grid-4>.rk-soft-card:nth-child(3){border-left:0}
+  .rk-sambutan-grid{padding:20px 18px;gap:18px}
+  .rk-sambutan-deck-panel{padding:10px;border-radius:16px}
+  .rk-sambutan-cards-grid{gap:8px}
+  .rk-leader-card{padding:8px 6px;border-radius:13px}
+  .rk-leader-role-title{font-size:0.8rem}
+  .rk-leader-placeholder-text{display:none}
+  .rk-sambutan-actions-bar{flex-direction:column;align-items:stretch}
+  .rk-sambutan-btn-next{width:100%;flex:none}
+  .rk-sambutan-btn-profile{background:transparent;border:none;box-shadow:none;text-decoration:underline;padding:6px;min-height:auto}
+  .rk-page-header{padding-top:24px}
+  .rk-glass-caption{padding:12px;left:10px;right:10px;bottom:10px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+.rk-discover-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;padding:10px;background:var(--rk-surface);border:1px solid white;border-radius:20px;box-shadow:var(--rk-shadow-raised)}
+.rk-discover-grid .rk-service-card{padding:20px 18px;background:transparent;border:0;border-radius:0;box-shadow:none;min-width:0;gap:18px}
+.rk-discover-grid .rk-service-card+*{border-left:1px solid var(--rk-line)}.rk-discover-grid h3{font-size:1rem}.rk-discover-grid p{font-size:.85rem;line-height:1.6}.rk-discover-grid .rk-card-link-right{margin-top:18px}
+@media(max-width:1024px){.rk-discover-grid{grid-template-columns:1fr}.rk-discover-grid .rk-service-card{display:flex;flex-direction:row;align-items:center;justify-content:space-between}.rk-discover-grid .rk-service-card+*{border-left:0;border-top:1px solid var(--rk-line)}.rk-discover-grid .rk-card-link-right{margin:0;flex-shrink:0}.rk-discover-grid p{max-width:52ch}}
+@media(max-width:480px){.rk-discover-grid .rk-service-card{padding:18px 12px}.rk-discover-grid p{display:none}.rk-discover-grid .rk-card-link-right span:first-child{display:none}}
+.rk-split-55-45>*,.rk-split-40-60>*,.rk-split-50-50>*,.rk-home-news-row>*,.rk-grid-2>*,.rk-grid-3>*{min-width:0}
+.rk-home-news-row img{max-width:100%}.rk-home-news-row h3{overflow-wrap:anywhere}
+@media(max-width:1024px){.rk-discover-grid .rk-service-card{min-height:0}.rk-discover-grid .rk-card-link-right{align-self:center}}
+.rk-soft-card{min-width:0;max-width:100%}.rk-home-event>div{flex:1;min-width:0}.rk-home-event .rk-inset-panel{flex-shrink:0}
