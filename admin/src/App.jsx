@@ -11,6 +11,7 @@ import Settings from './pages/Settings';
 import QAModeration from './pages/QAModeration';
 import UserManager from './pages/UserManager';
 import AuditLogs from './pages/AuditLogs';
+import GlassOptics from './components/GlassOptics';
 
 function ProtectedRoute({ children }) {
   const { isLoggedIn } = useAuth();
@@ -40,6 +41,7 @@ function AppRoutes() {
 export default function App() {
   return (
     <AuthProvider>
+      <GlassOptics />
       <DataProvider>
         <Router>
           <AppRoutes />

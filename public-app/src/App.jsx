@@ -15,6 +15,8 @@ import Contact from './pages/Contact';
 import Consultation from './pages/Consultation';
 import Programs from './pages/Programs';
 import ErrorBoundary from './components/common/ErrorBoundary';
+import GlassOptics from './components/GlassOptics';
+import AmbientBackground from './components/AmbientBackground';
 
 export default function App() {
   return (
@@ -22,6 +24,8 @@ export default function App() {
       <DataProvider>
         <Router>
           <div className="rk-site">
+            <GlassOptics />
+            <AmbientBackground />
             <div className="rk-board-shell">
               <Navbar />
               <main id="main-content" style={{ flex: 1, width: '100%' }}>

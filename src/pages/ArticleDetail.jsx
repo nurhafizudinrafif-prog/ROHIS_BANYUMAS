@@ -1,211 +1,306 @@
-import { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useData } from '../context/DataContext';
 import {
-  Container,
-  SoftCard,
-  formatIndonesianDate,
+    ArrowLeft,
+    Clock,
+    Calendar,
+    User,
+    Share2,
+    Check,
+    ArrowRight,
+    Quote,
+    MessageCircle,
+    Send,
+    Link2,
+} from 'lucide-react';
+import { fetchCmsData, getDriveImageUrl } from '../services/cmsService';
+import { DEFAULT_ARTICLES } from './Articles';
+import {
+    Eyebrow,
+    FramedPhoto,
+    GlassChip,
+    SoftCard,
 } from '../components/ui/SoftUI';
 
-const TOC_ITEMS = [
-  { id: 'memulai', label: 'Pengantar' },
-  { id: 'menjaga-kebiasaan', label: 'Pembahasan Utama' },
-  { id: 'refleksi', label: 'Refleksi & Hikmah' },
-];
-
-const FALLBACK_ARTICLE = {
-  title: 'Bertumbuh melalui kebiasaan baik',
-  category: 'Refleksi pelajar',
-  author: 'Tim Dakwah ROHIS',
-  date: '2026-09-01',
-  content:
-    'Kebiasaan baik adalah langkah kecil yang dilakukan secara konsisten dan membawa perubahan besar dalam diri. Sebagai pelajar, kita dapat memulainya dari hal-hal sederhana seperti disiplin waktu, menjaga ucapan, dan memperbanyak ilmu yang bermanfaat.\n\nKebiasaan baik juga membantu kita lebih terarah dalam belajar, berorganisasi, dan berinteraksi dengan sesama. Dengan membiasakan hal-hal positif, kita sedang melatih diri untuk menjadi pribadi yang lebih baik dan bermanfaat.',
-};
+function resolvePhotoUrl(raw, fallback) {
+    if (!raw) return fallback;
+    if (raw.startsWith('http') || raw.startsWith('/')) return raw;
+    return getDriveImageUrl(raw);
+}
 
 export default function ArticleDetail() {
-  const { slug } = useParams();
-  const { articles } = useData();
-  const [activeSection, setActiveSection] = useState('memulai');
+    const { slug } = useParams();
+    const [cms, setCms] = useState(null);
+    const [copied, setCopied] = useState(false);
 
-  const cmsArticles = Array.isArray(articles) ? articles : [];
-  const matched =
-    cmsArticles.find(
-      (item) => item.slug === slug || String(item.id) === slug
-    ) ||
-    (slug === 'bertumbuh-melalui-kebiasaan-baik'
-      ? FALLBACK_ARTICLE
-      : cmsArticles[0] || FALLBACK_ARTICLE);
+    useEffect(() => {
+        let mounted = true;
+        fetchCmsData().then((data) => {
+            if (mounted && data) setCms(data);
+        });
+        return () => {
+            mounted = false;
+        };
+    }, []);
 
-  const paragraphs = String(matched.content || matched.excerpt || '')
-    .split(/\n\n+/)
-    .map((p) => p.trim())
-    .filter(Boolean);
+    const articles = useMemo(() => {
+        const raw =
+            Array.isArray(cms?.articles) && cms.articles.length > 0
+                ? cms.articles
+                : DEFAULT_ARTICLES;
+        return raw.map((item, idx) => {
+            const fallback = DEFAULT_ARTICLES[idx % DEFAULT_ARTICLES.length];
+            const rawBody = item.content || item.body || fallback.content;
+            const paragraphs = Array.isArray(rawBody)
+                ? rawBody
+                : typeof rawBody === 'string' && rawBody.trim()
+                ? rawBody.split(/\n\n+/)
+                : fallback.content;
+            return {
+                id: item.id || fallback.id || `art-${idx}`,
+                slug: item.slug || fallback.slug || `artikel-${idx + 1}`,
+                title: item.title || fallback.title,
+                category: item.category || fallback.category || 'Motivasi',
+                readTime: item.readTime || fallback.readTime || '4 menit baca',
+                date: item.date || fallback.date,
+                author: item.author || fallback.author || 'Tim Literasi ROKABA',
+                image: resolvePhotoUrl(item.image || item.photo, fallback.image),
+                excerpt:
+                    item.excerpt ||
+                    item.summary ||
+                    item.description ||
+                    fallback.excerpt,
+                takeaways: item.takeaways || fallback.takeaways || [],
+                quote:
+                    item.quote ||
+                    fallback.quote ||
+                    'Belajar yang tertib dan organisasi yang sehat akan saling menguatkan.',
+                paragraphs,
+            };
+        });
+    }, [cms]);
 
-  const otherArticles = cmsArticles
-    .filter((a) => a.slug !== matched.slug)
-    .slice(0, 3);
+    const article = useMemo(() => {
+        return (
+            articles.find(
+                (a) => a.slug === slug || String(a.id) === String(slug)
+            ) || articles[0]
+        );
+    }, [articles, slug]);
 
-  return (
-    <div className="rk-page">
-      <section className="rk-section" style={{ paddingTop: '14px' }}>
-        <Container>
-          {/* Breadcrumb */}
-          <nav aria-label="Breadcrumb" className="rk-breadcrumb">
-            <Link to="/">Beranda</Link>
-            <span aria-hidden="true">/</span>
-            <Link to="/articles">Artikel</Link>
-          </nav>
+    const otherArticles = useMemo(() => {
+        return articles.filter((a) => a.slug !== article?.slug).slice(0, 2);
+    }, [articles, article]);
 
-          {/* Category & Author */}
-          <div
-            style={{
-              fontSize: '0.86rem',
-              fontWeight: 700,
-              color: 'var(--rk-brass-text)',
-              marginBottom: '6px',
-            }}
-          >
-            {matched.category || 'Refleksi pelajar'}
-            {matched.author ? ` • Oleh ${matched.author}` : ''}
-            {matched.date ? ` • ${formatIndonesianDate(matched.date)}` : ''}
-          </div>
+    const handleCopy = () => {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(window.location.href);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2200);
+        }
+    };
 
-          <div className="rk-article-layout">
-            {/* Left Column: Full Article Content */}
-            <div>
-              <h1
-                className="rk-page-title"
-                style={{
-                  fontSize: 'clamp(1.85rem, 3.1vw, 2.5rem)',
-                  marginBottom: '16px',
-                }}
-              >
-                {matched.title}
-              </h1>
+    const shareUrl =
+        typeof window !== 'undefined'
+            ? encodeURIComponent(window.location.href)
+            : '';
+    const shareTitle = encodeURIComponent(article?.title || 'Artikel ROKABA');
 
-              <SoftCard
-                id="memulai"
-                style={{
-                  display: 'grid',
-                  gap: '14px',
-                  fontSize: '0.96rem',
-                  lineHeight: 1.68,
-                  color: 'var(--rk-ink)',
-                }}
-              >
-                {paragraphs.map((para, idx) => (
-                  <p
-                    key={idx}
-                    id={idx === 1 ? 'menjaga-kebiasaan' : undefined}
-                    style={{ color: 'var(--rk-ink)', whiteSpace: 'pre-line' }}
-                  >
-                    {para.replace(/\*\*/g, '')}
-                  </p>
-                ))}
-              </SoftCard>
+    if (!article) return null;
 
-              {/* Quote Card with Vertical Brass Bar */}
-              <SoftCard
-                id="refleksi"
-                style={{
-                  marginTop: '16px',
-                  padding: '16px 20px',
-                  display: 'flex',
-                  alignItems: 'stretch',
-                  gap: '14px',
-                }}
-              >
-                <span
-                  aria-hidden="true"
-                  style={{
-                    width: '3.5px',
-                    borderRadius: '99px',
-                    background: 'var(--rk-brass)',
-                    flexShrink: 0,
-                  }}
-                />
-                <p
-                  style={{
-                    margin: 0,
-                    fontSize: '0.95rem',
-                    fontStyle: 'italic',
-                    fontWeight: 600,
-                    lineHeight: 1.55,
-                    color: 'var(--rk-ink)',
-                  }}
-                >
-                  “Perubahan besar sering kali berawal dari kebiasaan kecil yang
-                  dijaga dengan konsisten.”
-                </p>
-              </SoftCard>
-            </div>
+    return (
+        <div className="rk-page">
+            <article className="rk-detail-section">
+                <div className="rk-container">
+                    <div className="rk-detail-header">
+                        <div className="rk-article-top-bar">
+                            <Link to="/articles" className="rk-back-link">
+                                <ArrowLeft size={16} />
+                                <span>Artikel</span>
+                            </Link>
+                            <GlassChip>{article.category}</GlassChip>
+                        </div>
 
-            {/* Right Column: Daftar Isi & Artikel Lainnya */}
-            <div style={{ display: 'grid', gap: '16px' }}>
-              <SoftCard style={{ padding: '18px 20px' }}>
-                <strong
-                  style={{
-                    display: 'block',
-                    fontSize: '0.96rem',
-                    fontWeight: 800,
-                    color: 'var(--rk-ink)',
-                  }}
-                >
-                  Daftar isi
-                </strong>
+                        <h1 className="rk-detail-title" style={{ marginTop: 14 }}>
+                            {article.title}
+                        </h1>
 
-                <ul className="rk-toc-list">
-                  {TOC_ITEMS.map((item) => (
-                    <li key={item.id}>
-                      <a
-                        href={`#${item.id}`}
-                        className={activeSection === item.id ? 'is-active' : ''}
-                        onClick={() => setActiveSection(item.id)}
-                      >
-                        {item.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </SoftCard>
+                        <div className="rk-detail-meta">
+                            <span>
+                                <Calendar size={15} />
+                                {article.date}
+                            </span>
+                            <span>
+                                <Clock size={15} />
+                                {article.readTime}
+                            </span>
+                            <span>
+                                <User size={15} />
+                                {article.author}
+                            </span>
+                        </div>
 
-              {otherArticles.length > 0 && (
-                <SoftCard style={{ padding: '18px 20px' }}>
-                  <strong
-                    style={{
-                      display: 'block',
-                      fontSize: '0.94rem',
-                      fontWeight: 800,
-                      color: 'var(--rk-ink)',
-                      marginBottom: '10px',
-                    }}
-                  >
-                    Artikel lainnya
-                  </strong>
-                  <div style={{ display: 'grid', gap: '8px' }}>
-                    {otherArticles.map((art) => (
-                      <Link
-                        key={art.slug}
-                        to={`/articles/${art.slug}`}
-                        className="rk-inset-panel"
-                        style={{
-                          padding: '10px 12px',
-                          borderRadius: '11px',
-                          fontSize: '0.84rem',
-                          fontWeight: 600,
-                          color: 'var(--rk-ink)',
-                        }}
-                      >
-                        {art.title}
-                      </Link>
-                    ))}
-                  </div>
-                </SoftCard>
-              )}
-            </div>
-          </div>
-        </Container>
-      </section>
-    </div>
-  );
+                        <SoftCard
+                            className="rk-detail-body-card rk-article-reading-card-v3"
+                            style={{ marginTop: 24 }}
+                        >
+                            {/* BAGIAN ATAS: TEKS PENGANTAR + FOTO INLINE DI KANAN (PAPAN 08-ARTIKEL-PC) */}
+                            <div className="rk-article-detail-top-split">
+                                <div className="rk-article-detail-intro-col">
+                                    <p className="rk-detail-lead rk-detail-lead--accent">
+                                        {article.excerpt}
+                                    </p>
+                                    <p className="rk-body-text" style={{ marginTop: 14 }}>
+                                        {article.paragraphs[0]}
+                                    </p>
+                                </div>
+
+                                <div className="rk-article-detail-photo-col">
+                                    <FramedPhoto
+                                        src={article.image}
+                                        alt={article.title}
+                                        captionTitle="Literasi & kajian pelajar"
+                                        captionSub="ROHIS Kabupaten Banyumas"
+                                        aspectRatio="16 / 10.5"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* POIN PEGANGAN BERNOMOR */}
+                            {article.takeaways && article.takeaways.length > 0 && (
+                                <div className="rk-article-takeaways-box">
+                                    <h2 className="rk-detail-subheading">
+                                        Tiga pegangan sederhana
+                                    </h2>
+                                    <ol className="rk-numbered-takeaways">
+                                        {article.takeaways.map((point, idx) => (
+                                            <li key={idx}>
+                                                <span className="rk-takeaway-num">
+                                                    {idx + 1}
+                                                </span>
+                                                <span>{point}</span>
+                                            </li>
+                                        ))}
+                                    </ol>
+                                </div>
+                            )}
+
+                            {/* PARAGRAF LANJUTAN */}
+                            <div className="rk-detail-prose" style={{ marginTop: 18 }}>
+                                {article.paragraphs.slice(1).map((p, idx) => (
+                                    <p key={idx}>{p}</p>
+                                ))}
+                            </div>
+
+                            {/* KUTIPAN */}
+                            <div className="rk-quote-callout">
+                                <Quote size={20} className="rk-quote-callout-icon" />
+                                <blockquote>“{article.quote}”</blockquote>
+                            </div>
+
+                            {/* BAGIKAN ARTIKEL */}
+                            <div className="rk-detail-footer-bar">
+                                <Link to="/articles" className="rk-btn-secondary">
+                                    <ArrowLeft size={16} />
+                                    <span>Daftar artikel</span>
+                                </Link>
+
+                                <div className="rk-article-share-bar">
+                                    <span className="rk-article-share-label">
+                                        Bagikan artikel:
+                                    </span>
+                                    <a
+                                        href={`https://wa.me/?text=${shareTitle}%20${shareUrl}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="rk-share-pill"
+                                    >
+                                        <MessageCircle size={14} />
+                                        <span>WhatsApp</span>
+                                    </a>
+                                    <a
+                                        href={`https://t.me/share/url?url=${shareUrl}&text=${shareTitle}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="rk-share-pill"
+                                    >
+                                        <Send size={14} />
+                                        <span>Telegram</span>
+                                    </a>
+                                    <button
+                                        type="button"
+                                        className="rk-share-pill"
+                                        onClick={handleCopy}
+                                    >
+                                        {copied ? (
+                                            <Check size={14} />
+                                        ) : (
+                                            <Link2 size={14} />
+                                        )}
+                                        <span>
+                                            {copied ? 'Tersalin' : 'Salin tautan'}
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </SoftCard>
+                    </div>
+
+                    {otherArticles.length > 0 && (
+                        <div className="rk-related-block">
+                            <h2
+                                className="rk-section-title"
+                                style={{ fontSize: '1.5rem', marginBottom: 18 }}
+                            >
+                                Baca juga tulisan lainnya
+                            </h2>
+                            <div className="rk-articles-grid-v3">
+                                {otherArticles.map((art) => (
+                                    <SoftCard
+                                        key={art.id}
+                                        as="article"
+                                        className="rk-article-card-v3"
+                                    >
+                                        <Link
+                                            to={`/articles/${art.slug}`}
+                                            className="rk-article-card-thumb"
+                                        >
+                                            <img
+                                                src={art.image}
+                                                alt={art.title}
+                                                loading="lazy"
+                                            />
+                                        </Link>
+                                        <div className="rk-article-card-body-v3">
+                                            <div className="rk-article-meta-row">
+                                                <GlassChip>{art.category}</GlassChip>
+                                                <span>{art.readTime}</span>
+                                            </div>
+                                            <h3>
+                                                <Link to={`/articles/${art.slug}`}>
+                                                    {art.title}
+                                                </Link>
+                                            </h3>
+                                            <p>{art.excerpt}</p>
+                                            <div className="rk-article-card-footer-v3">
+                                                <span className="rk-news-card-author">
+                                                    {art.date}
+                                                </span>
+                                                <Link
+                                                    to={`/articles/${art.slug}`}
+                                                    className="rk-article-arrow-btn"
+                                                >
+                                                    <ArrowRight size={16} />
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    </SoftCard>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </article>
+        </div>
+    );
 }

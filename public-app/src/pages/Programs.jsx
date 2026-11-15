@@ -1,361 +1,375 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useData } from '../context/DataContext';
+import React, { useEffect, useState } from 'react';
 import {
-  Container,
-  PrimaryButton,
-  SoftCard,
-  normalizeTeamData,
+    Users,
+    Sparkles,
+    Share2,
+    PenTool,
+    HeartHandshake,
+    CheckCircle2,
+    ArrowRight,
+    Award,
+    Compass,
+    Heart,
+    ChevronDown,
+} from 'lucide-react';
+import { fetchCmsData } from '../services/cmsService';
+import {
+    Eyebrow,
+    FramedPhoto,
+    GlassChip,
+    PrimaryButton,
+    SecondaryButton,
+    SoftCard,
 } from '../components/ui/SoftUI';
 
-const PROGRAM_PILLARS = [
-  {
-    id: 'pembinaan',
-    title: 'Pembinaan',
-    subtitle: 'Penguatan ilmu dan karakter pelajar',
-    spotlightTitle: 'Program Pembinaan & Dakwah',
-    spotlightDescription:
-      'Wadah belajar, kajian rutin Ahad pagi, halaqah tarbiyah, dan penguatan nilai-nilai Islam rahmatan lil alamin bagi pelajar SMA, SMK, dan MA di Banyumas.',
-  },
-  {
-    id: 'kepemimpinan',
-    title: 'Kepemimpinan',
-    subtitle: 'Pengembangan potensi dan kapasitas pelajar',
-    spotlightTitle: 'Program Kepemimpinan & SDM',
-    spotlightDescription:
-      'Latihan Dasar Kepemimpinan (LDK) ROHIS, Musyawarah Kerja Daerah (Muskerda), upgrading manajemen organisasi, serta jurnalistik dan media kreatif pelajar.',
-  },
-  {
-    id: 'kepedulian',
-    title: 'Kepedulian',
-    subtitle: 'Aksi nyata untuk lingkungan sekitar',
-    spotlightTitle: 'Program Kepedulian & Sinergi Umat',
-    spotlightDescription:
-      'Gerakan ROKABA Peduli, distribusi paket belajar pelajar dhuafa, bakti sosial Ramadhan, bersih masjid, serta kemitraan bersama Kemenag Kabupaten Banyumas.',
-  },
+const PILLARS = [
+    {
+        id: 'pembinaan',
+        label: 'Pembinaan',
+        shortDesc: 'Ruhiyah, adab, dan literasi keislaman pelajar.',
+        spotlightTitle: 'Program Pembinaan & Dakwah',
+        desc: 'Halaqah belajar, mentoring sebaya, kajian pelajar, dan pembiasaan adab yang ramah bagi siswa SMA, SMK, dan MA.',
+        highlights: [
+            'Kajian rutin pelajar lintas sekolah',
+            'Mentoring adab & pendampingan ROHIS',
+            'Karya literasi dakwah harian',
+        ],
+        photo: '/documentation/03-kajian.jpg',
+        captionTitle: 'Kajian & pembinaan pelajar',
+        captionSub: 'Pendampingan ruhiyah lintas sekolah',
+        icon: Heart,
+    },
+    {
+        id: 'kepemimpinan',
+        label: 'Kepemimpinan',
+        shortDesc: 'Manajemen organisasi dan kaderisasi pengurus.',
+        spotlightTitle: 'Kaderisasi & Kepemimpinan Pelajar',
+        desc: 'Menempa kapasitas manajemen organisasi, komunikasi publik, musyawarah kerja, dan regenerasi pengurus ROHIS sekolah yang tertib serta amanah.',
+        highlights: [
+            'Latihan Dasar Kepemimpinan (LDK) ROHIS',
+            'Musyawarah Kerja Daerah (Muskerda)',
+            'Workshop manajemen program & media',
+        ],
+        photo: '/documentation/02-muskerda.jpg',
+        captionTitle: 'Musyawarah & latihan kepemimpinan',
+        captionSub: 'Penguatan kapasitas pengurus ROHIS',
+        icon: Compass,
+    },
+    {
+        id: 'kepedulian',
+        label: 'Kepedulian',
+        shortDesc: 'Kolaborasi sosial dan kontribusi nyata di masyarakat.',
+        spotlightTitle: 'Aksi Kepedulian & Kolaborasi Sosial',
+        desc: 'Menggerakkan solidaritas pelajar Banyumas melalui bakti sosial, kolaborasi lingkungan, dan ruang silaturahmi yang memberi manfaat langsung.',
+        highlights: [
+            'Aksi sosial & kemanusiaan pelajar',
+            'Kolaborasi lintas komunitas Banyumas',
+            'Kemandirian program & kewirausahaan muda',
+        ],
+        photo: '/documentation/04-kegiatan.jpg',
+        captionTitle: 'Kebersamaan & kolaborasi kader',
+        captionSub: 'Aksi nyata pelajar Muslim Banyumas',
+        icon: Users,
+    },
 ];
 
-const RBC_BRANCHES = [
-  {
-    title: 'Lomba Da’i Muda / Pildarem',
-    desc: 'Kompetisi syiar dan public speaking dakwah pelajar tingkat SMA/SMK/MA se-Banyumas.',
-  },
-  {
-    title: 'MTQ & Tartil Al-Qur’an',
-    desc: 'Musabaqah Tilawatil Qur’an untuk menumbuhkan kecintaan dan keindahan bacaan Al-Qur’an.',
-  },
-  {
-    title: 'Cover Sholawat & Nasyid',
-    desc: 'Apresiasi seni suara Islami dan kreativitas musik positif generasi muda.',
-  },
-  {
-    title: 'Desain Poster Digital Dakwah',
-    desc: 'Lomba infografis dan visual dakwah kreatif untuk syiar di media sosial.',
-  },
-  {
-    title: 'Cerdas Cermat Agama Islam (CCAI)',
-    desc: 'Adu wawasan keislaman, sejarah peradaban Islam, fiqih, dan Al-Qur’an Hadits.',
-  },
+const DEFAULT_DIVISIONS = [
+    {
+        id: 'sdm',
+        code: 'SDM',
+        name: 'Pengembangan Sumber Daya Manusia',
+        summary:
+            'Berfokus pada kaderisasi, penjagaan semangat pengurus, pelatihan kepemimpinan, dan penguatan kapasitas anggota ROHIS.',
+        programs: [
+            'Kaderisasi dan pembinaan pengurus',
+            'Pelatihan kepemimpinan pelajar',
+            'Pendampingan keaktifan anggota',
+        ],
+        icon: Users,
+    },
+    {
+        id: 'dakwah',
+        code: 'Dakwah',
+        name: 'Syiar & Pembinaan Keislaman',
+        summary:
+            'Menggerakkan kajian pelajar, penguatan ruhiyah, syiar hari besar Islam, dan ruang diskusi keislaman yang sejuk.',
+        programs: [
+            'Kajian pelajar lintas sekolah',
+            'Penguatan adab dan ibadah harian',
+            'Konten pengingat kebaikan',
+        ],
+        icon: Sparkles,
+    },
+    {
+        id: 'jurnalistik',
+        code: 'Jurnalistik',
+        name: 'Media, Literasi & Dokumentasi',
+        summary:
+            'Mengelola publikasi kreatif, dokumentasi visual kegiatan, penulisan berita, serta syiar digital ROKABA.',
+        programs: [
+            'Dokumentasi kegiatan dan galeri',
+            'Publikasi berita dan artikel pelajar',
+            'Pengelolaan identitas visual',
+        ],
+        icon: PenTool,
+    },
+    {
+        id: 'humas',
+        code: 'HUMAS',
+        name: 'Hubungan Masyarakat & Jejaring',
+        summary:
+            'Menjaga komunikasi dengan 17 ROHIS sekolah anggota, kemitraan eksternal, dan silaturahmi antar-komunitas pelajar.',
+        programs: [
+            'Komunikasi 17 ROHIS sekolah anggota',
+            'Silaturahmi dan kolaborasi kegiatan',
+            'Koordinasi informasi eksternal',
+        ],
+        icon: Share2,
+    },
+    {
+        id: 'danus',
+        code: 'DANUS',
+        name: 'Dana & Usaha Kemandirian',
+        summary:
+            'Mendorong kemandirian finansial organisasi melalui wirausaha pelajar yang halal, kreatif, dan mendukung keberlanjutan program.',
+        programs: [
+            'Dukungan kemandirian kegiatan',
+            'Pengelolaan usaha kreatif organisasi',
+            'Kemitraan pendukung program',
+        ],
+        icon: HeartHandshake,
+    },
+];
+
+const RBC_COMPETITIONS = [
+    "Da'i Muda",
+    'MTQ',
+    'Nasyid',
+    'Poster Dakwah',
+    'CCAI',
 ];
 
 export default function Programs() {
-  const { programs, team } = useData();
-  const { departments } = team || {};
-  const { divisions } = normalizeTeamData(team);
-  const [activeId, setActiveId] = useState('pembinaan');
+    const [cms, setCms] = useState(null);
+    const [activePillar, setActivePillar] = useState('pembinaan');
+    const [openDivisionId, setOpenDivisionId] = useState('sdm');
 
-  const activePillar =
-    PROGRAM_PILLARS.find((p) => p.id === activeId) || PROGRAM_PILLARS[0];
+    useEffect(() => {
+        let mounted = true;
+        fetchCmsData().then((data) => {
+            if (mounted && data) setCms(data);
+        });
+        return () => {
+            mounted = false;
+        };
+    }, []);
 
-  const cmsPrograms = Array.isArray(programs) ? programs : [];
+    const selectedPillar =
+        PILLARS.find((p) => p.id === activePillar) || PILLARS[0];
 
-  return (
-    <div className="rk-page">
-      {/* 1. HEADER */}
-      <section className="rk-page-header">
-        <Container>
-          <div className="rk-eyebrow">
-            <span className="rk-eyebrow-bar" aria-hidden="true" />
-            <span>Program ROKABA</span>
-          </div>
+    const divisions = DEFAULT_DIVISIONS.map((def, idx) => {
+        const cmsDiv = Array.isArray(cms?.homePrograms)
+            ? cms.homePrograms.find(
+                  (d) =>
+                      (d.title || '').toLowerCase().includes(def.code.toLowerCase()) ||
+                      (d.name || '').toLowerCase().includes(def.code.toLowerCase())
+              ) || cms.homePrograms[idx]
+            : null;
+        return {
+            ...def,
+            summary: cmsDiv?.description || def.summary,
+        };
+    });
 
-          <h1 className="rk-page-title">Ruang belajar dan berkarya</h1>
-        </Container>
-      </section>
+    return (
+        <div className="rk-page">
+            {/* 1. HEADER & 3 PILAR GERAK + SPOTLIGHT BERGAMBAR */}
+            <section className="rk-hero-section">
+                <div className="rk-container">
+                    <div className="rk-section-head">
+                        <div>
+                            <Eyebrow>Gerak & Kaderisasi</Eyebrow>
+                            <h1 className="rk-page-title">Program & Kaderisasi</h1>
+                            <p className="rk-page-lead" style={{ marginTop: 12 }}>
+                                Tiga pilar gerak dan lima divisi yang saling menguatkan
+                                pelajar Muslim di Kabupaten Banyumas.
+                            </p>
+                        </div>
+                    </div>
 
-      {/* 2. THREE SELECTABLE 3D PILLAR CARDS + SPOTLIGHT BANNER */}
-      <section className="rk-section" style={{ paddingTop: '8px' }}>
-        <Container>
-          <div className="rk-grid-3">
-            {PROGRAM_PILLARS.map((pillar) => {
-              const isSelected = pillar.id === activeId;
-              return (
-                <SoftCard
-                  key={pillar.id}
-                  as="button"
-                  type="button"
-                  interactive
-                  selected={isSelected}
-                  onClick={() => setActiveId(pillar.id)}
-                  aria-pressed={isSelected}
-                  style={{
-                    textAlign: 'left',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    minHeight: '144px',
-                  }}
-                >
-                  <div style={{ display: 'grid', gap: '8px' }}>
-                    <h2 style={{ fontSize: '1.24rem', fontWeight: 800 }}>
-                      {pillar.title}
-                    </h2>
-                    <p style={{ fontSize: '0.9rem', lineHeight: 1.48 }}>
-                      {pillar.subtitle}
-                    </p>
-                  </div>
-
-                  <span className="rk-card-link-right">
-                    <span aria-hidden="true">→</span>
-                  </span>
-                </SoftCard>
-              );
-            })}
-          </div>
-
-          {/* Spotlight Card */}
-          <SoftCard
-            style={{
-              marginTop: '18px',
-              display: 'flex',
-              flexWrap: 'wrap',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '20px',
-              padding: 'clamp(20px, 2.5vw, 28px)',
-            }}
-          >
-            <div style={{ maxWidth: '64ch', display: 'grid', gap: '8px' }}>
-              <div
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                }}
-              >
-                <span
-                  aria-hidden="true"
-                  style={{
-                    width: '3px',
-                    height: '24px',
-                    borderRadius: '99px',
-                    background: 'var(--rk-brass)',
-                    flexShrink: 0,
-                  }}
-                />
-                <h2 style={{ fontSize: 'clamp(1.28rem, 2vw, 1.6rem)' }}>
-                  {activePillar.spotlightTitle}
-                </h2>
-              </div>
-
-              <p
-                style={{
-                  paddingLeft: '15px',
-                  fontSize: '0.93rem',
-                  lineHeight: 1.55,
-                }}
-              >
-                {activePillar.spotlightDescription}
-              </p>
-            </div>
-
-            <PrimaryButton as="a" href="#divisi-program">
-              <span>Lihat kegiatan</span>
-              <span aria-hidden="true">→</span>
-            </PrimaryButton>
-          </SoftCard>
-        </Container>
-      </section>
-
-      {/* 3. PROGRAM KERJA LENGKAP 5 DIVISI ROKABA (DARI ROHIS-BANYUMAS.WEB.ID) */}
-      <section id="divisi-program" className="rk-section">
-        <Container>
-          <div className="rk-inline-section-head">
-            <h2>Program kerja 5 divisi utama</h2>
-            <span className="rk-inline-section-sep" aria-hidden="true" />
-            <p>
-              Rincian program kerja masing-masing divisi kepengurusan ROKABA
-              Periode 2025/2026.
-            </p>
-          </div>
-
-          <div className="rk-grid-2">
-            {cmsPrograms.map((prog) => {
-              const matchedDept = Array.isArray(departments)
-                ? departments.find((d) =>
-                    d.name
-                      .toLowerCase()
-                      .includes((prog.division || '').toLowerCase())
-                  )
-                : null;
-              const matchedDiv = divisions.find(
-                (d) =>
-                  (d.shortName || '').toLowerCase() ===
-                  (prog.division || '').toLowerCase()
-              );
-              const coordinator =
-                matchedDept?.head ||
-                matchedDiv?.members?.find((m) => m.role === 'Koordinator')
-                  ?.name;
-
-              return (
-                <SoftCard
-                  key={prog.id || prog.title}
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    gap: '14px',
-                  }}
-                >
-                  <div>
                     <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        gap: '10px',
-                        marginBottom: '6px',
-                      }}
+                        className="rk-pillar-tabs"
+                        role="tablist"
+                        aria-label="Pilar program ROKABA"
                     >
-                      <span
-                        style={{
-                          fontSize: '0.78rem',
-                          fontWeight: 700,
-                          color: 'var(--rk-brass-text)',
-                        }}
-                      >
-                        DIVISI {prog.division}
-                      </span>
-                      {coordinator && (
-                        <span className="rk-doc-badge">
-                          Koordinator: {coordinator}
-                        </span>
-                      )}
+                        {PILLARS.map((pillar) => {
+                            const Icon = pillar.icon;
+                            const active = pillar.id === activePillar;
+                            return (
+                                <button
+                                    key={pillar.id}
+                                    type="button"
+                                    role="tab"
+                                    aria-selected={active}
+                                    className={`rk-pillar-tab ${active ? 'is-active' : ''}`}
+                                    onClick={() => setActivePillar(pillar.id)}
+                                >
+                                    <span className="rk-pillar-tab-icon">
+                                        <Icon size={18} />
+                                    </span>
+                                    <span className="rk-pillar-tab-copy">
+                                        <strong>{pillar.label}</strong>
+                                        <small>{pillar.shortDesc}</small>
+                                    </span>
+                                </button>
+                            );
+                        })}
                     </div>
 
-                    <h3 style={{ fontSize: '1.2rem', fontWeight: 800 }}>
-                      {prog.title}
-                    </h3>
+                    <SoftCard className="rk-pillar-spotlight rk-pillar-spotlight--v3">
+                        <div className="rk-pillar-spotlight-copy">
+                            <GlassChip>Pilar {selectedPillar.label}</GlassChip>
+                            <h2 style={{ marginTop: 12 }}>
+                                {selectedPillar.spotlightTitle}
+                            </h2>
+                            <p style={{ marginTop: 10 }}>{selectedPillar.desc}</p>
 
-                    <p
-                      style={{
-                        fontSize: '0.88rem',
-                        lineHeight: 1.55,
-                        marginTop: '6px',
-                      }}
-                    >
-                      {prog.description}
-                    </p>
-                  </div>
+                            <ul className="rk-pillar-highlights" style={{ marginTop: 18 }}>
+                                {selectedPillar.highlights.map((item, i) => (
+                                    <li key={i}>
+                                        <CheckCircle2 size={17} />
+                                        <span>{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
 
-                  {Array.isArray(prog.details) && prog.details.length > 0 && (
-                    <div className="rk-inset-panel" style={{ padding: '14px 16px' }}>
-                      <strong
-                        style={{
-                          display: 'block',
-                          fontSize: '0.82rem',
-                          color: 'var(--rk-ink)',
-                          marginBottom: '8px',
-                        }}
-                      >
-                        Agenda & Rencana Kerja:
-                      </strong>
-                      <ul
-                        style={{
-                          margin: 0,
-                          paddingLeft: '18px',
-                          display: 'grid',
-                          gap: '5px',
-                          fontSize: '0.84rem',
-                          color: 'var(--rk-ink)',
-                        }}
-                      >
-                        {prog.details.map((detail, idx) => (
-                          <li key={idx}>{detail}</li>
-                        ))}
-                      </ul>
+                            <div style={{ marginTop: 22 }}>
+                                <PrimaryButton to="/events">
+                                    <span>Lihat kegiatan</span>
+                                    <ArrowRight size={16} />
+                                </PrimaryButton>
+                            </div>
+                        </div>
+
+                        <div className="rk-pillar-spotlight-media">
+                            <FramedPhoto
+                                src={selectedPillar.photo}
+                                alt={selectedPillar.spotlightTitle}
+                                captionTitle={selectedPillar.captionTitle}
+                                captionSub={selectedPillar.captionSub}
+                                aspectRatio="16 / 10.2"
+                            />
+                        </div>
+                    </SoftCard>
+                </div>
+            </section>
+
+            {/* 2. LIMA DIVISI UTAMA (3 ATAS + 2 BAWAH TENGAH DI PC, ACCORDION DI HP) */}
+            <section className="rk-section">
+                <div className="rk-container">
+                    <div className="rk-section-head rk-section-head--centered">
+                        <div className="rk-centered-title-bar">
+                            <span className="rk-brass-Rule" aria-hidden="true" />
+                            <h2 className="rk-section-title">
+                                Program kerja 5 divisi utama
+                            </h2>
+                            <span className="rk-brass-Rule" aria-hidden="true" />
+                        </div>
+                        <p className="rk-section-desc">
+                            Setiap divisi menjalankan program kerja yang terarah untuk
+                            mendukung pertumbuhan kader dan ROHIS sekolah.
+                        </p>
                     </div>
-                  )}
-                </SoftCard>
-              );
-            })}
-          </div>
-        </Container>
-      </section>
 
-      {/* 4. EVENT BESAR TAHUNAN: ROHIS BANYUMAS COMPETITION (RBC) X PECETIKAH */}
-      <section className="rk-section">
-        <Container>
-          <SoftCard style={{ padding: 'clamp(20px, 2.8vw, 30px)' }}>
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: '16px',
-                marginBottom: '18px',
-              }}
-            >
-              <div>
-                <div className="rk-eyebrow" style={{ marginBottom: '6px' }}>
-                  <span className="rk-eyebrow-bar" aria-hidden="true" />
-                  <span>EVENT AKBAR TAHUNAN KABUPATEN</span>
+                    <div className="rk-divisions-grid-v3">
+                        {divisions.map((div) => {
+                            const Icon = div.icon;
+                            const isOpen = openDivisionId === div.id;
+                            return (
+                                <SoftCard
+                                    key={div.id}
+                                    className={`rk-division-card rk-division-card--v3 ${
+                                        isOpen ? 'is-open' : ''
+                                    }`}
+                                >
+                                    <button
+                                        type="button"
+                                        className="rk-division-head rk-division-head--btn"
+                                        onClick={() =>
+                                            setOpenDivisionId((prev) =>
+                                                prev === div.id ? '' : div.id
+                                            )
+                                        }
+                                        aria-expanded={isOpen}
+                                    >
+                                        <span className="rk-service-icon-badge rk-service-icon-badge--lg">
+                                            <Icon size={22} />
+                                        </span>
+                                        <span className="rk-division-head-copy">
+                                            <strong>{div.code}</strong>
+                                            <small>{div.name}</small>
+                                        </span>
+                                        <ChevronDown
+                                            size={18}
+                                            className="rk-division-chevron"
+                                        />
+                                    </button>
+
+                                    <div className="rk-division-body">
+                                        <p className="rk-division-summary">{div.summary}</p>
+                                        <ul className="rk-division-list">
+                                            {div.programs.map((prog, idx) => (
+                                                <li key={idx}>
+                                                    <CheckCircle2 size={16} />
+                                                    <span>{prog}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </SoftCard>
+                            );
+                        })}
+                    </div>
                 </div>
-                <h2 style={{ fontSize: 'clamp(1.35rem, 2.2vw, 1.8rem)' }}>
-                  Rohis Banyumas Competition (RBC) × PECETIKAH
-                </h2>
-                <p style={{ fontSize: '0.9rem', marginTop: '4px', maxWidth: '68ch' }}>
-                  Ajang kompetisi syiar, bakat, dan kreativitas pelajar Muslim
-                  tingkat SMA, SMK, dan MA sederajat se-Kabupaten Banyumas di
-                  bawah naungan Seksi PAI Kemenag Kabupaten Banyumas.
-                </p>
-              </div>
+            </section>
 
-              <PrimaryButton as={Link} to="/events">
-                <span>Lihat jadwal agenda</span>
-                <span aria-hidden="true">→</span>
-              </PrimaryButton>
-            </div>
+            {/* 3. SOROTAN KEGIATAN BESAR (RBC x PECETIKAH BANNER) */}
+            <section className="rk-section">
+                <div className="rk-container">
+                    <SoftCard className="rk-flagship-banner-v3">
+                        <div className="rk-flagship-banner-left">
+                            <div className="rk-flagship-banner-title-row">
+                                <span className="rk-service-icon-badge rk-service-icon-badge--lg">
+                                    <Award size={22} />
+                                </span>
+                                <div>
+                                    <Eyebrow>Sorotan Kegiatan Tahunan</Eyebrow>
+                                    <h2 style={{ marginTop: 6 }}>RBC × PECETIKAH</h2>
+                                </div>
+                            </div>
+                            <p className="rk-flagship-banner-desc">
+                                Ruang syiar, kompetisi sehat, dan kolaborasi karya pelajar
+                                Muslim se-Kabupaten Banyumas.
+                            </p>
+                            <div className="rk-flagship-pills-row">
+                                {RBC_COMPETITIONS.map((comp) => (
+                                    <span key={comp} className="rk-flagship-comp-pill">
+                                        <Sparkles size={13} />
+                                        <span>{comp}</span>
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
 
-            <div className="rk-grid-5">
-              {RBC_BRANCHES.map((branch) => (
-                <div
-                  key={branch.title}
-                  className="rk-inset-panel"
-                  style={{ padding: '14px', borderRadius: '14px' }}
-                >
-                  <strong
-                    style={{
-                      display: 'block',
-                      fontSize: '0.9rem',
-                      color: 'var(--rk-ink)',
-                      marginBottom: '4px',
-                    }}
-                  >
-                    {branch.title}
-                  </strong>
-                  <p style={{ fontSize: '0.78rem', lineHeight: 1.45 }}>
-                    {branch.desc}
-                  </p>
+                        <div className="rk-flagship-banner-right">
+                            <PrimaryButton to="/events">
+                                <span>Lihat agenda</span>
+                                <ArrowRight size={16} />
+                            </PrimaryButton>
+                        </div>
+                    </SoftCard>
                 </div>
-              ))}
-            </div>
-          </SoftCard>
-        </Container>
-      </section>
-    </div>
-  );
+            </section>
+        </div>
+    );
 }

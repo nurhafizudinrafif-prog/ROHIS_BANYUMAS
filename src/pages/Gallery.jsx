@@ -1,326 +1,428 @@
-import { useMemo, useState } from 'react';
-import { Play } from 'lucide-react';
-import { useData } from '../context/DataContext';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
-  AccessibleDialog,
-  Container,
-  PhotoFrame,
-  ROKABA_REAL_PHOTOS,
-  SoftCard,
-  SmartImage,
+    Image as ImageIcon,
+    Video,
+    X,
+    Maximize2,
+    Calendar,
+    MapPin,
+    FolderOpen,
+    Search,
+    Sparkles,
+    BookOpen,
+    HeartHandshake,
+    Users,
+    ChevronLeft,
+    ChevronRight,
+} from 'lucide-react';
+import { fetchCmsData, getDriveImageUrl } from '../services/cmsService';
+import {
+    Eyebrow,
+    FramedPhoto,
+    GlassChip,
+    SoftCard,
 } from '../components/ui/SoftUI';
 
-const HERO_BENTO_ITEMS = [
-  {
-    id: 'foto-utama',
-    type: 'Foto',
-    category: 'Organisasi',
-    date: '07 Sep 2025',
-    title: 'Dokumentasi kegiatan',
-    subtitle: 'Kebersamaan kader ROHIS Kabupaten Banyumas',
-    description:
-      'Dokumentasi kebersamaan pengurus dan kader ROHIS SMA, SMK, dan MA se-Kabupaten Banyumas dalam agenda rutin organisasi.',
-    src: ROKABA_REAL_PHOTOS[0],
-  },
-  {
-    id: 'foto-kedua',
-    type: 'Foto',
-    category: 'Pelatihan',
-    date: '20 Sep 2025',
-    title: 'Dokumentasi kegiatan',
-    subtitle: 'Silaturahmi lintas SMA, SMK, dan MA se-Banyumas',
-    description:
-      'Forum silaturahmi, konsolidasi program kerja, dan pembinaan kepemimpinan pelajar Muslim Banyumas.',
-    src: ROKABA_REAL_PHOTOS[1],
-  },
-  {
-    id: 'video-dok',
-    type: 'Video',
-    category: 'Lomba',
-    date: '16 Mei 2025',
-    title: 'Dokumentasi kegiatan',
-    subtitle: 'Rekaman kegiatan & kebersamaan kader ROKABA',
-    description:
-      'Sorotan kegiatan Rohis Banyumas Competition (RBC) × PECETIKAH dan kajian pelajar akbar Kabupaten Banyumas.',
-    src: ROKABA_REAL_PHOTOS[2],
-    isVideo: true,
-  },
+const DEFAULT_GALLERY = [
+    {
+        id: 'gal-1',
+        title: 'Kebersamaan Kader ROKABA',
+        subtitle: 'SMAN 1 Baturraden',
+        category: 'Sosial',
+        type: 'Foto',
+        date: 'Februari 2026',
+        image: '/documentation/01-kebersamaan.jpg',
+        featured: true,
+    },
+    {
+        id: 'gal-2',
+        title: 'Musyawarah & Kaderisasi',
+        subtitle: 'Koordinasi pengurus lintas sekolah',
+        category: 'Organisasi',
+        type: 'Foto',
+        date: 'Januari 2026',
+        image: '/documentation/02-muskerda.jpg',
+        featured: false,
+    },
+    {
+        id: 'gal-3',
+        title: 'Kajian Pelajar',
+        subtitle: 'Pembinaan ruhiyah dan diskusi',
+        category: 'Kajian',
+        type: 'Foto',
+        date: 'Januari 2026',
+        image: '/documentation/03-kajian.jpg',
+        featured: false,
+    },
+    {
+        id: 'gal-4',
+        title: 'Temu Koordinasi Wilayah',
+        subtitle: 'Silaturahmi 17 ROHIS sekolah anggota',
+        category: 'Organisasi',
+        type: 'Foto',
+        date: 'Maret 2026',
+        image: '/documentation/04-kegiatan.jpg',
+        featured: false,
+    },
+    {
+        id: 'gal-5',
+        title: 'Workshop Media & Kepemimpinan',
+        subtitle: 'Pelatihan jurnalistik dan manajemen ROHIS',
+        category: 'Kajian',
+        type: 'Foto',
+        date: 'Februari 2026',
+        image: '/documentation/05-workshop.jpg',
+        featured: false,
+    },
 ];
 
-const CATEGORIES = [
-  'Semua',
-  'Foto',
-  'Video',
-  'Kajian',
-  'Pelatihan',
-  'Sosial',
-  'Lomba',
-  'Organisasi',
+const ALBUMS = [
+    {
+        title: 'Kajian & Pembinaan',
+        count: '12 dokumentasi',
+        category: 'Kajian',
+        desc: 'Halaqah pelajar, kajian lintas sekolah, dan mentoring adab.',
+    },
+    {
+        title: 'Musyawarah & Organisasi',
+        count: '9 dokumentasi',
+        category: 'Organisasi',
+        desc: 'Muskerda, rapat koordinasi BPH & divisi, serta temu pengurus.',
+    },
+    {
+        title: 'Kebersamaan & Sosial',
+        count: '15 dokumentasi',
+        category: 'Sosial',
+        desc: 'Rihlah ukhuwah, silaturahmi akbar, dan kepedulian pelajar.',
+    },
 ];
+
+const FILTERS = [
+    { key: 'Semua', label: 'Semua', icon: Sparkles },
+    { key: 'Foto', label: 'Foto', icon: ImageIcon },
+    { key: 'Video', label: 'Video', icon: Video },
+    { key: 'Kajian', label: 'Kajian', icon: BookOpen },
+    { key: 'Sosial', label: 'Sosial', icon: HeartHandshake },
+    { key: 'Organisasi', label: 'Organisasi', icon: Users },
+];
+
+function resolvePhotoUrl(raw, fallback) {
+    if (!raw) return fallback;
+    if (raw.startsWith('http') || raw.startsWith('/')) return raw;
+    return getDriveImageUrl(raw);
+}
 
 export default function Gallery() {
-  const { gallery } = useData();
-  const [activeTab, setActiveTab] = useState('Semua');
-  const [selectedItem, setSelectedItem] = useState(null);
+    const [cms, setCms] = useState(null);
+    const [activeFilter, setActiveFilter] = useState('Semua');
+    const [query, setQuery] = useState('');
+    const [lightboxIdx, setLightboxIdx] = useState(-1);
 
-  const albumItems = useMemo(() => {
-    const raw = Array.isArray(gallery) ? gallery : [];
-    return raw.map((album, idx) => {
-      const hasVideo =
-        Array.isArray(album.media) &&
-        album.media.some((m) => m.type === 'video');
-      const photoSrc = ROKABA_REAL_PHOTOS[idx % ROKABA_REAL_PHOTOS.length];
-      return {
-        id: album.id || `album-${idx}`,
-        title: album.title || 'Album Dokumentasi ROKABA',
-        subtitle: album.description || 'Dokumentasi kegiatan ROHIS Banyumas',
-        description:
-          album.description ||
-          'Dokumentasi resmi kegiatan pelajar Muslim ROHIS Kabupaten Banyumas.',
-        category: album.category || 'Kegiatan',
-        date: album.date || '2025',
-        type: hasVideo ? 'Video' : 'Foto',
-        isVideo: hasVideo,
-        src: photoSrc,
-        mediaCount: Array.isArray(album.media) ? album.media.length : 1,
-      };
-    });
-  }, [gallery]);
+    useEffect(() => {
+        let mounted = true;
+        fetchCmsData().then((data) => {
+            if (mounted && data) setCms(data);
+        });
+        return () => {
+            mounted = false;
+        };
+    }, []);
 
-  const filteredAlbums = useMemo(() => {
-    if (activeTab === 'Semua') return albumItems;
-    if (activeTab === 'Foto' || activeTab === 'Video') {
-      return albumItems.filter((a) => a.type === activeTab);
-    }
-    return albumItems.filter(
-      (a) => a.category.toLowerCase() === activeTab.toLowerCase()
-    );
-  }, [albumItems, activeTab]);
+    const items = useMemo(() => {
+        const raw =
+            Array.isArray(cms?.gallery) && cms.gallery.length > 0
+                ? cms.gallery
+                : DEFAULT_GALLERY;
+        return raw.map((g, idx) => {
+            const fallback = DEFAULT_GALLERY[idx % DEFAULT_GALLERY.length];
+            return {
+                id: g.id || fallback.id || `gal-${idx}`,
+                title: g.title || g.caption || fallback.title,
+                subtitle: g.subtitle || g.location || fallback.subtitle,
+                category: g.category || fallback.category || 'Kegiatan',
+                type: g.type || fallback.type || 'Foto',
+                date: g.date || fallback.date || '2026',
+                image: resolvePhotoUrl(g.image || g.url || g.photo, fallback.image),
+                featured: idx === 0,
+            };
+        });
+    }, [cms]);
 
-  return (
-    <div className="rk-page">
-      {/* 1. HEADER */}
-      <section className="rk-page-header">
-        <Container>
-          <div className="rk-eyebrow" style={{ marginBottom: '8px' }}>
-            <span className="rk-eyebrow-bar" aria-hidden="true" />
-            <span>Galeri Kegiatan ROKABA</span>
-          </div>
+    const filteredItems = useMemo(() => {
+        const q = query.trim().toLowerCase();
+        return items.filter((item) => {
+            const matchFilter =
+                activeFilter === 'Semua' ||
+                (activeFilter === 'Foto' &&
+                    item.type.toLowerCase() === 'foto') ||
+                (activeFilter === 'Video' &&
+                    item.type.toLowerCase() === 'video') ||
+                item.category.toLowerCase() === activeFilter.toLowerCase();
+            const matchQuery =
+                !q ||
+                item.title.toLowerCase().includes(q) ||
+                item.subtitle.toLowerCase().includes(q) ||
+                item.category.toLowerCase().includes(q);
+            return matchFilter && matchQuery;
+        });
+    }, [items, activeFilter, query]);
 
-          <h1 className="rk-page-title">Cerita dalam kebersamaan</h1>
-        </Container>
-      </section>
+    const activeLightboxItem =
+        lightboxIdx >= 0 && lightboxIdx < filteredItems.length
+            ? filteredItems[lightboxIdx]
+            : null;
 
-      {/* 2. FILTER PILLS + BENTO GRID */}
-      <section className="rk-section" style={{ paddingTop: '8px' }}>
-        <Container>
-          <div className="rk-filter-bar" style={{ marginBottom: '18px' }}>
-            <div
-              className="rk-filter-pills"
-              role="group"
-              aria-label="Filter tipe galeri"
-            >
-              {CATEGORIES.map((tab) => (
-                <button
-                  key={tab}
-                  type="button"
-                  className="rk-pill"
-                  aria-pressed={activeTab === tab}
-                  onClick={() => setActiveTab(tab)}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
-          </div>
+    const handlePrev = (e) => {
+        e.stopPropagation();
+        setLightboxIdx((prev) =>
+            prev <= 0 ? filteredItems.length - 1 : prev - 1
+        );
+    };
 
-          {/* Reference Bento Grid */}
-          <div className="rk-gallery-bento" style={{ marginBottom: '28px' }}>
-            {/* Left Large Framed Photo */}
-            <div
-              role="button"
-              tabIndex={0}
-              onClick={() => setSelectedItem(HERO_BENTO_ITEMS[0])}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  setSelectedItem(HERO_BENTO_ITEMS[0]);
-                }
-              }}
-              style={{ cursor: 'pointer' }}
-            >
-              <PhotoFrame
-                src={HERO_BENTO_ITEMS[0].src}
-                alt="Dokumentasi kegiatan kader ROHIS Kabupaten Banyumas"
-                aspect="16/11.6"
-                captionTitle="Dokumentasi kegiatan"
-                captionSub="Kebersamaan kader ROHIS Kabupaten Banyumas"
-                eager
-              />
-            </div>
+    const handleNext = (e) => {
+        e.stopPropagation();
+        setLightboxIdx((prev) =>
+            prev >= filteredItems.length - 1 ? 0 : prev + 1
+        );
+    };
 
-            {/* Right Stacked 2 Framed Photos */}
-            <div className="rk-gallery-bento-side">
-              <div
-                role="button"
-                tabIndex={0}
-                onClick={() => setSelectedItem(HERO_BENTO_ITEMS[1])}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    setSelectedItem(HERO_BENTO_ITEMS[1]);
-                  }
-                }}
-                style={{ cursor: 'pointer' }}
-              >
-                <PhotoFrame
-                  src={HERO_BENTO_ITEMS[1].src}
-                  alt="Dokumentasi kegiatan pengurus ROKABA"
-                  aspect="16/8.6"
-                  captionTitle="Dokumentasi kegiatan"
-                  captionSub="Silaturahmi lintas SMA, SMK, dan MA"
-                />
-              </div>
+    return (
+        <div className="rk-page">
+            <section className="rk-hero-section">
+                <div className="rk-container">
+                    <div className="rk-page-header-row">
+                        <div>
+                            <Eyebrow>Arsip Visual</Eyebrow>
+                            <h1 className="rk-page-title">Galeri Dokumentasi</h1>
+                            <p className="rk-page-lead" style={{ marginTop: 10 }}>
+                                Arsip visual kegiatan kebersamaan, kajian, musyawarah,
+                                dan kaderisasi ROHIS Kabupaten Banyumas.
+                            </p>
+                        </div>
 
-              <div
-                role="button"
-                tabIndex={0}
-                onClick={() => setSelectedItem(HERO_BENTO_ITEMS[2])}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    setSelectedItem(HERO_BENTO_ITEMS[2]);
-                  }
-                }}
-                style={{ cursor: 'pointer' }}
-              >
-                <PhotoFrame
-                  src={HERO_BENTO_ITEMS[2].src}
-                  alt="Video dokumentasi kegiatan ROKABA"
-                  aspect="16/8.6"
-                  captionTitle="Dokumentasi kegiatan"
-                  captionSub="Sorotan RBC × PECETIKAH & Kajian Akbar"
-                >
-                  <span className="rk-glass-play" aria-hidden="true">
-                    <Play size={16} fill="currentColor" />
-                  </span>
-                </PhotoFrame>
-              </div>
-            </div>
-          </div>
+                        <div className="rk-search-box rk-search-box--header">
+                            <Search size={17} />
+                            <input
+                                type="search"
+                                value={query}
+                                onChange={(e) => setQuery(e.target.value)}
+                                placeholder="Cari galeri..."
+                                aria-label="Cari dokumentasi galeri"
+                            />
+                            {query && (
+                                <button
+                                    type="button"
+                                    onClick={() => setQuery('')}
+                                    aria-label="Hapus pencarian"
+                                >
+                                    <X size={15} />
+                                </button>
+                            )}
+                        </div>
+                    </div>
 
-          {/* 3. COMPLETE ALBUM ARCHIVE FROM ROHIS-BANYUMAS.WEB.ID */}
-          <div className="rk-section-head" style={{ marginBottom: '16px' }}>
-            <h2>Arsip Dokumentasi & Album Kegiatan ({filteredAlbums.length})</h2>
-          </div>
+                    {/* FILTER PILLS */}
+                    <div className="rk-filter-bar" style={{ marginTop: 22 }}>
+                        <div
+                            className="rk-filter-pills"
+                            role="tablist"
+                            aria-label="Filter galeri"
+                        >
+                            {FILTERS.map((f) => {
+                                const IconComp = f.icon;
+                                const active = activeFilter === f.key;
+                                return (
+                                    <button
+                                        key={f.key}
+                                        type="button"
+                                        role="tab"
+                                        aria-selected={active}
+                                        className={`rk-filter-pill ${
+                                            active ? 'is-active' : ''
+                                        }`}
+                                        onClick={() => setActiveFilter(f.key)}
+                                    >
+                                        <IconComp size={14} />
+                                        <span>{f.label}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
 
-          <div className="rk-grid-3">
-            {filteredAlbums.map((album) => (
-              <SoftCard
-                key={album.id}
-                as="button"
-                type="button"
-                interactive
-                onClick={() => setSelectedItem(album)}
-                style={{
-                  padding: '14px',
-                  textAlign: 'left',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '12px',
-                }}
-              >
+                    {/* BENTO MOSAIC GRID (PAPAN 11-GALERI-PC) */}
+                    {filteredItems.length > 0 ? (
+                        <div
+                            className="rk-gallery-bento"
+                            style={{ marginTop: 24 }}
+                        >
+                            {filteredItems.map((item, idx) => (
+                                <button
+                                    key={item.id}
+                                    type="button"
+                                    className={`rk-gallery-tile ${
+                                        idx === 0 ? 'rk-gallery-tile--featured' : ''
+                                    }`}
+                                    onClick={() => setLightboxIdx(idx)}
+                                >
+                                    <FramedPhoto
+                                        src={item.image}
+                                        alt={item.title}
+                                        captionTitle={item.title}
+                                        captionSub={`${item.subtitle} • ${item.category}`}
+                                        aspectRatio={
+                                            idx === 0 ? '16 / 11' : '16 / 10'
+                                        }
+                                    />
+                                    <span
+                                        className="rk-gallery-zoom-badge"
+                                        aria-hidden="true"
+                                    >
+                                        <Maximize2 size={15} />
+                                    </span>
+                                </button>
+                            ))}
+                        </div>
+                    ) : (
+                        <SoftCard className="rk-empty-card" style={{ marginTop: 24 }}>
+                            <p>
+                                Belum ada item dokumentasi pada kategori{' '}
+                                <strong>{activeFilter}</strong>.
+                            </p>
+                            <button
+                                type="button"
+                                className="rk-btn-secondary"
+                                onClick={() => {
+                                    setActiveFilter('Semua');
+                                    setQuery('');
+                                }}
+                            >
+                                Lihat semua dokumentasi
+                            </button>
+                        </SoftCard>
+                    )}
+                </div>
+            </section>
+
+            {/* ALBUM KEGIATAN (PAPAN 11-GALERI-PC) */}
+            <section className="rk-section">
+                <div className="rk-container">
+                    <div className="rk-section-head">
+                        <div>
+                            <h2
+                                className="rk-section-title"
+                                style={{ fontSize: '1.5rem' }}
+                            >
+                                Album kegiatan
+                            </h2>
+                        </div>
+                    </div>
+
+                    <div className="rk-albums-grid">
+                        {ALBUMS.map((album) => (
+                            <SoftCard
+                                key={album.title}
+                                className="rk-album-card rk-album-card--v3"
+                                onClick={() => setActiveFilter(album.category)}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                <div className="rk-album-head">
+                                    <span className="rk-service-icon-badge">
+                                        <FolderOpen size={20} />
+                                    </span>
+                                    <div>
+                                        <h3>{album.title}</h3>
+                                        <small style={{ color: 'var(--rk-muted)' }}>
+                                            {album.count}
+                                        </small>
+                                    </div>
+                                </div>
+                                <p>{album.desc}</p>
+                            </SoftCard>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* LIGHTBOX MODAL DENGAN TOMBOL PREV/NEXT (PAPAN 11-GALERI-PC) */}
+            {activeLightboxItem && (
                 <div
-                  style={{
-                    position: 'relative',
-                    borderRadius: '14px',
-                    overflow: 'hidden',
-                    aspectRatio: '16/10',
-                    background: 'var(--rk-surface-recessed)',
-                  }}
+                    className="rk-modal-backdrop"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label={activeLightboxItem.title}
+                    onClick={() => setLightboxIdx(-1)}
                 >
-                  <SmartImage
-                    src={album.src}
-                    alt={album.title}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                    }}
-                  />
-                  {album.isVideo && (
-                    <span className="rk-glass-play" aria-hidden="true">
-                      <Play size={15} fill="currentColor" />
-                    </span>
-                  )}
-                </div>
-
-                <div style={{ padding: '2px 4px 4px' }}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      gap: '8px',
-                      marginBottom: '6px',
-                    }}
-                  >
-                    <span className="rk-doc-badge">{album.category}</span>
-                    <span
-                      style={{
-                        fontSize: '0.75rem',
-                        color: 'var(--rk-muted)',
-                        fontWeight: 600,
-                      }}
+                    <button
+                        type="button"
+                        className="rk-lightbox-nav rk-lightbox-nav--prev"
+                        onClick={handlePrev}
+                        aria-label="Foto sebelumnya"
                     >
-                      {album.date}
-                    </span>
-                  </div>
+                        <ChevronLeft size={22} />
+                    </button>
 
-                  <h3 style={{ fontSize: '1.04rem', lineHeight: 1.28 }}>
-                    {album.title}
-                  </h3>
-                  <p
-                    style={{
-                      fontSize: '0.84rem',
-                      color: 'var(--rk-muted)',
-                      marginTop: '6px',
-                      lineHeight: 1.5,
-                    }}
-                  >
-                    {album.description}
-                  </p>
+                    <div
+                        className="rk-modal-card rk-lightbox-card"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="rk-modal-head">
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 10,
+                                }}
+                            >
+                                <GlassChip>
+                                    {activeLightboxItem.category}
+                                </GlassChip>
+                                <small style={{ color: 'var(--rk-muted)' }}>
+                                    {lightboxIdx + 1} / {filteredItems.length}
+                                </small>
+                            </div>
+                            <button
+                                type="button"
+                                className="rk-modal-close"
+                                onClick={() => setLightboxIdx(-1)}
+                                aria-label="Tutup pratinjau foto"
+                            >
+                                <X size={18} />
+                            </button>
+                        </div>
+
+                        <div className="rk-lightbox-media">
+                            <img
+                                src={activeLightboxItem.image}
+                                alt={activeLightboxItem.title}
+                            />
+                        </div>
+
+                        <div className="rk-lightbox-caption">
+                            <h3>{activeLightboxItem.title}</h3>
+                            <div className="rk-detail-meta" style={{ marginTop: 6 }}>
+                                <span>
+                                    <MapPin size={14} />
+                                    {activeLightboxItem.subtitle}
+                                </span>
+                                <span>
+                                    <Calendar size={14} />
+                                    {activeLightboxItem.date}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button
+                        type="button"
+                        className="rk-lightbox-nav rk-lightbox-nav--next"
+                        onClick={handleNext}
+                        aria-label="Foto berikutnya"
+                    >
+                        <ChevronRight size={22} />
+                    </button>
                 </div>
-              </SoftCard>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      <AccessibleDialog
-        open={Boolean(selectedItem)}
-        onClose={() => setSelectedItem(null)}
-        eyebrow={`${selectedItem?.category || 'Galeri'} • ${selectedItem?.date || 'ROKABA'}`}
-        title={selectedItem?.title || 'Dokumentasi kegiatan'}
-      >
-        {selectedItem && (
-          <div style={{ display: 'grid', gap: '12px' }}>
-            <PhotoFrame
-              src={selectedItem.src}
-              alt={selectedItem.subtitle || selectedItem.title}
-              aspect="16/10"
-              captionTitle={selectedItem.title}
-              captionSub={selectedItem.subtitle}
-            />
-            {selectedItem.description && (
-              <p style={{ fontSize: '0.92rem', lineHeight: 1.65 }}>
-                {selectedItem.description}
-              </p>
             )}
-          </div>
-        )}
-      </AccessibleDialog>
-    </div>
-  );
+        </div>
+    );
 }

@@ -382,18 +382,64 @@ export function SoftCard({
 }
 
 /**
+ * Eyebrow — Brass bar + eyebrow text label
+ */
+export function Eyebrow({ className = '', children, ...props }) {
+  return (
+    <div className={`rk-eyebrow ${className}`.trim()} {...props}>
+      <span className="rk-eyebrow-bar" aria-hidden="true" />
+      <span>{children}</span>
+    </div>
+  );
+}
+
+/**
+ * GlassChip — Frosted sage/glass category pill
+ */
+export function GlassChip({ as: Component = 'span', className = '', children, ...props }) {
+  return (
+    <Component className={`rk-glass-chip ${className}`.trim()} {...props}>
+      {children}
+    </Component>
+  );
+}
+
+/**
+ * StatCard — Raised or capsule stat item
+ */
+export function StatCard({ value, suffix = '', label, className = '' }) {
+  return (
+    <SoftCard className={`rk-stat-card ${className}`.trim()}>
+      <strong>
+        {value}
+        {suffix}
+      </strong>
+      <span>{label}</span>
+    </SoftCard>
+  );
+}
+
+/**
  * PrimaryButton — Pine bevel primary button or soft raised secondary button
  */
 export function PrimaryButton({
-  as: Component = 'button',
+  as,
+  to,
+  href,
   variant = 'primary',
   className = '',
   children,
   ...props
 }) {
   const btnClass = variant === 'secondary' ? 'rk-btn-secondary' : 'rk-btn-primary';
+  const Component = as || (to ? Link : href ? 'a' : 'button');
   return (
-    <Component className={`${btnClass} ${className}`.trim()} {...props}>
+    <Component
+      to={to}
+      href={href}
+      className={`${btnClass} ${className}`.trim()}
+      {...props}
+    >
       {children}
     </Component>
   );
@@ -403,13 +449,21 @@ export function PrimaryButton({
  * SecondaryButton — Soft UI raised secondary button
  */
 export function SecondaryButton({
-  as: Component = 'button',
+  as,
+  to,
+  href,
   className = '',
   children,
   ...props
 }) {
+  const Component = as || (to ? Link : href ? 'a' : 'button');
   return (
-    <Component className={`rk-btn-secondary ${className}`.trim()} {...props}>
+    <Component
+      to={to}
+      href={href}
+      className={`rk-btn-secondary ${className}`.trim()}
+      {...props}
+    >
       {children}
     </Component>
   );
@@ -563,19 +617,39 @@ export function PhotoFrame({
   src,
   alt = 'Dokumentasi ROHIS Kabupaten Banyumas',
   aspect = '16/10',
+  aspectRatio,
   captionTitle,
   captionSub,
   eager = false,
   className = '',
   children,
 }) {
+  const resolvedAspect = aspectRatio || aspect || '16/10';
+  const photoRef = useRef(null);
+  const captionRef = useRef(null);
+  useEffect(() => {
+    const photo = photoRef.current;
+    const caption = captionRef.current;
+    if (!photo || !caption || typeof ResizeObserver === 'undefined') return undefined;
+    const measure = () => {
+      caption.style.setProperty('--lens-width', `${photo.clientWidth}px`);
+      caption.style.setProperty('--lens-height', `${photo.clientHeight}px`);
+      caption.style.setProperty('--lens-left', `${-caption.offsetLeft}px`);
+      caption.style.setProperty('--lens-top', `${-caption.offsetTop}px`);
+    };
+    const observer = new ResizeObserver(measure);
+    observer.observe(photo);
+    observer.observe(caption);
+    measure();
+    return () => observer.disconnect();
+  }, [src, captionTitle, captionSub]);
   return (
     <div className={`rk-photo-frame ${className}`.trim()}>
-      <div className="rk-photo-inner" style={{ aspectRatio: aspect }}>
+      <div ref={photoRef} className="rk-photo-inner" style={{ aspectRatio: resolvedAspect }}>
         <SmartImage src={src} alt={alt} eager={eager} />
 
         {(captionTitle || captionSub) && (
-          <div className="rk-glass-caption">
+          <div ref={captionRef} className="rk-glass-caption">
             <div className="rk-caption-lens" aria-hidden="true"><SmartImage src={src} alt="" eager={eager} /></div>
             {captionTitle && <strong>{captionTitle}</strong>}
             {captionSub && <span>{captionSub}</span>}
@@ -587,6 +661,8 @@ export function PhotoFrame({
     </div>
   );
 }
+
+export const FramedPhoto = PhotoFrame;
 
 /**
  * AccessibleDialog — Modal dialog with Escape key, focus trap, and focus restoration

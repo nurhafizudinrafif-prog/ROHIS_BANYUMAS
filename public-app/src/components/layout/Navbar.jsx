@@ -1,295 +1,264 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
-  Menu,
-  X,
-  ChevronDown,
-  Home,
-  Info,
-  Compass,
-  Newspaper,
-  Calendar,
-  School,
-  BookOpen,
-  Image as ImageIcon,
-  MessageCircle,
-  Phone,
+    Menu,
+    X,
+    ChevronDown,
+    BookOpen,
+    Image,
+    MessageCircleQuestion,
+    Phone,
+    ArrowUpRight,
+    Users,
+    Compass,
+    Newspaper,
+    Calendar,
+    School,
+    Sparkles,
+    Mail,
 } from 'lucide-react';
-import logo from '../../assets/logo.png';
 
-const PRIMARY_LINKS = [
-  ['/about', 'Tentang'],
-  ['/programs', 'Program'],
-  ['/berita', 'Berita'],
-  ['/events', 'Agenda'],
-  ['/schools', 'Sekolah'],
+const PRIMARY_ITEMS = [
+    { path: '/about', matchPaths: ['/about', '/tentang'], label: 'Tentang', icon: Users },
+    { path: '/programs', matchPaths: ['/programs', '/program'], label: 'Program', icon: Compass },
+    { path: '/berita', matchPaths: ['/berita'], label: 'Berita', icon: Newspaper },
+    { path: '/events', matchPaths: ['/events', '/agenda'], label: 'Agenda', icon: Calendar },
+    { path: '/schools', matchPaths: ['/schools', '/sekolah'], label: 'Sekolah', icon: School },
 ];
 
-const MORE_LINKS = [
-  ['/articles', 'Artikel & Opini'],
-  ['/gallery', 'Galeri Kegiatan'],
-  ['/consultation', 'Ruang Konsultasi'],
+const SERVICE_ITEMS = [
+    {
+        path: '/articles',
+        matchPaths: ['/articles', '/artikel'],
+        label: 'Artikel Dakwah',
+        desc: 'Tulisan singkat seputar iman, adab, belajar, dan kepemimpinan pelajar.',
+        icon: BookOpen,
+    },
+    {
+        path: '/gallery',
+        matchPaths: ['/gallery', '/galeri'],
+        label: 'Galeri Dokumentasi',
+        desc: 'Arsip visual kegiatan kebersamaan, kajian, musyawarah, dan kaderisasi.',
+        icon: Image,
+    },
+    {
+        path: '/consultation',
+        matchPaths: ['/consultation', '/konsultasi'],
+        label: 'Konsultasi & Q&A',
+        desc: 'Ruang tanya jawab keislaman, keseharian remaja, dan organisasi ROHIS.',
+        icon: MessageCircleQuestion,
+    },
+    {
+        path: '/contact',
+        matchPaths: ['/contact', '/kontak'],
+        label: 'Kontak & Aspirasi',
+        desc: 'Jalur komunikasi resmi untuk kolaborasi sekolah dan pengajuan kegiatan.',
+        icon: Phone,
+    },
 ];
-
-const ALL_MOBILE_LINKS = [
-  ['/', 'Beranda', Home],
-  ['/about', 'Tentang ROKABA', Info],
-  ['/programs', 'Program & Divisi', Compass],
-  ['/berita', 'Berita Kegiatan', Newspaper],
-  ['/events', 'Agenda Bersama', Calendar],
-  ['/schools', 'Sekolah Anggota', School],
-  ['/articles', 'Artikel & Opini', BookOpen],
-  ['/gallery', 'Galeri Kegiatan', ImageIcon],
-  ['/consultation', 'Ruang Konsultasi', MessageCircle],
-  ['/contact', 'Kontak & Sekretariat', Phone],
-];
-
-export function Brand({ onClick }) {
-  return (
-    <Link className="rk-brand" to="/" onClick={onClick} aria-label="ROKABA — Beranda">
-      <img src={logo} alt="Logo ROHIS Kabupaten Banyumas" width="42" height="42" />
-      <span className="rk-brand-divider" aria-hidden="true" />
-      <span className="rk-brand-text">
-        <strong>ROKABA</strong>
-        <small>ROHIS Kabupaten Banyumas</small>
-      </span>
-    </Link>
-  );
-}
 
 export default function Navbar() {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [moreOpen, setMoreOpen] = useState(false);
-  const location = useLocation();
-  const drawerRef = useRef(null);
-  const toggleBtnRef = useRef(null);
-  const dropdownRef = useRef(null);
+    const [scrolled, setScrolled] = useState(false);
+    const [mobileOpen, setMobileOpen] = useState(false);
+    const [servicesOpen, setServicesOpen] = useState(false);
+    const location = useLocation();
+    const dropdownRef = useRef(null);
 
-  useEffect(() => {
-    setMobileOpen(false);
-    setMoreOpen(false);
-    if (!location.hash) {
-      window.scrollTo({ top: 0, behavior: 'instant' });
-    }
-  }, [location.pathname, location.hash]);
+    useEffect(() => {
+        const handleScroll = () => setScrolled(window.scrollY > 14);
+        handleScroll();
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
-  useEffect(() => {
-    const handleOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setMoreOpen(false);
-      }
-    };
-    document.addEventListener('pointerdown', handleOutside);
-    return () => document.removeEventListener('pointerdown', handleOutside);
-  }, []);
+    useEffect(() => {
+        setMobileOpen(false);
+        setServicesOpen(false);
+    }, [location.pathname, location.hash]);
 
-  useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
-    if (mobileOpen) {
-      document.body.style.overflow = 'hidden';
-      const firstLink = drawerRef.current?.querySelector('a, button');
-      firstLink?.focus();
-    }
+    useEffect(() => {
+        const handleOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setServicesOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleOutside);
+        return () => document.removeEventListener('mousedown', handleOutside);
+    }, []);
 
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        if (moreOpen) setMoreOpen(false);
-        if (mobileOpen) {
-          setMobileOpen(false);
-          toggleBtnRef.current?.focus();
-        }
-      }
-      if (mobileOpen && e.key === 'Tab' && drawerRef.current) {
-        const focusables = drawerRef.current.querySelectorAll('a[href], button:not([disabled])');
-        if (focusables.length > 0) {
-          const first = focusables[0];
-          const last = focusables[focusables.length - 1];
-          if (e.shiftKey && document.activeElement === first) {
-            e.preventDefault();
-            last.focus();
-          } else if (!e.shiftKey && document.activeElement === last) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
-      }
-    };
+    const isPathActive = (paths = []) =>
+        paths.some((p) => location.pathname === p || location.pathname.startsWith(`${p}/`));
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [mobileOpen, moreOpen]);
+    const isServiceActive = SERVICE_ITEMS.some((item) => isPathActive(item.matchPaths));
 
-  const isRouteActive = (path) => {
-    if (path === '/') return location.pathname === '/';
-    return location.pathname === path || location.pathname.startsWith(`${path}/`);
-  };
+    return (
+        <header className={`rk-header-wrap ${scrolled ? 'is-scrolled' : ''}`}>
+            <div className="rk-container">
+                <nav className="rk-navbar" aria-label="Navigasi utama ROKABA">
+                    <Link to="/" className="rk-brand" aria-label="Beranda ROKABA">
+                        <span className="rk-brand-logo-shell">
+                            <img src="/logo.svg" alt="Logo ROHIS Kabupaten Banyumas" width="32" height="32" />
+                        </span>
+                        <span className="rk-brand-text">
+                            <strong>ROKABA</strong>
+                            <small>ROHIS Kabupaten Banyumas</small>
+                        </span>
+                    </Link>
 
-  const isMoreActive = MORE_LINKS.some(([path]) => isRouteActive(path));
+                    <div className="rk-nav-links">
+                        {PRIMARY_ITEMS.map((item) => {
+                            const active = isPathActive(item.matchPaths);
+                            const Icon = item.icon;
+                            return (
+                                <Link
+                                    key={item.path}
+                                    to={item.path}
+                                    className={`rk-nav-link ${active ? 'is-active' : ''}`}
+                                >
+                                    <Icon size={15} className="rk-nav-link-icon" />
+                                    <span>{item.label}</span>
+                                </Link>
+                            );
+                        })}
 
-  return (
-    <>
-      <a className="rk-skip" href="#main-content">
-        Lewati ke konten utama
-      </a>
+                        <div className="rk-nav-dropdown-wrap" ref={dropdownRef}>
+                            <button
+                                type="button"
+                                className={`rk-nav-link rk-nav-dropdown-trigger ${
+                                    isServiceActive || servicesOpen ? 'is-active' : ''
+                                }`}
+                                onClick={() => setServicesOpen((prev) => !prev)}
+                                aria-expanded={servicesOpen}
+                            >
+                                <Sparkles size={15} className="rk-nav-link-icon" />
+                                <span>Layanan</span>
+                                <ChevronDown
+                                    size={15}
+                                    style={{
+                                        transition: 'transform 200ms ease',
+                                        transform: servicesOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                                    }}
+                                />
+                            </button>
 
-      <header className="rk-header-shell">
-        <div className="rk-container">
-          <div className="rk-glass-nav">
-            <Brand />
+                            {servicesOpen && (
+                                <div className="rk-nav-dropdown" role="menu">
+                                    <div className="rk-nav-dropdown-head">
+                                        <span>Ruang Belajar & Layanan Pelajar</span>
+                                        <small>Akses cepat fitur komunitas ROKABA</small>
+                                    </div>
+                                    <div className="rk-nav-dropdown-grid">
+                                        {SERVICE_ITEMS.map((item) => {
+                                            const Icon = item.icon;
+                                            const active = isPathActive(item.matchPaths);
+                                            return (
+                                                <Link
+                                                    key={item.path}
+                                                    to={item.path}
+                                                    className={`rk-nav-dropdown-item ${active ? 'is-active' : ''}`}
+                                                    role="menuitem"
+                                                >
+                                                    <span className="rk-nav-dropdown-icon">
+                                                        <Icon size={18} />
+                                                    </span>
+                                                    <span className="rk-nav-dropdown-copy">
+                                                        <strong>
+                                                            {item.label}
+                                                            <ArrowUpRight size={14} />
+                                                        </strong>
+                                                        <small>{item.desc}</small>
+                                                    </span>
+                                                </Link>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
 
-            <nav className="rk-nav-links" aria-label="Navigasi utama">
-              {PRIMARY_LINKS.map(([path, label]) => (
-                <Link
-                  key={path}
-                  to={path}
-                  className="rk-nav-link"
-                  aria-current={isRouteActive(path) ? 'page' : undefined}
-                >
-                  {label}
-                </Link>
-              ))}
+                    <div className="rk-nav-actions">
+                        <Link to="/contact" className="rk-btn-primary rk-nav-cta">
+                            <Mail size={15} />
+                            <span>Hubungi kami</span>
+                        </Link>
+                        <button
+                            type="button"
+                            className="rk-mobile-toggle"
+                            onClick={() => setMobileOpen((prev) => !prev)}
+                            aria-label={mobileOpen ? 'Tutup menu navigasi' : 'Buka menu navigasi'}
+                            aria-expanded={mobileOpen}
+                        >
+                            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+                        </button>
+                    </div>
+                </nav>
 
-              <div className="rk-nav-dropdown-wrap" ref={dropdownRef}>
-                <button
-                  type="button"
-                  className="rk-nav-link"
-                  aria-expanded={moreOpen}
-                  aria-controls="rk-more-menu"
-                  onClick={() => setMoreOpen((prev) => !prev)}
-                  style={{
-                    border: 'none',
-                    background: isMoreActive ? 'rgba(255, 255, 255, 0.75)' : 'transparent',
-                    boxShadow: isMoreActive ? 'var(--rk-shadow-inset)' : 'none',
-                    cursor: 'pointer',
-                    gap: '5px',
-                  }}
-                >
-                  <span>Layanan</span>
-                  <ChevronDown
-                    size={15}
-                    style={{
-                      transition: 'transform 150ms ease',
-                      transform: moreOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                    }}
-                  />
-                </button>
+                {mobileOpen && (
+                    <div className="rk-mobile-drawer" role="dialog" aria-label="Menu mobile ROKABA">
+                        <div className="rk-mobile-section">
+                            <span className="rk-mobile-eyebrow">Navigasi Utama</span>
+                            <div className="rk-mobile-links">
+                                <Link
+                                    to="/"
+                                    className={`rk-mobile-link ${location.pathname === '/' ? 'is-active' : ''}`}
+                                >
+                                    Beranda
+                                </Link>
+                                {PRIMARY_ITEMS.map((item) => {
+                                    const Icon = item.icon;
+                                    return (
+                                        <Link
+                                            key={item.path}
+                                            to={item.path}
+                                            className={`rk-mobile-link ${
+                                                isPathActive(item.matchPaths) ? 'is-active' : ''
+                                            }`}
+                                        >
+                                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10 }}>
+                                                <Icon size={16} />
+                                                {item.label}
+                                            </span>
+                                        </Link>
+                                    );
+                                })}
+                            </div>
+                        </div>
 
-                {moreOpen && (
-                  <div
-                    id="rk-more-menu"
-                    className="rk-dropdown-panel"
-                    role="menu"
-                    aria-label="Menu layanan dan literasi"
-                  >
-                    {MORE_LINKS.map(([path, label]) => (
-                      <Link
-                        key={path}
-                        to={path}
-                        role="menuitem"
-                        aria-current={isRouteActive(path) ? 'page' : undefined}
-                      >
-                        <span>{label}</span>
-                        <span aria-hidden="true">→</span>
-                      </Link>
-                    ))}
-                  </div>
+                        <div className="rk-mobile-section">
+                            <span className="rk-mobile-eyebrow">Layanan & Ruang Belajar</span>
+                            <div className="rk-mobile-service-grid">
+                                {SERVICE_ITEMS.map((item) => {
+                                    const Icon = item.icon;
+                                    const active = isPathActive(item.matchPaths);
+                                    return (
+                                        <Link
+                                            key={item.path}
+                                            to={item.path}
+                                            className={`rk-mobile-service-card ${active ? 'is-active' : ''}`}
+                                        >
+                                            <span className="rk-nav-dropdown-icon">
+                                                <Icon size={17} />
+                                            </span>
+                                            <div>
+                                                <strong>{item.label}</strong>
+                                                <small>{item.desc}</small>
+                                            </div>
+                                        </Link>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        <div className="rk-mobile-footer">
+                            <Link to="/contact" className="rk-btn-primary" style={{ width: '100%' }}>
+                                <Mail size={16} />
+                                Hubungi kami
+                            </Link>
+                        </div>
+                    </div>
                 )}
-              </div>
-
-              <Link
-                to="/contact"
-                className="rk-btn-primary"
-                style={{ minHeight: '42px', padding: '0 20px', fontSize: '0.9rem' }}
-              >
-                Hubungi kami
-              </Link>
-            </nav>
-
-            <button
-              ref={toggleBtnRef}
-              type="button"
-              className="rk-mobile-toggle"
-              aria-label={mobileOpen ? 'Tutup menu navigasi' : 'Buka menu navigasi'}
-              aria-expanded={mobileOpen}
-              aria-controls="rk-mobile-drawer"
-              onClick={() => setMobileOpen((prev) => !prev)}
-            >
-              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {mobileOpen && (
-        <div
-          id="rk-mobile-drawer"
-          ref={drawerRef}
-          className="rk-mobile-drawer"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Menu navigasi utama"
-        >
-          <div className="rk-mobile-drawer-panel">
-            <div>
-              <div className="rk-mobile-drawer-top">
-                <Brand onClick={() => setMobileOpen(false)} />
-                <button
-                  type="button"
-                  className="rk-mobile-toggle"
-                  style={{ display: 'inline-flex' }}
-                  aria-label="Tutup menu navigasi"
-                  onClick={() => {
-                    setMobileOpen(false);
-                    toggleBtnRef.current?.focus();
-                  }}
-                >
-                  <X size={20} />
-                </button>
-              </div>
-
-              <nav className="rk-mobile-nav-list" aria-label="Menu seluler">
-                {ALL_MOBILE_LINKS.map(([path, label, Icon]) => (
-                  <Link
-                    key={path}
-                    to={path}
-                    aria-current={isRouteActive(path) ? 'page' : undefined}
-                  >
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '10px' }}>
-                      {Icon && <Icon size={17} aria-hidden="true" />}
-                      <span>{label}</span>
-                    </span>
-                    <span aria-hidden="true">→</span>
-                  </Link>
-                ))}
-              </nav>
             </div>
-
-            <div style={{ marginTop: '16px', display: 'grid', gap: '10px' }}>
-              <Link
-                to="/contact"
-                className="rk-btn-secondary"
-                style={{ width: '100%' }}
-                onClick={() => setMobileOpen(false)}
-              >
-                Hubungi kami
-              </Link>
-              <p
-                style={{
-                  margin: 0,
-                  textAlign: 'center',
-                  fontSize: '0.78rem',
-                  color: 'rgba(247, 245, 240, 0.72)',
-                }}
-              >
-                Kabupaten Banyumas • rokaba.banyumas@gmail.com
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
+        </header>
+    );
 }

@@ -1,0 +1,14 @@
+[
+  {
+    "slug": "04-pengurus-pc",
+    "text": "Change ONLY the footer contact email from the invented rokaba@rohisbanyumas.id to the EXACT verified address rokaba.banyumas@gmail.com. Keep all other pixels/layout, names, photos, material, colors, typography, filter counts unchanged."
+  },
+  {
+    "slug": "09-agenda-pc",
+    "text": "Change ONLY heading 'Daftar agenda mendatang' to 'Daftar kegiatan'. These dates are historical archive entries, not upcoming. Keep all dates, photos, layout, style and other wording unchanged."
+  },
+  {
+    "slug": "14-hp-berita-agenda-artikel",
+    "text": "Targeted content and control placement corrections ONLY, preserve same four-panel board, photos, style and layout as much as possible: In third/Agenda panel, bottom first list item must read '13 September 2026' / 'Latihan Dasar Kepemimpinan'; second '20 September 2026' / 'Bakti Sosial & Bersih Masjid'. In fourth/Artikel panel, replace filter/category words 'Refleksi' with 'Motivasi', 'Tips' with 'Ibadah', 'Inspirasi' with 'Kepemimpinan'. In first news and third agenda panels, move left/right arrow buttons from photo sides to beneath each card, on either side of pagination dots, not overlapping text or photos. Preserve other panels and all photographs."
+  }
+]
