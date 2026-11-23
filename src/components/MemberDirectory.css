@@ -82,8 +82,16 @@
   text-decoration: none;
 }
 .rk-member-instagram svg:last-child { margin-left: auto; }
-.rk-member-directory .rk-member-instagram:hover { background: #e6eee4; }
-.rk-member-directory .rk-member-instagram:hover span { text-decoration: underline; }
+@media (hover: hover) {
+  .rk-member-directory .rk-member-card .rk-member-instagram:hover {
+    background: #166044;
+    color: #fff;
+  }
+}
+.rk-member-directory .rk-member-card .rk-member-instagram:is(:active, :focus-visible) {
+  background: #124f39;
+  color: #fff;
+}
 .rk-member-directory .rk-member-card .rk-member-school {
   width: 100%;
   margin: auto 0 0;
