@@ -12,7 +12,6 @@ import Events from './pages/Events';
 import Schools from './pages/Schools';
 import Gallery from './pages/Gallery';
 import Contact from './pages/Contact';
-import Consultation from './pages/Consultation';
 import Programs from './pages/Programs';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import GlassOptics from './components/GlassOptics';
@@ -42,7 +41,7 @@ export default function App() {
                   <Route path="/schools" element={<Schools />} />
                   <Route path="/gallery" element={<Gallery />} />
                   <Route path="/contact" element={<Contact />} />
-                  <Route path="/consultation" element={<Consultation />} />
+                  <Route path="/consultation" element={<Navigate to="/contact" replace />} />
                   <Route path="/library" element={<Navigate to="/" replace />} />
 
                   {/* Backward-Compatible Indonesian URL Aliases */}

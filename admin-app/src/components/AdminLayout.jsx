@@ -10,15 +10,12 @@ import {
   Image as ImageIcon,
   School,
   Users,
-  MessageCircle,
   Shield,
   ClipboardList,
   Settings as SettingsIcon,
   RefreshCw,
   ExternalLink,
   LogOut,
-  Menu,
-  X,
   ChevronDown,
   ChevronRight,
   CheckCircle2,
@@ -28,40 +25,57 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import RohisLogo from './RohisLogo';
 import './AdminLayout.css';
 
-const ROUTE_BREADCRUMBS = {
-  '/': { group: 'Dashboard', label: 'Ringkasan' },
-  '/content/home': { group: 'Konten', label: 'Beranda' },
-  '/content/news': { group: 'Konten', label: 'Berita' },
-  '/content/articles': { group: 'Konten', label: 'Artikel' },
-  '/content/events': { group: 'Konten', label: 'Agenda' },
-  '/content/gallery': { group: 'Direktori & Media', label: 'Galeri' },
-  '/content/schools': { group: 'Direktori & Media', label: 'Sekolah' },
-  '/content/team': { group: 'Direktori & Media', label: 'Pengurus' },
-  '/qa': { group: 'Direktori & Media', label: 'Moderasi Q&A' },
-  '/users': { group: 'Sistem', label: 'Pengguna' },
-  '/audit': { group: 'Sistem', label: 'Audit Log' },
-  '/settings': { group: 'Sistem', label: 'Pengaturan' },
-};
+const NAV_GROUPS = [
+  { label: 'Ringkasan', icon: LayoutDashboard, links: [
+    { path: '/', label: 'Ringkasan', icon: LayoutDashboard, school: true },
+  ] },
+  { label: 'Konten', icon: Newspaper, links: [
+    { path: '/content/home', label: 'Beranda', icon: Home },
+    { path: '/content/news', label: 'Berita', icon: Newspaper },
+    { path: '/content/events', label: 'Agenda', icon: Calendar },
+    { path: '/content/articles', label: 'Artikel', icon: FileText },
+    { path: '/content/gallery', label: 'Galeri Dokumentasi', icon: ImageIcon },
+  ] },
+  { label: 'Direktori', icon: Users, links: [
+    { path: '/content/schools', label: 'Sekolah', icon: School, school: true },
+    { path: '/content/team', label: 'Pengurus', icon: Users },
+  ] },
+  { label: 'Sistem', icon: SettingsIcon, links: [
+    { path: '/users', label: 'Pengguna', icon: Shield },
+    { path: '/audit', label: 'Audit Log', icon: ClipboardList },
+    { path: '/settings', label: 'Pengaturan', icon: SettingsIcon },
+  ] },
+];
+
+function MenuLink({ item, className, onClick }) {
+  const Icon = item.icon;
+  return (
+    <NavLink to={item.path} end onClick={onClick}
+      className={({ isActive }) => className + (isActive ? ' active' : '')}>
+      <Icon size={18} aria-hidden="true" /><span>{item.label}</span>
+    </NavLink>
+  );
+}
 
 export default function AdminLayout() {
   const { user, logout } = useAuth();
   const location = useLocation();
   const { loadAllData, saving } = useData();
 
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [openGroup, setOpenGroup] = useState(null);
+  const bottomNavRef = useRef(null);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
   const dropdownRef = useRef(null);
 
-  const currentCrumb = useMemo(() => {
-    return (
-      ROUTE_BREADCRUMBS[location.pathname] || {
-        group: 'Admin ROKABA',
-        label: 'Panel CMS',
-      }
-    );
-  }, [location.pathname]);
+  const isEditorSekolah = user?.role === 'editor_sekolah';
+  const groups = NAV_GROUPS.map(group => ({
+    ...group, links: group.links.filter(link => !isEditorSekolah || link.school),
+  })).filter(group => group.links.length);
+  const currentGroup = groups.find(group => group.links.some(link => link.path === location.pathname));
+  const currentLink = currentGroup?.links.find(link => link.path === location.pathname);
+  const currentCrumb = { group: currentGroup?.label || 'Admin', label: currentLink?.label || 'CMS' };
 
   const userInitials = useMemo(() => {
     const raw = (user?.username || 'AD').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
@@ -70,38 +84,28 @@ export default function AdminLayout() {
 
   // Close sidebar and dropdown on route change
   useEffect(() => {
-    setSidebarOpen(false);
+    setOpenGroup(null);
     setUserDropdownOpen(false);
   }, [location.pathname]);
-
-  // Lock scroll on mobile when sidebar is open
-  useEffect(() => {
-    if (sidebarOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [sidebarOpen]);
 
   // Click outside to close user dropdown
   useEffect(() => {
     const handleClickOutside = (e) => {
+      if (!bottomNavRef.current?.contains(e.target)) setOpenGroup(null);
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setUserDropdownOpen(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('pointerdown', handleClickOutside);
+    return () => document.removeEventListener('pointerdown', handleClickOutside);
   }, []);
 
   // Keyboard accessibility: ESC closes sidebar / dropdown
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
-        setSidebarOpen(false);
+        bottomNavRef.current?.querySelector('[aria-expanded="true"]')?.focus();
+        setOpenGroup(null);
         setUserDropdownOpen(false);
       }
     };
@@ -125,110 +129,23 @@ export default function AdminLayout() {
     }
   };
 
-  const isEditorSekolah = user?.role === 'editor_sekolah';
-
   return (
     <div className="admin-layout-wrapper">
-      {/* Mobile Drawer Backdrop */}
-      <div
-        className={`admin-mobile-backdrop ${sidebarOpen ? 'active' : ''}`}
-        onClick={() => setSidebarOpen(false)}
-        aria-hidden="true"
-      />
-
-      {/* ══════════ SIDEBAR (Acuan Image 01) ══════════ */}
-      <aside id="admin-navigation" className={`admin-sidebar admin-glass ${sidebarOpen ? 'open' : ''}`} aria-label="Navigasi Utama">
+      <aside className="admin-sidebar admin-glass" aria-label="Navigasi utama">
         <div className="admin-sidebar-header">
           <RohisLogo size={34} showGlow={false} />
           <div className="admin-sidebar-brand">
             <h2>ROKABA</h2>
             <span>Admin CMS</span>
           </div>
-          <button
-            className="admin-sidebar-mobile-close"
-            onClick={() => setSidebarOpen(false)}
-            aria-label="Tutup Menu"
-          >
-            <X size={18} />
-          </button>
         </div>
-
         <nav className="admin-nav">
-          <NavLink to="/" end className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
-            <LayoutDashboard size={17} />
-            <span>Ringkasan</span>
-          </NavLink>
-
-          {!isEditorSekolah && (
-            <>
-              <div className="admin-nav-group-label">Konten</div>
-
-              <NavLink to="/content/home" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
-                <Home size={17} />
-                <span>Beranda</span>
-              </NavLink>
-
-              <NavLink to="/content/news" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
-                <Newspaper size={17} />
-                <span>Berita</span>
-              </NavLink>
-
-              <NavLink to="/content/articles" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
-                <FileText size={17} />
-                <span>Artikel</span>
-              </NavLink>
-
-              <NavLink to="/content/events" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
-                <Calendar size={17} />
-                <span>Agenda</span>
-              </NavLink>
-            </>
-          )}
-
-          <div className="admin-nav-group-label">Direktori & Media</div>
-
-          {!isEditorSekolah && (
-            <NavLink to="/content/gallery" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
-              <ImageIcon size={17} />
-              <span>Galeri</span>
-            </NavLink>
-          )}
-
-          <NavLink to="/content/schools" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
-            <School size={17} />
-            <span>Sekolah</span>
-          </NavLink>
-
-          {!isEditorSekolah && (
-            <>
-              <NavLink to="/content/team" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
-                <Users size={17} />
-                <span>Pengurus</span>
-              </NavLink>
-
-              <NavLink to="/qa" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
-                <MessageCircle size={17} />
-                <span>Moderasi Q&A</span>
-              </NavLink>
-
-              <div className="admin-nav-group-label">Sistem</div>
-
-              <NavLink to="/users" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
-                <Shield size={17} />
-                <span>Pengguna</span>
-              </NavLink>
-
-              <NavLink to="/audit" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
-                <ClipboardList size={17} />
-                <span>Audit Log</span>
-              </NavLink>
-
-              <NavLink to="/settings" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
-                <SettingsIcon size={17} />
-                <span>Pengaturan</span>
-              </NavLink>
-            </>
-          )}
+          {groups.map(group => (
+            <div className="admin-nav-group" key={group.label}>
+              {group.label !== 'Ringkasan' && <div className="admin-nav-group-label">{group.label}</div>}
+              {group.links.map(item => <MenuLink key={item.path} item={item} className="admin-nav-item" />)}
+            </div>
+          ))}
         </nav>
 
         <div className="admin-sidebar-footer">
@@ -256,13 +173,6 @@ export default function AdminLayout() {
       <div className="admin-main-wrapper">
         <header className="admin-topbar">
           <div className="admin-topbar-left">
-            <button
-              type="button" className="mobile-hamburger-btn" aria-expanded={sidebarOpen} aria-controls="admin-navigation"
-              onClick={() => setSidebarOpen(true)}
-              aria-label="Buka Navigasi"
-            >
-              <Menu size={18} />
-            </button>
             <div className="admin-topbar-title-wrap">
               <Home size={15} style={{ color: 'var(--text-muted)', flexShrink: 0 }} aria-hidden="true" />
               <ChevronRight size={14} style={{ color: 'var(--text-muted)', flexShrink: 0 }} aria-hidden="true" />
@@ -354,6 +264,26 @@ export default function AdminLayout() {
           <Outlet />
         </main>
       </div>
+
+      <nav ref={bottomNavRef} className="admin-bottom-nav" aria-label="Menu admin"
+        onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setOpenGroup(null); }}>
+        {groups.map(({ label, icon: Icon, links }) => {
+          if (links.length === 1) return <MenuLink key={label} item={links[0]} className="admin-bottom-tab" />;
+          const expanded = openGroup === label;
+          return (
+            <div className="admin-bottom-group" key={label}>
+              <button type="button" className={'admin-bottom-tab' + (currentGroup?.label === label ? ' active' : '')}
+                aria-expanded={expanded} aria-controls={'menu-' + label}
+                onClick={() => setOpenGroup(expanded ? null : label)}>
+                <Icon size={19} aria-hidden="true" /><span>{label}</span>
+              </button>
+              <div id={'menu-' + label} hidden={!expanded} className="admin-bottom-panel" aria-label={label}>
+                {links.map(item => <MenuLink key={item.path} item={item} className="admin-nav-item" onClick={() => setOpenGroup(null)} />)}
+              </div>
+            </div>
+          );
+        })}
+      </nav>
 
       {/* Floating Toast Notification */}
       {toastMessage && (

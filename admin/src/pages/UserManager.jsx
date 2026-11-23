@@ -253,7 +253,7 @@ export default function UserManager() {
           <div>
             <strong style={{ fontSize: '0.88rem', color: 'var(--pine-dark)' }}>Peran superadmin</strong>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.2rem', lineHeight: 1.45 }}>
-              Akses penuh ke seluruh modul: Kelola Beranda, Berita, Artikel, Agenda, Galeri, Sekolah, Pengurus, Moderasi Q&amp;A, Pengguna, Audit Log, dan Pengaturan.
+              Akses penuh ke seluruh modul: Kelola Beranda, Berita, Artikel, Agenda, Galeri, Sekolah, Pengurus, Pengguna, Audit Log, dan Pengaturan.
             </p>
           </div>
         </div>
@@ -262,7 +262,7 @@ export default function UserManager() {
           <div>
             <strong style={{ fontSize: '0.88rem', color: 'var(--pine-dark)' }}>Peran editor_sekolah</strong>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.2rem', lineHeight: 1.45 }}>
-              Akses terbatas untuk pengelolaan konten Berita, Artikel, Agenda, Galeri, Sekolah, dan Moderasi Q&amp;A sesuai afiliasi sekolah.
+              Akses terbatas untuk pengelolaan direktori sekolah sesuai afiliasi sekolah.
             </p>
           </div>
         </div>

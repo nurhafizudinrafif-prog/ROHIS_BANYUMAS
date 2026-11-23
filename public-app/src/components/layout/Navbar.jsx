@@ -6,7 +6,6 @@ import {
     ChevronDown,
     BookOpen,
     Image,
-    MessageCircleQuestion,
     Phone,
     ArrowUpRight,
     Users,
@@ -40,13 +39,6 @@ const SERVICE_ITEMS = [
         label: 'Galeri Dokumentasi',
         desc: 'Arsip visual kegiatan kebersamaan, kajian, musyawarah, dan kaderisasi.',
         icon: Image,
-    },
-    {
-        path: '/consultation',
-        matchPaths: ['/consultation', '/konsultasi'],
-        label: 'Konsultasi & Q&A',
-        desc: 'Ruang tanya jawab keislaman, keseharian remaja, dan organisasi ROHIS.',
-        icon: MessageCircleQuestion,
     },
     {
         path: '/contact',

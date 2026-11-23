@@ -101,6 +101,13 @@ export default function AdminHomeCMS({
     setIsDirty(true);
     setFormData((prev) => ({
       ...prev,
+      sectionHeaders: {
+        ...prev.sectionHeaders,
+        [secName]: {
+          ...prev.sectionHeaders?.[secName],
+          [{ desc: 'description', btnText: 'linkText' }[field] || field]: val,
+        },
+      },
       sections: {
         ...(prev.sections || {}),
         [secName]: {
@@ -1068,7 +1075,7 @@ export default function AdminHomeCMS({
                           <input
                             type="text"
                             className="form-input-soft"
-                            value={formData.sections?.news?.title || ''}
+                            value={formData.sectionHeaders?.news?.title ?? formData.sections?.news?.title ?? ''}
                             onChange={(e) => updateSection('news', 'title', e.target.value)}
                             placeholder="Contoh: Berita Terkini"
                           />
@@ -1081,7 +1088,7 @@ export default function AdminHomeCMS({
                           <textarea
                             rows={2}
                             className="form-textarea-soft"
-                            value={formData.sections?.news?.desc || ''}
+                            value={formData.sectionHeaders?.news?.description ?? formData.sections?.news?.desc ?? ''}
                             onChange={(e) => updateSection('news', 'desc', e.target.value)}
                             placeholder="Deskripsi singkat bagian berita."
                           />
@@ -1091,73 +1098,9 @@ export default function AdminHomeCMS({
                           <input
                             type="text"
                             className="form-input-soft"
-                            value={formData.sections?.news?.btnText || ''}
+                            value={formData.sectionHeaders?.news?.linkText ?? formData.sections?.news?.btnText ?? ''}
                             onChange={(e) => updateSection('news', 'btnText', e.target.value)}
                             placeholder="Contoh: Lihat Semua"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* 2. Artikel */}
-                <div className="admin-accordion-card">
-                  <div
-                    className="admin-accordion-header"
-                    onClick={() => toggleSectionExpand('articles')}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                      {expandedSections.articles ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                      <FileText size={17} color="var(--pine-dark)" />
-                      <h3>Artikel</h3>
-                    </div>
-                  </div>
-
-                  {expandedSections.articles && (
-                    <div className="admin-accordion-body">
-                      <div className="form-grid-2-soft">
-                        <div className="form-group-soft">
-                          <label className="form-label-soft">Label</label>
-                          <input
-                            type="text"
-                            className="form-input-soft"
-                            value={formData.sections?.articles?.tag || ''}
-                            onChange={(e) => updateSection('articles', 'tag', e.target.value)}
-                            placeholder="Contoh: Opini & Inspirasi"
-                          />
-                        </div>
-                        <div className="form-group-soft">
-                          <label className="form-label-soft">Judul</label>
-                          <input
-                            type="text"
-                            className="form-input-soft"
-                            value={formData.sections?.articles?.title || ''}
-                            onChange={(e) => updateSection('articles', 'title', e.target.value)}
-                            placeholder="Contoh: Artikel Dakwah & Pendidikan"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="form-grid-2-soft">
-                        <div className="form-group-soft">
-                          <label className="form-label-soft">Deskripsi</label>
-                          <textarea
-                            rows={2}
-                            className="form-textarea-soft"
-                            value={formData.sections?.articles?.desc || ''}
-                            onChange={(e) => updateSection('articles', 'desc', e.target.value)}
-                            placeholder="Deskripsi singkat bagian artikel."
-                          />
-                        </div>
-                        <div className="form-group-soft">
-                          <label className="form-label-soft">Teks tautan</label>
-                          <input
-                            type="text"
-                            className="form-input-soft"
-                            value={formData.sections?.articles?.btnText || ''}
-                            onChange={(e) => updateSection('articles', 'btnText', e.target.value)}
-                            placeholder="Contoh: Baca Artikel Lainnya"
                           />
                         </div>
                       </div>
@@ -1196,7 +1139,7 @@ export default function AdminHomeCMS({
                           <input
                             type="text"
                             className="form-input-soft"
-                            value={formData.sections?.events?.title || ''}
+                            value={formData.sectionHeaders?.events?.title ?? formData.sections?.events?.title ?? ''}
                             onChange={(e) => updateSection('events', 'title', e.target.value)}
                             placeholder="Contoh: Agenda & Kajian Pelajar"
                           />
@@ -1209,7 +1152,7 @@ export default function AdminHomeCMS({
                           <textarea
                             rows={2}
                             className="form-textarea-soft"
-                            value={formData.sections?.events?.desc || ''}
+                            value={formData.sectionHeaders?.events?.description ?? formData.sections?.events?.desc ?? ''}
                             onChange={(e) => updateSection('events', 'desc', e.target.value)}
                             placeholder="Deskripsi singkat bagian agenda."
                           />
@@ -1219,7 +1162,7 @@ export default function AdminHomeCMS({
                           <input
                             type="text"
                             className="form-input-soft"
-                            value={formData.sections?.events?.btnText || ''}
+                            value={formData.sectionHeaders?.events?.linkText ?? formData.sections?.events?.btnText ?? ''}
                             onChange={(e) => updateSection('events', 'btnText', e.target.value)}
                             placeholder="Contoh: Lihat Semua Agenda"
                           />
@@ -1229,46 +1172,7 @@ export default function AdminHomeCMS({
                   )}
                 </div>
 
-                {/* 4. Layanan */}
-                <div className="admin-accordion-card">
-                  <div
-                    className="admin-accordion-header"
-                    onClick={() => toggleSectionExpand('services')}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                      {expandedSections.services ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-                      <Sparkles size={17} color="var(--pine-dark)" />
-                      <h3>Layanan</h3>
-                    </div>
-                  </div>
 
-                  {expandedSections.services && (
-                    <div className="admin-accordion-body">
-                      <div className="form-grid-2-soft">
-                        <div className="form-group-soft">
-                          <label className="form-label-soft">Judul</label>
-                          <input
-                            type="text"
-                            className="form-input-soft"
-                            value={formData.sections?.services?.title || ''}
-                            onChange={(e) => updateSection('services', 'title', e.target.value)}
-                            placeholder="Layanan & Program Unggulan Kami"
-                          />
-                        </div>
-                        <div className="form-group-soft">
-                          <label className="form-label-soft">Deskripsi</label>
-                          <textarea
-                            rows={2}
-                            className="form-textarea-soft"
-                            value={formData.sections?.services?.desc || ''}
-                            onChange={(e) => updateSection('services', 'desc', e.target.value)}
-                            placeholder="ROKABA hadir sebagai wadah sinergi dan kolaborasi bagi seluruh Rohis sekolah di Banyumas."
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
               </div>
             </div>
           )}
@@ -1468,15 +1372,7 @@ export default function AdminHomeCMS({
                     {formData.sections?.news?.tag || 'Kabar Terbaru'}
                   </div>
                   <div style={{ fontSize: '0.82rem', fontWeight: 700 }}>
-                    {formData.sections?.news?.title || 'Berita & Kegiatan'}
-                  </div>
-                </div>
-                <div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
-                    {formData.sections?.articles?.tag || 'Literasi Pelajar'}
-                  </div>
-                  <div style={{ fontSize: '0.82rem', fontWeight: 700 }}>
-                    {formData.sections?.articles?.title || 'Artikel & Kajian'}
+                    {formData.sectionHeaders?.news?.title ?? formData.sections?.news?.title ?? 'Berita & Kegiatan'}
                   </div>
                 </div>
                 <div>
@@ -1484,7 +1380,7 @@ export default function AdminHomeCMS({
                     {formData.sections?.events?.tag || 'Jadwal Terdekat'}
                   </div>
                   <div style={{ fontSize: '0.82rem', fontWeight: 700 }}>
-                    {formData.sections?.events?.title || 'Agenda Terdekat'}
+                    {formData.sectionHeaders?.events?.title ?? formData.sections?.events?.title ?? 'Agenda Terdekat'}
                   </div>
                 </div>
               </div>

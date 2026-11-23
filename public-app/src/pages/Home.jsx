@@ -119,12 +119,6 @@ const DISCOVER_CARDS = [
         to: '/events',
         icon: Calendar,
     },
-    {
-        title: 'Tanya Jawab & Konsultasi',
-        desc: 'Ruang bertanya secara santun seputar keislaman, belajar, dan aktivitas ROHIS.',
-        to: '/consultation',
-        icon: MessageCircleQuestion,
-    },
 ];
 
 const DEFAULT_ABOUT_SUMMARY = {
@@ -487,7 +481,7 @@ export default function Home() {
             <FeatureCarousel
                 id="berita-terkini"
                 variant="news"
-                eyebrow="Kabar dari ROKABA"
+                eyebrow={cms?.sectionHeaders?.news?.tag || "Kabar dari ROKABA"}
                 title={cms?.sectionHeaders?.news?.title || 'Berita & cerita kegiatan'}
                 description={
                     cms?.sectionHeaders?.news?.description ||
@@ -502,7 +496,7 @@ export default function Home() {
             <FeatureCarousel
                 id="agenda-terdekat"
                 variant="agenda"
-                eyebrow="Jadwal Terdekat"
+                eyebrow={cms?.sectionHeaders?.events?.tag || "Jadwal Terdekat"}
                 title={cms?.sectionHeaders?.events?.title || 'Agenda & kegiatan bersama'}
                 description={
                     cms?.sectionHeaders?.events?.description ||

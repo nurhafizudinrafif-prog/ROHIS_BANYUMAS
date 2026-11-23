@@ -512,7 +512,7 @@ export default function Settings() {
                   Cadangan & Pemulihan Data Sistem
                 </h3>
                 <p className="text-secondary" style={{ fontSize: '0.82rem', marginTop: '0.2rem' }}>
-                  Seluruh data CMS (Beranda, Berita, Artikel, Agenda, Galeri, Pengurus, Sekolah, E-Library, Pertanyaan, dan Log) dapat diunduh dalam 1 berkas JSON aman.
+                  Unduh cadangan data CMS, termasuk arsip dan log, dalam satu berkas JSON.
                 </p>
               </div>
 

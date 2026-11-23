@@ -8,7 +8,6 @@ import ContentManager from './pages/ContentManager';
 import GalleryManager from './pages/GalleryManager';
 import TeamManager from './pages/TeamManager';
 import Settings from './pages/Settings';
-import QAModeration from './pages/QAModeration';
 import UserManager from './pages/UserManager';
 import AuditLogs from './pages/AuditLogs';
 import GlassOptics from './components/GlassOptics';
@@ -28,7 +27,7 @@ function AppRoutes() {
         <Route path="content/gallery" element={<GalleryManager />} />
         <Route path="content/team" element={<TeamManager />} />
         <Route path="content/:type" element={<ContentManager />} />
-        <Route path="qa" element={<QAModeration />} />
+        <Route path="qa" element={<Navigate to="/" replace />} />
         <Route path="library" element={<Navigate to="/" replace />} />
         <Route path="users" element={<UserManager />} />
         <Route path="audit" element={<AuditLogs />} />

@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import {
   FileText,
   Calendar,
-  MessageCircle,
   Edit3,
   Search,
   ArrowRight,
@@ -15,11 +14,10 @@ import {
 } from 'lucide-react';
 
 export default function Dashboard() {
-  const { news = [], articles = [], events = [], gallery = [], questions = [] } = useData();
+  const { news = [], articles = [], events = [], gallery = [] } = useData();
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
 
-  const pendingQuestions = questions.filter((q) => q.status === 'pending').length;
 
   // Combine recent editorial items for the "Konten terbaru" table
   const recentContent = useMemo(() => {
@@ -80,7 +78,7 @@ export default function Dashboard() {
     { label: 'Edit beranda', to: '/content/home', Icon: Edit3 },
     { label: 'Kelola berita', to: '/content/news', Icon: Newspaper },
     { label: 'Kelola agenda', to: '/content/events', Icon: CalendarDays },
-    { label: 'Moderasi Q&A', to: '/qa', Icon: MessageCircle, count: pendingQuestions },
+    { label: 'Galeri Dokumentasi', to: '/content/gallery', Icon: ImageIcon },
   ];
 
   return (
@@ -145,12 +143,11 @@ export default function Dashboard() {
             <section className="admin-soft-card" aria-labelledby="admin-shortcuts-title">
               <div className="admin-panel-heading"><h2 id="admin-shortcuts-title">Akses cepat</h2></div>
               <ul className="admin-dashboard-list">
-                {shortcuts.map(({ label, to, Icon, count }) => (
+                {shortcuts.map(({ label, to, Icon }) => (
                   <li key={to}>
                     <Link to={to} className="admin-dashboard-row">
                       <span className="admin-stat-icon"><Icon size={16} aria-hidden="true" /></span>
                       <strong>{label}</strong>
-                      {count > 0 && <span className="badge-soft-brass">{count} baru</span>}
                       <ArrowRight size={16} aria-hidden="true" />
                     </Link>
                   </li>
