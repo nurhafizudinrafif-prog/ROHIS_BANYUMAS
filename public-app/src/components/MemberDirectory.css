@@ -33,6 +33,22 @@
 .rk-member-social a > svg:last-child { margin-left: auto; }
 .rk-member-social a:hover { transform: translateY(-2px); }
 .rk-member-social-empty { display: flex; gap: 8px; align-items: center; min-height: 44px; font-size: .73rem; color: var(--rk-muted); }
+.rk-member-instagram {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%;
+  min-height: 32px;
+  margin-top: -8px;
+  color: var(--rk-pine);
+  font-size: .82rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.rk-member-instagram span { min-width: 0; overflow-wrap: anywhere; }
+.rk-member-instagram svg { flex-shrink: 0; }
+.rk-member-instagram:focus-visible { outline: 2px solid var(--rk-pine); outline-offset: 3px; border-radius: 4px; }
 .rk-members-empty { display: grid; justify-items: center; text-align: center; gap: 14px; padding: 48px 24px; border-radius: 20px; background: #f9faf3d9; border: 1px solid white; box-shadow: var(--material-raised); }
 .rk-members-empty p { color: var(--rk-muted); max-width: 48ch; }
 .rk-member-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
@@ -41,3 +57,49 @@
 @media (min-width: 560px) and (max-width: 899px) { .rk-members-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 559px) { .rk-members-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; } .rk-members-toolbar { padding: 14px; gap: 16px; } .rk-members-filters { flex-basis: 100%; gap: 8px; } .rk-members-filters button { padding: 9px 13px; } .rk-members-search { flex-basis: 100%; } .rk-member-card { padding: 18px; } .rk-member-identity h3 { min-height: 0; font-size: 1.1rem; } .rk-member-portrait { aspect-ratio: 5 / 4; } .rk-member-placeholder svg { width: 80px; } .rk-member-role { font-size: .8rem; } .rk-member-school { font-size: .86rem; } .rk-member-social a { font-size: .86rem; } }
 @media (prefers-reduced-motion: reduce) { .rk-members-filters button, .rk-member-social a { transition: none; transform: none; } }
+
+/* The portrait, identity and school each have their own reading level. */
+.rk-member-directory .rk-member-card .rk-member-card-body {
+  gap: 7px;
+  padding: 0 3px 2px;
+}
+.rk-member-directory .rk-member-card .rk-member-name {
+  margin: 0;
+  line-height: 1.22;
+  letter-spacing: -.025em;
+}
+.rk-member-directory .rk-member-card .rk-member-instagram {
+  align-self: stretch;
+  min-height: 44px;
+  margin: 0;
+  padding: 6px 10px;
+  gap: 8px;
+  border: 1px solid rgba(58, 89, 73, .18);
+  border-radius: 10px;
+  background: linear-gradient(135deg, #ffffffad, #e3ece334);
+  box-shadow: inset 0 1px 0 #fff;
+  color: #24523f;
+  text-decoration: none;
+}
+.rk-member-instagram svg:last-child { margin-left: auto; }
+.rk-member-directory .rk-member-instagram:hover { background: #e6eee4; }
+.rk-member-directory .rk-member-instagram:hover span { text-decoration: underline; }
+.rk-member-directory .rk-member-card .rk-member-school {
+  width: 100%;
+  margin: auto 0 0;
+  padding: 9px 0 0;
+  border-top: 1px solid rgba(52, 78, 59, .16);
+}
+@media (min-width: 560px) {
+  .rk-member-directory .rk-member-card .rk-member-div-badge {
+    position: absolute;
+    left: 9px;
+    bottom: 9px;
+    margin: 0;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: #fffffff0;
+    color: #254638;
+    font-weight: 650;
+  }
+}

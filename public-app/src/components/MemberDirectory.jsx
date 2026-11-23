@@ -1,7 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import {
+    ArrowUpRight,
+    Camera,
+    GraduationCap,
     Search,
-    User,
     X,
     Users,
     Shield,
@@ -86,7 +88,7 @@ const DIVISION_FILTERS = [
 function normalizeDivision(raw = '') {
     const val = raw.trim().toUpperCase();
     if (val === 'BPH' || val.includes('INTI') || val.includes('HARIAN')) return 'BPH';
-    if (val === 'SDM' || val.includes('KADER')) return 'SDM';
+    if (val.includes('SDM') || val.includes('SUMBER DAYA') || val.includes('KADER')) return 'SDM';
     if (val.includes('DAKWAH')) return 'Dakwah';
     if (val.includes('HUMAS')) return 'Humas';
     if (val.includes('JURNAL') || val.includes('MEDIA')) return 'Jurnalistik';
@@ -105,6 +107,14 @@ function resolveMemberPhoto(raw, name = '') {
     return getDriveImageUrl(raw);
 }
 
+function resolveInstagramHandle(raw) {
+    if (typeof raw !== 'string') return '';
+    const value = raw.trim();
+    const profile = value.match(/^(?:https?:\/\/)?(?:www\.)?instagram\.com\/([^/?#]+)\/?(?:[?#].*)?$/i);
+    const handle = profile ? profile[1] : value.replace(/^@/, '');
+    return handle.length <= 30 && /^[a-z0-9_]+(?:\.[a-z0-9_]+)*$/i.test(handle) ? handle : '';
+}
+
 export default function MemberDirectory({ cmsMembers }) {
     const [activeDivision, setActiveDivision] = useState('Semua');
     const [query, setQuery] = useState('');
@@ -118,6 +128,7 @@ export default function MemberDirectory({ cmsMembers }) {
                 role: m.role || m.position || 'Anggota',
                 division: normalizeDivision(m.division || m.department),
                 school: m.school || 'ROHIS Kabupaten Banyumas',
+                instagram: resolveInstagramHandle(m.instagram),
                 photo: resolveMemberPhoto(m.photo || m.image, m.name),
             }));
         }
@@ -139,6 +150,7 @@ export default function MemberDirectory({ cmsMembers }) {
                         cm.division || base[matchIdx]?.division || 'BPH'
                     ),
                     school: cm.school || base[matchIdx]?.school || 'ROHIS Kabupaten Banyumas',
+                    instagram: resolveInstagramHandle(cm.instagram),
                     photo: resolveMemberPhoto(
                         cm.photo || cm.image || base[matchIdx]?.photo || '',
                         cm.name || base[matchIdx]?.name || ''
@@ -239,7 +251,7 @@ export default function MemberDirectory({ cmsMembers }) {
                             type="search"
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
-                            placeholder="Cari nama, jabatan, atau sekolah..."
+                            placeholder="Cari pengurus"
                             aria-label="Cari pengurus ROKABA"
                         />
                         {query && (
@@ -262,8 +274,12 @@ export default function MemberDirectory({ cmsMembers }) {
                             <article key={member.id} className="rk-member-card">
                                 <div className="rk-member-card-top">
                                     <div className="rk-member-avatar">
-                                        {member.photo ? (
+                                        <span className="rk-member-initials" aria-hidden="true">
+                                            {member.name.trim().split(/\s+/).slice(0, 2).map(word => word[0]).join('')}
+                                        </span>
+                                        {member.photo && (
                                             <img
+                                                key={member.photo}
                                                 src={member.photo}
                                                 alt={member.name}
                                                 loading="lazy"
@@ -278,13 +294,11 @@ export default function MemberDirectory({ cmsMembers }) {
                                                     ) {
                                                         e.currentTarget.src =
                                                             '/documentation/06-ketua-akhwat.jpg';
+                                                    } else {
+                                                        e.currentTarget.hidden = true;
                                                     }
                                                 }}
                                             />
-                                        ) : (
-                                            <div className="rk-member-avatar-placeholder">
-                                                <User size={24} />
-                                            </div>
                                         )}
                                     </div>
                                     <span className="rk-member-div-badge">
@@ -295,12 +309,19 @@ export default function MemberDirectory({ cmsMembers }) {
                                 <div className="rk-member-card-body">
                                     <span className="rk-member-role">{member.role}</span>
                                     <h3 className="rk-member-name">{member.name}</h3>
-                                    <p className="rk-member-school">{member.school}</p>
-                                    {!member.photo && (
-                                        <span className="rk-member-photo-note">
-                                            Foto belum tersedia
-                                        </span>
+                                    {member.instagram && (
+                                        <a
+                                            className="rk-member-instagram"
+                                            href={`https://www.instagram.com/${member.instagram}/`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            aria-label={`Buka profil Instagram @${member.instagram} di tab baru`}
+                                        >
+                                            <Camera size={16} aria-hidden="true" /><span>@{member.instagram}</span>
+                                            <ArrowUpRight size={14} aria-hidden="true" />
+                                        </a>
                                     )}
+                                    <p className="rk-member-school"><GraduationCap size={16} aria-hidden="true" />{member.school}</p>
                                 </div>
                             </article>
                         ))}
@@ -320,7 +341,7 @@ export default function MemberDirectory({ cmsMembers }) {
                                 setQuery('');
                             }}
                         >
-                            Tampilkan semua 45 pengurus
+                            Tampilkan semua pengurus
                         </button>
                     </div>
                 )}
