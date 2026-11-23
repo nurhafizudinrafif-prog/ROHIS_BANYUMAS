@@ -317,12 +317,12 @@ export default function AdminHomeCMS({
       </div>
 
       {/* Local Sub-Navigation matching Image 05 & 06 */}
-      <div className="admin-section-nav-wrap">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-          <span className="admin-section-dropdown-label">Bagian beranda:</span>
+      <div className="admin-section-nav-wrap admin-glass">
+        <div className="admin-section-select">
+          <label className="form-label-soft" htmlFor="admin-home-section">Bagian beranda</label>
           <select
             className="form-select-soft"
-            style={{ minWidth: 200, padding: '0.45rem 1rem', fontSize: '0.85rem' }}
+            id="admin-home-section"
             value={activeSubTab}
             onChange={(e) => setActiveSubTab(e.target.value)}
           >
@@ -340,7 +340,7 @@ export default function AdminHomeCMS({
               key={sec.id}
               type="button"
               className={`admin-section-pill ${activeSubTab === sec.id ? 'active' : ''}`}
-              onClick={() => setActiveSubTab(sec.id)}
+              aria-pressed={activeSubTab === sec.id} onClick={() => setActiveSubTab(sec.id)}
             >
               {sec.label}
             </button>
@@ -1276,7 +1276,7 @@ export default function AdminHomeCMS({
           {/* Mobile Collapsible Preview Toggle (Image 14-hp-admin) */}
           <button
             type="button"
-            className="admin-mobile-preview-toggle"
+            className="admin-mobile-preview-toggle btn-secondary-soft" aria-expanded={showMobilePreview} aria-controls="admin-home-preview"
             onClick={() => setShowMobilePreview((prev) => !prev)}
           >
             <Eye size={16} />
@@ -1286,7 +1286,7 @@ export default function AdminHomeCMS({
         </div>
 
         {/* Right Column: Live Preview Card (Image 01-acuan-admin) */}
-        <aside className={`admin-live-preview-card ${showMobilePreview ? 'mobile-open' : ''}`}>
+        <aside id="admin-home-preview" className={`admin-live-preview-card ${showMobilePreview ? 'mobile-open' : ''}`}>
           <h2>Pratinjau tampilan</h2>
           <p className="admin-preview-helper">Perubahan di sini belum dipublikasikan sampai disimpan.</p>
 

@@ -21,40 +21,19 @@ export default function Login() {
   };
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'var(--canvas-bg)',
-        padding: '1.5rem',
-      }}
-    >
-      <div style={{ width: '100%', maxWidth: 440 }}>
-        {/* Login Card (Image 04 Panel 1) */}
-        <div
-          className="admin-soft-card"
-          style={{
-            padding: 'clamp(2rem, 5vw, 2.75rem)',
-            borderRadius: 'var(--radius-xl)',
-            boxShadow: 'var(--soft-shadow)',
-          }}
-        >
+    <main className="admin-login">
+      <div className="admin-login-frame">
+        <div className="admin-login-photo">
+          <img src="/documentation/hero.jpg" alt="Dokumentasi kegiatan ROKABA" />
+          <div className="admin-login-caption">ROHIS Kabupaten Banyumas</div>
+        </div>
+        <div className="admin-soft-card admin-login-card">
           {/* Logo & Headings */}
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <div style={{ display: 'inline-flex', marginBottom: '1rem' }}>
               <RohisLogo size={52} showGlow={false} />
             </div>
-            <h1
-              style={{
-                fontSize: '1.5rem',
-                fontWeight: 800,
-                color: 'var(--pine-dark)',
-                letterSpacing: '-0.02em',
-                marginBottom: '0.25rem',
-              }}
-            >
+            <h1>
               Masuk ke ROKABA CMS
             </h1>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.88rem' }}>
@@ -186,6 +165,6 @@ export default function Login() {
           </form>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

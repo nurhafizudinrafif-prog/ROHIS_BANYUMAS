@@ -137,7 +137,7 @@ export default function AdminLayout() {
       />
 
       {/* ══════════ SIDEBAR (Acuan Image 01) ══════════ */}
-      <aside className={`admin-sidebar ${sidebarOpen ? 'open' : ''}`} aria-label="Navigasi Utama">
+      <aside id="admin-navigation" className={`admin-sidebar admin-glass ${sidebarOpen ? 'open' : ''}`} aria-label="Navigasi Utama">
         <div className="admin-sidebar-header">
           <RohisLogo size={34} showGlow={false} />
           <div className="admin-sidebar-brand">
@@ -233,7 +233,7 @@ export default function AdminLayout() {
 
         <div className="admin-sidebar-footer">
           <a
-            href="/"
+            href="https://www.rohis-banyumas.web.id/"
             target="_blank"
             rel="noopener noreferrer"
             className="admin-sidebar-footer-btn"
@@ -257,7 +257,7 @@ export default function AdminLayout() {
         <header className="admin-topbar">
           <div className="admin-topbar-left">
             <button
-              className="mobile-hamburger-btn"
+              type="button" className="mobile-hamburger-btn" aria-expanded={sidebarOpen} aria-controls="admin-navigation"
               onClick={() => setSidebarOpen(true)}
               aria-label="Buka Navigasi"
             >
@@ -293,7 +293,7 @@ export default function AdminLayout() {
             </button>
 
             <a
-              href="/"
+              href="https://www.rohis-banyumas.web.id/"
               target="_blank"
               rel="noopener noreferrer"
               className="topbar-btn"
