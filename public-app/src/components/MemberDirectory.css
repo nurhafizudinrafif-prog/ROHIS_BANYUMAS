@@ -76,21 +76,46 @@
   gap: 8px;
   border: 1px solid rgba(58, 89, 73, .18);
   border-radius: 10px;
-  background: linear-gradient(135deg, #ffffffad, #e3ece334);
-  box-shadow: inset 0 1px 0 #fff;
+  background-color: rgb(234 240 232 / 60%);
+  background-image: linear-gradient(163deg, #ffffff30, transparent 48%, #2449350c);
   color: #24523f;
   text-decoration: none;
+  box-shadow: inset 0 1px 1px #ffffffe0, inset 0 -1px 1px #21463725,
+    0 2px 0 #74887966, 0 4px 7px #183b2920;
 }
 .rk-member-instagram svg:last-child { margin-left: auto; }
 @media (hover: hover) {
   .rk-member-directory .rk-member-card .rk-member-instagram:hover {
-    background: #166044;
-    color: #fff;
+    background-color: #14583e;
+    color: white;
+    box-shadow: inset 0 1px 1px #ffffff80, inset 0 -1px 1px #08291c55,
+      0 3px 0 #0c392bba, 0 7px 12px #183b2936;
   }
 }
-.rk-member-directory .rk-member-card .rk-member-instagram:is(:active, :focus-visible) {
-  background: #124f39;
-  color: #fff;
+.rk-member-directory .rk-member-card .rk-member-instagram:focus-visible {
+  background-color: #14583e;
+  color: white;
+}
+.rk-member-directory .rk-member-card .rk-member-instagram:active {
+  background-color: #104a35;
+  color: white;
+  box-shadow: inset 0 2px 4px #07281f66, inset 0 -1px 0 #ffffff42,
+    0 1px 0 #204c3980, 0 1px 2px #183b291a;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .rk-member-directory .rk-member-card .rk-member-instagram {
+    transition: transform 240ms cubic-bezier(.2,.8,.2,1), box-shadow 240ms ease-out,
+      background-color 200ms ease-out, color 200ms ease-out;
+  }
+  @media (hover: hover) {
+    .rk-member-directory .rk-member-card .rk-member-instagram:hover {
+      transform: translateY(-2px);
+    }
+  }
+  .rk-member-directory .rk-member-card .rk-member-instagram:active {
+    transform: translateY(1px);
+    transition-duration: 90ms;
+  }
 }
 .rk-member-directory .rk-member-card .rk-member-school {
   width: 100%;
