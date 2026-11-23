@@ -17,7 +17,6 @@ import {
   ExternalLink,
   LogOut,
   ChevronDown,
-  ChevronRight,
   CheckCircle2,
   AlertCircle,
 } from 'lucide-react';
@@ -75,17 +74,17 @@ export default function AdminLayout() {
   })).filter(group => group.links.length);
   const currentGroup = groups.find(group => group.links.some(link => link.path === location.pathname));
   const currentLink = currentGroup?.links.find(link => link.path === location.pathname);
-  const currentCrumb = { group: currentGroup?.label || 'Admin', label: currentLink?.label || 'CMS' };
 
   const userInitials = useMemo(() => {
     const raw = (user?.username || 'AD').replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
     return raw.slice(0, 2) || 'AD';
   }, [user?.username]);
 
-  // Close sidebar and dropdown on route change
+  // Close navigation menus and start the new page at the top.
   useEffect(() => {
     setOpenGroup(null);
     setUserDropdownOpen(false);
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }, [location.pathname]);
 
   // Click outside to close user dropdown
@@ -100,11 +99,12 @@ export default function AdminLayout() {
     return () => document.removeEventListener('pointerdown', handleClickOutside);
   }, []);
 
-  // Keyboard accessibility: ESC closes sidebar / dropdown
+  // Escape closes the open menu and restores focus to its button.
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
         bottomNavRef.current?.querySelector('[aria-expanded="true"]')?.focus();
+        dropdownRef.current?.querySelector('[aria-expanded="true"]')?.focus();
         setOpenGroup(null);
         setUserDropdownOpen(false);
       }
@@ -131,63 +131,19 @@ export default function AdminLayout() {
 
   return (
     <div className="admin-layout-wrapper">
-      <aside className="admin-sidebar admin-glass" aria-label="Navigasi utama">
-        <div className="admin-sidebar-header">
-          <RohisLogo size={34} showGlow={false} />
-          <div className="admin-sidebar-brand">
-            <h2>ROKABA</h2>
-            <span>Admin CMS</span>
-          </div>
-        </div>
-        <nav className="admin-nav">
-          {groups.map(group => (
-            <div className="admin-nav-group" key={group.label}>
-              {group.label !== 'Ringkasan' && <div className="admin-nav-group-label">{group.label}</div>}
-              {group.links.map(item => <MenuLink key={item.path} item={item} className="admin-nav-item" />)}
-            </div>
-          ))}
-        </nav>
-
-        <div className="admin-sidebar-footer">
-          <a
-            href="https://www.rohis-banyumas.web.id/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="admin-sidebar-footer-btn"
-          >
-            <ExternalLink size={15} />
-            <span>Lihat website</span>
-          </a>
-          <button
-            type="button"
-            onClick={logout}
-            className="admin-sidebar-footer-btn logout"
-          >
-            <LogOut size={15} />
-            <span>Keluar</span>
-          </button>
-        </div>
-      </aside>
-
-      {/* ══════════ MAIN WRAPPER & TOPBAR ══════════ */}
       <div className="admin-main-wrapper">
-        <header className="admin-topbar">
+        <header className="admin-topbar admin-navigation-shell">
           <div className="admin-topbar-left">
-            <div className="admin-topbar-title-wrap">
-              <Home size={15} style={{ color: 'var(--text-muted)', flexShrink: 0 }} aria-hidden="true" />
-              <ChevronRight size={14} style={{ color: 'var(--text-muted)', flexShrink: 0 }} aria-hidden="true" />
-              <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>
-                {currentCrumb.group}
-              </span>
-              <span style={{ color: 'var(--border-default)' }} aria-hidden="true">/</span>
-              <span className="admin-topbar-title">{currentCrumb.label}</span>
-
-              <span className="admin-topbar-sep" aria-hidden="true">|</span>
-              <div className="admin-sync-indicator">
-                <span className={`admin-sync-dot ${isSyncing || saving ? 'syncing' : ''}`} />
-                <span>{isSyncing || saving ? 'Menyinkronkan...' : 'Tersinkron'}</span>
+            <NavLink to="/" className="admin-topbar-brand" aria-label="Ringkasan Admin ROKABA">
+              <RohisLogo size={42} />
+              <span><strong>ROKABA</strong><small>Admin CMS</small></span>
+            </NavLink>
+            {currentLink && (
+              <div className="admin-topbar-current">
+                <currentLink.icon size={15} aria-hidden="true" />
+                <span>{currentLink.label}</span>
               </div>
-            </div>
+            )}
           </div>
 
           <div className="admin-topbar-right">
@@ -197,9 +153,10 @@ export default function AdminLayout() {
               onClick={handleSyncNow}
               disabled={isSyncing}
               title="Sinkronkan data dengan server"
+              aria-label="Sinkronkan data dengan server"
             >
-              <RefreshCw size={14} className={isSyncing ? 'animate-spin' : ''} />
-              <span>Sinkronkan</span>
+              <RefreshCw size={15} aria-hidden="true" className={isSyncing || saving ? 'animate-spin' : ''} />
+              <span className="admin-topbar-action-label">{isSyncing || saving ? 'Menyinkronkan' : 'Sinkronkan'}</span>
             </button>
 
             <a
@@ -208,25 +165,25 @@ export default function AdminLayout() {
               rel="noopener noreferrer"
               className="topbar-btn"
               title="Buka Website Publik ROKABA"
+              aria-label="Buka website publik ROKABA"
             >
-              <span>Lihat website</span>
-              <ExternalLink size={13} />
+              <ExternalLink size={15} aria-hidden="true" />
+              <span className="admin-topbar-action-label">Lihat website</span>
             </a>
 
             {/* Admin Profile Dropdown */}
             <div className="admin-user-menu" ref={dropdownRef}>
               <button
                 type="button"
-                className="topbar-btn"
+                className="topbar-btn admin-profile-btn"
                 onClick={() => setUserDropdownOpen(!userDropdownOpen)}
                 aria-expanded={userDropdownOpen}
                 aria-label="Menu Pengguna"
-                style={{ paddingLeft: '0.45rem', gap: '0.5rem' }}
               >
                 <span className="admin-avatar-pill" aria-hidden="true">
                   {userInitials}
                 </span>
-                <span>{user?.username || 'Admin'}</span>
+                <span className="admin-topbar-username">{user?.username || 'Admin'}</span>
                 <ChevronDown size={13} />
               </button>
 
@@ -265,7 +222,7 @@ export default function AdminLayout() {
         </main>
       </div>
 
-      <nav ref={bottomNavRef} className="admin-bottom-nav" aria-label="Menu admin"
+      <nav ref={bottomNavRef} className="admin-bottom-nav admin-navigation-shell" aria-label="Menu admin"
         onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setOpenGroup(null); }}>
         {groups.map(({ label, icon: Icon, links }) => {
           if (links.length === 1) return <MenuLink key={label} item={links[0]} className="admin-bottom-tab" />;
@@ -278,7 +235,10 @@ export default function AdminLayout() {
                 <Icon size={19} aria-hidden="true" /><span>{label}</span>
               </button>
               <div id={'menu-' + label} hidden={!expanded} className="admin-bottom-panel" aria-label={label}>
-                {links.map(item => <MenuLink key={item.path} item={item} className="admin-nav-item" onClick={() => setOpenGroup(null)} />)}
+                {links.map(item => <MenuLink key={item.path} item={item} className="admin-nav-item" onClick={() => {
+                  bottomNavRef.current?.querySelector('[aria-expanded="true"]')?.focus();
+                  setOpenGroup(null);
+                }} />)}
               </div>
             </div>
           );
