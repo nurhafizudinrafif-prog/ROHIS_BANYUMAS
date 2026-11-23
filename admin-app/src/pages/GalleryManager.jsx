@@ -370,19 +370,10 @@ export default function GalleryManager() {
           >
             {/* Modal Header */}
             <div className="modal-header-responsive">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                <div style={{
-                  width: 34,
-                  height: 34,
-                  borderRadius: 'var(--radius-sm)',
-                  background: 'rgba(16, 41, 31, 0.08)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: 'var(--pine-dark)',
-                }}>
+              <div className="admin-modal-heading">
+                <span className="admin-modal-icon" aria-hidden="true">
                   {albumForm.type === 'Video' ? <Film size={18} /> : <ImageIcon size={18} />}
-                </div>
+                </span>
                 <div>
                   <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--pine-dark)', margin: 0 }}>
                     {editingAlbum ? 'Edit Media Galeri' : 'Tambah Media Baru'}

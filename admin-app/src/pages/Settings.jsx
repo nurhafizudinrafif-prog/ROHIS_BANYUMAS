@@ -253,16 +253,7 @@ export default function Settings() {
         alignItems: 'start',
       }}>
         {/* Left Vertical Sub-Nav matching Image 04 panel 4 */}
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '0.35rem',
-          background: 'var(--surface-bg)',
-          padding: '0.65rem',
-          borderRadius: 'var(--radius-lg)',
-          border: '1px solid var(--border-subtle)',
-          boxShadow: 'var(--soft-shadow-sm)',
-        }}>
+        <div className="admin-soft-card admin-settings-nav">
           {navTabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -271,22 +262,8 @@ export default function Settings() {
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.75rem',
-                  padding: '0.75rem 1rem',
-                  borderRadius: 'var(--radius-md)',
-                  background: isActive ? 'var(--pine-dark)' : 'transparent',
-                  color: isActive ? '#FFFFFF' : 'var(--text-secondary)',
-                  border: 'none',
-                  fontWeight: isActive ? 700 : 500,
-                  fontSize: '0.88rem',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  transition: 'all 0.15s ease',
-                  boxShadow: isActive ? '0 2px 6px rgba(16, 41, 31, 0.25)' : 'none',
-                }}
+                className={isActive ? 'admin-nav-item active' : 'admin-nav-item'}
+                aria-pressed={isActive}
               >
                 <Icon size={16} />
                 <span>{tab.label}</span>
