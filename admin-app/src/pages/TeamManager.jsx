@@ -16,6 +16,31 @@ import {
 } from 'lucide-react';
 import ImageUploadField from '../components/ImageUploadField';
 import { getDirectImageUrl } from '../utils/media';
+import './TeamManager.css';
+
+function MemberAvatar({ member }) {
+  const photo = getDirectImageUrl(member.photo);
+  const [failedPhoto, setFailedPhoto] = useState(null);
+  const initials = (member.name || '').trim().split(/\s+/).slice(0, 2)
+    .map(word => Array.from(word)[0] || '').join('').toUpperCase();
+
+  return (
+    <span className="admin-team-avatar" aria-hidden="true">
+      {photo && photo !== failedPhoto ? (
+        <img src={photo} alt="" loading="lazy" onError={() => setFailedPhoto(photo)} />
+      ) : initials || <User size={18} />}
+    </span>
+  );
+}
+
+function EditMemberButton({ member, onEdit }) {
+  return (
+    <button type="button" className="btn-secondary-soft admin-team-edit"
+      onClick={() => onEdit(member)} aria-label={`Edit ${member.name}`}>
+      <Edit3 size={14} aria-hidden="true" /> Edit
+    </button>
+  );
+}
 
 export default function TeamManager() {
   const { team, updateData, addAuditLog } = useData();
@@ -67,7 +92,7 @@ export default function TeamManager() {
     }
 
     if (search.trim()) {
-      const q = search.toLowerCase();
+      const q = search.trim().toLowerCase();
       list = list.filter(
         (m) =>
           (m.name || '').toLowerCase().includes(q) ||
@@ -270,183 +295,90 @@ export default function TeamManager() {
         </button>
       </div>
 
-      {/* Filter Row matching Image 03 panel 2 */}
-      <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
-        <select
-          className="form-select-soft"
-          style={{ minWidth: 200, padding: '0.5rem 1rem' }}
-          value={filterGroup}
-          onChange={(e) => setFilterGroup(e.target.value)}
-        >
-          <option value="Semua">Semua BPH/Divisi</option>
-          <option value="bph">Badan Pengurus Harian (BPH)</option>
-          {divisionsList.map((div) => (
-            <option key={div.id || div.shortName} value={div.shortName || div.id}>
-              {div.name || div.title}
-            </option>
-          ))}
-        </select>
-
-        <div style={{ position: 'relative', width: '100%', maxWidth: 320 }}>
-          <Search size={16} style={{ position: 'absolute', left: '0.85rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-          <input
-            type="text"
-            className="form-input-soft"
-            style={{ paddingLeft: '2.4rem' }}
-            placeholder="Cari pengurus"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-      </div>
-
-      {/* Desktop Data Table matching Image 03 panel 2 */}
-      <div className="admin-desktop-table data-table-container-soft">
-        <table className="data-table-soft">
-          <thead>
-            <tr>
-              <th style={{ width: 100 }}>Foto</th>
-              <th style={{ width: '22%' }}>Jabatan</th>
-              <th style={{ width: '28%' }}>Nama pengurus</th>
-              <th>Asal sekolah</th>
-              <th style={{ width: 90, textAlign: 'right' }}>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredMembers.map((member) => (
-              <tr key={member.id}>
-                {/* Foto Column: Avatar or neutral rounded box with user icon + "Foto" */}
-                <td>
-                  <div style={{
-                    width: 48,
-                    height: 56,
-                    borderRadius: 'var(--radius-sm)',
-                    background: 'rgba(16, 41, 31, 0.05)',
-                    border: '1px solid var(--border-subtle)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    overflow: 'hidden',
-                  }}>
-                    {member.photo ? (
-                      <img
-                        src={getDirectImageUrl(member.photo)}
-                        alt={member.name}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      />
-                    ) : (
-                      <>
-                        <User size={18} color="var(--text-muted)" />
-                        <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 2 }}>Foto</span>
-                      </>
-                    )}
-                  </div>
-                </td>
-
-                {/* Jabatan */}
-                <td>
-                  <strong style={{ color: 'var(--pine-dark)', fontWeight: 700 }}>
-                    {member.role || 'Pengurus'}
-                  </strong>
-                </td>
-
-                {/* Nama Pengurus */}
-                <td>
-                  <span style={{ fontWeight: 600, color: 'var(--pine-dark)' }}>
-                    {member.name}
-                  </span>
-                </td>
-
-                {/* Asal Sekolah */}
-                <td>
-                  <span style={{ color: 'var(--text-secondary)', fontSize: '0.88rem' }}>
-                    {member.school || 'ROHIS Banyumas'}
-                  </span>
-                </td>
-
-                {/* Aksi */}
-                <td style={{ textAlign: 'right' }}>
-                  <button
-                    type="button"
-                    className="btn btn-secondary-soft btn-sm"
-                    onClick={() => handleOpenEdit(member)}
-                    style={{ gap: '0.35rem', padding: '0.35rem 0.75rem' }}
-                  >
-                    <Edit3 size={13} /> Edit
-                  </button>
-                </td>
-              </tr>
-            ))}
-
-            {filteredMembers.length === 0 && (
-              <tr>
-                <td colSpan={5} style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--text-muted)' }}>
-                  Tidak ada data pengurus yang cocok.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Mobile Card List */}
-      <div className="admin-mobile-cards">
-        {filteredMembers.map((member) => (
-          <div key={member.id} className="admin-mobile-card">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-              <div style={{
-                width: 48,
-                height: 56,
-                borderRadius: 'var(--radius-sm)',
-                background: 'rgba(16, 41, 31, 0.05)',
-                border: '1px solid var(--border-subtle)',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                overflow: 'hidden',
-                flexShrink: 0,
-              }}>
-                {member.photo ? (
-                  <img
-                    src={getDirectImageUrl(member.photo)}
-                    alt={member.name}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  />
-                ) : (
-                  <>
-                    <User size={18} color="var(--text-muted)" />
-                    <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: 2 }}>Foto</span>
-                  </>
-                )}
-              </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <strong style={{ display: 'block', fontSize: '0.92rem', color: 'var(--pine-dark)' }}>
-                  {member.name}
-                </strong>
-                <span style={{ fontSize: '0.82rem', color: 'var(--pine-deep)', fontWeight: 600 }}>
-                  {member.role}
-                </span>
-                <span style={{ display: 'block', fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: 2 }}>
-                  {member.school || 'ROHIS Banyumas'}
-                </span>
-              </div>
-            </div>
-
-            <div className="admin-mobile-card-actions">
-              <button
-                type="button"
-                className="btn btn-secondary-soft btn-sm"
-                onClick={() => handleOpenEdit(member)}
-                style={{ flex: 1, justifyContent: 'center' }}
-              >
-                <Edit3 size={14} /> Edit
-              </button>
-            </div>
+      <section className="admin-team-directory" aria-label="Daftar pengurus">
+        <div className="admin-team-toolbar">
+          <div className="admin-team-filters">
+            <label className="admin-team-search">
+              <Search size={16} aria-hidden="true" />
+              <input
+                type="search"
+                className="form-input-soft"
+                placeholder="Cari nama, jabatan, atau sekolah"
+                aria-label="Cari pengurus"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </label>
+            <select
+              className="form-select-soft"
+              aria-label="Filter divisi pengurus"
+              value={filterGroup}
+              onChange={(e) => setFilterGroup(e.target.value)}
+            >
+              <option value="Semua">Semua divisi</option>
+              <option value="bph">Badan Pengurus Harian (BPH)</option>
+              {divisionsList.map((div) => (
+                <option key={div.id || div.shortName} value={div.shortName || div.id}>
+                  {div.name || div.title}
+                </option>
+              ))}
+            </select>
           </div>
-        ))}
-      </div>
+          <p className="admin-team-count" role="status">
+            <strong>{filteredMembers.length}</strong>{filteredMembers.length !== allMembers.length && ` dari ${allMembers.length}`} pengurus
+          </p>
+        </div>
+
+        {filteredMembers.length === 0 ? (
+          <p className="admin-team-empty">Tidak ada pengurus yang cocok.</p>
+        ) : (
+          <>
+            <div className="admin-desktop-table admin-team-table-wrap">
+              <table className="admin-soft-table admin-team-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Nama pengurus</th>
+                    <th scope="col">Jabatan / Divisi</th>
+                    <th scope="col">Asal sekolah</th>
+                    <th scope="col">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredMembers.map((member) => (
+                    <tr key={member.id}>
+                      <td>
+                        <div className="admin-team-identity">
+                          <MemberAvatar member={member} />
+                          <strong>{member.name}</strong>
+                        </div>
+                      </td>
+                      <td>
+                        <span>{member.role || 'Pengurus'}</span>
+                        <small>{member.groupName}</small>
+                      </td>
+                      <td className="admin-team-school">{member.school || 'ROHIS Banyumas'}</td>
+                      <td><EditMemberButton member={member} onEdit={handleOpenEdit} /></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <ul className="admin-mobile-cards admin-team-cards">
+              {filteredMembers.map((member) => (
+                <li key={member.id} className="admin-team-member">
+                  <MemberAvatar member={member} />
+                  <div className="admin-team-details">
+                    <strong>{member.name}</strong>
+                    <span>{member.role || 'Pengurus'}</span>
+                    <small>{member.school || 'ROHIS Banyumas'}</small>
+                  </div>
+                  <EditMemberButton member={member} onEdit={handleOpenEdit} />
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </section>
 
       {/* ═══════════════════════════════════════════════════════════════
           RESPONSIVE MODAL: EDIT / TAMBAH PENGURUS
