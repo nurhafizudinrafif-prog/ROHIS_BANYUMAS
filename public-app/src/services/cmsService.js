@@ -6,12 +6,15 @@ import {
     parseImageUrl,
 } from '@shared/services/mediaHelper.js';
 import { normalizeTeamData } from '../components/ui/SoftUI';
+import { localDocumentationPhoto } from './documentationPhotos';
 
 export function getDriveImageUrl(raw = '') {
     if (!raw) return '';
     if (typeof raw !== 'string') return '';
     const trimmed = raw.trim();
     if (!trimmed) return '';
+    const localPhoto = localDocumentationPhoto(trimmed);
+    if (localPhoto) return localPhoto;
     if (trimmed.startsWith('/')) return trimmed;
     const driveId = extractDriveId(trimmed);
     if (driveId) {

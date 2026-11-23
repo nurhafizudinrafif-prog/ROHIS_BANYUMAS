@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigationType } from 'react-router-dom';
 import {
     ArrowRight,
-    Sparkles,
-    Compass,
     School,
-    Newspaper,
-    Calendar,
-    MessageCircleQuestion,
-    User,
     Users,
     Layers,
     CalendarCheck,
@@ -18,11 +12,9 @@ import FeatureCarousel from '../components/FeatureCarousel';
 import {
     Eyebrow,
     FramedPhoto,
-    GlassChip,
     PrimaryButton,
     SecondaryButton,
     SoftCard,
-    StatCard,
 } from '../components/ui/SoftUI';
 
 const DEFAULT_HERO = {
@@ -34,7 +26,7 @@ const DEFAULT_HERO = {
     ctaPrimaryText: 'Mengenal ROKABA',
     ctaPrimaryLink: '/about',
     ctaSecondaryText: 'Jelajahi program',
-    ctaSecondaryLink: '/programs',
+    ctaSecondaryLink: '/about#program',
     backgroundImage: '/documentation/01-kebersamaan.jpg',
     captionTitle: 'Dokumentasi kebersamaan kader ROKABA',
     captionSub: 'SMAN 1 Baturraden',
@@ -94,33 +86,6 @@ const DEFAULT_LEADERS = [
     },
 ];
 
-const DISCOVER_CARDS = [
-    {
-        title: 'Program & Kaderisasi',
-        desc: 'Lima divisi yang menggerakkan pembinaan, dakwah, media, jejaring, dan kemandirian.',
-        to: '/programs',
-        icon: Compass,
-    },
-    {
-        title: 'ROHIS Sekolah',
-        desc: 'Jejaring 17 SMA, SMK, dan MA yang saling terhubung di Kabupaten Banyumas.',
-        to: '/schools',
-        icon: School,
-    },
-    {
-        title: 'Berita & Kegiatan',
-        desc: 'Cerita kegiatan, rilis organisasi, dan dokumentasi perjalanan kader.',
-        to: '/berita',
-        icon: Newspaper,
-    },
-    {
-        title: 'Agenda & Kajian',
-        desc: 'Jadwal kajian pelajar, musyawarah, pelatihan, dan kegiatan bersama.',
-        to: '/events',
-        icon: Calendar,
-    },
-];
-
 const DEFAULT_ABOUT_SUMMARY = {
     sectionTitle: 'Tentang ROKABA',
     intro:
@@ -146,9 +111,32 @@ function resolvePhotoUrl(raw, fallback = '') {
     return getDriveImageUrl(raw);
 }
 
+function tiltCover(event) {
+    if (event.pointerType !== 'mouse' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const frame = event.currentTarget;
+    const bounds = frame.getBoundingClientRect();
+    const x = (event.clientX - bounds.left) / bounds.width - 0.5;
+    const y = (event.clientY - bounds.top) / bounds.height - 0.5;
+    frame.style.setProperty('--cover-yaw', `${x * 4}deg`);
+    frame.style.setProperty('--cover-pitch', `${y * -3}deg`);
+}
+
+function resetCover(event) {
+    event.currentTarget.style.removeProperty('--cover-yaw');
+    event.currentTarget.style.removeProperty('--cover-pitch');
+}
+
 export default function Home() {
     const [cms, setCms] = useState(null);
     const [activeLeaderIdx, setActiveLeaderIdx] = useState(0);
+    const { hash, key } = useLocation();
+    const navigationType = useNavigationType();
+
+    useEffect(() => {
+        if (!hash && navigationType !== 'POP') {
+            window.scrollTo({ top: 0, behavior: 'instant' });
+        }
+    }, [hash, key, navigationType]);
 
     useEffect(() => {
         let mounted = true;
@@ -228,7 +216,7 @@ export default function Home() {
     return (
         <div className="rk-page">
             {/* 1. HERO SECTION */}
-            <section className="rk-hero-section">
+            <section className="rk-hero-section rk-home-cover" data-scene="welcome">
                 <div className="rk-container">
                     <div className="rk-hero-grid">
                         <div className="rk-hero-copy">
@@ -244,19 +232,20 @@ export default function Home() {
                                     <span>{hero.ctaPrimaryText || 'Mengenal ROKABA'}</span>
                                     <ArrowRight size={17} />
                                 </PrimaryButton>
-                                <SecondaryButton to={hero.ctaSecondaryLink || '/programs'}>
+                                <SecondaryButton to={hero.ctaSecondaryLink || '/about#program'}>
                                     <span>{hero.ctaSecondaryText || 'Jelajahi program'}</span>
                                     <ArrowRight size={16} />
                                 </SecondaryButton>
                             </div>
                         </div>
 
-                        <div className="rk-hero-visual">
+                        <div className="rk-hero-visual" onPointerMove={tiltCover} onPointerLeave={resetCover}>
                             <FramedPhoto
                                 src={heroPhoto}
                                 alt="Dokumentasi kebersamaan kader ROKABA"
                                 captionTitle={hero.captionTitle}
                                 captionSub={hero.captionSub}
+                                eager
                                 aspectRatio="16 / 10.8"
                             />
                         </div>
@@ -285,197 +274,120 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* 3. SAMBUTAN PIMPINAN (URUTAN WAJIB: ISI -> SALAM PENUTUP -> 3 KARTU PEMILIH KETUA) */}
-            <section className="rk-section" id="sambutan">
-                <div className="rk-container">
-                    <div className="rk-section-head">
-                        <div>
-                            <Eyebrow>Sambutan Pimpinan</Eyebrow>
-                            <h2 className="rk-section-title">Sambutan Pimpinan</h2>
-                            <p className="rk-section-desc">
-                                Pesan kebersamaan dari pimpinan ROHIS Kabupaten Banyumas.
-                            </p>
-                        </div>
-                    </div>
-
-                    <SoftCard className="rk-sambutan-card rk-sambutan-card--v3">
-                        <div className="rk-sambutan-top-pill-wrap">
-                            <div className="rk-sambutan-top-pill">
-                                <span className="rk-sambutan-top-pill-role">
-                                    <User size={14} />
-                                    <strong>{activeLeader.role}</strong>
-                                </span>
-                                <span className="rk-sambutan-top-pill-divider" aria-hidden="true" />
-                                <span className="rk-sambutan-top-pill-period">
-                                    {activeLeader.period}
-                                </span>
+            <div className="rk-home-flow" data-scene="calm">
+                <section className="rk-section rk-welcome-letter" id="sambutan" aria-labelledby="sambutan-title">
+                    <div className="rk-container">
+                        <header className="rk-welcome-heading">
+                            <div>
+                                <h2 className="rk-section-title" id="sambutan-title">Sambutan pengurus</h2>
+                                <p>ROHIS Kabupaten Banyumas</p>
                             </div>
-                        </div>
+                            <p>{activeLeader.period}</p>
+                        </header>
 
-                        <div className="rk-sambutan-body">
-                            <p className="rk-salutation">{activeLeader.salutationOpen}</p>
-
-                            {activeLeader.paragraphs.map((paragraph, pIdx) => (
-                                <p key={pIdx}>{paragraph}</p>
-                            ))}
-
-                            <p className="rk-salutation-close">{activeLeader.salutationClose}</p>
-                        </div>
-
-                        {/* TIGA KARTU PEMILIH KETUA WAJIB DI BAWAH SALAM PENUTUP */}
-                        <div className="rk-leader-selector-wrap">
-                            <span className="rk-leader-selector-label">
-                                Pilih Sambutan Pimpinan ({activeLeaderIdx + 1}/{leaders.length})
-                            </span>
-                            <div
-                                className="rk-leader-selector-grid"
-                                role="tablist"
-                                aria-label="Pemilih sambutan pimpinan ROKABA"
-                            >
-                                {leaders.map((leader, idx) => {
-                                    const isSelected = idx === activeLeaderIdx;
-                                    return (
+                        <div className="rk-welcome-grid">
+                            <div className="rk-welcome-people">
+                                <FramedPhoto
+                                    key={activeLeader.id}
+                                    className="rk-flow-glass rk-welcome-portrait"
+                                    src={activeLeader.photo}
+                                    alt={activeLeader.name}
+                                    aspectRatio="1 / 1.08"
+                                    captionTitle={activeLeader.name}
+                                    captionSub={activeLeader.role}
+                                    fallback={
+                                        <div className="rk-welcome-monogram" aria-hidden="true">
+                                            {activeLeader.name.trim().split(/\s+/).slice(-2).map(word => word[0]).join('')}
+                                        </div>
+                                    }
+                                />
+                                <div
+                                    className="rk-welcome-selector"
+                                    role="group"
+                                    aria-label="Pilih sambutan pengurus"
+                                >
+                                    {leaders.map((leader, idx) => (
                                         <button
                                             key={leader.id}
                                             type="button"
-                                            role="tab"
-                                            aria-selected={isSelected}
-                                            className={`rk-leader-card ${
-                                                isSelected ? 'is-active' : ''
-                                            }`}
+                                            aria-pressed={idx === activeLeaderIdx}
+                                            aria-controls="sambutan-content"
                                             onClick={() => setActiveLeaderIdx(idx)}
                                         >
-                                            <span className="rk-leader-avatar">
-                                                {leader.photo ? (
-                                                    <img
-                                                        src={leader.photo}
-                                                        alt={leader.name}
-                                                        loading="lazy"
-                                                        onError={(e) => {
-                                                            if (leader.id === 'akhwat' && !e.currentTarget.src.endsWith('/documentation/06-ketua-akhwat.jpg')) {
-                                                                e.currentTarget.src = '/documentation/06-ketua-akhwat.jpg';
-                                                            }
-                                                        }}
-                                                    />
-                                                ) : (
-                                                    <User size={22} />
-                                                )}
-                                            </span>
-                                            <span className="rk-leader-info">
-                                                <strong>{leader.name}</strong>
-                                                <span>{leader.role}</span>
-                                                <small>
-                                                    {leader.photo
-                                                        ? leader.school
-                                                        : 'Foto belum tersedia'}
-                                                </small>
-                                            </span>
+                                            {leader.role}
                                         </button>
-                                    );
-                                })}
+                                    ))}
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="rk-sambutan-actions rk-sambutan-actions--centered">
-                            <button
-                                type="button"
-                                className="rk-btn-primary"
-                                onClick={handleNextLeader}
-                            >
-                                <span>Sambutan berikutnya</span>
-                                <ArrowRight size={16} />
-                            </button>
-                            <SecondaryButton to="/about#pengurus">
-                                <span>Kenali pengurus</span>
-                            </SecondaryButton>
-                        </div>
-                    </SoftCard>
-                </div>
-            </section>
-
-            {/* 4. RUANG UNTUK BERTUMBUH (5 KARTU ARAH: 3 ATAS + 2 BAWAH TENGAH) */}
-            <section className="rk-section">
-                <div className="rk-container">
-                    <div className="rk-section-head rk-section-head--centered">
-                        <div className="rk-centered-title-bar">
-                            <span className="rk-brass-Rule" aria-hidden="true" />
-                            <h2 className="rk-section-title">Ruang untuk bertumbuh</h2>
-                            <span className="rk-brass-Rule" aria-hidden="true" />
-                        </div>
-                        <p className="rk-section-desc">
-                            Lima bidang gerak yang saling menguatkan kader dan sekolah.
-                        </p>
-                    </div>
-
-                    <div className="rk-discover-grid-v3">
-                        {DISCOVER_CARDS.map((card) => {
-                            const Icon = card.icon;
-                            return (
-                                <Link
-                                    key={card.title}
-                                    to={card.to}
-                                    className="rk-card rk-discover-card rk-discover-card--v3"
-                                >
-                                    <span className="rk-service-icon-badge rk-service-icon-badge--lg">
-                                        <Icon size={22} />
-                                    </span>
-                                    <div>
-                                        <h3>{card.title}</h3>
-                                        <p style={{ marginTop: 8 }}>{card.desc}</p>
+                            <article className="rk-flow-glass rk-welcome-pane" id="sambutan-content" aria-labelledby="sambutan-role">
+                                <h3 className="rk-welcome-role" id="sambutan-role" aria-live="polite">
+                                    Sambutan {activeLeader.role}
+                                </h3>
+                                <div className="rk-sambutan-body">
+                                    <p className="rk-salutation">{activeLeader.salutationOpen}</p>
+                                    {activeLeader.paragraphs.map((paragraph, pIdx) => (
+                                        <p key={pIdx}>{paragraph}</p>
+                                    ))}
+                                    <p className="rk-salutation-close">{activeLeader.salutationClose}</p>
+                                    <div className="rk-welcome-byline">
+                                        <strong>{activeLeader.name}</strong>
+                                        <span>{activeLeader.school}</span>
                                     </div>
-                                    <span className="rk-discover-link">
-                                        Telusuri
-                                        <ArrowRight size={15} />
-                                    </span>
-                                </Link>
-                            );
-                        })}
+                                </div>
+
+                                <footer className="rk-welcome-actions">
+                                    <Link to="/about#pengurus">Kenali pengurus</Link>
+                                    <button type="button" className="rk-btn-primary" onClick={handleNextLeader}>
+                                        <span>Sambutan berikutnya</span>
+                                        <ArrowRight size={16} aria-hidden="true" />
+                                    </button>
+                                </footer>
+                            </article>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            {/* 5. TENTANG ORGANISASI (RINGKASAN PROFIL BERANDA) */}
-            <section className="rk-section">
-                <div className="rk-container">
-                    <div className="rk-about-preview-grid">
-                        <FramedPhoto
-                            src={aboutPhoto}
-                            alt="Musyawarah dan kolaborasi pengurus ROKABA"
-                            captionTitle="Dokumentasi kader ROKABA"
-                            captionSub="Musyawarah & kaderisasi lintas sekolah"
-                            aspectRatio="16 / 11"
-                        />
+                <section className="rk-section rk-home-profile" aria-labelledby="home-profile-title">
+                    <div className="rk-container">
+                        <h2 className="rk-section-title" id="home-profile-title">{aboutData.sectionTitle}</h2>
+                        <div className="rk-about-preview-grid">
+                            <FramedPhoto
+                                src={aboutPhoto}
+                                alt="Musyawarah dan kolaborasi pengurus ROKABA"
+                                className="rk-flow-glass rk-profile-photo"
+                                aspectRatio="16 / 10"
+                            />
 
-                        <div className="rk-about-preview-copy">
-                            <Eyebrow>Profil Organisasi</Eyebrow>
-                            <h2 className="rk-section-title">{aboutData.sectionTitle}</h2>
-                            <p className="rk-lead-text">{aboutData.intro}</p>
-                            <p className="rk-body-text">{aboutData.paragraph}</p>
+                            <div className="rk-about-preview-copy">
+                                <p className="rk-lead-text">{aboutData.intro}</p>
+                                <p className="rk-body-text">{aboutData.paragraph}</p>
 
-                            <div className="rk-about-values-grid">
-                                {(aboutData.values || DEFAULT_ABOUT_SUMMARY.values).map(
-                                    (val, idx) => (
-                                        <SoftCard key={idx} className="rk-mini-value-card">
-                                            <strong>{val.title}</strong>
-                                            <p>{val.desc}</p>
-                                        </SoftCard>
-                                    )
-                                )}
-                            </div>
+                                <div className="rk-about-values-grid">
+                                    {(aboutData.values || DEFAULT_ABOUT_SUMMARY.values).map(
+                                        (val, idx) => (
+                                            <SoftCard key={idx} className="rk-mini-value-card">
+                                                <strong>{val.title}</strong>
+                                                <p>{val.desc}</p>
+                                            </SoftCard>
+                                        )
+                                    )}
+                                </div>
 
-                            <div style={{ marginTop: 8, display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-                                <PrimaryButton to="/about">
-                                    <span>Pelajari profil & linimasa</span>
-                                    <ArrowRight size={16} />
-                                </PrimaryButton>
-                                <SecondaryButton to="/about#pengurus">
-                                    <span>Direktori 45 pengurus</span>
-                                </SecondaryButton>
+                                <div className="rk-profile-actions">
+                                    <PrimaryButton to="/about">
+                                        <span>Pelajari profil & linimasa</span>
+                                        <ArrowRight size={16} aria-hidden="true" />
+                                    </PrimaryButton>
+                                    <SecondaryButton to="/about#pengurus">
+                                        <span>Direktori pengurus</span>
+                                    </SecondaryButton>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            </div>
 
             {/* 6. CUPLIKAN BERITA TERKINI (CAROUSEL 3 KARTU) */}
             <FeatureCarousel
@@ -502,7 +414,7 @@ export default function Home() {
                     cms?.sectionHeaders?.events?.description ||
                     'Ikuti kajian pelajar, pelatihan kepemimpinan, musyawarah kerja, dan aksi kolaborasi terdekat.'
                 }
-                ctaHref="/events"
+                ctaHref="/berita#agenda"
                 ctaLabel={cms?.sectionHeaders?.events?.linkText || 'Lihat kalender agenda'}
                 items={eventsList}
             />

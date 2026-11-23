@@ -47,7 +47,7 @@ export default function Footer() {
             }}
           >
             <Link to="/about">Tentang</Link>
-            <Link to="/programs">Program</Link>
+            <Link to="/about#program">Program</Link>
             <Link to="/schools">Sekolah</Link>
             <Link to="/articles">Artikel</Link>
             <Link to="/gallery">Galeri</Link>

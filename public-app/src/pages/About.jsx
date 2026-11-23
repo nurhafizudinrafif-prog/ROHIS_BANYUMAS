@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
-    Compass,
     Target,
     Flag,
-    Calendar,
     MapPin,
     Users,
     ArrowRight,
     Sparkles,
     Share2,
     School,
-    Award,
 } from 'lucide-react';
 import { fetchCmsData, getDriveImageUrl } from '../services/cmsService';
 import MemberDirectory from '../components/MemberDirectory';
+import Programs from './Programs';
 import {
     Eyebrow,
     FramedPhoto,
-    GlassChip,
-    PrimaryButton,
     SecondaryButton,
     SoftCard,
 } from '../components/ui/SoftUI';
@@ -76,6 +73,31 @@ function resolvePhotoUrl(raw, fallback) {
 
 export default function About() {
     const [cms, setCms] = useState(null);
+    const { hash, key } = useLocation();
+    const navigate = useNavigate();
+    const waitingForSection = Boolean(hash) && cms === null;
+
+    useEffect(() => {
+        if (hash === '#sekolah') {
+            navigate('/schools', { replace: true });
+            return;
+        }
+        if (!hash) {
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            return;
+        }
+        if (waitingForSection) return;
+
+        let cancelled = false;
+        document.fonts.ready.then(() => {
+            if (!cancelled) {
+                document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'instant' });
+            }
+        });
+        return () => {
+            cancelled = true;
+        };
+    }, [hash, key, navigate, waitingForSection]);
 
     useEffect(() => {
         let mounted = true;
@@ -123,8 +145,8 @@ export default function About() {
                                     <Users size={17} />
                                     <span>Struktur 45 Pengurus</span>
                                 </a>
-                                <SecondaryButton to="/schools">
-                                    <span>17 ROHIS Sekolah</span>
+                                <SecondaryButton to="#program">
+                                    <span>Program & Kaderisasi</span>
                                     <ArrowRight size={16} />
                                 </SecondaryButton>
                             </div>
@@ -238,7 +260,8 @@ export default function About() {
                 </div>
             </section>
 
-            {/* 4. DIREKTORI PENGURUS (45 ANGGOTA DENGAN FILTER DIVISI & PENCARIAN) */}
+            <Programs cms={cms} />
+
             <MemberDirectory cmsMembers={cms?.members} />
         </div>
     );

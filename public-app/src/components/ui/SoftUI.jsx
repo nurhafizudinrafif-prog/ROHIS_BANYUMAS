@@ -9,6 +9,7 @@ import {
   parseImageUrl,
 } from '@shared/services/mediaHelper.js';
 import logo from '../../assets/logo.png';
+import { localDocumentationPhoto } from '../../services/documentationPhotos';
 
 /**
  * Authentic ROKABA Documentation Photo IDs (Google Drive)
@@ -179,6 +180,7 @@ export function formatShortDayMonth(dateStr) {
 export function SmartImage({
   src,
   alt = 'Dokumentasi ROHIS Kabupaten Banyumas',
+  fallback,
   eager = false,
   className = '',
   style,
@@ -186,7 +188,7 @@ export function SmartImage({
   const [tier, setTier] = useState(0);
 
   // Replace generic stock unsplash URLs with real ROKABA documentation photos
-  const localDocumentation = typeof src === 'string' && (src.includes('1PUOOkf_OLutx7LItdz6_7U7cNRtd1XrB') ? '/documentation/hero.jpg' : src.includes('1FSPbsFV9dStzLQsxXRi3VdOj_FfE-BKJ') ? '/documentation/about.jpg' : null);
+  const localDocumentation = localDocumentationPhoto(src);
   const normalizedSrc = localDocumentation || (
     typeof src === 'string' && src.includes('unsplash.com')
       ? '/documentation/hero.jpg'
@@ -209,6 +211,8 @@ export function SmartImage({
   }, [normalizedSrc]);
 
   if (!activeUrl) {
+    if (fallback !== undefined) return fallback;
+
     return (
       <div
         role="img"
@@ -616,6 +620,7 @@ export function DocumentRow({
 export function PhotoFrame({
   src,
   alt = 'Dokumentasi ROHIS Kabupaten Banyumas',
+  fallback,
   aspect = '16/10',
   aspectRatio,
   captionTitle,
@@ -632,10 +637,14 @@ export function PhotoFrame({
     const caption = captionRef.current;
     if (!photo || !caption || typeof ResizeObserver === 'undefined') return undefined;
     const measure = () => {
+      const left = caption.offsetLeft + caption.clientLeft;
+      const top = caption.offsetTop + caption.clientTop;
       caption.style.setProperty('--lens-width', `${photo.clientWidth}px`);
       caption.style.setProperty('--lens-height', `${photo.clientHeight}px`);
-      caption.style.setProperty('--lens-left', `${-caption.offsetLeft}px`);
-      caption.style.setProperty('--lens-top', `${-caption.offsetTop}px`);
+      caption.style.setProperty('--lens-left', `${-left}px`);
+      caption.style.setProperty('--lens-top', `${-top}px`);
+      caption.style.setProperty('--lens-origin-x', `${left + caption.clientWidth / 2}px`);
+      caption.style.setProperty('--lens-origin-y', `${top + caption.clientHeight / 2}px`);
     };
     const observer = new ResizeObserver(measure);
     observer.observe(photo);
@@ -646,11 +655,13 @@ export function PhotoFrame({
   return (
     <div className={`rk-photo-frame ${className}`.trim()}>
       <div ref={photoRef} className="rk-photo-inner" style={{ aspectRatio: resolvedAspect }}>
-        <SmartImage src={src} alt={alt} eager={eager} />
+        <SmartImage src={src} alt={alt} eager={eager} fallback={fallback} />
 
         {(captionTitle || captionSub) && (
           <div ref={captionRef} className="rk-glass-caption">
-            <div className="rk-caption-lens" aria-hidden="true"><SmartImage src={src} alt="" eager={eager} /></div>
+            <div className="rk-caption-lens" aria-hidden="true">
+              <SmartImage src={src} alt="" eager={eager} fallback={fallback === undefined ? undefined : null} />
+            </div>
             {captionTitle && <strong>{captionTitle}</strong>}
             {captionSub && <span>{captionSub}</span>}
           </div>

@@ -103,7 +103,7 @@ export default function FeatureCarousel({
     ctaLabel,
     onSelect,
 }) {
-    const [index, setIndex] = useState(0);
+    const [selection, setSelection] = useState({ index: 0, previous: 0, direction: 1 });
     const [selectedEvent, setSelectedEvent] = useState(null);
     const gesture = useRef(null);
     const dragged = useRef(false);
@@ -119,12 +119,30 @@ export default function FeatureCarousel({
             : FALLBACK_NEWS;
 
     const count = resolvedItems.length;
-    const current = count ? index % count : 0;
-    const move = (step) =>
-        setIndex((old) => (count ? (old % count + step + count) % count : 0));
+    const at = (position) => ((position % count) + count) % count;
+    const current = at(selection.index);
+    const previous = at(selection.previous);
+    const before = at(current - 1);
+    const next = at(current + 1);
+    // Mount just the current card, its neighbours, and a card leaving on a direct jump.
+    const visibleIndices = [...new Set([before, current, next, previous])];
+    const direction = selection.direction;
+    const move = (step) => {
+        if (!step || count < 2) return;
+        setSelection((old) => ({
+            index: at(old.index + step),
+            previous: at(old.index),
+            direction: Math.sign(step),
+        }));
+    };
     const selectEvent = (item) =>
         onSelect ? onSelect(item) : setSelectedEvent(item);
-    const slots = count > 2 ? [-1, 0, 1] : count === 2 ? [0, 1] : [0];
+
+    const finishGesture = (stage) => {
+        gesture.current = null;
+        delete stage.dataset.dragging;
+        stage.style.removeProperty('--drag-x');
+    };
 
     const resolvedLead = description || lead;
     const resolvedMoreTo = ctaHref || moreTo;
@@ -169,6 +187,7 @@ export default function FeatureCarousel({
                         <div
                             id={id}
                             className="rk-carousel-stage"
+                            style={{ '--enter-x': direction < 0 ? '-16%' : '16%' }}
                             tabIndex={0}
                             onKeyDown={(event) => {
                                 if (
@@ -182,20 +201,45 @@ export default function FeatureCarousel({
                                     event.key === 'ArrowLeft'
                                 ) {
                                     event.preventDefault();
+                                    event.currentTarget.focus({ preventScroll: true });
                                     move(event.key === 'ArrowRight' ? 1 : -1);
                                 }
                             }}
                             onPointerDown={(event) => {
+                                dragged.current = false;
+                                if (count < 2 || !event.isPrimary || event.button !== 0) return;
                                 gesture.current = {
+                                    id: event.pointerId,
                                     x: event.clientX,
                                     y: event.clientY,
+                                    horizontal: false,
                                 };
-                                dragged.current = false;
+                            }}
+                            onPointerMove={(event) => {
+                                const start = gesture.current;
+                                if (!start || start.id !== event.pointerId) return;
+                                const stage = event.currentTarget;
+                                const dx = event.clientX - start.x;
+                                const dy = event.clientY - start.y;
+                                if (!start.horizontal) {
+                                    if (Math.abs(dy) > 12 && Math.abs(dy) >= Math.abs(dx)) {
+                                        finishGesture(stage);
+                                        return;
+                                    }
+                                    if (Math.abs(dx) < 8 || Math.abs(dx) <= Math.abs(dy) * 1.3) return;
+                                    start.horizontal = true;
+                                    dragged.current = true;
+                                    stage.setPointerCapture(event.pointerId);
+                                    stage.dataset.dragging = 'true';
+                                }
+                                const limit = stage.clientWidth * .22;
+                                const offset = Math.max(-limit, Math.min(dx * .7, limit));
+                                stage.style.setProperty('--drag-x', `${offset}px`);
                             }}
                             onPointerUp={(event) => {
                                 const start = gesture.current;
-                                gesture.current = null;
-                                if (!start) return;
+                                if (!start || start.id !== event.pointerId) return;
+                                finishGesture(event.currentTarget);
                                 const dx = event.clientX - start.x;
                                 const dy = event.clientY - start.y;
                                 if (
@@ -206,8 +250,11 @@ export default function FeatureCarousel({
                                     move(dx < 0 ? 1 : -1);
                                 }
                             }}
-                            onPointerCancel={() => {
-                                gesture.current = null;
+                            onPointerCancel={(event) => {
+                                finishGesture(event.currentTarget);
+                            }}
+                            onPointerLeave={(event) => {
+                                if (!gesture.current?.horizontal) finishGesture(event.currentTarget);
                             }}
                             onClickCapture={(event) => {
                                 if (dragged.current) {
@@ -217,11 +264,15 @@ export default function FeatureCarousel({
                                 }
                             }}
                         >
-                            {slots.map((slot) => {
-                                const itemIndex =
-                                    (current + slot + count) % count;
+                            {visibleIndices.map((itemIndex) => {
                                 const item = resolvedItems[itemIndex];
-                                const active = slot === 0;
+                                const active = itemIndex === current;
+                                const neighbour = !active && (itemIndex === before || itemIndex === next);
+                                let side = itemIndex === next ? 1 : -1;
+                                if (itemIndex === previous && (count < 3 || !neighbour)) side = -direction;
+                                const position = active ? 'active' : side < 0 ? 'previous' : 'next';
+                                const category = item.category || item.type || (isEvent ? 'Kegiatan' : 'Organisasi');
+                                const date = item.date ? formatIndonesianDate(item.date) : undefined;
                                 const suppliedPhoto =
                                     item.image || item.photoUrl || item.photo;
                                 const photo =
@@ -238,14 +289,20 @@ export default function FeatureCarousel({
 
                                 return (
                                     <article
-                                        key={`${itemIndex}-${slot}`}
-                                        className={`rk-carousel-card rk-carousel-card--${
-                                            slot < 0
-                                                ? 'previous'
-                                                : slot > 0
-                                                ? 'next'
-                                                : 'active'
-                                        }`}
+                                        key={`${item.id || item.slug || 'item'}-${itemIndex}`}
+                                        className={`rk-carousel-card rk-carousel-card--${position} rk-carousel-glass`}
+                                        data-neighbour={neighbour || undefined}
+                                        onPointerMove={active ? (event) => {
+                                            if (event.pointerType !== 'mouse' || event.buttons) return;
+                                            const card = event.currentTarget;
+                                            const box = card.getBoundingClientRect();
+                                            card.style.setProperty('--shine-x', `${100 * (event.clientX - box.left) / box.width}%`);
+                                            card.style.setProperty('--shine-y', `${100 * (event.clientY - box.top) / box.height}%`);
+                                        } : undefined}
+                                        onPointerLeave={active ? (event) => {
+                                            event.currentTarget.style.removeProperty('--shine-x');
+                                            event.currentTarget.style.removeProperty('--shine-y');
+                                        } : undefined}
                                         aria-hidden={!active}
                                         inert={!active}
                                     >
@@ -257,34 +314,23 @@ export default function FeatureCarousel({
                                                         ? item.title
                                                         : 'Dokumentasi organisasi ROKABA'
                                                 }
-                                                aspect="16/9"
-                                                captionTitle={
-                                                    item.category ||
-                                                    item.type ||
-                                                    (isEvent
-                                                        ? 'Kegiatan'
-                                                        : 'Organisasi')
-                                                }
+                                                aspect="16/10"
                                             />
                                         </div>
 
                                         <div className="rk-carousel-body">
+                                            <span className="rk-carousel-category">{category}</span>
                                             <h3>{item.title}</h3>
                                             <div className="rk-carousel-meta">
-                                                {item.date && (
+                                                {date && (
                                                     <span>
-                                                        <CalendarDays
-                                                            size={16}
-                                                            aria-hidden="true"
-                                                        />
-                                                        {formatIndonesianDate(
-                                                            item.date
-                                                        )}
+                                                        <CalendarDays size={16} aria-hidden="true" />
+                                                        {date}
                                                     </span>
                                                 )}
                                                 {isEvent
                                                     ? item.time && (
-                                                          <span>
+                                                          <span className="rk-carousel-time">
                                                               <Clock3
                                                                   size={16}
                                                                   aria-hidden="true"
@@ -293,7 +339,7 @@ export default function FeatureCarousel({
                                                           </span>
                                                       )
                                                     : item.author && (
-                                                          <span>
+                                                          <span className="rk-carousel-author">
                                                               <UserRound
                                                                   size={16}
                                                                   aria-hidden="true"
@@ -312,44 +358,26 @@ export default function FeatureCarousel({
                                                 )}
                                             </div>
 
-                                            {active && (
-                                                <>
-                                                    {itemSummary && (
-                                                        <p className="rk-carousel-excerpt">
-                                                            {itemSummary}
-                                                        </p>
-                                                    )}
-                                                    {isEvent ? (
-                                                        <button
-                                                            type="button"
-                                                            className="rk-btn-primary rk-carousel-action"
-                                                            onClick={() =>
-                                                                selectEvent(item)
-                                                            }
-                                                        >
-                                                            <span>
-                                                                Lihat rincian
-                                                            </span>
-                                                            <ArrowRight
-                                                                size={17}
-                                                                aria-hidden="true"
-                                                            />
-                                                        </button>
-                                                    ) : (
-                                                        <Link
-                                                            className="rk-btn-primary rk-carousel-action"
-                                                            to={`/berita/${itemSlug}`}
-                                                        >
-                                                            <span>
-                                                                Baca selengkapnya
-                                                            </span>
-                                                            <ArrowRight
-                                                                size={17}
-                                                                aria-hidden="true"
-                                                            />
-                                                        </Link>
-                                                    )}
-                                                </>
+                                            {itemSummary && (
+                                                <p className="rk-carousel-excerpt">{itemSummary}</p>
+                                            )}
+                                            {isEvent ? (
+                                                <button
+                                                    type="button"
+                                                    className="rk-btn-primary rk-carousel-action"
+                                                    onClick={() => selectEvent(item)}
+                                                >
+                                                    <span>Lihat rincian</span>
+                                                    <ArrowRight size={17} aria-hidden="true" />
+                                                </button>
+                                            ) : (
+                                                <Link
+                                                    className="rk-btn-primary rk-carousel-action"
+                                                    to={`/berita/${itemSlug}`}
+                                                >
+                                                    <span>Baca selengkapnya</span>
+                                                    <ArrowRight size={17} aria-hidden="true" />
+                                                </Link>
                                             )}
                                         </div>
                                     </article>
@@ -357,8 +385,8 @@ export default function FeatureCarousel({
                             })}
                         </div>
 
-                        {count > 1 && (
-                            <>
+                        <div className="rk-carousel-controls">
+                            {count > 1 && (
                                 <button
                                     type="button"
                                     className="rk-carousel-arrow rk-carousel-arrow--previous"
@@ -372,6 +400,30 @@ export default function FeatureCarousel({
                                 >
                                     <ArrowLeft size={20} />
                                 </button>
+                            )}
+
+                            <div className="rk-carousel-pagination">
+                                <span aria-live="polite" aria-atomic="true">
+                                    {current + 1} / {count}
+                                </span>
+                                {count > 1 && (
+                                    <div className="rk-carousel-dots">
+                                        {resolvedItems.map((item, i) => (
+                                            <button
+                                                key={`${item.id || item.slug || 'item'}-${i}`}
+                                                type="button"
+                                                aria-label={`Tampilkan ${isEvent ? 'agenda' : 'berita'} ${i + 1}`}
+                                                aria-current={i === current ? 'true' : undefined}
+                                                onClick={() => move(i - current)}
+                                            >
+                                                <span />
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            {count > 1 && (
                                 <button
                                     type="button"
                                     className="rk-carousel-arrow rk-carousel-arrow--next"
@@ -385,38 +437,8 @@ export default function FeatureCarousel({
                                 >
                                     <ArrowRight size={20} />
                                 </button>
-                            </>
-                        )}
-
-                        <div className="rk-carousel-pagination">
-                            <span aria-live="polite" aria-atomic="true">
-                                {current + 1} / {count}
-                            </span>
-                            {count > 1 && (
-                                <div className="rk-carousel-dots">
-                                    {resolvedItems.map((item, i) => (
-                                        <button
-                                            key={item.id || item.slug || i}
-                                            type="button"
-                                            aria-label={`Tampilkan ${
-                                                isEvent ? 'agenda' : 'berita'
-                                            } ${i + 1}`}
-                                            aria-current={
-                                                i === current
-                                                    ? 'true'
-                                                    : undefined
-                                            }
-                                            onClick={() => setIndex(i)}
-                                        >
-                                            <span />
-                                        </button>
-                                    ))}
-                                </div>
                             )}
                         </div>
-                        <p className="rk-carousel-swipe-hint">
-                            Geser atau gunakan tombol panah untuk melihat lainnya
-                        </p>
                     </div>
 
                     {!onSelect && (

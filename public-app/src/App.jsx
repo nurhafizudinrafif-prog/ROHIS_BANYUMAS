@@ -8,11 +8,9 @@ import News from './pages/News';
 import NewsDetail from './pages/NewsDetail';
 import Articles from './pages/Articles';
 import ArticleDetail from './pages/ArticleDetail';
-import Events from './pages/Events';
-import Schools from './pages/Schools';
 import Gallery from './pages/Gallery';
 import Contact from './pages/Contact';
-import Programs from './pages/Programs';
+import SchoolDirectory from './pages/Schools';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import GlassOptics from './components/GlassOptics';
 import AmbientBackground from './components/AmbientBackground';
@@ -32,28 +30,28 @@ export default function App() {
                   {/* Primary Routes */}
                   <Route path="/" element={<Home />} />
                   <Route path="/about" element={<About />} />
-                  <Route path="/programs" element={<Programs />} />
+                  <Route path="/schools" element={<SchoolDirectory />} />
                   <Route path="/berita" element={<News />} />
                   <Route path="/berita/:slug" element={<NewsDetail />} />
                   <Route path="/articles" element={<Articles />} />
                   <Route path="/articles/:slug" element={<ArticleDetail />} />
-                  <Route path="/events" element={<Events />} />
-                  <Route path="/schools" element={<Schools />} />
                   <Route path="/gallery" element={<Gallery />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/consultation" element={<Navigate to="/contact" replace />} />
                   <Route path="/library" element={<Navigate to="/" replace />} />
 
-                  {/* Backward-Compatible Indonesian URL Aliases */}
+                  {/* Backward-compatible URLs */}
                   <Route path="/news" element={<Navigate to="/berita" replace />} />
                   <Route path="/tentang" element={<Navigate to="/about" replace />} />
-                  <Route path="/program" element={<Programs />} />
-                  <Route path="/agenda" element={<Events />} />
+                  <Route path="/programs" element={<Navigate to="/about#program" replace />} />
+                  <Route path="/program" element={<Navigate to="/about#program" replace />} />
+                  <Route path="/events" element={<Navigate to="/berita#agenda" replace />} />
+                  <Route path="/agenda" element={<Navigate to="/berita#agenda" replace />} />
                   <Route path="/artikel" element={<Articles />} />
                   <Route path="/artikel/:slug" element={<ArticleDetail />} />
-                  <Route path="/anggota" element={<Schools />} />
-                  <Route path="/sekolah" element={<Schools />} />
-                  <Route path="/rohis-anggota" element={<Schools />} />
+                  <Route path="/anggota" element={<Navigate to="/schools" replace />} />
+                  <Route path="/sekolah" element={<Navigate to="/schools" replace />} />
+                  <Route path="/rohis-anggota" element={<Navigate to="/schools" replace />} />
                   <Route path="/galeri" element={<Gallery />} />
                   <Route path="/kontak" element={<Contact />} />
                   <Route path="/pendaftaran" element={<Contact />} />

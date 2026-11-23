@@ -1,16 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useData } from '../context/DataContext';
 import {
     Search,
     School,
     MapPin,
     AtSign,
-    ArrowUpRight,
     X,
     Users,
     ArrowRight,
-    Sparkles,
 } from 'lucide-react';
-import { fetchCmsData } from '../services/cmsService';
 import {
     Eyebrow,
     GlassChip,
@@ -52,31 +50,25 @@ const LEVEL_FILTERS = [
 
 function detectLevel(name = '', rawLevel = '') {
     const up = (rawLevel || name).toUpperCase();
-    if (up.includes('SMK')) return 'SMK';
-    if (up.includes('MAN') || up.includes('MA ') || up === 'MA') return 'MA';
+    if (/\bSMK[NS]?(?=\b|\d)/.test(up)) return 'SMK';
+    if (/\bMA[NS]?(?=\b|\d)/.test(up)) return 'MA';
     return 'SMA';
 }
 
-export default function Schools() {
-    const [cms, setCms] = useState(null);
+export default function SchoolDirectory() {
+    const { schools: cmsSchools } = useData();
     const [level, setLevel] = useState('Semua');
     const [query, setQuery] = useState('');
     const [selectedSchool, setSelectedSchool] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
-        let mounted = true;
-        fetchCmsData().then((data) => {
-            if (mounted && data) setCms(data);
-        });
-        return () => {
-            mounted = false;
-        };
+        window.scrollTo({ top: 0, behavior: 'instant' });
     }, []);
 
     const schools = useMemo(() => {
-        if (Array.isArray(cms?.schools) && cms.schools.length >= 17) {
-            return cms.schools.map((s, idx) => {
+        if (Array.isArray(cmsSchools) && cmsSchools.length >= 17) {
+            return cmsSchools.map((s, idx) => {
                 const fallback = DEFAULT_SCHOOLS[idx % DEFAULT_SCHOOLS.length];
                 const name = s.name || s.schoolName || fallback.name;
                 return {
@@ -91,7 +83,7 @@ export default function Schools() {
             });
         }
         return DEFAULT_SCHOOLS;
-    }, [cms]);
+    }, [cmsSchools]);
 
     const counts = useMemo(() => {
         const res = { Semua: schools.length, SMA: 0, SMK: 0, MA: 0 };
@@ -122,16 +114,16 @@ export default function Schools() {
     };
 
     return (
-        <div className="rk-page">
-            <section className="rk-hero-section">
+        <>
+            <section id="sekolah" className="rk-section rk-school-directory" aria-labelledby="school-directory-title">
                 <div className="rk-container">
                     {/* HEADER + 3 BADGE RINGKASAN JENJANG DI KANAN ATAS (PAPAN 10-SEKOLAH-PC) */}
                     <div className="rk-schools-header-row-v3">
                         <div>
                             <Eyebrow>Jejaring Satuan Pendidikan</Eyebrow>
-                            <h1 className="rk-page-title">ROHIS Sekolah Anggota</h1>
+                            <h2 className="rk-section-title" id="school-directory-title">ROHIS Sekolah Anggota</h2>
                             <p className="rk-page-lead" style={{ marginTop: 10 }}>
-                                Jejaring 17 SMA, SMK, dan MA yang terhubung dalam ROHIS
+                                Jejaring {schools.length} SMA, SMK, dan MA yang terhubung dalam ROHIS
                                 Kabupaten Banyumas.
                             </p>
                         </div>
@@ -288,7 +280,7 @@ export default function Schools() {
                                     setQuery('');
                                 }}
                             >
-                                Tampilkan 17 sekolah
+                                Tampilkan semua sekolah
                             </button>
                         </SoftCard>
                     )}
@@ -398,6 +390,6 @@ export default function Schools() {
                     </div>
                 </div>
             )}
-        </div>
+        </>
     );
 }

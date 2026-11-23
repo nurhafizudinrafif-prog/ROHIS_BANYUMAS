@@ -15,7 +15,7 @@ export default function AmbientBackground() {
       node.style.setProperty('--ambient-angle', `${reduced.matches ? -12 : -12 + progress * 18}deg`);
     };
     const scroll = () => { if (!frame) frame = requestAnimationFrame(update); };
-    const initialScene = pathname.startsWith('/events') ? 'agenda' : pathname.startsWith('/berita') ? 'news' : 'welcome';
+    const initialScene = pathname.startsWith('/berita') ? 'news' : 'welcome';
     node.dataset.scene = initialScene;
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => { if (entry.isIntersecting) node.dataset.scene = entry.target.dataset.scene; });

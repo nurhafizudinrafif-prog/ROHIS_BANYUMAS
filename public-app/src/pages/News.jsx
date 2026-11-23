@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {
     Search,
     Calendar,
     User,
+    ArrowDown,
     ArrowRight,
     X,
     Sparkles,
@@ -14,9 +15,10 @@ import {
 } from 'lucide-react';
 import { fetchCmsData, getDriveImageUrl } from '../services/cmsService';
 import FeatureCarousel from '../components/FeatureCarousel';
+import AgendaSection from './Events';
 import {
     Eyebrow,
-    FramedPhoto,
+    SmartImage,
     GlassChip,
     SoftCard,
 } from '../components/ui/SoftUI';
@@ -124,6 +126,27 @@ export default function News() {
     const [cms, setCms] = useState(null);
     const [category, setCategory] = useState('Semua');
     const [query, setQuery] = useState('');
+    const { hash, key } = useLocation();
+    const waitingForSection = Boolean(hash) && cms === null;
+
+    useEffect(() => {
+        if (!hash) {
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            return;
+        }
+        if (waitingForSection) return;
+
+        // News cards above the agenda can change height when data and fonts load.
+        let cancelled = false;
+        document.fonts.ready.then(() => {
+            if (!cancelled) {
+                document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'instant' });
+            }
+        });
+        return () => {
+            cancelled = true;
+        };
+    }, [hash, key, waitingForSection]);
 
     useEffect(() => {
         let mounted = true;
@@ -178,16 +201,21 @@ export default function News() {
     return (
         <div className="rk-page">
             {/* 1. HEADER & FILTER BAR */}
-            <section className="rk-hero-section" style={{ paddingBottom: 16 }}>
+            <section className="rk-hero-section" style={{ paddingBottom: 16 }} data-scene="news">
                 <div className="rk-container">
                     <div className="rk-page-header-row">
                         <div>
-                            <Eyebrow>Rilis & Dokumentasi</Eyebrow>
-                            <h1 className="rk-page-title">Berita & Kegiatan</h1>
+                            <Eyebrow>ROHIS Kabupaten Banyumas</Eyebrow>
+                            <h1 className="rk-page-title">Berita & Agenda</h1>
                             <p className="rk-page-lead" style={{ marginTop: 10 }}>
-                                Cerita kegiatan, rilis organisasi, dan dokumentasi
-                                perjalanan ROHIS Kabupaten Banyumas.
+                                Ikuti kabar kegiatan ROKABA dan lihat jadwal kajian,
+                                pelatihan, serta pertemuan lintas sekolah.
                             </p>
+                            <Link to="#agenda" className="rk-btn-secondary" style={{ marginTop: 16 }}>
+                                <Calendar size={17} aria-hidden="true" />
+                                <span>Lihat agenda</span>
+                                <ArrowDown size={16} aria-hidden="true" />
+                            </Link>
                         </div>
 
                         <div className="rk-search-box rk-search-box--header">
@@ -242,22 +270,19 @@ export default function News() {
             </section>
 
             {/* 2. SOROTAN CAROUSEL 3 KARTU */}
-            <FeatureCarousel
+            {filteredNews.length > 0 && <FeatureCarousel
                 id="sorotan-berita"
                 variant="news"
-                eyebrow="Sorotan Utama"
-                title="Kabar pilihan pekan ini"
-                description="Geser atau pilih kartu untuk membaca dokumentasi kegiatan terbaru."
-                items={filteredNews.length > 0 ? filteredNews : newsItems}
-            />
+                items={filteredNews}
+            />}
 
             {/* 3. BERITA LAINNYA (STRIP KARTU HORIZONTAL & ARSIP LENGKAP) */}
-            <section className="rk-section">
+            <section className="rk-section" data-scene="news">
                 <div className="rk-container">
                     <div className="rk-section-head">
                         <div>
-                            <h2 className="rk-section-title" style={{ fontSize: '1.55rem' }}>
-                                Berita lainnya
+                            <h2 className="rk-section-title">
+                                Arsip berita
                             </h2>
                         </div>
                     </div>
@@ -274,10 +299,9 @@ export default function News() {
                                         to={`/berita/${item.slug}`}
                                         className="rk-other-news-thumb"
                                     >
-                                        <img
+                                        <SmartImage
                                             src={item.image}
                                             alt={item.title}
-                                            loading="lazy"
                                         />
                                     </Link>
 
@@ -333,6 +357,8 @@ export default function News() {
                     )}
                 </div>
             </section>
+
+            <AgendaSection cmsEvents={cms?.events} />
         </div>
     );
 }

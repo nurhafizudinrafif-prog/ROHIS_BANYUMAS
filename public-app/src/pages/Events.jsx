@@ -1,19 +1,17 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useMemo, useState } from 'react';
 import {
     Calendar,
     Clock,
     MapPin,
     Sparkles,
     ListFilter,
-    X,
     BookOpen,
     Award,
     HeartHandshake,
     Users,
     ArrowRight,
 } from 'lucide-react';
-import { fetchCmsData, getDriveImageUrl } from '../services/cmsService';
+import { getDriveImageUrl } from '../services/cmsService';
 import FeatureCarousel from '../components/FeatureCarousel';
 import {
     Eyebrow,
@@ -114,26 +112,15 @@ function getShortDate(dateStr = '', idx = 0) {
     return DEFAULT_EVENTS[idx % DEFAULT_EVENTS.length]?.shortDate || 'Agenda';
 }
 
-export default function Events() {
-    const [cms, setCms] = useState(null);
+export default function AgendaSection({ cmsEvents }) {
     const [category, setCategory] = useState('Semua');
     const [viewMode, setViewMode] = useState('all'); // 'all' | 'list'
     const [selectedEventId, setSelectedEventId] = useState(null);
 
-    useEffect(() => {
-        let mounted = true;
-        fetchCmsData().then((data) => {
-            if (mounted && data) setCms(data);
-        });
-        return () => {
-            mounted = false;
-        };
-    }, []);
-
     const events = useMemo(() => {
         const raw =
-            Array.isArray(cms?.events) && cms.events.length > 0
-                ? cms.events
+            Array.isArray(cmsEvents) && cmsEvents.length > 0
+                ? cmsEvents
                 : DEFAULT_EVENTS;
         return raw.map((evt, idx) => {
             const fallback = DEFAULT_EVENTS[idx % DEFAULT_EVENTS.length];
@@ -152,7 +139,7 @@ export default function Events() {
                     evt.description || evt.summary || fallback.description,
             };
         });
-    }, [cms]);
+    }, [cmsEvents]);
 
     const filteredEvents = useMemo(() => {
         return events.filter((evt) => {
@@ -170,14 +157,14 @@ export default function Events() {
     }, [filteredEvents, events, selectedEventId]);
 
     return (
-        <div className="rk-page">
+        <section id="agenda" className="rk-agenda-section" data-scene="agenda" aria-labelledby="agenda-heading">
             {/* 1. HEADER & FILTER BAR */}
             <section className="rk-hero-section" style={{ paddingBottom: 16 }}>
                 <div className="rk-container">
                     <div className="rk-section-head">
                         <div>
                             <Eyebrow>Kalender Kegiatan</Eyebrow>
-                            <h1 className="rk-page-title">Agenda & Kajian</h1>
+                            <h2 className="rk-section-title" id="agenda-heading">Agenda & Kajian</h2>
                             <p className="rk-page-lead" style={{ marginTop: 10 }}>
                                 Jadwal kajian pelajar, musyawarah, pelatihan, dan kegiatan
                                 bersama ROHIS Kabupaten Banyumas.
@@ -381,6 +368,6 @@ export default function Events() {
                     </div>
                 </div>
             </section>
-        </div>
+        </section>
     );
 }

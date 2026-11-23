@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
     Users,
     Sparkles,
@@ -12,13 +12,11 @@ import {
     Heart,
     ChevronDown,
 } from 'lucide-react';
-import { fetchCmsData } from '../services/cmsService';
 import {
     Eyebrow,
     FramedPhoto,
     GlassChip,
     PrimaryButton,
-    SecondaryButton,
     SoftCard,
 } from '../components/ui/SoftUI';
 
@@ -149,20 +147,9 @@ const RBC_COMPETITIONS = [
     'CCAI',
 ];
 
-export default function Programs() {
-    const [cms, setCms] = useState(null);
+export default function Programs({ cms }) {
     const [activePillar, setActivePillar] = useState('pembinaan');
     const [openDivisionId, setOpenDivisionId] = useState('sdm');
-
-    useEffect(() => {
-        let mounted = true;
-        fetchCmsData().then((data) => {
-            if (mounted && data) setCms(data);
-        });
-        return () => {
-            mounted = false;
-        };
-    }, []);
 
     const selectedPillar =
         PILLARS.find((p) => p.id === activePillar) || PILLARS[0];
@@ -182,14 +169,14 @@ export default function Programs() {
     });
 
     return (
-        <div className="rk-page">
+        <section id="program" aria-labelledby="program-title">
             {/* 1. HEADER & 3 PILAR GERAK + SPOTLIGHT BERGAMBAR */}
-            <section className="rk-hero-section">
+            <section className="rk-section">
                 <div className="rk-container">
                     <div className="rk-section-head">
                         <div>
                             <Eyebrow>Gerak & Kaderisasi</Eyebrow>
-                            <h1 className="rk-page-title">Program & Kaderisasi</h1>
+                            <h2 id="program-title" className="rk-section-title">Program & Kaderisasi</h2>
                             <p className="rk-page-lead" style={{ marginTop: 12 }}>
                                 Tiga pilar gerak dan lima divisi yang saling menguatkan
                                 pelajar Muslim di Kabupaten Banyumas.
@@ -244,7 +231,7 @@ export default function Programs() {
                             </ul>
 
                             <div style={{ marginTop: 22 }}>
-                                <PrimaryButton to="/events">
+                                <PrimaryButton to="/berita#agenda">
                                     <span>Lihat kegiatan</span>
                                     <ArrowRight size={16} />
                                 </PrimaryButton>
@@ -362,7 +349,7 @@ export default function Programs() {
                         </div>
 
                         <div className="rk-flagship-banner-right">
-                            <PrimaryButton to="/events">
+                            <PrimaryButton to="/berita#agenda">
                                 <span>Lihat agenda</span>
                                 <ArrowRight size={16} />
                             </PrimaryButton>
@@ -370,6 +357,6 @@ export default function Programs() {
                     </SoftCard>
                 </div>
             </section>
-        </div>
+        </section>
     );
 }
