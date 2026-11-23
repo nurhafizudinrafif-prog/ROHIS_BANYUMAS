@@ -274,7 +274,7 @@ export default function UserManager() {
       {modalOpen && editing && (
         <div className="modal-backdrop-responsive" onClick={() => setModalOpen(false)}>
           <div
-            className="modal-dialog-responsive"
+            className="modal-card-responsive"
             style={{ maxWidth: 720 }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -304,9 +304,9 @@ export default function UserManager() {
               </div>
               <button
                 type="button"
-                className="btn-icon-soft"
+                className="modal-close-btn"
                 onClick={() => setModalOpen(false)}
-                title="Tutup dialog"
+                aria-label="Tutup dialog"
               >
                 <X size={18} />
               </button>
@@ -376,7 +376,7 @@ export default function UserManager() {
 
               {/* Modal Sticky Footer */}
               <div className="modal-footer-responsive">
-                <div>
+                <div className="modal-footer-secondary">
                   {!isNew && editing.role !== 'superadmin' && (
                     <button
                       type="button"
@@ -389,7 +389,7 @@ export default function UserManager() {
                   )}
                 </div>
 
-                <div style={{ display: 'flex', gap: '0.65rem' }}>
+                <div className="modal-footer-actions">
                   <button
                     type="button"
                     className="btn btn-secondary-soft"
@@ -417,30 +417,24 @@ export default function UserManager() {
       {deleteConfirmItem && (
         <div className="modal-backdrop-responsive" style={{ zIndex: 10000 }} onClick={() => setDeleteConfirmItem(null)}>
           <div
-            className="admin-soft-card"
-            style={{
-              maxWidth: 420,
-              width: '90%',
-              margin: 'auto',
-              padding: '1.5rem',
-              boxShadow: 'var(--soft-shadow-lg)',
-            }}
+            className="modal-card-responsive modal-confirmation"
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+            <div className="modal-header-responsive">
               <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--pine-dark)', margin: 0 }}>
                 Hapus pengguna?
               </h3>
               <button
                 type="button"
-                className="btn-icon-soft"
+                className="modal-close-btn"
+                aria-label="Tutup dialog"
                 onClick={() => setDeleteConfirmItem(null)}
               >
                 <X size={16} />
               </button>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem', marginBottom: '1.5rem' }}>
+            <div className="modal-body-responsive modal-confirmation-body">
               <div style={{
                 width: 44,
                 height: 44,
@@ -464,7 +458,7 @@ export default function UserManager() {
               </div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.65rem' }}>
+            <div className="modal-footer-responsive">
               <button
                 type="button"
                 className="btn btn-secondary-soft"

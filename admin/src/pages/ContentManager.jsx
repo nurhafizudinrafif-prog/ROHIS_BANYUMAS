@@ -716,16 +716,9 @@ export default function ContentManager() {
               </button>
             </div>
 
-            <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', flex: '1 1 auto', overflow: 'hidden' }}>
+            <form onSubmit={handleSave}>
               <div className="modal-body-responsive">
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-                    gap: '1.15rem',
-                  }}
-                  className="modal-grid-2col"
-                >
+                <div className="modal-grid-2col">
                   {schema.fields.map((field) => {
                     if (field.type === 'image') {
                       return (
@@ -824,7 +817,7 @@ export default function ContentManager() {
             if (e.target === e.currentTarget) setItemToDelete(null);
           }}
         >
-          <div className="modal-card-responsive" style={{ maxWidth: 440 }}>
+          <div className="modal-card-responsive modal-confirmation">
             <div className="modal-header-responsive">
               <h3>Hapus konten?</h3>
               <button
@@ -837,7 +830,7 @@ export default function ContentManager() {
               </button>
             </div>
 
-            <div className="modal-body-responsive" style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+            <div className="modal-body-responsive modal-confirmation-body">
               <div
                 style={{
                   width: 48,

@@ -307,6 +307,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ═══════ Responsive Modal Architecture (AGENTS.md Rule 3 & Image 07) ═══════ */
 .modal-backdrop-responsive {
+  --modal-gutter: clamp(12px, 2.5vw, 20px);
   position: fixed;
   inset: 0;
   z-index: 9999;
@@ -316,14 +317,16 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.25rem;
-  overflow-y: auto;
+  padding: var(--modal-gutter);
 }
+
+html:has(.modal-backdrop-responsive) { overflow: hidden; }
 
 .modal-card-responsive {
   width: 100%;
   max-width: 780px;
-  max-height: calc(100dvh - 2.5rem);
+  max-height: calc(100dvh - 2 * var(--modal-gutter));
+  min-width: 0;
   background: var(--surface-bg);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-xl);
@@ -345,8 +348,10 @@ h1, h2, h3, h4, h5, h6 {
   top: 0;
   z-index: 10;
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   padding: 1.25rem 1.75rem;
   background: rgba(247, 245, 240, 0.95);
   backdrop-filter: blur(10px);
@@ -360,8 +365,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .modal-close-btn {
-  width: 36px;
-  height: 36px;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -381,6 +387,8 @@ h1, h2, h3, h4, h5, h6 {
 .modal-body-responsive {
   padding: 1.75rem;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  overflow-wrap: anywhere;
   flex: 1 1 auto;
   min-height: 0;
 }
@@ -392,6 +400,8 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
   gap: 0.75rem;
   padding: 1.15rem 1.75rem;
   background: rgba(247, 245, 240, 0.95);
@@ -444,7 +454,6 @@ h1, h2, h3, h4, h5, h6 {
   .modal-card-responsive {
     max-width: 100%;
     margin: 0;
-    max-height: calc(100dvh - 1rem);
     border-radius: var(--radius-lg);
   }
 
@@ -469,7 +478,7 @@ h1, h2, h3, h4, h5, h6 {
 .form-input-soft,.form-select-soft,.form-textarea-soft{min-height:44px;background:#f6f5ef;box-shadow:var(--inset-shadow)}
 .modal-card-responsive{border:1px solid white;border-radius:22px;box-shadow:var(--modal-shadow),inset 0 1px 1px white}
 .modal-header-responsive,.modal-footer-responsive{background:#f7f5f0dc;backdrop-filter:blur(18px) saturate(1.2)}
-@media(max-width:640px){.admin-soft-card{padding:18px}.modal-card-responsive{max-height:calc(100dvh - 24px)}.modal-footer-responsive{padding-bottom:max(16px,env(safe-area-inset-bottom))}}
+@media(max-width:640px){.admin-soft-card{padding:18px}.modal-footer-responsive{padding-bottom:max(16px,env(safe-area-inset-bottom))}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 
 .admin-settings-grid>*,.admin-qa-grid>*,.admin-dashboard-split>*{min-width:0}
