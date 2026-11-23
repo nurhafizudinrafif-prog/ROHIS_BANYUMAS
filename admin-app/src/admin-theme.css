@@ -278,6 +278,87 @@ body::before {
 .modal-footer-secondary:empty { display: none; }
 .modal-footer-actions { display: flex; flex-wrap: wrap; gap: 0.65rem; }
 
+/* A raised glass rim frames the recessed workspace of the content editor. */
+.modal-card-responsive.admin-content-editor {
+  padding: 5px;
+  border-color: #fffdf2;
+  border-radius: 25px;
+  background: linear-gradient(152deg, #fffef8 2%, #eef1e1 44%, #b7c3ac 100%);
+  box-shadow:
+    0 5px 0 -2px #233c2e99,
+    0 14px 26px -10px #14291ec4,
+    0 42px 78px -25px #0d261eb8,
+    inset 0 1px 2px #fff,
+    inset 0 -2px 2px #50705750;
+}
+
+.admin-content-editor .modal-header-responsive {
+  border: 1px solid #fffc;
+  border-bottom-color: #273d3029;
+  border-radius: 19px 19px 0 0;
+  background: linear-gradient(165deg, #fffef9ed, #edf1e4c7);
+  box-shadow: inset 0 2px 1px #fff, 0 3px 8px #2c49321f;
+}
+
+.admin-content-editor-heading { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.admin-content-editor-icon {
+  width: 42px;
+  height: 42px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border: 1px solid #ffffffed;
+  border-radius: 13px;
+  background: linear-gradient(150deg, #fafcf2, #d6e2cd);
+  color: var(--pine-dark);
+  box-shadow: inset 0 2px 1px white, inset 0 -2px 2px #66876528, 0 4px 6px #1e3d2e2b;
+}
+
+.admin-content-editor .modal-close-btn {
+  border-radius: 50%;
+  border-color: #ffffffc9;
+  background: linear-gradient(150deg, #fffdf5, #e2e9da);
+  box-shadow: inset 0 1px 1px #fff, 0 2px 4px #29463824;
+  transition: transform 180ms var(--admin-ease), box-shadow 180ms var(--admin-ease);
+}
+.admin-content-editor .modal-close-btn:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 3px #29463830;
+}
+
+.admin-content-editor .modal-body-responsive {
+  background: linear-gradient(155deg, #f9f8ef 10%, #edf0e5 100%);
+  box-shadow: inset 2px 0 5px #3856421a, inset -2px 0 5px #3856421a;
+  scrollbar-width: thin;
+  scrollbar-color: #8a9c88 #ecf0e4;
+}
+
+.admin-content-editor .modal-body-responsive :is(.form-input-soft, .form-select-soft, .form-textarea-soft) {
+  border-color: #50654d33;
+  background: linear-gradient(180deg, #e4eadc, #fafaf2);
+  box-shadow: inset 0 3px 6px #2946382c, inset 0 -2px 1px #fff, 0 1px 0 #fff;
+}
+.admin-content-editor .modal-body-responsive :is(.form-input-soft, .form-select-soft, .form-textarea-soft):focus {
+  border-color: #668875;
+  box-shadow: inset 0 2px 4px #2946381f, 0 0 0 3px #41715826;
+}
+
+.admin-content-editor .modal-footer-responsive {
+  border: 1px solid #ffffffe6;
+  border-top-color: #62816a36;
+  border-radius: 0 0 19px 19px;
+  background: linear-gradient(163deg, #fafcf2e8, #e0e8d8dd);
+  box-shadow: 0 -3px 8px #2a44341a, inset 0 1px 1px #fff, inset 0 -2px 3px #385a3c29;
+}
+.admin-content-editor .modal-footer-responsive .btn-pine {
+  box-shadow: inset 0 2px 2px #ffffff7a, inset 0 -2px 3px #051f176e,
+    0 3px 0 #0d3024c9, 0 6px 9px #17392c35;
+}
+.admin-content-editor .modal-footer-responsive .btn-pine:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: inset 0 2px 4px #031e18ab, 0 1px 1px #183d2d60;
+}
+
 /* Masuk */
 .admin-login {
   position: relative;

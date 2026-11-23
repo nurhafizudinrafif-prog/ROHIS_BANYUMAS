@@ -698,11 +698,16 @@ export default function ContentManager() {
             }
           }}
         >
-          <div className="modal-card-responsive">
+          <div className="modal-card-responsive admin-content-editor" role="dialog" aria-modal="true" aria-labelledby="admin-content-editor-title">
             <div className="modal-header-responsive">
-              <h3>
-                {isNew ? 'Tambah' : 'Edit'} {schema.label.toLowerCase()}
-              </h3>
+              <div className="admin-content-editor-heading">
+                <span className="admin-content-editor-icon" aria-hidden="true">
+                  {isNew ? <Plus size={20} /> : <Edit3 size={20} />}
+                </span>
+                <h3 id="admin-content-editor-title">
+                  {isNew ? 'Tambah' : 'Edit'} {schema.label.toLowerCase()}
+                </h3>
+              </div>
               <button
                 type="button"
                 className="modal-close-btn"
