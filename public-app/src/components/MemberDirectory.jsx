@@ -1,7 +1,9 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import {
     ArrowUpRight,
     Camera,
+    ChevronLeft,
+    ChevronRight,
     GraduationCap,
     Search,
     X,
@@ -115,6 +117,73 @@ function resolveInstagramHandle(raw) {
     return handle.length <= 30 && /^[a-z0-9_]+(?:\.[a-z0-9_]+)*$/i.test(handle) ? handle : '';
 }
 
+function DivisionScroller({ children }) {
+    const viewportId = useId();
+    const viewportRef = useRef(null);
+    const tabsRef = useRef(null);
+    const [scroll, setScroll] = useState({ overflow: false, progress: 0 });
+
+    const updateScroll = useCallback(() => {
+        const viewport = viewportRef.current;
+        const max = viewport.scrollWidth - viewport.clientWidth;
+        const left = viewport.scrollLeft;
+        const overflow = max > 1;
+        const progress = !overflow || left <= 1 ? 0
+            : left >= max - 1 ? 100
+            : Math.min(99, Math.max(1, Math.round(left / max * 100)));
+        setScroll(current => current.overflow === overflow && current.progress === progress
+            ? current
+            : { overflow, progress });
+    }, []);
+
+    useEffect(() => {
+        const observer = new ResizeObserver(updateScroll);
+        observer.observe(viewportRef.current);
+        observer.observe(tabsRef.current);
+        return () => observer.disconnect();
+    }, [updateScroll]);
+
+    function move(direction) {
+        const viewport = viewportRef.current;
+        viewport.scrollBy({
+            left: direction * viewport.clientWidth * 0.72,
+            behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+        });
+    }
+
+    function seek(event) {
+        const viewport = viewportRef.current;
+        const max = viewport.scrollWidth - viewport.clientWidth;
+        viewport.scrollTo({ left: max * Number(event.target.value) / 100, behavior: 'instant' });
+        updateScroll();
+    }
+
+    return (
+        <div className="rk-member-filters-column">
+            <div id={viewportId} className="rk-member-scroll" ref={viewportRef} onScroll={updateScroll}>
+                <div ref={tabsRef} className="rk-member-tabs" role="group" aria-label="Filter divisi pengurus ROKABA">
+                    {children}
+                </div>
+            </div>
+            {scroll.overflow && (
+                <div className="rk-member-scroll-controls">
+                    <button type="button" className="rk-member-scroll-arrow" aria-label="Geser filter ke kiri"
+                        aria-controls={viewportId} disabled={scroll.progress === 0} onClick={() => move(-1)}>
+                        <ChevronLeft size={17} aria-hidden="true" />
+                    </button>
+                    <input type="range" className="rk-member-scroll-position" min="0" max="100" value={scroll.progress}
+                        onChange={seek} aria-controls={viewportId} aria-label="Posisi geser filter divisi"
+                        aria-valuetext={`${scroll.progress}%`} />
+                    <button type="button" className="rk-member-scroll-arrow" aria-label="Geser filter ke kanan"
+                        aria-controls={viewportId} disabled={scroll.progress === 100} onClick={() => move(1)}>
+                        <ChevronRight size={17} aria-hidden="true" />
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+}
+
 export default function MemberDirectory({ cmsMembers }) {
     const [activeDivision, setActiveDivision] = useState('Semua');
     const [query, setQuery] = useState('');
@@ -220,30 +289,24 @@ export default function MemberDirectory({ cmsMembers }) {
 
                 {/* FILTER DIVISI & PENCARIAN */}
                 <div className="rk-member-toolbar">
-                    <div
-                        className="rk-member-tabs"
-                        role="tablist"
-                        aria-label="Filter divisi pengurus ROKABA"
-                    >
-                        {DIVISION_FILTERS.map((f) => {
-                            const active = activeDivision === f.key;
-                            const IconComp = f.icon;
+                    <DivisionScroller>
+                        {DIVISION_FILTERS.map(({ key, label, icon: Icon }) => {
+                            const active = activeDivision === key;
                             return (
                                 <button
-                                    key={f.key}
+                                    key={key}
                                     type="button"
-                                    role="tab"
-                                    aria-selected={active}
+                                    aria-pressed={active}
                                     className={`rk-member-tab ${active ? 'is-active' : ''}`}
-                                    onClick={() => setActiveDivision(f.key)}
+                                    onClick={() => setActiveDivision(key)}
                                 >
-                                    <IconComp size={14} />
-                                    <span>{f.label}</span>
-                                    <small>{divisionCounts[f.key] ?? 0}</small>
+                                    <Icon size={14} aria-hidden="true" />
+                                    <span>{label}</span>
+                                    <small>{divisionCounts[key] ?? 0}</small>
                                 </button>
                             );
                         })}
-                    </div>
+                    </DivisionScroller>
 
                     <div className="rk-member-search">
                         <Search size={17} className="rk-member-search-icon" />

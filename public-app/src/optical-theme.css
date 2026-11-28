@@ -170,7 +170,92 @@
     }
   }
 }
-.rk-site .rk-member-tabs { display: flex; flex-wrap: wrap; gap: 10px; flex: 1 1 680px; min-width: 0; }
+.rk-site .rk-member-filters-column { min-width: 0; width: 100%; }
+.rk-site .rk-member-tabs { display: flex; gap: 10px; min-width: 0; }
+@media (max-width: 959px) {
+  .rk-site .rk-member-toolbar { display: grid; grid-template-columns: minmax(0,1fr); gap: 12px; }
+  .rk-site .rk-member-scroll {
+    overflow-x: auto;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    scroll-padding-inline: 6px;
+  }
+  .rk-site .rk-member-scroll::-webkit-scrollbar { display: none; }
+  .rk-site .rk-member-tabs { width: max-content; padding: 4px 6px 10px; }
+  .rk-site .rk-member-tab { flex-shrink: 0; }
+}
+.rk-member-scroll-controls {
+  display: grid;
+  grid-template-columns: auto minmax(0,1fr) auto;
+  align-items: center;
+  gap: 10px;
+}
+.rk-member-scroll-arrow {
+  position: relative;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--rk-pine);
+  cursor: pointer;
+}
+.rk-member-scroll-arrow::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border-radius: inherit;
+  border: 1px solid #ffffffe0;
+  background: linear-gradient(150deg,#fffdf5d9,#dfe8d4b3);
+  box-shadow: inset 0 1px 2px white, inset 0 -2px 2px #536c4d29, 0 3px 6px #243c2926;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+.rk-member-scroll-arrow svg { position: relative; }
+.rk-member-scroll-arrow:disabled { color: #637b68; cursor: default; opacity: .54; }
+.rk-member-scroll-arrow:not(:disabled):active::before {
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 3px #314e3b45;
+}
+.rk-member-scroll-position {
+  --scroll-rail: #a0b39d9c;
+  --scroll-thumb: linear-gradient(180deg,#3e6f57,#123c2d 65%,#0c2e23);
+  --scroll-relief: inset 0 1px 1px #ffffff80, 0 2px 4px #294c363b;
+  appearance: none;
+  width: 100%;
+  min-width: 0;
+  height: 36px;
+  margin: 0;
+  border-radius: 999px;
+  background: transparent;
+  cursor: ew-resize;
+  touch-action: pan-y;
+}
+.rk-member-scroll-position::-webkit-slider-runnable-track { height: 3px; border-radius: 999px; background: var(--scroll-rail); }
+.rk-member-scroll-position::-moz-range-track { height: 3px; border-radius: 999px; background: var(--scroll-rail); }
+.rk-member-scroll-position::-webkit-slider-thumb {
+  appearance: none;
+  width: clamp(26px,23%,110px);
+  height: 8px;
+  margin-top: -2.5px;
+  border-radius: 999px;
+  background: var(--scroll-thumb);
+  box-shadow: var(--scroll-relief);
+}
+.rk-member-scroll-position::-moz-range-thumb {
+  width: clamp(26px,23%,110px);
+  height: 8px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--scroll-thumb);
+  box-shadow: var(--scroll-relief);
+}
+.rk-member-scroll-controls :focus-visible,
+.rk-member-tabs button:focus-visible { outline: 2px solid var(--rk-pine); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  .rk-member-scroll-arrow::before { transition: none; }
+}
 .rk-site .rk-member-tab { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 10px 14px; border: 1px solid white; border-radius: 999px; background: linear-gradient(135deg,#ffffffb0,#dce5cb99); box-shadow: var(--rk-shadow-pill); font-size: .8rem; font-weight: 700; cursor: pointer; }
 .rk-site .rk-member-tab.is-active { background: linear-gradient(165deg,#397057,#0a2e20); color: white; box-shadow: var(--rk-shadow-button); }
 .rk-site .rk-member-search { display: flex; align-items: center; gap: 10px; flex: 1 1 270px; min-width: 0; padding: 0 16px; min-height: 48px; border: 1px solid #ffffffc9; border-radius: 999px; box-shadow: var(--rk-shadow-inset); background: #f8faf151; }
@@ -194,8 +279,6 @@
 @media (max-width: 559px) {
   .rk-site .rk-member-header { align-items: flex-start; flex-direction: column; gap: 16px; }
   .rk-site .rk-member-toolbar { padding: 16px; }
-  .rk-site .rk-member-tabs { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 10px; }
-  .rk-site .rk-member-tab { flex-shrink: 0; }
   .rk-site .rk-member-grid { grid-template-columns: minmax(0,1fr); }
 }
 .rk-site #sorotan-berita { padding-top: 0; }
