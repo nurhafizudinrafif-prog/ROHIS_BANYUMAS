@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigationType } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
     ArrowRight,
     School,
@@ -129,14 +129,6 @@ function resetCover(event) {
 export default function Home() {
     const [cms, setCms] = useState(null);
     const [activeLeaderIdx, setActiveLeaderIdx] = useState(0);
-    const { hash, key } = useLocation();
-    const navigationType = useNavigationType();
-
-    useEffect(() => {
-        if (!hash && navigationType !== 'POP') {
-            window.scrollTo({ top: 0, behavior: 'instant' });
-        }
-    }, [hash, key, navigationType]);
 
     useEffect(() => {
         let mounted = true;
@@ -324,7 +316,7 @@ export default function Home() {
                                 <h3 className="rk-welcome-role" id="sambutan-role" aria-live="polite">
                                     Sambutan {activeLeader.role}
                                 </h3>
-                                <div className="rk-sambutan-body">
+                                <div className="rk-sambutan-body rk-motion-content" key={activeLeader.id}>
                                     <p className="rk-salutation">{activeLeader.salutationOpen}</p>
                                     {activeLeader.paragraphs.map((paragraph, pIdx) => (
                                         <p key={pIdx}>{paragraph}</p>

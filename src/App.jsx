@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useLayoutEffect, useRef } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigationType } from 'react-router-dom';
 import { DataProvider } from './context/DataContext';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
@@ -15,6 +16,30 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 import GlassOptics from './components/GlassOptics';
 import AmbientBackground from './components/AmbientBackground';
 
+function PageContent({ children }) {
+  const { pathname, hash } = useLocation();
+  const navigationType = useNavigationType();
+  const previousPath = useRef(pathname);
+  const page = useRef(null);
+
+  useLayoutEffect(() => {
+    if (previousPath.current === pathname) return;
+    previousPath.current = pathname;
+
+    // Hash links and back/forward visits keep their existing scroll behavior.
+    if (!hash && navigationType !== 'POP') window.scrollTo({ top: 0, behavior: 'instant' });
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const animation = page.current.animate?.([{ opacity: 0.42 }, { opacity: 1 }], {
+      duration: 320,
+      easing: 'cubic-bezier(.16,1,.3,1)',
+    });
+    return () => animation?.cancel();
+  }, [pathname, hash, navigationType]);
+
+  return <main id="main-content" ref={page} className="rk-page-content">{children}</main>;
+}
+
 export default function App() {
   return (
     <ErrorBoundary>
@@ -25,7 +50,7 @@ export default function App() {
             <AmbientBackground />
             <div className="rk-board-shell">
               <Navbar />
-              <main id="main-content" style={{ flex: 1, width: '100%' }}>
+              <PageContent>
                 <Routes>
                   {/* Primary Routes */}
                   <Route path="/" element={<Home />} />
@@ -56,7 +81,7 @@ export default function App() {
                   <Route path="/kontak" element={<Contact />} />
                   <Route path="/pendaftaran" element={<Contact />} />
                 </Routes>
-              </main>
+              </PageContent>
               <Footer />
             </div>
           </div>

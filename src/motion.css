@@ -1,0 +1,90 @@
+.rk-site {
+  --rk-motion-ease: cubic-bezier(.16,1,.3,1);
+  --rk-motion-quick: 155ms;
+  --rk-motion-menu: 250ms;
+}
+
+.rk-page-content { flex: 1; width: 100%; }
+
+/* Keep the disclosure in place while it closes and remove it from tab order immediately. */
+.rk-site .rk-mobile-drawer[data-open="false"] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-7px) scale(.985);
+}
+.rk-site .rk-mobile-drawer[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+.rk-mobile-drawer { transform-origin: top right; }
+.rk-mobile-toggle-icons { display: grid; place-items: center; }
+.rk-mobile-toggle-icons > svg { grid-area: 1 / 1; }
+.rk-toggle-close, .rk-mobile-toggle[aria-expanded="true"] .rk-toggle-open {
+  opacity: 0;
+  transform: rotate(-24deg) scale(.78);
+}
+.rk-mobile-toggle[aria-expanded="true"] .rk-toggle-close { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .rk-site .rk-mobile-drawer {
+    transition: opacity var(--rk-motion-menu) var(--rk-motion-ease),
+      transform var(--rk-motion-menu) var(--rk-motion-ease), visibility 0s var(--rk-motion-menu);
+  }
+  .rk-site .rk-mobile-drawer[data-open="true"] { transition-delay: 0s; }
+  .rk-mobile-toggle-icons > svg {
+    transition: opacity var(--rk-motion-quick) ease, transform var(--rk-motion-menu) var(--rk-motion-ease);
+  }
+
+  .rk-site :is(.rk-btn-primary,.rk-btn-secondary,.rk-nav-link,.rk-mobile-toggle,.rk-mobile-link,
+    .rk-filter-pill,.rk-member-tab,.rk-carousel-arrow,.rk-member-scroll-arrow,.rk-lightbox-nav,
+    .rk-dialog-close,.rk-modal-close,.rk-school-card-v3,.rk-welcome-selector button) {
+    transition: scale var(--rk-motion-quick) var(--rk-motion-ease),
+      transform var(--rk-motion-menu) var(--rk-motion-ease),
+      box-shadow var(--rk-motion-menu) var(--rk-motion-ease),
+      border-color var(--rk-motion-quick) ease, background-color var(--rk-motion-quick) ease;
+  }
+  .rk-site :is(.rk-btn-primary,.rk-btn-secondary,.rk-nav-link,.rk-mobile-toggle,.rk-mobile-link,
+    .rk-filter-pill,.rk-member-tab,.rk-carousel-arrow,.rk-member-scroll-arrow,.rk-lightbox-nav,
+    .rk-dialog-close,.rk-modal-close,.rk-school-card-v3,.rk-welcome-selector button):active:not(:disabled) {
+    scale: .975;
+  }
+
+  .rk-site :is(.rk-dialog-backdrop,.rk-modal-backdrop) {
+    animation: rk-motion-fade 240ms var(--rk-motion-ease) both;
+  }
+  .rk-site :is(.rk-dialog-panel,.rk-modal-card) {
+    animation: rk-motion-dialog 320ms var(--rk-motion-ease) both;
+  }
+  .rk-site :is(.rk-motion-content,.rk-welcome-portrait,.rk-form-success) {
+    animation: rk-motion-fade 290ms var(--rk-motion-ease) both;
+  }
+
+  .rk-site :is(.rk-other-news-card-v3,.rk-article-card-v3,.rk-album-card,.rk-member-card,.rk-school-card-v3) {
+    transition: opacity 280ms var(--rk-motion-ease), scale var(--rk-motion-quick) var(--rk-motion-ease),
+      transform var(--rk-motion-menu) var(--rk-motion-ease), box-shadow var(--rk-motion-menu) var(--rk-motion-ease);
+  }
+  @starting-style {
+    .rk-site :is(.rk-other-news-card-v3,.rk-article-card-v3,.rk-album-card,.rk-member-card,.rk-school-card-v3) { opacity: .4; }
+  }
+
+  @keyframes rk-motion-fade {
+    from { opacity: .25; }
+    to { opacity: 1; }
+  }
+  @keyframes rk-motion-dialog {
+    from { opacity: 0; transform: translateY(9px) scale(.985); }
+    to { opacity: 1; transform: none; }
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .rk-site :is(.rk-filter-pill.is-active,.rk-member-tab.is-active,.rk-welcome-selector button[aria-pressed="true"]) {
+    animation: rk-motion-choice 280ms var(--rk-motion-ease);
+  }
+  @keyframes rk-motion-choice {
+    from { filter: brightness(1.15); }
+    to { filter: brightness(1); }
+  }
+}

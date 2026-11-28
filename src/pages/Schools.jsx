@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useData } from '../context/DataContext';
 import {
     Search,
@@ -61,10 +61,6 @@ export default function SchoolDirectory() {
     const [query, setQuery] = useState('');
     const [selectedSchool, setSelectedSchool] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
-
-    useEffect(() => {
-        window.scrollTo({ top: 0, behavior: 'instant' });
-    }, []);
 
     const schools = useMemo(() => {
         if (Array.isArray(cmsSchools) && cmsSchools.length >= 17) {

@@ -82,11 +82,7 @@ export default function About() {
             navigate('/schools', { replace: true });
             return;
         }
-        if (!hash) {
-            window.scrollTo({ top: 0, behavior: 'instant' });
-            return;
-        }
-        if (waitingForSection) return;
+        if (!hash || waitingForSection) return;
 
         let cancelled = false;
         document.fonts.ready.then(() => {

@@ -421,7 +421,7 @@
   box-shadow: inset 0 1px 2px #fff, inset 0 -2px 2px #52705220,
     0 3px 0 -1px #78907842, 0 15px 35px -10px #12352865;
 }
-.rk-site .rk-mobile-drawer[hidden] { display: none; }
+
 
 .rk-mobile-links { list-style: none; margin: 0; padding: 0; }
 .rk-mobile-links > li + li { border-top: 1px solid #153e2b14; }
@@ -471,14 +471,6 @@
 
 @media (hover: hover) {
   .rk-mobile-link:not(.is-active):hover { background: #e5edde; }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .rk-mobile-drawer:not([hidden]) { animation: rk-mobile-menu-in 190ms cubic-bezier(.2,.8,.2,1) both; }
-  .rk-mobile-link { transition: background-color 170ms ease; }
-  @keyframes rk-mobile-menu-in {
-    from { opacity: 0; transform: translateY(-5px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
 }
 @media (min-width: 1191px) {
   .rk-site .rk-mobile-drawer { display: none; }

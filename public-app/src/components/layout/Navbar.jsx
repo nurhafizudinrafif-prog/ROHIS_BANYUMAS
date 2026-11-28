@@ -120,12 +120,15 @@ export default function Navbar() {
                             aria-label={mobileOpen ? 'Tutup menu navigasi' : 'Buka menu navigasi'}
                             aria-expanded={mobileOpen}
                         >
-                            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+                            <span className="rk-mobile-toggle-icons" aria-hidden="true">
+                                <Menu size={20} className="rk-toggle-open" />
+                                <X size={20} className="rk-toggle-close" />
+                            </span>
                         </button>
                     </div>
                 </nav>
 
-                <nav id={menuId} className="rk-mobile-drawer" aria-label="Menu ROKABA" hidden={!mobileOpen}>
+                <nav id={menuId} className="rk-mobile-drawer" aria-label="Menu ROKABA" data-open={mobileOpen} inert={!mobileOpen}>
                     <ul className="rk-mobile-links">
                         {PRIMARY_ITEMS.map(({ path, matchPaths, label, icon: Icon }) => {
                             const active = isPathActive(matchPaths);

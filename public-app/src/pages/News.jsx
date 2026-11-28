@@ -130,11 +130,7 @@ export default function News() {
     const waitingForSection = Boolean(hash) && cms === null;
 
     useEffect(() => {
-        if (!hash) {
-            window.scrollTo({ top: 0, behavior: 'instant' });
-            return;
-        }
-        if (waitingForSection) return;
+        if (!hash || waitingForSection) return;
 
         // News cards above the agenda can change height when data and fonts load.
         let cancelled = false;

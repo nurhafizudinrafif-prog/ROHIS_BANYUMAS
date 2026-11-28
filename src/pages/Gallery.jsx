@@ -393,6 +393,8 @@ export default function Gallery() {
 
                         <div className="rk-lightbox-media">
                             <img
+                                key={activeLightboxItem.image}
+                                className="rk-motion-content"
                                 src={activeLightboxItem.image}
                                 alt={activeLightboxItem.title}
                             />
